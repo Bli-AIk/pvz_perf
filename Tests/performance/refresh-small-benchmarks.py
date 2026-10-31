@@ -98,8 +98,27 @@ def main():
         original = old.read_text(encoding="utf-8-sig")
         lo, hi, _ = declaration(original, table)
         target = old.with_name("current_" + old.name)
-        target.write_text(original[:lo] + extracted + original[hi:], encoding="utf-8")
-        jobs.append((target, "current_table_in_historical_harness", {"production_source":str(source.relative_to(project)), "production_sha256":digest(source), "table":table, "declaration_sha256":hashlib.sha256(extracted.encode()).hexdigest()}))
+        adapted = original[:lo] + extracted + original[hi:]
+        metadata = {"production_source":str(source.relative_to(project)), "production_sha256":digest(source), "table":table, "declaration_sha256":hashlib.sha256(extracted.encode()).hexdigest()}
+        if table == "kSeedTypeUpdates" and "std::int64_t" in extracted:
+            # Keep the production table verbatim; adapt only common test stubs
+            # and the invocation ABI to the explicit owner/visual/animation clocks.
+            split = adapted.index('// ---------------- FormA')
+            prefix = re.sub(r'void (Update\w+)\(\)',
+                            r'void \1(std::int64_t = 0, std::int64_t = 0, std::int64_t = 0)', adapted[:split])
+            adapted = prefix + adapted[split:]
+            for helper in ("kProductionUpdate", "kSpikeweedUpdate"):
+                pattern = r'^\s*static constexpr auto '+helper+r'\s*=.*?;\s*};'
+                helper_line = re.search(pattern, text, re.M)
+                if not helper_line:
+                    raise ValueError("Missing current dispatcher helper " + helper)
+                adapted = re.sub(pattern, lambda _: helper_line.group(), adapted, count=1, flags=re.M)
+            adapted = adapted.replace('void (*aUpdate)(Plant*)',
+                                      'void (*aUpdate)(std::int64_t, std::int64_t, std::int64_t, Plant*)')
+            adapted = adapted.replace('aUpdate(this_);', 'aUpdate(0, 0, 0, this_);')
+            metadata['harness_adapter'] = 'Explicit 3-clock ABI; common Mix stubs ignore clocks. Not full Plant::Update.'
+        target.write_text(adapted, encoding="utf-8")
+        jobs.append((target, "current_table_in_historical_harness", metadata))
     for fixture, table, relative, last in [("ifelse/bench7_plantheight.cpp", "kPlantHeightOffsets", "Lawn/Plant.cpp", True), ("ifelse/bench5_plantshadow.cpp", "kPlantShadow", "Lawn/Plant.cpp", True), ("ui/bench13_ZombatarColors_SetColorMode.cpp", "kZombatarPaletteRange", "Lawn/Widget/ZombatarColors.cpp", False)]:
         source = project / "pvzPerf" / relative
         _, _, extracted = declaration(source.read_text(encoding="utf-8-sig"), table)

@@ -1,0 +1,1 @@
+PASS frozen DrawScreen 128 warmup, 640 samples, 32 plants, 40 zombies, 800x600; flush/readback excluded

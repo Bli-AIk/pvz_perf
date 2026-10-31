@@ -430,9 +430,8 @@ static void SubmitGpuTriangles(
 		return;
 	int aDrawMode = theDrawMode < 0 ? gGpuCurrentDrawMode : theDrawMode;
 
-	// P5（2026-10-05 真凶）：原 4096 顶点栈缓冲=128KB/次调用，Windows x64 栈探
-	// 测逐页摸 32 页 ≈5µs×每帧~175 提交=0.9ms/帧。降为 192 顶点（6KB 两页）
-	// + 超限回落堆；实测提交计数 99.9% 走栈路
+	// Bound the stack frame for general triangle batches; large batches use
+	// dynamic storage. Uniform image quads bypass this conversion entirely.
 	GpuVertex aLocal[192];
 	const size_t aRequired = theType == PRIMITIVE_TRIANGLELIST ? size_t(theNumVertices) :
 		size_t(std::max(0, theNumVertices - 2)) * 3;
@@ -510,24 +509,55 @@ static void SubmitGpuTriangles(
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
+static void SubmitTextureQuad(const SexyVector2 (&points)[4], const TextureRegion& source,
+	const Color& color, GpuTexture* texture, const Rect* clip)
+{
+	if (!gGpuRenderer || (clip && (clip->mWidth <= 0 || clip->mHeight <= 0))) return;
+	// Decode the uniform tint once, preserving the existing packed-color semantics.
+	const DWORD packed = RGBA_MAKE(color.mRed, color.mGreen, color.mBlue, color.mAlpha);
+	const float red = ((packed >> 16) & 0xff) / 255.0f;
+	const float green = ((packed >> 8) & 0xff) / 255.0f;
+	const float blue = (packed & 0xff) / 255.0f;
+	const float alpha = ((packed >> 24) & 0xff) / 255.0f;
+	const uint32_t slot = GpuRenderer::SlotOf(texture) | CombinedImageSamplingFlags();
+	const uint32_t sampler = (gLinearFilter ? 1u : 0u) | (RenderInterface::sSamplerAddressWrap ? 2u : 0u);
+#if defined(PVZ_GPU_VULKAN) || defined(PVZ_GPU_D3D12) || defined(PVZ_GPU_OPENGL)
+	// Preserve the previous strip/fan diagonal, including non-parallelogram UVs.
+	static constexpr unsigned int order[2][4]{{0,1,2,3},{1,3,0,2}};
+	GpuVertex vertices[4];
+#else
+	static constexpr unsigned int order[2][6]{{0,1,2,1,2,3},{0,1,3,0,3,2}};
+	GpuVertex vertices[6];
+#endif
+	const auto& indices = order[clip != nullptr];
+	for (size_t i = 0; i < std::size(vertices); ++i)
+	{
+		const auto index = indices[i];
+		vertices[i] = {points[index].x, points[index].y, red, green, blue, alpha,
+			(index & 2) ? source.mU1 : source.mU0, (index & 1) ? source.mV1 : source.mV0,
+			slot, sampler};
+	}
+#if defined(PVZ_GPU_VULKAN) || defined(PVZ_GPU_D3D12) || defined(PVZ_GPU_OPENGL)
+	GpuClip nativeClip{};
+	if (clip) nativeClip = {clip->mX,clip->mY,clip->mWidth,clip->mHeight};
+	const auto blend = gGpuCurrentDrawMode == 1 ? GpuBlend::Additive :
+		gGpuCurrentDrawMode == 2 ? GpuBlend::Opaque : GpuBlend::Normal;
+	gGpuRenderer->SubmitQuads(vertices,texture,gLinearFilter,RenderInterface::sSamplerAddressWrap,
+		blend,clip ? &nativeClip : nullptr);
+#else
+	SubmitNativeTriangles(vertices,texture,gLinearFilter,-1,clip);
+#endif
+}
+
 void TextureSource::Blt(float theX, float theY, const TextureRegion& theSrcRect, const Color& theColor) const
 {
 	TextureSamplingScope sampling(mSamplingFlags);
 	if(theSrcRect.mWidth<=0 || theSrcRect.mHeight<=0)
 		return;
-	const float u1=theSrcRect.mU0, v1=theSrcRect.mV0;
-	const float u2=theSrcRect.mU1, v2=theSrcRect.mV1;
 	const float right=theX+theSrcRect.mWidth;
 	const float bottom=theY+theSrcRect.mHeight;
-	DWORD aColor = RGBA_MAKE(theColor.mRed, theColor.mGreen, theColor.mBlue, theColor.mAlpha);
-	ScreenVertex aVertex[4] =
-	{
-		{ theX, theY, 0, 1, aColor, u1, v1 },
-		{ theX, bottom, 0, 1, aColor, u1, v2 },
-		{ right, theY, 0, 1, aColor, u2, v1 },
-		{ right, bottom, 0, 1, aColor, u2, v2 }
-	};
-	SubmitGpuTriangles(aVertex, 4, PRIMITIVE_TRIANGLESTRIP, mTexture, gLinearFilter, -1, NULL);
+	const SexyVector2 points[4]{{theX,theY},{theX,bottom},{right,theY},{right,bottom}};
+	SubmitTextureQuad(points,theSrcRect,theColor,mTexture,nullptr);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -539,8 +569,6 @@ void TextureSource::BltTransformed(const SexyMatrix3 &theTrans, const TextureReg
 		return;
 	const float x=center ? -theSrcRect.mWidth/2.0f : 0.0f;
 	const float y=center ? -theSrcRect.mHeight/2.0f : 0.0f;
-	const float u1=theSrcRect.mU0, v1=theSrcRect.mV0;
-	const float u2=theSrcRect.mU1, v2=theSrcRect.mV1;
 	SexyVector2 p[4] = {
 		SexyVector2(x,y), SexyVector2(x,y+theSrcRect.mHeight),
 		SexyVector2(x+theSrcRect.mWidth,y), SexyVector2(x+theSrcRect.mWidth,y+theSrcRect.mHeight)
@@ -551,24 +579,7 @@ void TextureSource::BltTransformed(const SexyMatrix3 &theTrans, const TextureReg
 		point.x+=theX;
 		point.y+=theY;
 	}
-	DWORD aColor = RGBA_MAKE(theColor.mRed, theColor.mGreen, theColor.mBlue, theColor.mAlpha);
-	ScreenVertex aVertex[4] =
-	{
-		{ p[0].x, p[0].y, 0, 1, aColor, u1, v1 },
-		{ p[1].x, p[1].y, 0, 1, aColor, u1, v2 },
-		{ p[2].x, p[2].y, 0, 1, aColor, u2, v1 },
-		{ p[3].x, p[3].y, 0, 1, aColor, u2, v2 }
-	};
-	if (theClipRect && (theClipRect->mWidth <= 0 || theClipRect->mHeight <= 0)) return;
-	// Retain each existing call form's triangle diagonal for UV interpolation;
-	// local scissor is applied by GPU without changing the submitted vertices.
-	if (theClipRect)
-	{
-		const ScreenVertex polygon[4] = {aVertex[0], aVertex[1], aVertex[3], aVertex[2]};
-		SubmitGpuTriangles(polygon, 4, PRIMITIVE_TRIANGLEFAN, mTexture, gLinearFilter, -1, theClipRect);
-	}
-	else
-		SubmitGpuTriangles(aVertex, 4, PRIMITIVE_TRIANGLESTRIP, mTexture, gLinearFilter, -1, nullptr);
+	SubmitTextureQuad(p,theSrcRect,theColor,mTexture,theClipRect);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

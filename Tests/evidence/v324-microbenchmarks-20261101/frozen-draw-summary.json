@@ -1,0 +1,23 @@
+{
+  "backend": "D3D12",
+  "scene": "800x600; 32 plants; 40 zombies",
+  "warmup": 128,
+  "scope": "CPU DrawScreen; flush/fence/readback excluded",
+  "pixel_sha256": "185d2ade644271b4ca67de2181de5f3d7cc741559c29e70f5dd74309dd5b8b08",
+  "results": [
+    {
+      "run": 1,
+      "samples": 640,
+      "median_cpu_us": 1253.3,
+      "p90_nearest_rank_us": 1312.1,
+      "median_thread_cycles": 3867034.0
+    },
+    {
+      "run": 2,
+      "samples": 640,
+      "median_cpu_us": 1264.6,
+      "p90_nearest_rank_us": 1329.9,
+      "median_thread_cycles": 3900672.0
+    }
+  ]
+}

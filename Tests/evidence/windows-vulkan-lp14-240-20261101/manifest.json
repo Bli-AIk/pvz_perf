@@ -1,0 +1,42 @@
+{
+  "build-source.json": {
+    "bytes": 792,
+    "sha256": "b85041ea6c817d91933530cd86f8e77c94dd7f5112f4d8627a34394d773c9e06"
+  },
+  "comparison.json": {
+    "bytes": 536,
+    "sha256": "580825ffbdbe07024d0973006eb3a0ec528c6cafa546cbf6d8fe210d4f098050"
+  },
+  "conditions.json": {
+    "bytes": 715,
+    "sha256": "024115baa3e76831c7d468870c60578ad3f4ce2020352f350b9860ab6cd07fe2"
+  },
+  "game-layout.json": {
+    "bytes": 886,
+    "sha256": "39bd8d07abfc013854aacdc9f4ba3f4acbff562616b5aafcd9fc52dcb27b07b0"
+  },
+  "measurement.json": {
+    "bytes": 1936,
+    "sha256": "3a353371b56e533b10ff1f1869140ee1e52f2501e66caa75545063fdfe0d747e"
+  },
+  "project-timeline.png": {
+    "bytes": 249298,
+    "sha256": "012ed077cd82e70756da01e536573819f0c1fb2113bc6b50f9e4171cea6a1046"
+  },
+  "project-timeline.svg": {
+    "bytes": 132809,
+    "sha256": "b8dc216149363316cc00d6bba6cb2d6cc7007c36a4ca318633c711ccad5ab950"
+  },
+  "samples.csv": {
+    "bytes": 55635,
+    "sha256": "c268840b68e1a559391ab398afecf9d2020392bede04ee908a8d939741d4cc7f"
+  },
+  "settings.json": {
+    "bytes": 256,
+    "sha256": "b0d5607c264716a79eea99dbeeb3560bda9ef803bc2a79296fdff55800cd5a1e"
+  },
+  "summary.json": {
+    "bytes": 785,
+    "sha256": "718b1f4dae8fb169eaa17553137ebe02ee4330e730c1e503eeb9b6e6be4b816d"
+  }
+}

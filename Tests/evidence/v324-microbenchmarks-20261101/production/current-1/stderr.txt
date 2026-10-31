@@ -1,0 +1,1 @@
+PASS paired production NRSC4 resource contract

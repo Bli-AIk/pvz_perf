@@ -1,0 +1,640 @@
+{
+  "table_models": [
+    {
+      "table": "kDamageRangeFlags",
+      "processes": [
+        [
+          32.89,
+          6.89
+        ],
+        [
+          33.17,
+          6.9
+        ]
+      ]
+    },
+    {
+      "table": "kFireProjectiles",
+      "processes": [
+        [
+          44.04,
+          7.12
+        ],
+        [
+          44.16,
+          7.12
+        ]
+      ]
+    },
+    {
+      "table": "kFlowerPotAdjust",
+      "processes": [
+        [
+          34.13,
+          8.96
+        ],
+        [
+          34.13,
+          8.97
+        ]
+      ]
+    },
+    {
+      "table": "kSeedPacketDrawMetrics",
+      "processes": [
+        [
+          62.12,
+          26.73
+        ],
+        [
+          62.24,
+          26.75
+        ]
+      ]
+    },
+    {
+      "table": "kZombieImageOffsetFix",
+      "processes": [
+        [
+          33.01,
+          9.45
+        ],
+        [
+          33.01,
+          9.42
+        ]
+      ]
+    },
+    {
+      "table": "kWalkHeadPos",
+      "processes": [
+        [
+          30.57,
+          14.65
+        ],
+        [
+          30.62,
+          14.61
+        ]
+      ]
+    },
+    {
+      "table": "kSeedTypeUpdates",
+      "processes": [
+        [
+          55.43,
+          47.03
+        ],
+        [
+          55.42,
+          47.07
+        ]
+      ]
+    },
+    {
+      "table": "kShadowParams",
+      "processes": [
+        [
+          89.59,
+          59.66
+        ],
+        [
+          89.52,
+          59.78
+        ]
+      ]
+    },
+    {
+      "table": "kSeedCostOverrides",
+      "processes": [
+        [
+          39.15,
+          32.48
+        ],
+        [
+          39.3,
+          32.34
+        ]
+      ]
+    },
+    {
+      "table": "kStoreItemCosts",
+      "processes": [
+        [
+          40.11,
+          10.72
+        ],
+        [
+          40.13,
+          10.73
+        ]
+      ]
+    },
+    {
+      "table": "kPlantHeightOffsets",
+      "processes": [
+        [
+          26.98,
+          11.75
+        ],
+        [
+          27.08,
+          11.74
+        ]
+      ]
+    },
+    {
+      "table": "kPlantShadow",
+      "processes": [
+        [
+          40.4,
+          22.83
+        ],
+        [
+          40.47,
+          22.85
+        ]
+      ]
+    },
+    {
+      "table": "kZombatarPaletteRange",
+      "processes": [
+        [
+          26.64,
+          8.67
+        ],
+        [
+          26.69,
+          8.67
+        ]
+      ]
+    }
+  ],
+  "production": [
+    {
+      "kind": "retail",
+      "process": 1,
+      "kernel": "damage_range",
+      "min_ns": 35.0342,
+      "median_ns": 36.7852,
+      "calls_per_round": 2000000,
+      "checksum": "28758216"
+    },
+    {
+      "kind": "retail",
+      "process": 1,
+      "kernel": "flower_pot_height",
+      "min_ns": 45.067,
+      "median_ns": 46.94345,
+      "calls_per_round": 2000000,
+      "checksum": "6153060641968128"
+    },
+    {
+      "kind": "retail",
+      "process": 1,
+      "kernel": "plants_actual_pool_48",
+      "min_ns": 548.0629,
+      "median_ns": 560.08615,
+      "calls_per_round": 2000000,
+      "checksum": "57087483720130"
+    },
+    {
+      "kind": "retail",
+      "process": 1,
+      "kernel": "seed_cost_tail",
+      "min_ns": 51.6078,
+      "median_ns": 51.79915,
+      "calls_per_round": 2000000,
+      "checksum": "349831475"
+    },
+    {
+      "kind": "retail",
+      "process": 1,
+      "kernel": "store_priced_items",
+      "min_ns": 48.76595,
+      "median_ns": 49.1401,
+      "calls_per_round": 2000000,
+      "checksum": "1551947590"
+    },
+    {
+      "kind": "retail",
+      "process": 1,
+      "kernel": "zombatar_palette",
+      "min_ns": 41.48915,
+      "median_ns": 43.3382,
+      "calls_per_round": 2000000,
+      "checksum": "19683276679"
+    },
+    {
+      "kind": "retail",
+      "process": 1,
+      "kernel": "zombies_actual_pool_1024",
+      "min_ns": 8344.7995,
+      "median_ns": 8347.353,
+      "calls_per_round": 200000,
+      "checksum": "34200000"
+    },
+    {
+      "kind": "current",
+      "process": 1,
+      "kernel": "damage_range",
+      "min_ns": 6.93135,
+      "median_ns": 6.9364,
+      "calls_per_round": 2000000,
+      "checksum": "28758216"
+    },
+    {
+      "kind": "current",
+      "process": 1,
+      "kernel": "flower_pot_height",
+      "min_ns": 8.26345,
+      "median_ns": 8.32645,
+      "calls_per_round": 2000000,
+      "checksum": "6153060641968128"
+    },
+    {
+      "kind": "current",
+      "process": 1,
+      "kernel": "seed_cost_tail",
+      "min_ns": 6.4307,
+      "median_ns": 6.4518,
+      "calls_per_round": 2000000,
+      "checksum": "349831475"
+    },
+    {
+      "kind": "current",
+      "process": 1,
+      "kernel": "store_priced_items",
+      "min_ns": 10.5697,
+      "median_ns": 10.63225,
+      "calls_per_round": 2000000,
+      "checksum": "1551947590"
+    },
+    {
+      "kind": "current",
+      "process": 1,
+      "kernel": "zombatar_palette",
+      "min_ns": 8.72505,
+      "median_ns": 8.78155,
+      "calls_per_round": 2000000,
+      "checksum": "19683276679"
+    },
+    {
+      "kind": "current",
+      "process": 2,
+      "kernel": "damage_range",
+      "min_ns": 6.9416,
+      "median_ns": 6.99335,
+      "calls_per_round": 2000000,
+      "checksum": "28758216"
+    },
+    {
+      "kind": "current",
+      "process": 2,
+      "kernel": "flower_pot_height",
+      "min_ns": 8.26545,
+      "median_ns": 8.3194,
+      "calls_per_round": 2000000,
+      "checksum": "6153060641968128"
+    },
+    {
+      "kind": "current",
+      "process": 2,
+      "kernel": "seed_cost_tail",
+      "min_ns": 6.4312,
+      "median_ns": 6.4399,
+      "calls_per_round": 2000000,
+      "checksum": "349831475"
+    },
+    {
+      "kind": "current",
+      "process": 2,
+      "kernel": "store_priced_items",
+      "min_ns": 10.6048,
+      "median_ns": 10.61725,
+      "calls_per_round": 2000000,
+      "checksum": "1551947590"
+    },
+    {
+      "kind": "current",
+      "process": 2,
+      "kernel": "zombatar_palette",
+      "min_ns": 8.72475,
+      "median_ns": 8.7848,
+      "calls_per_round": 2000000,
+      "checksum": "19683276679"
+    },
+    {
+      "kind": "retail",
+      "process": 2,
+      "kernel": "damage_range",
+      "min_ns": 34.46885,
+      "median_ns": 34.5945,
+      "calls_per_round": 2000000,
+      "checksum": "28758216"
+    },
+    {
+      "kind": "retail",
+      "process": 2,
+      "kernel": "flower_pot_height",
+      "min_ns": 46.90265,
+      "median_ns": 46.9193,
+      "calls_per_round": 2000000,
+      "checksum": "6153060641968128"
+    },
+    {
+      "kind": "retail",
+      "process": 2,
+      "kernel": "plants_actual_pool_48",
+      "min_ns": 548.2437,
+      "median_ns": 550.2827,
+      "calls_per_round": 2000000,
+      "checksum": "57087483720130"
+    },
+    {
+      "kind": "retail",
+      "process": 2,
+      "kernel": "seed_cost_tail",
+      "min_ns": 51.68255,
+      "median_ns": 51.79895,
+      "calls_per_round": 2000000,
+      "checksum": "349831475"
+    },
+    {
+      "kind": "retail",
+      "process": 2,
+      "kernel": "store_priced_items",
+      "min_ns": 49.00795,
+      "median_ns": 49.151,
+      "calls_per_round": 2000000,
+      "checksum": "1551947590"
+    },
+    {
+      "kind": "retail",
+      "process": 2,
+      "kernel": "zombatar_palette",
+      "min_ns": 41.80885,
+      "median_ns": 42.02875,
+      "calls_per_round": 2000000,
+      "checksum": "19683276679"
+    },
+    {
+      "kind": "retail",
+      "process": 2,
+      "kernel": "zombies_actual_pool_1024",
+      "min_ns": 8387.9795,
+      "median_ns": 8389.109,
+      "calls_per_round": 200000,
+      "checksum": "34200000"
+    },
+    {
+      "kind": "structure",
+      "process": 1,
+      "kernel": "groups_all_18",
+      "min_ns": 203767.5,
+      "median_ns": 208520.6,
+      "calls_per_round": 2000,
+      "checksum": "534743444136919040"
+    },
+    {
+      "kind": "structure",
+      "process": 1,
+      "kernel": "groups_occupied",
+      "min_ns": 58855.75,
+      "median_ns": 59258.0,
+      "calls_per_round": 2000,
+      "checksum": "534743444136919040"
+    },
+    {
+      "kind": "structure",
+      "process": 1,
+      "kernel": "plants_actual_bucket_48",
+      "min_ns": 55.4393,
+      "median_ns": 55.47275,
+      "calls_per_round": 2000000,
+      "checksum": "57087483720130"
+    },
+    {
+      "kind": "structure",
+      "process": 1,
+      "kernel": "plants_actual_pool_48",
+      "min_ns": 282.17255,
+      "median_ns": 282.21455,
+      "calls_per_round": 2000000,
+      "checksum": "57087483720130"
+    },
+    {
+      "kind": "structure",
+      "process": 1,
+      "kernel": "tracks_mask_0pct",
+      "min_ns": 6497.9,
+      "median_ns": 6501.7,
+      "calls_per_round": 2000,
+      "checksum": "0"
+    },
+    {
+      "kind": "structure",
+      "process": 1,
+      "kernel": "tracks_mask_5pct",
+      "min_ns": 9942.55,
+      "median_ns": 9957.65,
+      "calls_per_round": 2000,
+      "checksum": "698000"
+    },
+    {
+      "kind": "structure",
+      "process": 1,
+      "kernel": "tracks_scan_0pct",
+      "min_ns": 51879.45,
+      "median_ns": 63898.15,
+      "calls_per_round": 2000,
+      "checksum": "0"
+    },
+    {
+      "kind": "structure",
+      "process": 1,
+      "kernel": "tracks_scan_5pct",
+      "min_ns": 44936.7,
+      "median_ns": 45968.4,
+      "calls_per_round": 2000,
+      "checksum": "698000"
+    },
+    {
+      "kind": "structure",
+      "process": 1,
+      "kernel": "zombies_actual_pool_1024",
+      "min_ns": 6482.39,
+      "median_ns": 6484.1005,
+      "calls_per_round": 200000,
+      "checksum": "34200000"
+    },
+    {
+      "kind": "structure",
+      "process": 1,
+      "kernel": "zombies_actual_row_171",
+      "min_ns": 3969.408,
+      "median_ns": 3970.1905,
+      "calls_per_round": 200000,
+      "checksum": "34200000"
+    },
+    {
+      "kind": "structure",
+      "process": 2,
+      "kernel": "groups_all_18",
+      "min_ns": 210871.25,
+      "median_ns": 212628.0,
+      "calls_per_round": 2000,
+      "checksum": "534743444136919040"
+    },
+    {
+      "kind": "structure",
+      "process": 2,
+      "kernel": "groups_occupied",
+      "min_ns": 59160.6,
+      "median_ns": 59547.25,
+      "calls_per_round": 2000,
+      "checksum": "534743444136919040"
+    },
+    {
+      "kind": "structure",
+      "process": 2,
+      "kernel": "plants_actual_bucket_48",
+      "min_ns": 55.4348,
+      "median_ns": 55.4574,
+      "calls_per_round": 2000000,
+      "checksum": "57087483720130"
+    },
+    {
+      "kind": "structure",
+      "process": 2,
+      "kernel": "plants_actual_pool_48",
+      "min_ns": 282.87815,
+      "median_ns": 283.50715,
+      "calls_per_round": 2000000,
+      "checksum": "57087483720130"
+    },
+    {
+      "kind": "structure",
+      "process": 2,
+      "kernel": "tracks_mask_0pct",
+      "min_ns": 6499.5,
+      "median_ns": 6511.25,
+      "calls_per_round": 2000,
+      "checksum": "0"
+    },
+    {
+      "kind": "structure",
+      "process": 2,
+      "kernel": "tracks_mask_5pct",
+      "min_ns": 9914.4,
+      "median_ns": 9972.65,
+      "calls_per_round": 2000,
+      "checksum": "698000"
+    },
+    {
+      "kind": "structure",
+      "process": 2,
+      "kernel": "tracks_scan_0pct",
+      "min_ns": 49438.85,
+      "median_ns": 56679.25,
+      "calls_per_round": 2000,
+      "checksum": "0"
+    },
+    {
+      "kind": "structure",
+      "process": 2,
+      "kernel": "tracks_scan_5pct",
+      "min_ns": 45227.85,
+      "median_ns": 50158.4,
+      "calls_per_round": 2000,
+      "checksum": "698000"
+    },
+    {
+      "kind": "structure",
+      "process": 2,
+      "kernel": "zombies_actual_pool_1024",
+      "min_ns": 6482.27,
+      "median_ns": 6484.047,
+      "calls_per_round": 200000,
+      "checksum": "34200000"
+    },
+    {
+      "kind": "structure",
+      "process": 2,
+      "kernel": "zombies_actual_row_171",
+      "min_ns": 3967.309,
+      "median_ns": 3969.843,
+      "calls_per_round": 200000,
+      "checksum": "34200000"
+    }
+  ],
+  "reanim_identity": {
+    "current_id_scan_model": [
+      51.978639,
+      51.98352
+    ],
+    "production_mphf_api": [
+      15.528527,
+      15.469918
+    ]
+  },
+  "trig_medians": [
+    {
+      "baseline": 3.89,
+      "sin(float)": 21.27,
+      "cos(float)": 20.195,
+      "sin(double)": 20.016,
+      "cos(double)": 19.26,
+      "FastSin(real TU)": 14.803,
+      "FastCos(real TU)": 15.819,
+      "pow(20/21,t)": 54.958,
+      "sqrt(double)": 11.041,
+      "cbrt(double)": 74.371,
+      "matrix fast (4)": 62.047,
+      "matrix shared reduction": 53.332,
+      "matrix sqrt best case": 44.601,
+      "matrix CRT 2 axes (4)": 66.409,
+      "matrix CRT same axis": 36.507
+    },
+    {
+      "baseline": 3.912,
+      "sin(float)": 21.295,
+      "cos(float)": 20.032,
+      "sin(double)": 19.954,
+      "cos(double)": 19.316,
+      "FastSin(real TU)": 14.797,
+      "FastCos(real TU)": 15.812,
+      "pow(20/21,t)": 54.896,
+      "sqrt(double)": 11.04,
+      "cbrt(double)": 74.413,
+      "matrix fast (4)": 62.019,
+      "matrix shared reduction": 53.305,
+      "matrix sqrt best case": 44.581,
+      "matrix CRT 2 axes (4)": 66.338,
+      "matrix CRT same axis": 36.553
+    }
+  ],
+  "frozen_draw": {
+    "backend": "D3D12",
+    "scene": "800x600; 32 plants; 40 zombies",
+    "warmup": 128,
+    "scope": "CPU DrawScreen; flush/fence/readback excluded",
+    "pixel_sha256": "185d2ade644271b4ca67de2181de5f3d7cc741559c29e70f5dd74309dd5b8b08",
+    "results": [
+      {
+        "run": 1,
+        "samples": 640,
+        "median_cpu_us": 1253.3,
+        "p90_nearest_rank_us": 1312.1,
+        "median_thread_cycles": 3867034.0
+      },
+      {
+        "run": 2,
+        "samples": 640,
+        "median_cpu_us": 1264.6,
+        "p90_nearest_rank_us": 1329.9,
+        "median_thread_cycles": 3900672.0
+      }
+    ]
+  }
+}

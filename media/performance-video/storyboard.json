@@ -1,0 +1,192 @@
+[
+  {
+    "chapter": "00 / 问题",
+    "title": "把性能花在真正需要的工作上",
+    "subtitle": "植物大战僵尸现代重制 · v3.2.4",
+    "narration": "这个项目的目标，是让原版玩法在现代平台上，以更低的处理成本运行，同时支持更高刷新率。今天不按开发时间讲故事，而是拆开几个可以复用的优化原理。每个原理先看典型代码，再看测量结果。微基准只说明局部成本，整局测试才反映这些机制共同工作的结果。",
+    "code": null,
+    "diagram": "overview",
+    "table": null,
+    "footer": null
+  },
+  {
+    "chapter": "01 / 静态参数表",
+    "title": "重复判断 → 编译期参数表",
+    "subtitle": "典型例子：植物的伤害范围",
+    "narration": "第一类工作是选择固定参数。植物类型决定伤害范围，这个映射不会在战斗中变化。多段条件链要逐个比较类型；静态表把同一个问题变成范围检查和一次下标访问。关键不是消灭所有分支，而是把确定的映射集中到编译期。真正不同的业务算法，仍然需要分支或函数调用。",
+    "code": "// 原机制：按植物与武器选择范围\nif (seed == A) return maskA;\nif (seed == B) return maskB;\n...\n\n// 现行代码：二维常量参数表\nconstexpr uint8_t flags[][2] = { ... };\nreturn flags[seed][weapon];",
+    "diagram": "lookup",
+    "table": null,
+    "footer": null
+  },
+  {
+    "chapter": "01 / 测试数据",
+    "title": "参数选择的局部成本",
+    "subtitle": "实际原版EXE机器码 vs 当前生产函数",
+    "narration": "这里是这一原理的局部测试结果。测量范围和限制写在表格下方，可以暂停查看。",
+    "code": null,
+    "diagram": null,
+    "table": "tables",
+    "footer": "ns/查询 · LP14 · 用户11x · min-of-5 · x86/x64与ABI不同"
+  },
+  {
+    "chapter": "02 / 候选集合",
+    "title": "不再问所有对象",
+    "subtitle": "典型例子：只检查当前行的僵尸",
+    "narration": "第二个原理，是减少必须访问的对象。豌豆寻找碰撞对象时，没有必要每次遍历整个僵尸池，再逐个过滤行号。主对象池仍然保存完整状态，行索引只提供候选集合。植物也按格子和层建立桶。更新索引有维护成本，但大量重复查询能够摊薄它。候选顺序和首次命中的语义必须保持。",
+    "code": "// 以前：全池扫描，再过滤\nfor (Zombie& z : allZombies)\n    if (z.row == row) test(z);\n\n// 现在：从行索引取候选\nfor (Zombie* z : rows[row])\n    test(*z);",
+    "diagram": "candidates",
+    "table": null,
+    "footer": null
+  },
+  {
+    "chapter": "02 / 活动掩码",
+    "title": "没有工作的轨道直接跳过",
+    "subtitle": "典型例子：混合、抖动和附件轨道",
+    "narration": "同一个原理也适用于动画轨道。大多数轨道在某次更新里，没有混合、抖动或附件工作。活动位图先告诉我们哪些槽需要处理，绘制组掩码则跳过完全空的组。这不是少画内容，而是避免反复读取没有工作的槽。附件的特殊路径和重复轨道仍然保留。",
+    "code": "while (activeMask != 0) {\n    index = trailingZeroCount(activeMask);\n    activeMask &= activeMask - 1;\n    updateTrack(index);\n}",
+    "diagram": "mask",
+    "table": null,
+    "footer": null
+  },
+  {
+    "chapter": "02 / 测试数据",
+    "title": "缩小扫描范围的效果",
+    "subtitle": "对象池、行索引、格桶与活动轨道",
+    "narration": "这里是这一原理的局部测试结果。测量范围和限制写在表格下方，可以暂停查看。",
+    "code": null,
+    "diagram": null,
+    "table": "candidates",
+    "footer": "ns/查询；轨道项为µs/pass · 相同候选语义 · 不是完整Update"
+  },
+  {
+    "chapter": "03 / 编译期身份",
+    "title": "运行时不要再解释名字",
+    "subtitle": "典型例子：reanim轨道枚举与MPHF",
+    "narration": "第三个原理，是把身份解析前移。代码已经知道要找哪个动画轨道，仍然拿字符串逐个比较，就在重复解释同一个名字。资源编译器把轨道变成枚举，并为动画类型和轨道编号生成最小完美哈希表。运行时用整数键定位，再校验一次键。合法输入直接到达轨道，不做字符串扫描，也不静默回退到第零条轨道。",
+    "code": "// 原机制：名字比较，逐轨道查找\nfindTrack(\"anim_walk\");\n\n// 当前：枚举键 + 编译期MPHF\nfindTrack(ReanimTrackId::anim_walk);\nkey = pack(type, trackId);\nindex = generatedLookup(key);",
+    "diagram": "identity",
+    "table": null,
+    "footer": null
+  },
+  {
+    "chapter": "03 / 粒子身份",
+    "title": "同样的办法用在粒子上",
+    "subtitle": "枚举、前缀区间与共享定义",
+    "narration": "粒子具名发射器的查找采用同样思路。精确名字用枚举，家族前缀在编译时转成整数区间。行为定义由资源共享，外观变体只选择自己的纹理区域。这样减少的是解析和查找，不是删掉粒子效果。资源加载结束后，也不再需要从全局图片编号反向找指针。",
+    "code": null,
+    "diagram": "identity",
+    "table": null,
+    "footer": null
+  },
+  {
+    "chapter": "03 / 测试数据",
+    "title": "身份查询成本",
+    "subtitle": "当前身份契约，保留共同选择和颜色写入",
+    "narration": "这里是这一原理的局部测试结果。测量范围和限制写在表格下方，可以暂停查看。",
+    "code": null,
+    "diagram": null,
+    "table": "identity",
+    "footer": "ns/查询 · 粒子为固定语料模型；reanim为当前整数扫描/生产API"
+  },
+  {
+    "chapter": "04 / GPU提交",
+    "title": "减少提交，减少重复数据",
+    "subtitle": "典型例子：normal与additive相邻合批",
+    "narration": "第四个原理，是减少每次绘制提交的固定工作。绑定无关纹理，并不会自动解决混合状态导致的断批。支持双源混合时，普通和加亮精灵可以在统一混合规则下合批。原有绘制顺序保持不变，不会为了凑批次而重排半透明图片。不支持的设备仍使用独立管线。",
+    "code": "// 顺序不变：N A N A N\n// 原先：每次混合切换都可能断批\n\n// 支持双源混合的统一精灵路径\nappend(sprite, blendParameters);\nflushWhenStateIsIncompatible();",
+    "diagram": "batches",
+    "table": null,
+    "footer": null
+  },
+  {
+    "chapter": "04 / 数据与采样",
+    "title": "稳定工作移出逐像素热路",
+    "subtitle": "四顶点矩形；透明边缘在上传前修补",
+    "narration": "一个矩形用两个三角形表示，六个独立顶点中有两个重复。四个顶点加静态索引，把动态顶点数据从二百四十字节降到一百六十字节。透明边缘修补则在图片上传前完成，避免稳定绘制时反复做邻域采样。字形和生成纹理仍走各自正确的路径。双槽帧资源只轮换命令、同步对象和动态几何，不复制全部纹理。",
+    "code": "// 每个顶点40字节\n6 vertices = 240 bytes\n4 vertices = 160 bytes\nindices = {0,1,2, 1,3,2};\n\n// 稳定纹理：上传前做一次边缘处理\nrepairTransparentRGB(decodedPixels);\nuploadAndReleaseCpuPixels();",
+    "diagram": "quad",
+    "table": null,
+    "footer": null
+  },
+  {
+    "chapter": "04 / 测试数据",
+    "title": "调用结构与固定场景CPU绘制",
+    "subtitle": "不把操作数下降当成整局FPS倍率",
+    "narration": "这里是这一原理的局部测试结果。测量范围和限制写在表格下方，可以暂停查看。",
+    "code": null,
+    "diagram": null,
+    "table": "gpu",
+    "footer": "计数/字节数不是计时 · 固定DrawScreen为DX12 CPU计时"
+  },
+  {
+    "chapter": "05 / 精确时间",
+    "title": "整数相位，浮点插值",
+    "subtitle": "典型例子：动画与根运动共用帧状态",
+    "narration": "第五个原理，同时涉及精度和重复计算。用浮点相位不断相加，会让不同步长产生不同的累积误差。现在保存整数纳秒起点和帧时长，更新时通过除法和余数推进关键帧。同一拍的根运动、绘制和保龄球复用帧号与余数。坐标和角度仍然可以用浮点插值；整数时间负责稳定的时间轴。",
+    "code": "age = nowNs - frameBirthNs;\nframes = age / frameDurationNs;\nremainder = age % frameDurationNs;\nframe += frames;\nframeBirthNs += frames * frameDurationNs;\n\nvalue = lerp(key[frame], key[next],\n             double(remainder)/frameDurationNs);",
+    "diagram": "phase",
+    "table": null,
+    "footer": null
+  },
+  {
+    "chapter": "05 / 共享计算",
+    "title": "同一条轨道只算一次变换",
+    "subtitle": "sin/cos共享归一化，四角复用矩阵",
+    "narration": "这里要区分插值和累加。精确时间不是承诺更快，而是保证一致性。对于绘制，我们让正弦和余弦共享角度范围归一化，每个倾斜轴只求一对值，矩形四个角复用同一矩阵。没有用开方猜另一个三角函数，也没有把计算结果搬到显卡后再读回处理器。",
+    "code": "FastSinCos(skewX, sx, cx);\nFastSinCos(skewY, sy, cy);\n\nmatrix = buildTransform(sx,cx,sy,cy);\nfor (corner : fourCorners)\n    vertex = matrix * corner;",
+    "diagram": "trig",
+    "table": null,
+    "footer": null
+  },
+  {
+    "chapter": "05 / 测试数据",
+    "title": "重复消费时，缓存才有价值",
+    "subtitle": "推进成本与查询成本分别登记",
+    "narration": "这里是这一原理的局部测试结果。测量范围和限制写在表格下方，可以暂停查看。",
+    "code": null,
+    "diagram": null,
+    "table": "time",
+    "footer": "真实API局部成本；粒子缓存对照不是原版EXE；不换算整局FPS"
+  },
+  {
+    "chapter": "06 / 试验边界",
+    "title": "试验失败也要留下结论",
+    "subtitle": "当前版本：reanim与粒子在CPU求值",
+    "narration": "我们也试过把动画插值和三角函数交给显卡，以及拆分主线程流水线。对当前负载和设备，这些方案没有达到性能门槛，所以回退。一次轨道变换在处理器上可以被四角复用，而顶点着色器可能重复计算。并发数量很多，不代表这点工作就适合搬过去。水面保持独立分工，不用一次试验给所有图形任务下结论。",
+    "code": null,
+    "diagram": "cpu_gpu",
+    "table": null,
+    "footer": null
+  },
+  {
+    "chapter": "07 / 整局验证",
+    "title": "局部优化要回到真实场景",
+    "subtitle": "相同基准阵型；记录FPS与进程CPU时间",
+    "narration": "最后看完整关卡。电脑测试固定在逻辑处理器十四，由用户限制倍频为十一。最新版本使用二百四十赫兹上限，平均绘制约一百九十七帧，逻辑更新也接近这个频率。原版仍是固定更新，绘制频率更低。这是整套实现共同作用下的场景观测，不是某一行代码的提升倍数。",
+    "code": null,
+    "diagram": null,
+    "table": "endless",
+    "footer": "同源基准；轨迹和更新步长不同；CPU为整个进程；GPU频率未独立核验"
+  },
+  {
+    "chapter": "08 / 横向参照",
+    "title": "另一个实现的表现",
+    "subtitle": "精华版对比只用于视频，不进入性能文档",
+    "narration": "作为横向参照，我们还测了精华版。电脑解帧版仍然是固定一百赫兹逻辑，我们只解除绘制限制。相似出怪条件下，它的平均呈现约一百三十帧。本项目约一百九十七帧。手机电池侧整机功耗也有小幅差异，但包含屏幕和系统，不能说成游戏进程独占功耗。两轮不是完全一致的战斗，不做严格胜负归因。",
+    "code": null,
+    "diagram": null,
+    "table": "external",
+    "footer": "相同阵型/相似出怪；非严格同局；不同FPS口径；手机为整机功耗"
+  },
+  {
+    "chapter": "09 / 结束",
+    "title": "先减少工作，再讨论并行",
+    "subtitle": "代码、夹具与原始数据均可追溯",
+    "narration": "这些优化没有一个万能开关。固定映射放到编译期，查询缩小候选集合，稳定工作移出热路径，重复结果只在有真实消费者时缓存。精确时间解决漂移，测量负责证明速度。视频中的表格都有范围和条件，局部指标不替代实玩结果。完整数据与实现见项目的性能文档。",
+    "code": null,
+    "diagram": "overview",
+    "table": null,
+    "footer": null
+  }
+]

@@ -974,18 +974,19 @@ void Reanimation::GetTransformAtTime(int theTrackIndex, ReanimatorTransform* the
 //0x4720F0
 void Reanimation::MatrixFromTransform(const ReanimatorTransform& theTransform, SexyMatrix3& theMatrix)
 {
-	// 将倾斜的角度转化为弧度（P5-⑥：Fast 三角，域 ±60° 天然在 [-π,π]）。
-	// P5-② 零倾斜短路曾落于此：⑥ FastSin（1.05ns）落地后交替 A/B 三轮
-	// （ON 459.9/472.0 vs OFF 458.7 p50）带内重合——短路分支已被更通用的
-	// 快三角覆盖，撤除（省一个分支，全输入单一路径）
+    // Evaluate each skew axis once; sin/cos share their angle reduction.
+    // The resulting transform is reused for all four image corners.
 	float aSkewX = -DEG_TO_RAD(theTransform.mSkewX);
 	float aSkewY = -DEG_TO_RAD(theTransform.mSkewY);
 
-	theMatrix.m00 = FastCos(aSkewX) * theTransform.mScaleX;
-	theMatrix.m10 = -FastSin(aSkewX) * theTransform.mScaleX;
+    float sinX,cosX,sinY,cosY;
+    FastSinCos(aSkewX,sinX,cosX);
+    FastSinCos(aSkewY,sinY,cosY);
+	theMatrix.m00 = cosX * theTransform.mScaleX;
+	theMatrix.m10 = -sinX * theTransform.mScaleX;
 	theMatrix.m20 = 0.0f;
-	theMatrix.m01 = FastSin(aSkewY) * theTransform.mScaleY;
-	theMatrix.m11 = FastCos(aSkewY) * theTransform.mScaleY;
+	theMatrix.m01 = sinY * theTransform.mScaleY;
+	theMatrix.m11 = cosY * theTransform.mScaleY;
 	theMatrix.m21 = 0.0f;
 	theMatrix.m02 = theTransform.mTransX;
 	theMatrix.m12 = theTransform.mTransY;

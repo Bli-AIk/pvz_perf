@@ -1,0 +1,1 @@
+bench01 kDamageRangeFlags | before 33.17 ns | after 6.90 ns | diff 79.2% | checksum=OK (B3E76F6FFF20836E/B3E76F6FFF20836E)

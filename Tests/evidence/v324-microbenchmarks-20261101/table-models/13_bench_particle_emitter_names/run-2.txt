@@ -1,0 +1,24 @@
+Validation passed: 49728 color scans, 37968 definition lookups, 45 changing-color sequences, 4032 duplicate-instance scans and 3808 declaration-order range lookups.
+Pinned process and benchmark thread to 0x4000 (LP14). CPU: Intel(R) Core(TM) Ultra 9 185H
+unnamed_tiny_1_10                        A    32.112 ns  B    18.276 ns  change  -43.088%
+unnamed_fast_tiny_1_10                   A    24.230 ns  B    18.250 ns  change  -24.681%
+all_tiny_1_10                            A    24.290 ns  B    23.651 ns  change   -2.629%
+named_exact_tiny_1_10                    A    67.096 ns  B    19.348 ns  change  -71.164%
+family_prefix_tiny_1_10                  A    91.318 ns  B    18.496 ns  change  -79.745%
+unnamed_full_corpus                      A    35.146 ns  B    18.712 ns  change  -46.759%
+unnamed_fast_full_corpus                 A    25.513 ns  B    18.700 ns  change  -26.705%
+all_full_corpus                          A    24.994 ns  B    24.541 ns  change   -1.812%
+named_exact_full_corpus                  A   112.983 ns  B    22.761 ns  change  -79.855%
+family_prefix_full_corpus                A   120.252 ns  B    20.752 ns  change  -82.743%
+family_prefix_cached_tiny_1_10           A    50.187 ns  B    18.321 ns  change  -63.495%
+family_gloom__own_system                 A   334.122 ns  B    45.830 ns  change  -86.283%
+family_icetrap_own_system                A    90.231 ns  B    25.525 ns  change  -71.712%
+family_awardray_own_system               A   567.142 ns  B    56.128 ns  change  -90.103%
+family_doommushroom_own_system           A   503.915 ns  B    47.200 ns  change  -90.633%
+find_scan_tiny_1_10                      A    44.072 ns  B     9.227 ns  change  -79.063%
+find_direct_tiny_1_10                    A    43.907 ns  B     6.213 ns  change  -85.850%
+find_scan_full_corpus                    A    69.478 ns  B    11.116 ns  change  -84.000%
+find_direct_full_corpus                  A    68.682 ns  B     6.521 ns  change  -90.506%
+find_fadeout_present_systems             A    48.735 ns  B     5.955 ns  change  -87.781%
+find_fadeout_full_corpus                 A    30.092 ns  B     5.964 ns  change  -80.179%
+Benchmark wall time 4.813 seconds; 9 rounds. Results: C:\Users\Administrator\CLionProjects\codex\PlantsVsZombiesModern\Tests\evidence\v324-microbenchmarks-20261101\table-models\13_bench_particle_emitter_names\reports-2

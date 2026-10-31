@@ -1,0 +1,1 @@
+bench5 PlantDrawShadow | before 40.47 ns | after 44.75 ns | diff -10.6% | C(static) 22.85 ns | checksum=OK (A=0515585F5E8260CC B=0515585F5E8260CC C=0515585F5E8260CC)

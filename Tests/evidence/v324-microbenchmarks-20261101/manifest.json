@@ -1,0 +1,252 @@
+{
+  "version": "3.2.4",
+  "affinity": "LP14 / 0x4000",
+  "frequency": "11x user-controlled; not independently sampled",
+  "work": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-production-refresh-f7dhgijl",
+  "serial": true,
+  "runs": [
+    {
+      "command": [
+        "C:\\UserProgram\\DevTools\\Python314\\python.exe",
+        "C:\\Users\\Administrator\\CLionProjects\\codex\\PlantsVsZombiesModern\\Tests\\performance\\build-production-benchmark.py",
+        "--build",
+        "C:\\Users\\Administrator\\CLionProjects\\codex\\PlantsVsZombiesModern\\out\\x64-win32-vulkan",
+        "--source",
+        "C:\\Users\\Administrator\\CLionProjects\\codex\\PlantsVsZombiesModern\\Tests\\performance\\production_leaf_benchmark.cpp",
+        "--output",
+        "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-production-refresh-f7dhgijl\\build-production_leaf_benchmark"
+      ],
+      "seconds": 38.27873980000368,
+      "exit": 0
+    },
+    {
+      "command": [
+        "C:\\UserProgram\\DevTools\\Python314\\python.exe",
+        "C:\\Users\\Administrator\\CLionProjects\\codex\\PlantsVsZombiesModern\\Tests\\performance\\build-production-benchmark.py",
+        "--build",
+        "C:\\Users\\Administrator\\CLionProjects\\codex\\PlantsVsZombiesModern\\out\\x64-win32-vulkan",
+        "--source",
+        "C:\\Users\\Administrator\\CLionProjects\\codex\\PlantsVsZombiesModern\\Tests\\performance\\production_structure_benchmark.cpp",
+        "--output",
+        "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-production-refresh-f7dhgijl\\build-production_structure_benchmark"
+      ],
+      "seconds": 36.85176379999757,
+      "exit": 0
+    },
+    {
+      "command": [
+        "C:\\UserProgram\\DevTools\\Python314\\python.exe",
+        "C:\\Users\\Administrator\\CLionProjects\\codex\\PlantsVsZombiesModern\\Tests\\performance\\build-production-benchmark.py",
+        "--build",
+        "C:\\Users\\Administrator\\CLionProjects\\codex\\PlantsVsZombiesModern\\out\\x64-win32-vulkan",
+        "--source",
+        "C:\\Users\\Administrator\\CLionProjects\\codex\\PlantsVsZombiesModern\\Tests\\performance\\reanim_frame_cache_benchmark.cpp",
+        "--output",
+        "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-production-refresh-f7dhgijl\\build-reanim_frame_cache_benchmark"
+      ],
+      "seconds": 37.61912189999566,
+      "exit": 0
+    },
+    {
+      "command": [
+        "C:\\UserProgram\\DevTools\\Python314\\python.exe",
+        "C:\\Users\\Administrator\\CLionProjects\\codex\\PlantsVsZombiesModern\\Tests\\performance\\build-production-benchmark.py",
+        "--build",
+        "C:\\Users\\Administrator\\CLionProjects\\codex\\PlantsVsZombiesModern\\out\\x64-win32-vulkan",
+        "--source",
+        "C:\\Users\\Administrator\\CLionProjects\\codex\\PlantsVsZombiesModern\\Tests\\performance\\reanim_identity_benchmark.cpp",
+        "--output",
+        "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-production-refresh-f7dhgijl\\build-reanim_identity_benchmark"
+      ],
+      "seconds": 37.68355200000224,
+      "exit": 0
+    },
+    {
+      "command": [
+        "C:\\UserProgram\\DevTools\\Python314\\python.exe",
+        "C:\\Users\\Administrator\\CLionProjects\\codex\\PlantsVsZombiesModern\\Tests\\performance\\build-production-benchmark.py",
+        "--build",
+        "C:\\Users\\Administrator\\CLionProjects\\codex\\PlantsVsZombiesModern\\out\\x64-win32-vulkan",
+        "--source",
+        "C:\\Users\\Administrator\\CLionProjects\\codex\\PlantsVsZombiesModern\\Tests\\performance\\particle_life_side_cache_benchmark.cpp",
+        "--output",
+        "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-production-refresh-f7dhgijl\\build-particle_life_side_cache_benchmark"
+      ],
+      "seconds": 36.492361000004166,
+      "exit": 0
+    },
+    {
+      "command": [
+        "C:\\UserProgram\\DevTools\\Python314\\python.exe",
+        "C:\\Users\\Administrator\\CLionProjects\\codex\\PlantsVsZombiesModern\\Tests\\performance\\build-production-benchmark.py",
+        "--build",
+        "C:\\Users\\Administrator\\CLionProjects\\codex\\PlantsVsZombiesModern\\out\\x64-win32-dx12",
+        "--source",
+        "C:\\Users\\Administrator\\CLionProjects\\codex\\PlantsVsZombiesModern\\Tests\\performance\\production_frozen_draw.cpp",
+        "--output",
+        "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-production-refresh-f7dhgijl\\build-production_frozen_draw"
+      ],
+      "seconds": 37.46741729999485,
+      "exit": 0
+    },
+    {
+      "command": [
+        "C:\\Windows\\system32\\cmd.exe",
+        "/d",
+        "/c",
+        "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-production-refresh-f7dhgijl\\build-trig.cmd"
+      ],
+      "seconds": 4.970026099996176,
+      "exit": 0
+    },
+    {
+      "command": [
+        "C:\\Windows\\system32\\cmd.exe",
+        "/d",
+        "/c",
+        "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-production-refresh-f7dhgijl\\build-pin.cmd"
+      ],
+      "seconds": 2.9825261999940267,
+      "exit": 0
+    },
+    {
+      "command": [
+        "C:\\UserProgram\\DevTools\\Python314\\python.exe",
+        "C:\\Users\\Administrator\\CLionProjects\\codex\\PlantsVsZombiesModern\\Tests\\performance\\run-production-small-benchmarks.py",
+        "--retail",
+        "C:/UserProgram/Plants_Vs_Zombies_V1.2.0.1073_EN/PlantsVsZombies.exe",
+        "--retail-probe",
+        "C:\\Users\\Administrator\\AppData\\Local\\Temp\\pvz-production-leaf-20261029\\retail.exe",
+        "--current-probe",
+        "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-production-refresh-f7dhgijl\\build-production_leaf_benchmark\\benchmark.exe",
+        "--structure-probe",
+        "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-production-refresh-f7dhgijl\\build-production_structure_benchmark\\benchmark.exe",
+        "--pak",
+        "C:\\Users\\Administrator\\CLionProjects\\codex\\PlantsVsZombiesModern\\out\\x64-win32-vulkan\\Release\\main.pak64",
+        "--output",
+        "C:\\Users\\Administrator\\CLionProjects\\codex\\PlantsVsZombiesModern\\Tests\\evidence\\v324-microbenchmarks-20261101\\production"
+      ],
+      "seconds": 78.84412080000038,
+      "exit": 0
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-production-refresh-f7dhgijl\\build-reanim_frame_cache_benchmark\\benchmark.exe",
+        "C:\\Users\\Administrator\\CLionProjects\\codex\\PlantsVsZombiesModern\\Tests\\evidence\\v324-microbenchmarks-20261101\\reanim_frame_cache_benchmark\\run-1"
+      ],
+      "seconds": 12.484994200000074,
+      "exit": 0
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-production-refresh-f7dhgijl\\build-reanim_frame_cache_benchmark\\benchmark.exe",
+        "C:\\Users\\Administrator\\CLionProjects\\codex\\PlantsVsZombiesModern\\Tests\\evidence\\v324-microbenchmarks-20261101\\reanim_frame_cache_benchmark\\run-2",
+        "reverse"
+      ],
+      "seconds": 12.465709399999469,
+      "exit": 0
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-production-refresh-f7dhgijl\\build-reanim_identity_benchmark\\benchmark.exe"
+      ],
+      "seconds": 1.3647223000007216,
+      "exit": 0
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-production-refresh-f7dhgijl\\build-reanim_identity_benchmark\\benchmark.exe"
+      ],
+      "seconds": 1.3405631999994512,
+      "exit": 0
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-production-refresh-f7dhgijl\\build-particle_life_side_cache_benchmark\\benchmark.exe"
+      ],
+      "seconds": 6.443186500000593,
+      "exit": 0
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-production-refresh-f7dhgijl\\build-particle_life_side_cache_benchmark\\benchmark.exe"
+      ],
+      "seconds": 6.413802399998531,
+      "exit": 0
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-production-refresh-f7dhgijl\\pin.exe",
+        "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-production-refresh-f7dhgijl\\trig.exe"
+      ],
+      "seconds": 9.556151199998567,
+      "exit": 0
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-production-refresh-f7dhgijl\\pin.exe",
+        "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-production-refresh-f7dhgijl\\trig.exe"
+      ],
+      "seconds": 9.5003194000019,
+      "exit": 0
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-production-refresh-f7dhgijl\\build-reanim_frame_cache_benchmark\\benchmark.exe",
+        "C:\\Users\\Administrator\\CLionProjects\\codex\\PlantsVsZombiesModern\\Tests\\evidence\\v324-microbenchmarks-20261101\\reanim_frame_cache_benchmark\\compare_progression",
+        "compare_progression"
+      ],
+      "seconds": 23.620221299999685,
+      "exit": 0
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-production-refresh-f7dhgijl\\build-reanim_frame_cache_benchmark\\benchmark.exe",
+        "C:\\Users\\Administrator\\CLionProjects\\codex\\PlantsVsZombiesModern\\Tests\\evidence\\v324-microbenchmarks-20261101\\reanim_frame_cache_benchmark\\repeat_queries",
+        "repeat_queries"
+      ],
+      "seconds": 18.232499500001722,
+      "exit": 0
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-production-refresh-f7dhgijl\\build-production_frozen_draw\\benchmark.exe",
+        "C:\\Users\\Administrator\\CLionProjects\\codex\\PlantsVsZombiesModern\\out\\x64-win32-dx12\\Release",
+        "C:\\Users\\Administrator\\CLionProjects\\codex\\PlantsVsZombiesModern\\Tests\\evidence\\v324-microbenchmarks-20261101\\frozen-draw\\run-1"
+      ],
+      "seconds": 36.462479599998915,
+      "exit": 0
+    },
+    {
+      "command": [
+        "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-production-refresh-f7dhgijl\\build-production_frozen_draw\\benchmark.exe",
+        "C:\\Users\\Administrator\\CLionProjects\\codex\\PlantsVsZombiesModern\\out\\x64-win32-dx12\\Release",
+        "C:\\Users\\Administrator\\CLionProjects\\codex\\PlantsVsZombiesModern\\Tests\\evidence\\v324-microbenchmarks-20261101\\frozen-draw\\run-2"
+      ],
+      "seconds": 25.78475040000194,
+      "exit": 0
+    },
+    {
+      "command": [
+        "C:\\UserProgram\\DevTools\\Python314\\python.exe",
+        "C:\\Users\\Administrator\\CLionProjects\\codex\\PlantsVsZombiesModern\\Tests\\performance\\refresh-small-benchmarks.py",
+        "--archive",
+        "C:\\Users\\Administrator\\AppData\\Local\\Temp\\pvz-small-bench-build-1ftl_ck5\\archive",
+        "--emitter-fixture",
+        "C:\\Users\\Administrator\\AppData\\Local\\Temp\\pvz-small-bench-build-1ftl_ck5\\particle_emitter_bench_fixture.h",
+        "--output",
+        "C:\\Users\\Administrator\\CLionProjects\\codex\\PlantsVsZombiesModern\\Tests\\evidence\\v324-microbenchmarks-20261101\\table-models",
+        "--only",
+        "current_|bench_particle_emitter_names",
+        "--vs-root",
+        "C:/UserProgram/Visual Studuio/2026/Community"
+      ],
+      "seconds": 52.63235889999487,
+      "exit": 0
+    }
+  ],
+  "complete": true,
+  "fixture_repair": "Explicit three-clock dispatcher ABI; table group rerun and audited",
+  "game_executable_sha256": "179fad1a1fe48bea209228c3dd756fcc809c105e575d3034029a3a9306759454",
+  "pak_sha256": "5bdd71c632d945304ae3752bfed61941bb8c7e4351e616e1ff6fbceab1431545"
+}

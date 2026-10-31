@@ -1,0 +1,11 @@
+{
+  "git_head": "c77fb6e660ec8fc12df91f317d5332d5e36ab238",
+  "working_tree": "uncommitted CPU sincos/direct uniform quads/fixed per-frame geometry changes",
+  "sources": {
+    "pvzPerf/Sexy.TodLib/Reanimator.cpp": "869dfe5fcf7a28c4fe946dbd6661afb502e90f80248a7f8916af411571c2202e",
+    "pvzPerf/Sexy.TodLib/TodParticle.cpp": "b20554b979ab78f1b7b90e22d2420c572c1f5d3f2e8cdc7dbae625a7ac94a328",
+    "pvzPerf/SexyAppFramework/graphics/RenderInterface.cpp": "556cf1f8f7aac9b92a1f074ca9dba0f514e7bdad8309eeb57800936d49695c2b",
+    "pvzPerf/SexyAppFramework/graphics/vulkan/VulkanRenderer.cpp": "1ab3cfdc5e583502b6f1a5190945ed01d5304a0ff837767281d41dcc42049f4c",
+    "pvzPerf/SexyAppFramework/misc/FastMath.cpp": "78cc1195e9aa025a04f04cad93afe2b6b7a10a80a5562f772fa45cc520b443e4"
+  }
+}

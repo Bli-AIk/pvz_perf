@@ -35,6 +35,9 @@ unsigned int VulkanRenderer::benchmarkDrawCalls = 0, VulkanRenderer::benchmarkSc
 unsigned int VulkanRenderer::benchmarkTriangles = 0, VulkanRenderer::benchmarkSceneTriangles = 0;
 #endif
 namespace {
+// Each frame slot owns one fixed geometry allocation; capacity exhaustion is an error.
+constexpr unsigned int kFrameVertexCapacity = 65536;
+constexpr VkDeviceSize kFrameVertexBytes = VkDeviceSize{kFrameVertexCapacity} * sizeof(VulkanVertex);
 #if defined(PVZ_VULKAN_SPRITE_EXPERIMENT)
 struct PackedColorVertex {
     float x,y;
@@ -101,7 +104,13 @@ struct Buffer {
 struct DrawStream {
     Buffer vertices;
     Buffer indices;
+    DrawStream();
 };
+
+DrawStream::DrawStream() {
+    vertices.Create(kFrameVertexBytes,VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT);
+    indices.Create(VkDeviceSize{kFrameVertexCapacity / 4} * 6 * sizeof(unsigned short),VK_BUFFER_USAGE_INDEX_BUFFER_BIT);
+}
 
 void Barrier(VkCommandBuffer cmd, VkImage image, VkImageLayout oldLayout,
              VkImageLayout newLayout, VkPipelineStageFlags2 srcStage,
@@ -388,7 +397,7 @@ struct VulkanRenderer::Impl {
 #endif
     // CPU-written geometry only. Textures, pipelines, static indices and GPU
     // targets are shared; their existing GPU barriers order consecutive frames.
-    std::array<std::vector<DrawStream*>, VulkanContext::kFramesInFlight> streamSets;
+    std::array<DrawStream*, VulkanContext::kFramesInFlight> drawStreams{};
     bool recordingFailed = false;
     Buffer staticIndices;
     // 上传 staging 轮换环：提交后的旧 arena 仍被在途批读取，轮换到下一个
@@ -513,10 +522,7 @@ struct VulkanRenderer::Impl {
         textures.clear();
         if (sceneFramebuffer) vkDestroyFramebuffer(device, sceneFramebuffer, nullptr);
         scene.reset();
-        for (auto& streams : streamSets) {
-            for (auto* stream : streams) delete stream;
-            streams.clear();
-        }
+        for (auto*& stream : drawStreams) { delete stream; stream = nullptr; }
         for (auto pipeline : pipelines) if (pipeline) vkDestroyPipeline(device, pipeline, nullptr);
         for (auto pipeline : spritePipelines) if (pipeline) vkDestroyPipeline(device, pipeline, nullptr);
         if (mixedSpritePipeline) vkDestroyPipeline(device,mixedSpritePipeline,nullptr);
@@ -1661,7 +1667,7 @@ uint32_t VulkanRenderer::MaxImageDimension2D() const {
 VulkanRenderer::ResourceCounts VulkanRenderer::GetResourceCounts() const {
     const auto& s = *impl_;
     size_t streamCount = 0;
-    for (const auto& streams : s.streamSets) streamCount += streams.size();
+    for (auto* stream : s.drawStreams) streamCount += stream != nullptr;
     return {s.textures.size(),s.retired.size(),s.pools.size(),streamCount};
 }
 
@@ -2311,7 +2317,7 @@ bool VulkanRenderer::BeginScene() try {
     // been queued and destroyed outside a frame, including while minimized.
     s.drawState = {}; // Vulkan command buffers do not inherit last frame's state.
     s.ReapRetired();
-    for (auto* stream : s.streamSets[s.frame.resourceIndex]) { stream->vertices.used = 0; stream->indices.used = 0; }
+    if (auto* stream = s.drawStreams[s.frame.resourceIndex]) { stream->vertices.used = 0; stream->indices.used = 0; }
 #if defined(PVZ_VULKAN_SPRITE_EXPERIMENT)
     benchmarkDrawCalls = 0;
     benchmarkTriangles = 0;
@@ -2369,22 +2375,10 @@ void VulkanRenderer::Impl::Draw(std::span<const VulkanVertex> vertices, VulkanTe
         bytes/=4;
     }
 #endif
-    DrawStream* stream = nullptr;
-    for (auto* candidate : streamSets[frame.resourceIndex])
-        if (candidate->vertices.size - candidate->vertices.used >= bytes) { stream = candidate; break; }
-    if (!stream) {
-        auto* allocation = new DrawStream;
-        try {
-            const auto capacity=std::max<VkDeviceSize>(8 * 1024 * 1024, bytes);
-            allocation->vertices.Create(capacity,
-                VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT);
-            // Quad streams have the largest ratio: six indices per four vertices.
-            const auto indexCapacity=(capacity/vertexStride+3)/4*6*sizeof(unsigned short);
-            allocation->indices.Create(indexCapacity,VK_BUFFER_USAGE_INDEX_BUFFER_BIT);
-            streamSets[frame.resourceIndex].push_back(allocation);
-        } catch (...) { delete allocation; throw; }
-        stream = allocation;
-    }
+    auto*& stream = drawStreams[frame.resourceIndex];
+    if (!stream) stream = new DrawStream;
+    if (bytes > stream->vertices.size - stream->vertices.used)
+        throw std::overflow_error("Vulkan frame vertex capacity exceeded (65536 vertices)");
     auto offset = stream->vertices.used;
     auto* copiedVertices = reinterpret_cast<VulkanVertex*>(static_cast<std::byte*>(stream->vertices.mapped) + offset);
     constexpr uint32_t kVertexSlotValid = kSlotMask | kGeneratedPremult |
@@ -2477,7 +2471,7 @@ void VulkanRenderer::Impl::AppendRun(DrawStream* stream, VkDeviceSize offset, ui
     auto cmd = frame.cmd;
     // P5 游程：状态变化检测前置（先判后绑）。bindless+采样器数组后描述符
     // 对恒为 {纹理数组, 采样器数组}——首绘绑定一次，帧内不再变化；断点
-    // 只剩 管线/剪刀/视口/换流
+    // 只剩 管线/剪刀/视口
     const std::array sets{textureArray,samplerSet};
     const bool aVpChange = drawState.width!=vw || drawState.height!=vh;
     const bool aScChange = !drawState.hasScissor || drawState.scissor.offset.x!=scissor.offset.x ||
@@ -2485,7 +2479,7 @@ void VulkanRenderer::Impl::AppendRun(DrawStream* stream, VkDeviceSize offset, ui
         drawState.scissor.extent.height!=scissor.extent.height;
     const bool aPlChange = drawState.pipeline!=pipeline;
     const bool aDsChange = drawState.descriptors!=sets;
-    if (pendingRun.count != 0 && (aVpChange || aScChange || aPlChange || aDsChange || pendingRun.stream != stream))
+    if (pendingRun.count != 0 && (aVpChange || aScChange || aPlChange || aDsChange))
         FlushPendingRun(cmd);
     if (aVpChange) {
         const VkViewport viewport{0,0,static_cast<float>(vw),static_cast<float>(vh),0,1};
@@ -2689,19 +2683,10 @@ void VulkanRenderer::SubmitBenchmarkSprite(const VulkanSpriteInstance& sprite,Vu
         bottom=std::min<int64_t>(bottom,int64_t(clip->y)+clip->height);
     }
     if (right<=left || bottom<=top) return;
-    DrawStream* stream=nullptr;
-    for(auto* candidate:s.streamSets[s.frame.resourceIndex])
-        if(candidate->vertices.size-candidate->vertices.used>=sizeof(sprite)) {stream=candidate;break;}
-    if (!stream) {
-        auto* allocation=new DrawStream;
-        try {
-            constexpr VkDeviceSize capacity=8*1024*1024;
-            allocation->vertices.Create(capacity,VK_BUFFER_USAGE_VERTEX_BUFFER_BIT|VK_BUFFER_USAGE_TRANSFER_SRC_BIT);
-            allocation->indices.Create((capacity/sizeof(sprite)+3)/4*6*sizeof(unsigned short),VK_BUFFER_USAGE_INDEX_BUFFER_BIT);
-            s.streamSets[s.frame.resourceIndex].push_back(allocation);
-        } catch (...) {delete allocation;throw;}
-        stream=allocation;
-    }
+    auto*& stream=s.drawStreams[s.frame.resourceIndex];
+    if (!stream) stream=new DrawStream;
+    if (sizeof(sprite)>stream->vertices.size-stream->vertices.used)
+        throw std::overflow_error("Vulkan frame vertex capacity exceeded (65536 vertices)");
     texture->lastDraw=s.frameSerial;
     const auto offset=stream->vertices.used;
     auto* stored=reinterpret_cast<VulkanSpriteInstance*>(static_cast<std::byte*>(stream->vertices.mapped)+offset);
@@ -2754,22 +2739,13 @@ void VulkanRenderer::SubmitPool(VulkanTexture* texture,const GpuPoolParams& p) {
     vkCmdBindDescriptorSets(s.frame.cmd,VK_PIPELINE_BIND_POINT_GRAPHICS,s.poolLayout,0,2,sets,0,nullptr);
     std::array<PoolMeshVertex,96> vertices;
     BuildPoolMesh(p,vertices);
-    // Append each draw's mesh to the existing frame streams. Never overwrite a
+    // Append each draw's mesh to the fixed frame buffer. Never overwrite a
     // previous layer/credits draw while its command buffer still references it.
     static_assert(sizeof(vertices)%sizeof(VulkanVertex)==0);
-    DrawStream* stream = nullptr;
-    for (auto* candidate : s.streamSets[s.frame.resourceIndex])
-        if (candidate->vertices.size-candidate->vertices.used >= sizeof(vertices)) {stream=candidate;break;}
-    if (!stream) {
-        auto* allocation = new DrawStream;
-        try {
-            constexpr VkDeviceSize capacity = 8*1024*1024;
-            allocation->vertices.Create(capacity,VK_BUFFER_USAGE_VERTEX_BUFFER_BIT|VK_BUFFER_USAGE_TRANSFER_SRC_BIT);
-            allocation->indices.Create((capacity/sizeof(VulkanVertex)+3)/4*6*sizeof(unsigned short),VK_BUFFER_USAGE_INDEX_BUFFER_BIT);
-            s.streamSets[s.frame.resourceIndex].push_back(allocation);
-        } catch (...) { delete allocation; throw; }
-        stream = allocation;
-    }
+    auto*& stream = s.drawStreams[s.frame.resourceIndex];
+    if (!stream) stream = new DrawStream;
+    if (sizeof(vertices) > stream->vertices.size - stream->vertices.used)
+        throw std::overflow_error("Vulkan frame vertex capacity exceeded (65536 vertices)");
     const VkDeviceSize offset = stream->vertices.used;
     std::memcpy(static_cast<std::byte*>(stream->vertices.mapped)+offset,vertices.data(),sizeof(vertices));
     stream->vertices.used += sizeof(vertices);

@@ -1,0 +1,9 @@
+{
+  "original_summary": "Tests/evidence/original-1073-11x-full-20261029/summary.json",
+  "current_summary": "Tests/evidence/windows-vulkan-lp14-240-20261101/summary.json",
+  "same_canonical_source": true,
+  "current_target_fps": 240,
+  "original_target_fps": 100,
+  "observed_fps_ratio": 4.4762480645117,
+  "qualification": "Single-run same-origin gameplay observations on LP14/user-set 11x. Different renderers, update frequencies and state trajectories; GPU clocks not verified. Not an isolated draw or algorithm speedup."
+}

@@ -1,0 +1,13 @@
+{
+  "targetFps": 240,
+  "autoDetectFrameRate": false,
+  "musicVolume": 100,
+  "sfxVolume": 65,
+  "muted": 0,
+  "screenMode": "windowed",
+  "preferredX": 865,
+  "preferredY": 589,
+  "customCursors": 0,
+  "waitForVSync": 0,
+  "customScale": 0
+}

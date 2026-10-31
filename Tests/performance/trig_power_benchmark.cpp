@@ -31,6 +31,20 @@ __declspec(noinline) static double MatrixFast(const Input& x)
     return double(FastCos(x.angle)) + FastSin(x.angle) +
         FastSin(x.angle2) + FastCos(x.angle2);
 }
+__declspec(noinline) static double MatrixFastPair(const Input& x)
+{
+    float sx,cx,sy,cy;
+    FastSinCos(x.angle,sx,cx);FastSinCos(x.angle2,sy,cy);
+    return double(cx)+sx+sy+cy;
+}
+// Best case for sqrt reconstruction: this fixture stays within +/-60 degrees,
+// so cosine is positive and no quadrant reduction/sign handling is needed.
+__declspec(noinline) static double MatrixSqrtPair(const Input& x)
+{
+    const float sx=FastSin(x.angle),sy=FastSin(x.angle2);
+    return double(std::sqrt(std::max(0.0f,1-sx*sx)))+sx+sy+
+        std::sqrt(std::max(0.0f,1-sy*sy));
+}
 __declspec(noinline) static double MatrixCRT(const Input& x)
 {
     return double(std::cos(x.angle)) + std::sin(x.angle) +
@@ -101,13 +115,30 @@ int main(int argc, char** argv)
         maxSinError = std::max(maxSinError, std::abs(FastSinF(x) - SinF(x)));
         maxCosError = std::max(maxCosError, std::abs(FastCosF(x) - CosF(x)));
     }
+    double pairSinError=0,pairCosError=0,sqrtCosError=0;
+    for(unsigned i=0;i<=100000;++i) {
+        const float angle=(float(i)/100000*2-1)*50.2654825f;
+        float sine,cosine;FastSinCos(angle,sine,cosine);
+        if(!std::isfinite(sine) || !std::isfinite(cosine)) return 3;
+        pairSinError=std::max(pairSinError,std::abs(double(sine)-std::sin(double(angle))));
+        pairCosError=std::max(pairCosError,std::abs(double(cosine)-std::cos(double(angle))));
+        const float rawSine=FastSin(angle);
+        const double referenceCos=std::cos(double(angle));
+        const float reconstructed=std::copysign(std::sqrt(std::max(0.0f,1-rawSine*rawSine)),float(referenceCos));
+        sqrtCosError=std::max(sqrtCosError,std::abs(double(reconstructed)-referenceCos));
+    }
+    std::printf("Shared reduction max error [-16pi,16pi]: sin=%.9g cos=%.9g\n",pairSinError,pairCosError);
+    std::printf("Sqrt reconstruction max cosine error (oracle sign, not timed): %.9g\n",sqrtCosError);
+    if(pairSinError>0.0001 || pairCosError>0.0001) return 3;
     Case cases[] = {
         {"baseline", Measure<Baseline>}, {"sin(float)", Measure<SinF>},
         {"cos(float)", Measure<CosF>}, {"sin(double)", Measure<SinD>},
         {"cos(double)", Measure<CosD>}, {"FastSin(real TU)", Measure<FastSinF>},
         {"FastCos(real TU)", Measure<FastCosF>}, {"pow(20/21,t)", Measure<PowDecay>},
         {"sqrt(double)", Measure<SqrtD>}, {"cbrt(double)", Measure<CbrtD>},
-        {"matrix fast (4)", Measure<MatrixFast>}, {"matrix CRT 2 axes (4)", Measure<MatrixCRT>},
+        {"matrix fast (4)", Measure<MatrixFast>},
+        {"matrix shared reduction", Measure<MatrixFastPair>},
+        {"matrix sqrt best case", Measure<MatrixSqrtPair>}, {"matrix CRT 2 axes (4)", Measure<MatrixCRT>},
         {"matrix CRT same axis", Measure<MatrixSameAngleCRT>}
     };
     double checksum = 0;

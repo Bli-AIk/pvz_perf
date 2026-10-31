@@ -1,0 +1,7 @@
+retail-1: exit=0
+current-1: exit=0
+current-2: exit=0
+retail-2: exit=0
+structure-1: exit=0
+structure-2: exit=0
+PASS all serial production samples and validation

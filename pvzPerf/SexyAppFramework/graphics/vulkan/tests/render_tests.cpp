@@ -840,21 +840,49 @@ void Run() {
     std::cout << "PASS: BGRA, pitch, opacity, alpha/additive, nearest/linear, wrap/clamp, scissor, pixel edges\n";
     CanvasHash(pixels,"mixed-state");
 
-    // Exercise vertex-stream overflow without overwriting earlier recorded data.
-    Require(renderer.BeginScene(), "Cannot start retained scene");
-    SubmitImage(renderer,Quad(402,400,1,1,1,0,0),white,false,false,VulkanBlend::Opaque);
+    // Fill the fixed frame buffer exactly. A further draw must fail without
+    // allocating storage, corrupting earlier geometry, or submitting a partial draw.
+    Require(renderer.BeginScene(), "Cannot start fixed-capacity scene");
+    const auto submitQuad = [&](const auto& triangles) {
+        std::array<VulkanVertex,4> vertices{triangles[0],triangles[5],triangles[1],triangles[2]};
+        EncodeSource(vertices,white,false,false);
+        renderer.SubmitQuads(vertices,white,false,false,VulkanBlend::Opaque,nullptr);
+    };
+    submitQuad(Quad(402,400,1,1,1,0,0));
+    const auto fixedBufferCount = renderer.GetResourceCounts().vertexBuffers;
     const auto tinyQuad = Quad(400,400,1,1,1,1,0);
-    for (int i=0;i<46000;++i) SubmitImage(renderer,tinyQuad,white,false,false,VulkanBlend::Opaque);
-    SubmitImage(renderer,Quad(403,400,1,1,0,1,0),white,false,false,VulkanBlend::Opaque);
+    for (int i=0;i<16379;++i) submitQuad(tinyQuad);
+    submitQuad(Quad(403,400,1,1,0,1,0));
+    SubmitImage(renderer,tinyQuad,white,false,false,VulkanBlend::Opaque);
+    // 65530 scene vertices plus the six-vertex final present quad fill 65536.
+    std::array<VulkanVertex,8> extraQuads{};
+    EncodeSource(extraQuads,white,false,false);
+    bool capacityRejected = false;
+    try { renderer.SubmitQuads(extraQuads,white,false,false,VulkanBlend::Opaque,nullptr); }
+    catch (const std::overflow_error&) { capacityRejected = true; }
+    Require(capacityRejected,"Fixed frame buffer accepted more than 65536 vertices");
+    Require(renderer.GetResourceCounts().vertexBuffers==fixedBufferCount &&
+        fixedBufferCount<=VulkanContext::kFramesInFlight,"Frame vertex overflow allocated another buffer");
     renderer.EndSceneAndPresent();
     pixels = renderer.ReadScenePixels();
     Pixel(pixels,400,400,0xffffff00);
     Pixel(pixels,402,400,0xffff0000);
     Pixel(pixels,403,400,0xff00ff00);
     Pixel(pixels,200,10,0xffff0000);
-    Require(renderer.GetResourceCounts().vertexBuffers>=2,"Vertex overflow did not retain multiple stream buffers");
-    std::cout << "PASS: retained logical scene and multi-buffer vertex stream\n";
-    CanvasHash(pixels,"stream-overflow");
+    CanvasHash(pixels,"fixed-frame-capacity");
+
+    Require(renderer.BeginScene(),"Cannot reuse fixed frame buffer after exhaustion");
+    std::vector<VulkanVertex> oversized(65540);
+    EncodeSource(oversized,white,false,false);
+    capacityRejected=false;
+    try { renderer.SubmitQuads(oversized,white,false,false,VulkanBlend::Opaque,nullptr); }
+    catch (const std::overflow_error&) { capacityRejected=true; }
+    Require(capacityRejected,"Oversized single submission grew the fixed frame buffer");
+    submitQuad(Quad(403,400,1,1,0,0,1));
+    renderer.EndSceneAndPresent();
+    pixels=renderer.ReadScenePixels();
+    Pixel(pixels,403,400,0xff0000ff);
+    std::cout << "PASS fixed frame geometry: exact 65536-vertex boundary, cumulative/single overflow rejection, retained pixels and frame reuse\n";
 
     native.Resize(640,360);
     renderer.ResizePresent();

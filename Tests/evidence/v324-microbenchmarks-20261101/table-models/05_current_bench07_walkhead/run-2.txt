@@ -1,0 +1,1 @@
+bench07 kWalkHeadPos | before 30.62 ns | after 14.61 ns | diff 52.3% | checksum=OK (8526D23E0EDC5599/8526D23E0EDC5599)

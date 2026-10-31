@@ -1,0 +1,19 @@
+MSVC 195136260, affinity 0x4000, iterations 2000000, rounds 9
+Shared reduction max error [-16pi,16pi]: sin=6.72592735e-06 cos=6.48193978e-06
+Sqrt reconstruction max cosine error (oracle sign, not timed): 0.000190288124
+baseline                   median    3.890 ns/eval  min    3.697 max    4.111
+sin(float)                 median   21.270 ns/eval  min   21.172 max   21.423
+cos(float)                 median   20.195 ns/eval  min   19.697 max   20.348
+sin(double)                median   20.016 ns/eval  min   19.803 max   20.211
+cos(double)                median   19.260 ns/eval  min   19.120 max   19.611
+FastSin(real TU)           median   14.803 ns/eval  min   14.793 max   14.855
+FastCos(real TU)           median   15.819 ns/eval  min   15.764 max   15.931
+pow(20/21,t)               median   54.958 ns/eval  min   54.804 max   55.023
+sqrt(double)               median   11.041 ns/eval  min   11.011 max   11.052
+cbrt(double)               median   74.371 ns/eval  min   74.313 max   74.529
+matrix fast (4)            median   62.047 ns/eval  min   62.008 max   65.019
+matrix shared reduction    median   53.332 ns/eval  min   53.255 max   53.403
+matrix sqrt best case      median   44.601 ns/eval  min   44.580 max   44.633
+matrix CRT 2 axes (4)      median   66.409 ns/eval  min   66.293 max   66.454
+matrix CRT same axis       median   36.507 ns/eval  min   36.252 max   36.680
+max abs error in +/-60deg: sin 2.68220901e-07 cos 5.96046448e-07; checksum 717008989.06105351

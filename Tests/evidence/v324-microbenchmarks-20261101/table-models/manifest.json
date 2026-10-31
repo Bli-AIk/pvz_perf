@@ -1,0 +1,531 @@
+{
+  "created_local": "2026-11-01T03:50:08",
+  "work": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-small-bench-build-nieomft2",
+  "compiler": "C:\\UserProgram\\Visual Studuio\\2026\\Community\\VC\\Tools\\MSVC\\14.51.36231\\bin\\Hostx64\\x64\\cl.exe",
+  "flags": [
+    "/O2",
+    "/EHsc",
+    "/std:c++20",
+    "/GL-"
+  ],
+  "affinity": "0x4000",
+  "frequency": "User-confirmed 11x; not measured by runner",
+  "scope": "Archived fixtures remain historical models. Extracted tables are current production declarations in the unchanged historical harness; not complete current functions.",
+  "jobs": [
+    {
+      "name": "00_current_bench01_dmgflags",
+      "scope": "current_table_in_historical_harness",
+      "source_sha256": "c403cd14e7c3cadb74cfc9f04ca104cc3bcc0ee64b73be6049738ea1d8cdc1da",
+      "command": [
+        "C:\\UserProgram\\Visual Studuio\\2026\\Community\\VC\\Tools\\MSVC\\14.51.36231\\bin\\Hostx64\\x64\\cl.exe",
+        "/nologo",
+        "/O2",
+        "/EHsc",
+        "/std:c++20",
+        "/GL-",
+        "/utf-8",
+        "/IC:\\Users\\Administrator\\CLionProjects\\codex\\PlantsVsZombiesModern\\pvzPerf",
+        "/FoC:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-small-bench-build-nieomft2\\00_current_bench01_dmgflags.obj",
+        "/FeC:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-small-bench-build-nieomft2\\00_current_bench01_dmgflags.exe",
+        "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-small-bench-build-nieomft2\\archive\\r4\\current_bench01_dmgflags.cpp"
+      ],
+      "production_source": "pvzPerf\\Lawn\\Plant.cpp",
+      "production_sha256": "a8024a7a0d7ea5ab387894b8ab59d1d275abb8177d2038ce483b5a0f7a35ff9d",
+      "table": "kDamageRangeFlags",
+      "declaration_sha256": "900a06d4e430cc6d284b63a62ba01bd93c6fee993c58be4a3848ecf282f51593",
+      "build_exit": 0,
+      "runs": [
+        {
+          "exit": 0,
+          "seconds": 0.7039670000012848,
+          "mismatch_marker": false
+        },
+        {
+          "exit": 0,
+          "seconds": 0.6809062999964226,
+          "mismatch_marker": false
+        }
+      ],
+      "exe_sha256": "54ffeac376030fca4fa4b6b9c2606016f9502957e824bf7fe3783b12fd27a7a6"
+    },
+    {
+      "name": "01_current_bench02_fireproj",
+      "scope": "current_table_in_historical_harness",
+      "source_sha256": "4971a97166c08fecf15b4e477daf588334f6ef9c4a68588570bcee053a6b382d",
+      "command": [
+        "C:\\UserProgram\\Visual Studuio\\2026\\Community\\VC\\Tools\\MSVC\\14.51.36231\\bin\\Hostx64\\x64\\cl.exe",
+        "/nologo",
+        "/O2",
+        "/EHsc",
+        "/std:c++20",
+        "/GL-",
+        "/utf-8",
+        "/IC:\\Users\\Administrator\\CLionProjects\\codex\\PlantsVsZombiesModern\\pvzPerf",
+        "/FoC:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-small-bench-build-nieomft2\\01_current_bench02_fireproj.obj",
+        "/FeC:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-small-bench-build-nieomft2\\01_current_bench02_fireproj.exe",
+        "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-small-bench-build-nieomft2\\archive\\r4\\current_bench02_fireproj.cpp"
+      ],
+      "production_source": "pvzPerf\\Lawn\\Plant.cpp",
+      "production_sha256": "a8024a7a0d7ea5ab387894b8ab59d1d275abb8177d2038ce483b5a0f7a35ff9d",
+      "table": "kFireProjectiles",
+      "declaration_sha256": "8182ac70461ae73d185969c9c6cfa2c404a2e722d4e1a37011e850e72a3d4817",
+      "build_exit": 0,
+      "runs": [
+        {
+          "exit": 0,
+          "seconds": 0.8627703000020119,
+          "mismatch_marker": false
+        },
+        {
+          "exit": 0,
+          "seconds": 0.8517541000037454,
+          "mismatch_marker": false
+        }
+      ],
+      "exe_sha256": "b522e374e3fca298eee5b8a9375d2bb34e416564071cf68c8835713b7c03741e"
+    },
+    {
+      "name": "02_current_bench04_flowerpot",
+      "scope": "current_table_in_historical_harness",
+      "source_sha256": "2d548fb2918e4f67f1b21a5534f4ebd52c4ee8b0840f95013fd252a0be6bb3db",
+      "command": [
+        "C:\\UserProgram\\Visual Studuio\\2026\\Community\\VC\\Tools\\MSVC\\14.51.36231\\bin\\Hostx64\\x64\\cl.exe",
+        "/nologo",
+        "/O2",
+        "/EHsc",
+        "/std:c++20",
+        "/GL-",
+        "/utf-8",
+        "/IC:\\Users\\Administrator\\CLionProjects\\codex\\PlantsVsZombiesModern\\pvzPerf",
+        "/FoC:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-small-bench-build-nieomft2\\02_current_bench04_flowerpot.obj",
+        "/FeC:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-small-bench-build-nieomft2\\02_current_bench04_flowerpot.exe",
+        "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-small-bench-build-nieomft2\\archive\\r4\\current_bench04_flowerpot.cpp"
+      ],
+      "production_source": "pvzPerf\\Lawn\\Plant.cpp",
+      "production_sha256": "a8024a7a0d7ea5ab387894b8ab59d1d275abb8177d2038ce483b5a0f7a35ff9d",
+      "table": "kFlowerPotAdjust",
+      "declaration_sha256": "6ac7c52fed689b73320e1f25a9e8ff3a2731bc9df0cf51b377877b9e92947a58",
+      "build_exit": 0,
+      "runs": [
+        {
+          "exit": 0,
+          "seconds": 0.7414776000005077,
+          "mismatch_marker": false
+        },
+        {
+          "exit": 0,
+          "seconds": 0.7240949000042747,
+          "mismatch_marker": false
+        }
+      ],
+      "exe_sha256": "7c30b083c97504cf72fc02785be976a56b34fa334f3e48388a630a47f2352fb7"
+    },
+    {
+      "name": "03_current_bench05_packetdraw",
+      "scope": "current_table_in_historical_harness",
+      "source_sha256": "a276b781928bd4c3cdbfa4ac251b18f6bab1d5d265604d97d5334b4aa0a70231",
+      "command": [
+        "C:\\UserProgram\\Visual Studuio\\2026\\Community\\VC\\Tools\\MSVC\\14.51.36231\\bin\\Hostx64\\x64\\cl.exe",
+        "/nologo",
+        "/O2",
+        "/EHsc",
+        "/std:c++20",
+        "/GL-",
+        "/utf-8",
+        "/IC:\\Users\\Administrator\\CLionProjects\\codex\\PlantsVsZombiesModern\\pvzPerf",
+        "/FoC:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-small-bench-build-nieomft2\\03_current_bench05_packetdraw.obj",
+        "/FeC:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-small-bench-build-nieomft2\\03_current_bench05_packetdraw.exe",
+        "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-small-bench-build-nieomft2\\archive\\r4\\current_bench05_packetdraw.cpp"
+      ],
+      "production_source": "pvzPerf\\Lawn\\SeedPacket.cpp",
+      "production_sha256": "34c019752fef34ea7f0484a1444c73496f3d75b89667066b0c605f842b62acde",
+      "table": "kSeedPacketDrawMetrics",
+      "declaration_sha256": "7844a73472fd5fe05a40298ecb518e15f9639659efad506ad0a97a37c3d028b5",
+      "build_exit": 0,
+      "runs": [
+        {
+          "exit": 0,
+          "seconds": 1.3844984000024851,
+          "mismatch_marker": false
+        },
+        {
+          "exit": 0,
+          "seconds": 1.3740995000043768,
+          "mismatch_marker": false
+        }
+      ],
+      "exe_sha256": "4ae1fc5d3bbfbd0532930558d372e443ed576504051b18ae4607f4e11a71aabd"
+    },
+    {
+      "name": "04_current_bench06_zimgoff",
+      "scope": "current_table_in_historical_harness",
+      "source_sha256": "a06f8c64ca360d885768f87aa3e9e1a85a61b328bd6f452fd233792cf591ac84",
+      "command": [
+        "C:\\UserProgram\\Visual Studuio\\2026\\Community\\VC\\Tools\\MSVC\\14.51.36231\\bin\\Hostx64\\x64\\cl.exe",
+        "/nologo",
+        "/O2",
+        "/EHsc",
+        "/std:c++20",
+        "/GL-",
+        "/utf-8",
+        "/IC:\\Users\\Administrator\\CLionProjects\\codex\\PlantsVsZombiesModern\\pvzPerf",
+        "/FoC:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-small-bench-build-nieomft2\\04_current_bench06_zimgoff.obj",
+        "/FeC:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-small-bench-build-nieomft2\\04_current_bench06_zimgoff.exe",
+        "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-small-bench-build-nieomft2\\archive\\r4\\current_bench06_zimgoff.cpp"
+      ],
+      "production_source": "pvzPerf\\Lawn\\Zombie.cpp",
+      "production_sha256": "21db267b2a5f7c5debfdfb7cb636a7d2cb4026f039ef9780f6432eaac49c14b5",
+      "table": "kZombieImageOffsetFix",
+      "declaration_sha256": "25ad29c6a5ab0b63e4d951d278973ff958a43920a5b10cf7b73e3b310de0b6a3",
+      "build_exit": 0,
+      "runs": [
+        {
+          "exit": 0,
+          "seconds": 0.7338182000021334,
+          "mismatch_marker": false
+        },
+        {
+          "exit": 0,
+          "seconds": 0.7158877000038046,
+          "mismatch_marker": false
+        }
+      ],
+      "exe_sha256": "3d389d8a4456876380c7305b0a58ea21f16bea34dd7228fd6933603fb262a16b"
+    },
+    {
+      "name": "05_current_bench07_walkhead",
+      "scope": "current_table_in_historical_harness",
+      "source_sha256": "11a8718fea2eaea063353f608086bac4769361e5b29734139a9cfe975f577489",
+      "command": [
+        "C:\\UserProgram\\Visual Studuio\\2026\\Community\\VC\\Tools\\MSVC\\14.51.36231\\bin\\Hostx64\\x64\\cl.exe",
+        "/nologo",
+        "/O2",
+        "/EHsc",
+        "/std:c++20",
+        "/GL-",
+        "/utf-8",
+        "/IC:\\Users\\Administrator\\CLionProjects\\codex\\PlantsVsZombiesModern\\pvzPerf",
+        "/FoC:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-small-bench-build-nieomft2\\05_current_bench07_walkhead.obj",
+        "/FeC:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-small-bench-build-nieomft2\\05_current_bench07_walkhead.exe",
+        "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-small-bench-build-nieomft2\\archive\\r4\\current_bench07_walkhead.cpp"
+      ],
+      "production_source": "pvzPerf\\Lawn\\Zombie.cpp",
+      "production_sha256": "21db267b2a5f7c5debfdfb7cb636a7d2cb4026f039ef9780f6432eaac49c14b5",
+      "table": "kWalkHeadPos",
+      "declaration_sha256": "5c3d5bed403e84e7d33245626327bb1e86ea3a3b316aafed97aabfc847a2a98f",
+      "build_exit": 0,
+      "runs": [
+        {
+          "exit": 0,
+          "seconds": 0.7845965000014985,
+          "mismatch_marker": false
+        },
+        {
+          "exit": 0,
+          "seconds": 0.756160999997519,
+          "mismatch_marker": false
+        }
+      ],
+      "exe_sha256": "916099b3b4f9046449dcce2c6ae5a8831307052db4161bcab85c2893549cf7e4"
+    },
+    {
+      "name": "06_current_bench08_seedupdate",
+      "scope": "current_table_in_historical_harness",
+      "source_sha256": "cf1ba41e29fca4b309c267f98f98f79ff341f3f397f47dcc3aee50fc8bf03074",
+      "command": [
+        "C:\\UserProgram\\Visual Studuio\\2026\\Community\\VC\\Tools\\MSVC\\14.51.36231\\bin\\Hostx64\\x64\\cl.exe",
+        "/nologo",
+        "/O2",
+        "/EHsc",
+        "/std:c++20",
+        "/GL-",
+        "/utf-8",
+        "/IC:\\Users\\Administrator\\CLionProjects\\codex\\PlantsVsZombiesModern\\pvzPerf",
+        "/FoC:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-small-bench-build-nieomft2\\06_current_bench08_seedupdate.obj",
+        "/FeC:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-small-bench-build-nieomft2\\06_current_bench08_seedupdate.exe",
+        "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-small-bench-build-nieomft2\\archive\\r4\\current_bench08_seedupdate.cpp"
+      ],
+      "production_source": "pvzPerf\\Lawn\\Plant.cpp",
+      "production_sha256": "a8024a7a0d7ea5ab387894b8ab59d1d275abb8177d2038ce483b5a0f7a35ff9d",
+      "table": "kSeedTypeUpdates",
+      "declaration_sha256": "272e4526b3228e241b8fefe54219a5f00c222c794da5b26f48d2593ae906d9fc",
+      "harness_adapter": "Explicit 3-clock ABI; common Mix stubs ignore clocks. Not full Plant::Update.",
+      "build_exit": 0,
+      "runs": [
+        {
+          "exit": 0,
+          "seconds": 1.561143600003561,
+          "mismatch_marker": false
+        },
+        {
+          "exit": 0,
+          "seconds": 1.5593358000041917,
+          "mismatch_marker": false
+        }
+      ],
+      "exe_sha256": "c3057b4e3afa789be27b7b84a29dae3cd20313b72fba3bbb0757e48377b71126"
+    },
+    {
+      "name": "07_current_bench11_proshadow",
+      "scope": "current_table_in_historical_harness",
+      "source_sha256": "4c02202db49993f403a037357ed50049ccd1a35a32395e18b91ddb0515030002",
+      "command": [
+        "C:\\UserProgram\\Visual Studuio\\2026\\Community\\VC\\Tools\\MSVC\\14.51.36231\\bin\\Hostx64\\x64\\cl.exe",
+        "/nologo",
+        "/O2",
+        "/EHsc",
+        "/std:c++20",
+        "/GL-",
+        "/utf-8",
+        "/IC:\\Users\\Administrator\\CLionProjects\\codex\\PlantsVsZombiesModern\\pvzPerf",
+        "/FoC:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-small-bench-build-nieomft2\\07_current_bench11_proshadow.obj",
+        "/FeC:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-small-bench-build-nieomft2\\07_current_bench11_proshadow.exe",
+        "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-small-bench-build-nieomft2\\archive\\r4\\current_bench11_proshadow.cpp"
+      ],
+      "production_source": "pvzPerf\\Lawn\\Projectile.cpp",
+      "production_sha256": "25ad79d2b26a267946e41c16a501c32feaa04c1860ca08f9ae2df936a6876c5d",
+      "table": "kShadowParams",
+      "declaration_sha256": "8b3e02275a0aa0f4aa938f4f870e0a663f65adba86af2db93830dd8c774c1fe6",
+      "build_exit": 0,
+      "runs": [
+        {
+          "exit": 0,
+          "seconds": 2.2282807000010507,
+          "mismatch_marker": false
+        },
+        {
+          "exit": 0,
+          "seconds": 2.2177616999979364,
+          "mismatch_marker": false
+        }
+      ],
+      "exe_sha256": "74a56ca9f82e6f249765290ea6ca1fe335e6b53d0b4cdbc6c0c445f4909f96ef"
+    },
+    {
+      "name": "08_current_bench14_seedcost",
+      "scope": "current_table_in_historical_harness",
+      "source_sha256": "50764b9489506c75e2be8e5fec746b5226042955f618007b1fe73d8d4557de79",
+      "command": [
+        "C:\\UserProgram\\Visual Studuio\\2026\\Community\\VC\\Tools\\MSVC\\14.51.36231\\bin\\Hostx64\\x64\\cl.exe",
+        "/nologo",
+        "/O2",
+        "/EHsc",
+        "/std:c++20",
+        "/GL-",
+        "/utf-8",
+        "/IC:\\Users\\Administrator\\CLionProjects\\codex\\PlantsVsZombiesModern\\pvzPerf",
+        "/FoC:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-small-bench-build-nieomft2\\08_current_bench14_seedcost.obj",
+        "/FeC:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-small-bench-build-nieomft2\\08_current_bench14_seedcost.exe",
+        "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-small-bench-build-nieomft2\\archive\\r4\\current_bench14_seedcost.cpp"
+      ],
+      "production_source": "pvzPerf\\Lawn\\Plant.cpp",
+      "production_sha256": "a8024a7a0d7ea5ab387894b8ab59d1d275abb8177d2038ce483b5a0f7a35ff9d",
+      "table": "kSeedCostOverrides",
+      "declaration_sha256": "34355dd5e3529e8ba8c772c81c6d332740cffbc6ea1c101335b928072dd276cd",
+      "build_exit": 0,
+      "runs": [
+        {
+          "exit": 0,
+          "seconds": 1.144498499998008,
+          "mismatch_marker": false
+        },
+        {
+          "exit": 0,
+          "seconds": 1.1327682999981334,
+          "mismatch_marker": false
+        }
+      ],
+      "exe_sha256": "e66f9c871c3e28404ab469ed5b4234629fa01400c864297ade1d67a06f40e0d6"
+    },
+    {
+      "name": "09_current_bench15_storecost",
+      "scope": "current_table_in_historical_harness",
+      "source_sha256": "733910929fe128e90cd6c2eec31d5d76e1f7df9b08193aa4e9365400a9fa7641",
+      "command": [
+        "C:\\UserProgram\\Visual Studuio\\2026\\Community\\VC\\Tools\\MSVC\\14.51.36231\\bin\\Hostx64\\x64\\cl.exe",
+        "/nologo",
+        "/O2",
+        "/EHsc",
+        "/std:c++20",
+        "/GL-",
+        "/utf-8",
+        "/IC:\\Users\\Administrator\\CLionProjects\\codex\\PlantsVsZombiesModern\\pvzPerf",
+        "/FoC:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-small-bench-build-nieomft2\\09_current_bench15_storecost.obj",
+        "/FeC:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-small-bench-build-nieomft2\\09_current_bench15_storecost.exe",
+        "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-small-bench-build-nieomft2\\archive\\r4\\current_bench15_storecost.cpp"
+      ],
+      "production_source": "pvzPerf\\Lawn\\Widget\\StoreScreen.cpp",
+      "production_sha256": "cfd6c46fa4327c506b68219b2d1eee0469505e08425e263eccda52b6c37bcd60",
+      "table": "kStoreItemCosts",
+      "declaration_sha256": "ae4b9797a5c8935a1ef7d098ad258d69828288ff77fa0b1fbda8853987b6b091",
+      "build_exit": 0,
+      "runs": [
+        {
+          "exit": 0,
+          "seconds": 0.8505693000042811,
+          "mismatch_marker": false
+        },
+        {
+          "exit": 0,
+          "seconds": 0.8400565999982064,
+          "mismatch_marker": false
+        }
+      ],
+      "exe_sha256": "6b7d0daa5a0140ccca06e2743fdff763ceae692558956f9c11105ba25be077e2"
+    },
+    {
+      "name": "10_current_bench7_plantheight",
+      "scope": "current_table_in_historical_harness",
+      "source_sha256": "e7cb879e29f565bd28f7f568ae1db91626f35bc4b76b6e220508247214aa2ddc",
+      "command": [
+        "C:\\UserProgram\\Visual Studuio\\2026\\Community\\VC\\Tools\\MSVC\\14.51.36231\\bin\\Hostx64\\x64\\cl.exe",
+        "/nologo",
+        "/O2",
+        "/EHsc",
+        "/std:c++20",
+        "/GL-",
+        "/utf-8",
+        "/IC:\\Users\\Administrator\\CLionProjects\\codex\\PlantsVsZombiesModern\\pvzPerf",
+        "/FoC:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-small-bench-build-nieomft2\\10_current_bench7_plantheight.obj",
+        "/FeC:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-small-bench-build-nieomft2\\10_current_bench7_plantheight.exe",
+        "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-small-bench-build-nieomft2\\archive\\ifelse\\current_bench7_plantheight.cpp"
+      ],
+      "production_source": "pvzPerf\\Lawn\\Plant.cpp",
+      "production_sha256": "a8024a7a0d7ea5ab387894b8ab59d1d275abb8177d2038ce483b5a0f7a35ff9d",
+      "table": "kPlantHeightOffsets",
+      "declaration_sha256": "c911f7e8f56f3c82881514d3e140d40a1149af1f58166ce3f3dc6d9fe46b4df7",
+      "candidate": "C(static)",
+      "build_exit": 0,
+      "runs": [
+        {
+          "exit": 0,
+          "seconds": 0.9289389999976265,
+          "mismatch_marker": false
+        },
+        {
+          "exit": 0,
+          "seconds": 0.916118599998299,
+          "mismatch_marker": false
+        }
+      ],
+      "exe_sha256": "34ced6a79e5f4d551ff4b32cfad3a89def10d3a512ba1fc0614075448e19ec39"
+    },
+    {
+      "name": "11_current_bench5_plantshadow",
+      "scope": "current_table_in_historical_harness",
+      "source_sha256": "22f2fcf500d1f8283d0174d9e0272bde259538e98bc90a2f22d608f081c5c6eb",
+      "command": [
+        "C:\\UserProgram\\Visual Studuio\\2026\\Community\\VC\\Tools\\MSVC\\14.51.36231\\bin\\Hostx64\\x64\\cl.exe",
+        "/nologo",
+        "/O2",
+        "/EHsc",
+        "/std:c++20",
+        "/GL-",
+        "/utf-8",
+        "/IC:\\Users\\Administrator\\CLionProjects\\codex\\PlantsVsZombiesModern\\pvzPerf",
+        "/FoC:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-small-bench-build-nieomft2\\11_current_bench5_plantshadow.obj",
+        "/FeC:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-small-bench-build-nieomft2\\11_current_bench5_plantshadow.exe",
+        "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-small-bench-build-nieomft2\\archive\\ifelse\\current_bench5_plantshadow.cpp"
+      ],
+      "production_source": "pvzPerf\\Lawn\\Plant.cpp",
+      "production_sha256": "a8024a7a0d7ea5ab387894b8ab59d1d275abb8177d2038ce483b5a0f7a35ff9d",
+      "table": "kPlantShadow",
+      "declaration_sha256": "6c3d02c417db95fb98592d45037f29215124caaea5a8c5994692167dfe03651d",
+      "candidate": "C(static)",
+      "build_exit": 0,
+      "runs": [
+        {
+          "exit": 0,
+          "seconds": 1.6482992000019294,
+          "mismatch_marker": false
+        },
+        {
+          "exit": 0,
+          "seconds": 1.6334119999955874,
+          "mismatch_marker": false
+        }
+      ],
+      "exe_sha256": "1a4111e298974518cf1dd49642352bec34f6f6f64c6817b840225a23fab7ad7e"
+    },
+    {
+      "name": "12_current_bench13_ZombatarColors_SetColorMode",
+      "scope": "current_table_in_historical_harness",
+      "source_sha256": "4a1e1e020e4a5b8e2d02a6012444205db9f68364df43e57fc9bcdfbc78e7c918",
+      "command": [
+        "C:\\UserProgram\\Visual Studuio\\2026\\Community\\VC\\Tools\\MSVC\\14.51.36231\\bin\\Hostx64\\x64\\cl.exe",
+        "/nologo",
+        "/O2",
+        "/EHsc",
+        "/std:c++20",
+        "/GL-",
+        "/utf-8",
+        "/IC:\\Users\\Administrator\\CLionProjects\\codex\\PlantsVsZombiesModern\\pvzPerf",
+        "/FoC:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-small-bench-build-nieomft2\\12_current_bench13_ZombatarColors_SetColorMode.obj",
+        "/FeC:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-small-bench-build-nieomft2\\12_current_bench13_ZombatarColors_SetColorMode.exe",
+        "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-small-bench-build-nieomft2\\archive\\ui\\current_bench13_ZombatarColors_SetColorMode.cpp"
+      ],
+      "production_source": "pvzPerf\\Lawn\\Widget\\ZombatarColors.cpp",
+      "production_sha256": "14fd59c6ac5b237c4eac0c417a665619d7b7f1ff1b3fda766d8a54d241e77887",
+      "table": "kZombatarPaletteRange",
+      "declaration_sha256": "286ac3fc471c1fafcfa3bd779f3fde78e58f62b5ea7c13f38de3f6bb4f4d615d",
+      "candidate": "B",
+      "build_exit": 0,
+      "runs": [
+        {
+          "exit": 0,
+          "seconds": 0.4912780999948154,
+          "mismatch_marker": false
+        },
+        {
+          "exit": 0,
+          "seconds": 0.472748699998192,
+          "mismatch_marker": false
+        }
+      ],
+      "exe_sha256": "803e592ba65d5fb7118b1606e731ecc6e694d0b5e92c6534adc7ddcfc9655c31"
+    },
+    {
+      "name": "13_bench_particle_emitter_names",
+      "scope": "current_name_contract_historical_corpus",
+      "source_sha256": "1a5df09a2bd74854378b7f41f14c86fda38ad8982db2e7cf6348d6eacb3a4877",
+      "command": [
+        "C:\\UserProgram\\Visual Studuio\\2026\\Community\\VC\\Tools\\MSVC\\14.51.36231\\bin\\Hostx64\\x64\\cl.exe",
+        "/nologo",
+        "/O2",
+        "/EHsc",
+        "/std:c++23preview",
+        "/GL-",
+        "/utf-8",
+        "/IC:\\Users\\Administrator\\CLionProjects\\codex\\PlantsVsZombiesModern\\pvzPerf",
+        "/FoC:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-small-bench-build-nieomft2\\13_bench_particle_emitter_names.obj",
+        "/FeC:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-small-bench-build-nieomft2\\13_bench_particle_emitter_names.exe",
+        "C:\\Users\\Administrator\\CLionProjects\\codex\\PlantsVsZombiesModern\\Tests\\performance\\bench_particle_emitter_names.cpp",
+        "/Ob2",
+        "/DNDEBUG",
+        "/W4",
+        "/MD",
+        "/fp:precise",
+        "/IC:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-small-bench-build-nieomft2",
+        "/link",
+        "/INCREMENTAL:NO",
+        "/OPT:REF",
+        "/OPT:NOICF"
+      ],
+      "fixture_sha256": "06a597a4c9d4a5141a9b0d2594abb310630731b50dd12e5dfb1a2adbb6a3170a",
+      "build_exit": 0,
+      "runs": [
+        {
+          "exit": 0,
+          "seconds": 5.001017499998852,
+          "mismatch_marker": false
+        },
+        {
+          "exit": 0,
+          "seconds": 4.933779200000572,
+          "mismatch_marker": false
+        }
+      ],
+      "exe_sha256": "9ba9e3108d4038a67acec1537dd5a81b2adbd2abb4a5b21961a0aeca8046755c"
+    }
+  ]
+}

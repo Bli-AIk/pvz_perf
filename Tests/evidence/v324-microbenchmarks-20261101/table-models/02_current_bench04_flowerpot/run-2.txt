@@ -1,0 +1,1 @@
+bench04 kFlowerPotAdjust | before 34.13 ns | after 8.97 ns | diff 73.7% | checksum=OK (5A838D4D33B8C000/5A838D4D33B8C000)

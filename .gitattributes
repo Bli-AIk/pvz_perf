@@ -3,3 +3,5 @@
 
 # Preserve archived measurements byte-for-byte so their recorded hashes survive checkout.
 /Tests/evidence/linux-wayland-20261018/* -text -whitespace
+/Tests/evidence/v324-microbenchmarks-20261101/** -text -whitespace
+/Tests/evidence/windows-vulkan-lp14-240-20261101/** -text -whitespace

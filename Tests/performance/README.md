@@ -199,3 +199,10 @@ Android 可用默认关闭的 `PVZ_VULKAN_SEPARATE_BLEND_TEST` 编译开关生�
 
 单组当前记录复用`report-windows-game-perf.py <measurement目录> <证据目录> --single --label <图标题>`。
 旧双组入口和新单组入口共用同一绘图函数；上图叠加FPS与CPU不同颜色曲线，下图CPU毫秒／绘制帧，非game样本留空。
+
+
+## 当前生产微基准整组复测
+
+`refresh-production-suite.py`先构建独立夹具，再串行运行生产查询、真实结构、帧缓存、轨道身份、粒子侧表、真实FastMath和固定DX12 CPU绘制，最后复测13项当前表声明与17项粒子身份契约。显式传入`--multiplier 11x`、原始`--archive`、`--emitter-fixture`与已校验的`--retail-probe`。输出目录必须不存在；不在测量时并行构建或渲染视频。
+
+`reanim_identity_benchmark.cpp`对当前全部2641条合法轨道查找先穷举验证，再比较整数ID线性扫描与生产MPHF接口。它不是原版字符串API基准。植物分派模型桩适配当前三时钟参数，但保留同一输入和Mix工作，不将时间驱动业务算入该选择模型。

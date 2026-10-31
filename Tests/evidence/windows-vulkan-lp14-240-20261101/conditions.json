@@ -1,0 +1,15 @@
+{
+  "pakSha256": "5bdd71c632d945304ae3752bfed61941bb8c7e4351e616e1ff6fbceab1431545",
+  "executableSha256": "cb96720d3b046c39d2a6446ca1841cc6b66e163a709564186cde1de7acb0e6c8",
+  "logicalProcessor": 14,
+  "profile": "PerfTest / 1",
+  "cpuMultiplier": "11x, user controlled",
+  "game": "latest Vulkan Release LTO",
+  "affinity": "0x4000",
+  "originalBaseline": "reuse existing LP14 data; no retail rerun",
+  "mode": "Enter to arm; Quit to stop",
+  "canonicalConvertedSha256": "cb18bdbe8a5104ac16a7aa923bbd350b7780e48f4c26a78c8e690b47adc86541",
+  "targetFps": 240,
+  "gpuClock": "not independently sampled",
+  "canonicalSourceSha256": "a1bbc2f43a129b655f0068de8f28a731f1ef6814170419d3f4ec406436437cf1"
+}

@@ -1,0 +1,1 @@
+bench11 kShadowParams | before 89.52 ns | after 59.78 ns | diff 33.2% | checksum=OK (1F7D639FF82C494C/1F7D639FF82C494C)

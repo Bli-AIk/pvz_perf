@@ -1,0 +1,1 @@
+bench15 kStoreItemCosts | before 40.11 ns | after 10.72 ns | diff 73.3% | checksum=OK (00000000568B8EE9/00000000568B8EE9)

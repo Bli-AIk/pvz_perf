@@ -1,0 +1,14 @@
+# exhaustive valid queries=2641; integer scan, not a string-scan baseline
+kernel,round,queries,ns_per_query,checksum
+production_mphf_api,1,2704384,15.529821,54872064
+current_id_scan_model,1,2704384,52.084098,54872064
+current_id_scan_model,2,2704384,52.041759,54872064
+production_mphf_api,2,2704384,15.644006,54872064
+production_mphf_api,3,2704384,15.528527,54872064
+current_id_scan_model,3,2704384,52.067791,54872064
+current_id_scan_model,4,2704384,52.001195,54872064
+production_mphf_api,4,2704384,15.536440,54872064
+production_mphf_api,5,2704384,15.713449,54872064
+current_id_scan_model,5,2704384,51.978639,54872064
+current_id_scan_model,6,2704384,52.024897,54872064
+production_mphf_api,6,2704384,15.640382,54872064
