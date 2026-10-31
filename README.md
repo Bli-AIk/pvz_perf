@@ -4,13 +4,13 @@
 文档维护当前有效机制与修复；现行实测和历史算法证据分开标注，不按日期追加开发过程。
 
 发行下载：[GitHub Releases](https://github.com/YuHao2006/pvz_perf/releases)。
-**当前源码 v3.2.2，沿用 v3.0 引入的 DAT64 v4：v1.x/v2.x 的旧存档与旧 PAK64 不能直接混用。**
-v3.2.2 仅发布源码与版本标签，不上传新的 EXE、APK、资源包或存档附件；既有平台发行包、完美用户档和统一无尽基准见 Releases。
+**当前版本 v3.2.4，沿用 v3.0 引入的 DAT64 v4：v1.x/v2.x 的旧存档与旧 PAK64 不能直接混用。**
+v3.2.4提供Win10 Vulkan 1.3、Win7 OpenGL 3.3和Android Vulkan 1.3整包，以及完美用户档与统一无尽基准。
 完整解压到新的可写目录后运行 `pvz_perf.exe`。
 游戏只读取 **DAT64 v4 / schema 0x10745**；原版 DAT、DAT64 v1/v2 需使用附带转换器升级。
 未发布的 v3 系列中间存档不受支持。用户摘要 `users.dat` 和玩家详情 `PVZUSR64` v13 独立管理。
 资源采用当前静态定义和离线图集，EXE、shaders 与 PAK64 必须成套更新。
-本次修复见 [v3.2.2 发布说明](docs/releases/v3.2.2.md)，存档迁移背景见 [v3.0 发布说明](docs/releases/v3.0.md)。
+本次修复见 [v3.2.4 发布说明](docs/releases/v3.2.4.md)，存档迁移背景见 [v3.0 发布说明](docs/releases/v3.0.md)。
 生成的 PerfTest 完美用户档包含全解锁进度，DAT64 v4 无尽档来自仓库原版基准；不包含个人进度或设置。
 普通生存完成记录为 5 旗，困难生存为 10 旗。
 **Win7 统一 SDR，不支持 HDR；DX9/OpenGL 的默认配置不启用自定义缩放效果。**
@@ -55,7 +55,7 @@ Windows 发行优先推荐 Vulkan，保留 DX12；没有为 DX12 Ultimate 单独
 当前开发中的 Vulkan 后端要求 **Vulkan 1.3**、Synchronization2 和所需的
 descriptor indexing 功能／限额，旧 Vulkan 兼容路径尚未实现；这不改变已发行 v3.0 包的要求。
 内置 shader 按 Vulkan 1.3 编译并校验。屏障与队列提交使用 Synchronization2，
-仍保留单套帧资源，下一次复用前等待上一帧完成。
+主帧轮换两套命令／同步及动态几何资源；复用槽位前非阻塞检查fence，未完成时跳过本次绘制，逻辑继续更新。素材纹理与图集不复制。
 
 Android 的 APK ABI 为 `arm64-v8a`，PAK64 内置于 APK，无需另外复制数据包或安装 Java。
 新包默认以 Armv9-A 为指令集基线，使用 `-march=armv9-a+nosve+nosve2`，
@@ -80,7 +80,7 @@ cmake --build out/android-arm64 --config Release
 ./tools/build-android-apk.ps1 -JavaHome 'C:\Program Files\Java\graalvm-jdk-25.0.3+9.1'
 ```
 
-APK 输出到 `out/android-vulkan/`；未配置发行签名时输出文件标记为 `-unsigned.apk`，
+APK 输出到 `out/arm64-android14-vulkan1.3/`；未配置发行签名时输出文件标记为 `-unsigned.apk`，
 需签名后安装。脚本仅在子构建期间设置 JDK 和短 AF_UNIX 临时目录，结束后恢复环境变量。
 测试 APK 内置完美用户档和由原版转换的统一泳池无尽基准，首次启动且不存在用户档时
 自动初始化。更新安装保留已有进度，不重新补入已消费的关卡存档。
