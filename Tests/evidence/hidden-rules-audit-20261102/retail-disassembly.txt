@@ -1,0 +1,52 @@
+SHA256: 5f650f52d12751e08b63e590edb0d9b9f09d087cea900baa0eb39e4af8eda251
+
+IsShovelLevel: live Board and original mode 46
+00456CF0: cmp dword ptr [eax + 0x868], 0
+00456CF7: jne 0x456cfc
+00456CF9: xor al, al
+00456CFB: ret 
+00456CFC: cmp dword ptr [eax + 0x918], 0x2e
+00456D03: sete al
+00456D06: ret 
+
+Conveyor common pick register starts at zero
+004258EB: xor edi, edi
+004258ED: mov dword ptr [ebx + 0x5c], eax
+
+Shovel pick: seed zero (Peashooter), weight 100, single choice
+00425AFF: mov ecx, dword ptr [ebp + 8]
+00425B02: mov ecx, dword ptr [ecx]
+00425B04: mov eax, ecx
+00425B06: call 0x456cf0
+00425B0B: test al, al
+00425B0D: je 0x425b25
+00425B0F: mov dword ptr [esp + 0x18], edi
+00425B13: mov dword ptr [esp + 0x1c], 0x64
+00425B1B: mov edi, 1
+00425B20: jmp 0x425da0
+
+Paused storm: hold at 1; threshold 150 in FLASH_1 is checked before DEC
+00426180: push ecx
+00426181: mov eax, dword ptr [edi + 4]
+00426184: cmp byte ptr [eax + 0x17c], 0
+0042618B: je 0x4261af
+0042618D: mov eax, dword ptr [edi + 0x58]
+00426190: cmp eax, 1
+00426193: je 0x4262f3
+00426199: cmp eax, 0x96
+0042619E: jne 0x4261af
+004261A0: cmp dword ptr [edi + 0x54], 5
+004261A4: jne 0x4261af
+004261A6: mov dword ptr [edi + 0x58], 1
+004261AD: pop ecx
+004261AE: ret 
+004261AF: dec dword ptr [edi + 0x58]
+004261B2: mov eax, dword ptr [edi + 0x58]
+
+Ice demonstration: original mode 42 and exact main counter 3000
+00427424: mov eax, dword ptr [esi]
+00427426: cmp dword ptr [eax + 0x918], 0x2a
+0042742D: jne 0x4274a2
+0042742F: mov ecx, dword ptr [esi + 4]
+00427432: cmp dword ptr [ecx + 0x5580], 0xbb8
+0042743C: jne 0x4274a2

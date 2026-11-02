@@ -1,0 +1,50 @@
+{
+  "ultimate": {
+    "fps": 129.57262006374415,
+    "cpu_percent": 96.41320559964372,
+    "approx_cpu_ms_per_present": 7.440862548909836,
+    "presentation_seconds": 312.813,
+    "cpu_observation_seconds": 313.5754310000011,
+    "frames": 40532,
+    "min_interval_fps": 73.81889763779527,
+    "max_interval_fps": 232.28346456692913,
+    "logic_hz": 100,
+    "affinity": "0x4000",
+    "selection": "Full foreground intervals inside [3,316.920] seconds; no game-state introspection",
+    "stop_reason": "game-exited"
+  },
+  "project": {
+    "label": "最新 Vulkan · LPE14 11x · 240Hz 上限",
+    "selection": "segment=game, valid=1, scene=3, foreground=1",
+    "seconds": 358.9997515000032,
+    "valid_samples": 359,
+    "recorded_seconds": 368.0003758999992,
+    "frames": 70628,
+    "cpu_seconds": 321.484375,
+    "fps": 196.73551222499768,
+    "update_hz": 196.76336739748237,
+    "cpu_percent": 89.55002716763639,
+    "cpu_ms_per_frame": 4.5517977997394805,
+    "wave_first": 0,
+    "wave_last": 20,
+    "fps_min": 133.9707809724284,
+    "fps_max": 240.98231189863074,
+    "max_interval_cpu_ms": 7.1128731343283595,
+    "excluded": {
+      "preroll": 2,
+      "other-scene": 6,
+      "background": 1
+    },
+    "executable_sha256": "cb96720d3b046c39d2a6446ca1841cc6b66e163a709564186cde1de7acb0e6c8",
+    "stop_reason": "game-exited"
+  },
+  "qualification": [
+    "Same formation and similar spawn conditions, not identical trajectories or seeds.",
+    "Ultimate logic remains 100Hz; project logic averaged 196.76Hz.",
+    "Ultimate RTSS measures presentation calls, project counts game draws. Neither guarantees physically displayed frames.",
+    "CPU is whole-process time. Ultimate CPU/present estimate uses separately sampled nearby intervals.",
+    "No GPU clock or GPU duration collected.",
+    "User controls CPU 11x. Affinity was checked at Enter.",
+    "Ultimate has no pause/menu detection; only foreground and boundary filtering."
+  ]
+}

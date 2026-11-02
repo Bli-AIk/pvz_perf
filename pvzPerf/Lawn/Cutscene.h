@@ -17,7 +17,6 @@ public:
     Board*                      mBoard;                           //+0x4
     Sexy::TimeCounter                         mCutsceneTime;                    //+0x8
     int                         mSodTime;                         //+0xC
-    int                         mGraveStoneTime;                  //+0x10
     int                         mReadySetPlantTime;               //+0x14
     int                         mFogTime;                         //+0x18
     int                         mBossTime;                        //+0x1C
@@ -50,7 +49,6 @@ public:
     /*inline*/ void             EndSeedChooser();
     /*inline*/ int              CalcPosition(std::int64_t theStartNs, std::int64_t theEndNs, int thePositionStart, int thePositionEnd);
     void                        PlaceStreetZombies();
-    void                        AddGraveStoneParticles();
     void                        PlaceAZombie(ZombieType theZombieType, int theGridX, int theGridY);
     bool                        CanZombieGoInGridSpot(ZombieType theZombieType, int theGridX, int theGridY, bool theZombieGrid[5][5]);
     /*inline*/ bool             IsSurvivalRepick();

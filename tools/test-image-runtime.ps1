@@ -1,7 +1,8 @@
 param(
     [Parameter(Mandatory=$true)][string]$BuildDirectory,
     [string]$PakFile,
-    [string]$OutputDirectory
+    [string]$OutputDirectory,
+    [ValidateSet('all','plant-attacks','zombie-behavior','minigame-rules','puzzle-rules','survival-rules','adventure-rules','hidden-rules','garden-rules','intro-rules','ui-rules','award-rules','almanac-clock','actor-birth','loss-rules','opening-rules','lifecycle-rules','grave-rules','hud-seams')][string]$Case='all'
 )
 $ErrorActionPreference='Stop'
 $taskRoot=Split-Path -Parent $PSScriptRoot
@@ -44,6 +45,9 @@ $taskExecutable=Join-Path $taskOutput 'image_runtime_tests.exe'
 $taskCompileCommand=$taskCompile[0].Replace($taskMain,$taskTestSource)
 $taskCompileCommand=[regex]::Replace($taskCompileCommand,'/Fo[^ ]+','/Fo"'+$taskObject+'"')
 $taskCompileCommand=[regex]::Replace($taskCompileCommand,'/Fd[^ ]+','/Fd"'+(Join-Path $taskOutput 'compile.pdb')+'"')
+$taskOpeningSource=Join-Path $taskRoot 'Tests\native\OpeningFlowRuntimeChecks.cpp'
+$taskOpeningObject=Join-Path $taskOutput 'OpeningFlowRuntimeChecks.cpp.obj'
+$taskOpeningCompileCommand=$taskCompileCommand.Replace($taskTestSource,$taskOpeningSource).Replace($taskObject,$taskOpeningObject)
 $taskCompilerMatch=[regex]::Match($taskCompile[0],'^(?:"([^"]+)"|(\S+))')
 $taskCompiler=if ($taskCompilerMatch.Groups[1].Success) {
     $taskCompilerMatch.Groups[1].Value
@@ -52,7 +56,7 @@ $taskToolset=Split-Path -Parent (Split-Path -Parent (Split-Path -Parent (Split-P
 $taskEnvironment='call "{0}" >nul && set "PATH={1}\bin\Hostx64\x64;!PATH!" && set "INCLUDE={1}\include;!INCLUDE!" && set "LIB={1}\lib\x64;!LIB!" && ' -f $taskVcvars,$taskToolset
 $taskLinkCommand=$taskLink[0].Substring($taskLink[0].IndexOf(' -- ')+4)
 $taskLinkCommand=($taskLinkCommand -split ' && ',2)[0]
-$taskLinkCommand=$taskLinkCommand.Replace('SexyAppFramework\CMakeFiles\LawnProject.dir\__\main.cpp.obj','"'+$taskObject+'"')
+$taskLinkCommand=$taskLinkCommand.Replace('SexyAppFramework\CMakeFiles\LawnProject.dir\__\main.cpp.obj','"'+$taskObject+'" "'+$taskOpeningObject+'"')
 $taskLinkCommand=[regex]::Replace($taskLinkCommand,'/out:[^ ]+','/out:"'+$taskExecutable+'"','IgnoreCase')
 $taskLinkCommand=[regex]::Replace($taskLinkCommand,'/pdb:[^ ]+','/pdb:"'+(Join-Path $taskOutput 'image_runtime_tests.pdb')+'"','IgnoreCase')
 $taskLinkCommand=[regex]::Replace($taskLinkCommand,'/implib:[^ ]+','/implib:"'+(Join-Path $taskOutput 'image_runtime_tests.lib')+'"','IgnoreCase')
@@ -68,6 +72,9 @@ try {
     & $env:ComSpec /d /v:on /s /c ($taskEnvironment+$taskCompileCommand) |
         Where-Object { $_ -notmatch '^(Note: including file:|注意: 包含文件:)' }
     if ($LASTEXITCODE -ne 0) { throw 'Image runtime fixture compilation failed' }
+    & $env:ComSpec /d /v:on /s /c ($taskEnvironment+$taskOpeningCompileCommand) |
+        Where-Object { $_ -notmatch '^(Note: including file:|注意: 包含文件:)' }
+    if ($LASTEXITCODE -ne 0) { throw 'Opening runtime fixture compilation failed' }
     & $env:ComSpec /d /v:on /s /c ($taskEnvironment+$taskLinkCommand)
     if ($LASTEXITCODE -ne 0) { throw 'Image runtime fixture link failed' }
 }
@@ -84,7 +91,8 @@ if ((Test-Path -LiteralPath $taskRuntimeShaders) -and !(Test-Path -LiteralPath $
 # no game window is shown, no player data is loaded, and no log files are written.
 Push-Location $taskOutput
 try {
-    & $taskExecutable $taskPak
+    if($Case -eq 'all') { & $taskExecutable $taskPak }
+    else { & $taskExecutable $taskPak $Case }
     if ($LASTEXITCODE -ne 0) { throw 'Image runtime regression failed' }
 }
 finally { Pop-Location }

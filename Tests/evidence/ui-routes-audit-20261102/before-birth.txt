@@ -1,0 +1,644 @@
+ImageRuntimeTests.cpp
+正在生成代码
+已完成代码的生成
+PASS pure wrapped text measurement: wrapping, newlines, color tags, no glyph draws and empty fill
+pool GPU day-normal-nearest: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU night-normal-linear: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU day-additive-partial-fractional: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU night-additive-phase-wrap: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU day-opaque-partial-fractional: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU night-opaque-large-counter: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU feedback-float-source-pending-batch: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+PASS production GPU pool vs independent legacy CPU mesh: day/night, normal/additive/opaque, nearest/linear/repeat, phase wrap, destination scissor, fractional translation, ordinary painter order and float target feedback
+PASS precomputed transparent edges: alpha, visible RGB, idempotency, nearest/linear, upload-discard
+PASS public font upload: deferred alpha, upload-and-discard, texture reuse, independent copies
+PASS nonzero source rectangles and repacked whole-sheet atlas views: translation, scale origins, clipping, tint, additive, local-source views and floating scales
+PASS necessary local-clip contract: independent full-pixel rect/image/source/mirror/matrix/particle/convex oracles, disjoint/partial/empty clips and negative framebuffer crossings
+PASS actual TitleScreen grass reveal: widths 0/1/157/313/314/400, translated draw and unrevealed black pixels
+PASS actual GameButton atlas states: normal, hover, press/fallbacks, disabled, overAlpha, additive glow, translation/offsets and hidden state match independent images
+PASS direct shared-image snapshots and reference lifetime
+PASS actual boss back-arm drawing: four attack offsets, reference pixels, 1024 exact shared-animation translation restorations
+PASS reanimation appearances: independent options, image slots, atlas dimensions, original centers and actual AttachmentDraw visibility pixels
+PASS fullscreen reanimation: destination fill pixels, hidden/zero alpha, color modulation, both blend modes, translation and effective clip without track matrices
+Store clock fixture: initialize
+Actor birth failed group=0 type=0 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=1 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=2 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=3 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=4 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=5 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=6 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=7 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=8 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=9 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=10 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=11 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=12 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=13 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=14 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=15 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=16 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=17 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=18 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=19 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=20 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=21 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=22 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=23 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=24 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=25 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=26 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=27 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=28 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=29 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=30 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=31 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=32 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=33 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=34 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=35 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=36 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=37 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=38 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=39 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=40 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=41 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=42 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=43 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=44 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=45 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=46 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=47 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=48 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=49 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=50 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=51 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=52 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=0 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=1 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=2 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=3 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=4 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=5 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=6 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=7 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=8 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=9 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=10 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=11 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=12 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=13 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=14 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=15 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=16 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=17 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=18 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=19 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=20 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=21 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=22 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=23 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=24 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=25 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=26 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=27 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=28 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=29 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=30 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=31 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=32 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=33 scene=3 born=0 message=Actor birth left its animation in a different clock until the first update
+Actor birth group=2 type=0 scene=3 born=0 animations=1 ok=1
+Actor birth group=2 type=1 scene=3 born=0 animations=2 ok=1
+Actor birth group=2 type=2 scene=3 born=0 animations=1 ok=1
+Actor birth group=2 type=3 scene=3 born=0 animations=1 ok=1
+Actor birth group=2 type=4 scene=3 born=0 animations=1 ok=1
+Actor birth group=2 type=5 scene=3 born=0 animations=1 ok=1
+Actor birth group=2 type=6 scene=3 born=0 animations=1 ok=1
+Actor birth group=2 type=7 scene=3 born=0 animations=1 ok=1
+Actor birth group=2 type=8 scene=3 born=0 animations=1 ok=1
+Actor birth group=2 type=9 scene=3 born=0 animations=1 ok=1
+Actor birth group=2 type=10 scene=3 born=0 animations=1 ok=1
+Actor birth group=2 type=11 scene=3 born=0 animations=1 ok=1
+Actor birth group=2 type=12 scene=3 born=0 animations=1 ok=1
+Actor birth group=2 type=13 scene=3 born=0 animations=1 ok=1
+Actor birth group=2 type=14 scene=3 born=0 animations=1 ok=1
+Actor birth group=2 type=15 scene=3 born=0 animations=1 ok=1
+Actor birth group=2 type=16 scene=3 born=0 animations=1 ok=1
+Actor birth group=2 type=17 scene=3 born=0 animations=1 ok=1
+Actor birth group=2 type=18 scene=3 born=0 animations=1 ok=1
+Actor birth group=2 type=19 scene=3 born=0 animations=1 ok=1
+Actor birth group=2 type=20 scene=3 born=0 animations=1 ok=1
+Actor birth group=2 type=21 scene=3 born=0 animations=1 ok=1
+Actor birth group=2 type=22 scene=3 born=0 animations=1 ok=1
+Actor birth group=2 type=23 scene=3 born=0 animations=1 ok=1
+Actor birth group=2 type=24 scene=3 born=0 animations=1 ok=1
+Actor birth group=2 type=25 scene=3 born=0 animations=2 ok=1
+Actor birth group=2 type=26 scene=3 born=0 animations=2 ok=1
+Actor birth group=2 type=27 scene=3 born=0 animations=2 ok=1
+Actor birth group=2 type=28 scene=3 born=0 animations=2 ok=1
+Actor birth group=2 type=29 scene=3 born=0 animations=2 ok=1
+Actor birth group=2 type=30 scene=3 born=0 animations=2 ok=1
+Actor birth group=2 type=31 scene=3 born=0 animations=2 ok=1
+Actor birth group=2 type=32 scene=3 born=0 animations=1 ok=1
+Actor birth group=2 type=33 scene=3 born=0 animations=3 ok=1
+Actor birth group=3 type=0 scene=3 born=0 animations=1 ok=1
+Actor birth group=3 type=1 scene=3 born=0 animations=2 ok=1
+Actor birth group=3 type=2 scene=3 born=0 animations=1 ok=1
+Actor birth group=3 type=3 scene=3 born=0 animations=1 ok=1
+Actor birth group=3 type=4 scene=3 born=0 animations=1 ok=1
+Actor birth group=3 type=5 scene=3 born=0 animations=1 ok=1
+Actor birth group=3 type=6 scene=3 born=0 animations=1 ok=1
+Actor birth group=3 type=7 scene=3 born=0 animations=1 ok=1
+Actor birth group=3 type=8 scene=3 born=0 animations=1 ok=1
+Actor birth group=3 type=9 scene=3 born=0 animations=1 ok=1
+Actor birth group=3 type=10 scene=3 born=0 animations=1 ok=1
+Actor birth group=3 type=11 scene=3 born=0 animations=1 ok=1
+Actor birth group=3 type=12 scene=3 born=0 animations=1 ok=1
+Actor birth group=3 type=13 scene=3 born=0 animations=1 ok=1
+Actor birth group=3 type=14 scene=3 born=0 animations=1 ok=1
+Actor birth group=3 type=15 scene=3 born=0 animations=1 ok=1
+Actor birth group=3 type=16 scene=3 born=0 animations=1 ok=1
+Actor birth group=3 type=17 scene=3 born=0 animations=1 ok=1
+Actor birth group=3 type=18 scene=3 born=0 animations=1 ok=1
+Actor birth group=3 type=19 scene=3 born=0 animations=1 ok=1
+Actor birth group=3 type=20 scene=3 born=0 animations=1 ok=1
+Actor birth group=3 type=21 scene=3 born=0 animations=1 ok=1
+Actor birth group=3 type=22 scene=3 born=0 animations=1 ok=1
+Actor birth group=3 type=23 scene=3 born=0 animations=1 ok=1
+Actor birth group=3 type=24 scene=3 born=0 animations=1 ok=1
+Actor birth group=3 type=25 scene=3 born=0 animations=2 ok=1
+Actor birth group=3 type=26 scene=3 born=0 animations=2 ok=1
+Actor birth group=3 type=27 scene=3 born=0 animations=2 ok=1
+Actor birth group=3 type=28 scene=3 born=0 animations=2 ok=1
+Actor birth group=3 type=29 scene=3 born=0 animations=2 ok=1
+Actor birth group=3 type=30 scene=3 born=0 animations=2 ok=1
+Actor birth group=3 type=31 scene=3 born=0 animations=2 ok=1
+Actor birth group=3 type=32 scene=3 born=0 animations=1 ok=1
+Actor birth failed group=0 type=0 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth group=3 type=33 scene=3 born=0 animations=3 ok=1
+Actor birth failed group=0 type=1 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=2 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=3 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=4 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=5 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=6 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=7 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=8 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=9 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=10 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=11 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=12 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=13 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=14 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=15 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=16 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=17 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=18 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=19 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=20 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=21 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=22 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=23 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=24 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=25 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=26 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=27 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=28 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=29 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=30 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=31 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=32 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=33 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=34 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=35 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=36 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=37 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=38 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=39 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=40 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=41 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=42 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=43 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=44 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=45 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=46 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=47 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=48 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=49 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=50 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=51 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=0 type=52 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=0 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=1 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=2 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=3 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=4 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=5 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=6 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=7 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=8 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=9 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=10 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=11 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=12 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=13 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=14 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=15 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=16 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=17 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=18 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=19 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=20 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=21 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=22 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=23 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=24 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=25 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=26 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=27 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=28 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=29 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=30 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=31 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=32 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth failed group=1 type=33 scene=3 born=31234567890 message=Actor birth left its animation in a different clock until the first update
+Actor birth group=2 type=0 scene=3 born=31234567890 animations=1 ok=1
+Actor birth group=2 type=1 scene=3 born=31234567890 animations=2 ok=1
+Actor birth group=2 type=2 scene=3 born=31234567890 animations=1 ok=1
+Actor birth group=2 type=3 scene=3 born=31234567890 animations=1 ok=1
+Actor birth group=2 type=4 scene=3 born=31234567890 animations=1 ok=1
+Actor birth group=2 type=5 scene=3 born=31234567890 animations=1 ok=1
+Actor birth group=2 type=6 scene=3 born=31234567890 animations=1 ok=1
+Actor birth group=2 type=7 scene=3 born=31234567890 animations=1 ok=1
+Actor birth group=2 type=8 scene=3 born=31234567890 animations=1 ok=1
+Actor birth group=2 type=9 scene=3 born=31234567890 animations=1 ok=1
+Actor birth group=2 type=10 scene=3 born=31234567890 animations=1 ok=1
+Actor birth group=2 type=11 scene=3 born=31234567890 animations=1 ok=1
+Actor birth group=2 type=12 scene=3 born=31234567890 animations=1 ok=1
+Actor birth group=2 type=13 scene=3 born=31234567890 animations=1 ok=1
+Actor birth group=2 type=14 scene=3 born=31234567890 animations=1 ok=1
+Actor birth group=2 type=15 scene=3 born=31234567890 animations=1 ok=1
+Actor birth group=2 type=16 scene=3 born=31234567890 animations=1 ok=1
+Actor birth group=2 type=17 scene=3 born=31234567890 animations=1 ok=1
+Actor birth group=2 type=18 scene=3 born=31234567890 animations=1 ok=1
+Actor birth group=2 type=19 scene=3 born=31234567890 animations=1 ok=1
+Actor birth group=2 type=20 scene=3 born=31234567890 animations=1 ok=1
+Actor birth group=2 type=21 scene=3 born=31234567890 animations=1 ok=1
+Actor birth group=2 type=22 scene=3 born=31234567890 animations=1 ok=1
+Actor birth group=2 type=23 scene=3 born=31234567890 animations=1 ok=1
+Actor birth group=2 type=24 scene=3 born=31234567890 animations=1 ok=1
+Actor birth group=2 type=25 scene=3 born=31234567890 animations=2 ok=1
+Actor birth group=2 type=26 scene=3 born=31234567890 animations=2 ok=1
+Actor birth group=2 type=27 scene=3 born=31234567890 animations=2 ok=1
+Actor birth group=2 type=28 scene=3 born=31234567890 animations=2 ok=1
+Actor birth group=2 type=29 scene=3 born=31234567890 animations=2 ok=1
+Actor birth group=2 type=30 scene=3 born=31234567890 animations=2 ok=1
+Actor birth group=2 type=31 scene=3 born=31234567890 animations=2 ok=1
+Actor birth group=2 type=32 scene=3 born=31234567890 animations=1 ok=1
+Actor birth group=2 type=33 scene=3 born=31234567890 animations=3 ok=1
+Actor birth group=3 type=0 scene=3 born=31234567890 animations=1 ok=1
+Actor birth group=3 type=1 scene=3 born=31234567890 animations=2 ok=1
+Actor birth group=3 type=2 scene=3 born=31234567890 animations=1 ok=1
+Actor birth group=3 type=3 scene=3 born=31234567890 animations=1 ok=1
+Actor birth group=3 type=4 scene=3 born=31234567890 animations=1 ok=1
+Actor birth group=3 type=5 scene=3 born=31234567890 animations=1 ok=1
+Actor birth group=3 type=6 scene=3 born=31234567890 animations=1 ok=1
+Actor birth group=3 type=7 scene=3 born=31234567890 animations=1 ok=1
+Actor birth group=3 type=8 scene=3 born=31234567890 animations=1 ok=1
+Actor birth group=3 type=9 scene=3 born=31234567890 animations=1 ok=1
+Actor birth group=3 type=10 scene=3 born=31234567890 animations=1 ok=1
+Actor birth group=3 type=11 scene=3 born=31234567890 animations=1 ok=1
+Actor birth group=3 type=12 scene=3 born=31234567890 animations=1 ok=1
+Actor birth group=3 type=13 scene=3 born=31234567890 animations=1 ok=1
+Actor birth group=3 type=14 scene=3 born=31234567890 animations=1 ok=1
+Actor birth group=3 type=15 scene=3 born=31234567890 animations=1 ok=1
+Actor birth group=3 type=16 scene=3 born=31234567890 animations=1 ok=1
+Actor birth group=3 type=17 scene=3 born=31234567890 animations=1 ok=1
+Actor birth group=3 type=18 scene=3 born=31234567890 animations=1 ok=1
+Actor birth group=3 type=19 scene=3 born=31234567890 animations=1 ok=1
+Actor birth group=3 type=20 scene=3 born=31234567890 animations=1 ok=1
+Actor birth group=3 type=21 scene=3 born=31234567890 animations=1 ok=1
+Actor birth group=3 type=22 scene=3 born=31234567890 animations=1 ok=1
+Actor birth group=3 type=23 scene=3 born=31234567890 animations=1 ok=1
+Actor birth group=3 type=24 scene=3 born=31234567890 animations=1 ok=1
+Actor birth group=3 type=25 scene=3 born=31234567890 animations=2 ok=1
+Actor birth group=3 type=26 scene=3 born=31234567890 animations=2 ok=1
+Actor birth group=3 type=27 scene=3 born=31234567890 animations=2 ok=1
+Actor birth group=3 type=28 scene=3 born=31234567890 animations=2 ok=1
+Actor birth group=3 type=29 scene=3 born=31234567890 animations=2 ok=1
+Actor birth group=3 type=30 scene=3 born=31234567890 animations=2 ok=1
+Actor birth group=3 type=31 scene=3 born=31234567890 animations=2 ok=1
+Actor birth group=3 type=32 scene=3 born=31234567890 animations=1 ok=1
+Actor birth group=3 type=33 scene=3 born=31234567890 animations=3 ok=1
+Actor birth group=0 type=0 scene=2 born=0 animations=2 ok=1
+Actor birth group=0 type=1 scene=2 born=0 animations=1 ok=1
+Actor birth group=0 type=2 scene=2 born=0 animations=1 ok=1
+Actor birth group=0 type=3 scene=2 born=0 animations=1 ok=1
+Actor birth group=0 type=4 scene=2 born=0 animations=1 ok=1
+Actor birth group=0 type=5 scene=2 born=0 animations=2 ok=1
+Actor birth group=0 type=6 scene=2 born=0 animations=1 ok=1
+Actor birth group=0 type=7 scene=2 born=0 animations=2 ok=1
+Actor birth group=0 type=8 scene=2 born=0 animations=2 ok=1
+Actor birth group=0 type=9 scene=2 born=0 animations=2 ok=1
+Actor birth group=0 type=10 scene=2 born=0 animations=2 ok=1
+Actor birth group=0 type=11 scene=2 born=0 animations=1 ok=1
+Actor birth group=0 type=12 scene=2 born=0 animations=2 ok=1
+Actor birth group=0 type=13 scene=2 born=0 animations=2 ok=1
+Actor birth group=0 type=14 scene=2 born=0 animations=2 ok=1
+Actor birth group=0 type=15 scene=2 born=0 animations=2 ok=1
+Actor birth group=0 type=16 scene=2 born=0 animations=1 ok=1
+Actor birth group=0 type=17 scene=2 born=0 animations=1 ok=1
+Actor birth group=0 type=18 scene=2 born=0 animations=4 ok=1
+Actor birth group=0 type=19 scene=2 born=0 animations=1 ok=1
+Actor birth group=0 type=20 scene=2 born=0 animations=1 ok=1
+Actor birth group=0 type=21 scene=2 born=0 animations=1 ok=1
+Actor birth group=0 type=22 scene=2 born=0 animations=1 ok=1
+Actor birth group=0 type=23 scene=2 born=0 animations=1 ok=1
+Actor birth group=0 type=24 scene=2 born=0 animations=2 ok=1
+Actor birth group=0 type=25 scene=2 born=0 animations=1 ok=1
+Actor birth group=0 type=26 scene=2 born=0 animations=1 ok=1
+Actor birth group=0 type=27 scene=2 born=0 animations=1 ok=1
+Actor birth group=0 type=28 scene=2 born=0 animations=3 ok=1
+Actor birth group=0 type=29 scene=2 born=0 animations=1 ok=1
+Actor birth group=0 type=30 scene=2 born=0 animations=1 ok=1
+Actor birth group=0 type=31 scene=2 born=0 animations=2 ok=1
+Actor birth group=0 type=32 scene=2 born=0 animations=1 ok=1
+Actor birth group=0 type=33 scene=2 born=0 animations=1 ok=1
+Actor birth group=0 type=34 scene=2 born=0 animations=1 ok=1
+Actor birth group=0 type=35 scene=2 born=0 animations=1 ok=1
+Actor birth group=0 type=36 scene=2 born=0 animations=1 ok=1
+Actor birth group=0 type=37 scene=2 born=0 animations=1 ok=1
+Actor birth group=0 type=38 scene=2 born=0 animations=1 ok=1
+Actor birth group=0 type=39 scene=2 born=0 animations=1 ok=1
+Actor birth group=0 type=40 scene=2 born=0 animations=2 ok=1
+Actor birth group=0 type=41 scene=2 born=0 animations=1 ok=1
+Actor birth group=0 type=42 scene=2 born=0 animations=2 ok=1
+Actor birth group=0 type=43 scene=2 born=0 animations=1 ok=1
+Actor birth group=0 type=44 scene=2 born=0 animations=1 ok=1
+Actor birth group=0 type=45 scene=2 born=0 animations=1 ok=1
+Actor birth group=0 type=46 scene=2 born=0 animations=1 ok=1
+Actor birth group=0 type=47 scene=2 born=0 animations=1 ok=1
+Actor birth group=0 type=48 scene=2 born=0 animations=1 ok=1
+Actor birth group=0 type=49 scene=2 born=0 animations=1 ok=1
+Actor birth group=0 type=50 scene=2 born=0 animations=1 ok=1
+Actor birth group=0 type=51 scene=2 born=0 animations=1 ok=1
+Actor birth group=0 type=52 scene=2 born=0 animations=2 ok=1
+Actor birth group=1 type=0 scene=2 born=0 animations=1 ok=1
+Actor birth group=1 type=1 scene=2 born=0 animations=2 ok=1
+Actor birth group=1 type=2 scene=2 born=0 animations=1 ok=1
+Actor birth group=1 type=3 scene=2 born=0 animations=1 ok=1
+Actor birth group=1 type=4 scene=2 born=0 animations=1 ok=1
+Actor birth group=1 type=5 scene=2 born=0 animations=1 ok=1
+Actor birth group=1 type=6 scene=2 born=0 animations=1 ok=1
+Actor birth group=1 type=7 scene=2 born=0 animations=1 ok=1
+Actor birth group=1 type=8 scene=2 born=0 animations=1 ok=1
+Actor birth group=1 type=9 scene=2 born=0 animations=1 ok=1
+Actor birth group=1 type=10 scene=2 born=0 animations=1 ok=1
+Actor birth group=1 type=11 scene=2 born=0 animations=1 ok=1
+Actor birth group=1 type=12 scene=2 born=0 animations=1 ok=1
+Actor birth group=1 type=13 scene=2 born=0 animations=4 ok=1
+Actor birth group=1 type=14 scene=2 born=0 animations=1 ok=1
+Actor birth group=1 type=15 scene=2 born=0 animations=1 ok=1
+Actor birth group=1 type=16 scene=2 born=0 animations=1 ok=1
+Actor birth group=1 type=17 scene=2 born=0 animations=1 ok=1
+Actor birth group=1 type=18 scene=2 born=0 animations=1 ok=1
+Actor birth group=1 type=19 scene=2 born=0 animations=1 ok=1
+Actor birth group=1 type=20 scene=2 born=0 animations=1 ok=1
+Actor birth group=1 type=21 scene=2 born=0 animations=1 ok=1
+Actor birth group=1 type=22 scene=2 born=0 animations=1 ok=1
+Actor birth group=1 type=23 scene=2 born=0 animations=1 ok=1
+Actor birth group=1 type=24 scene=2 born=0 animations=1 ok=1
+Actor birth group=1 type=25 scene=2 born=0 animations=2 ok=1
+Actor birth group=1 type=26 scene=2 born=0 animations=2 ok=1
+Actor birth group=1 type=27 scene=2 born=0 animations=2 ok=1
+Actor birth group=1 type=28 scene=2 born=0 animations=2 ok=1
+Actor birth group=1 type=29 scene=2 born=0 animations=2 ok=1
+Actor birth group=1 type=30 scene=2 born=0 animations=2 ok=1
+Actor birth group=1 type=31 scene=2 born=0 animations=2 ok=1
+Actor birth group=1 type=32 scene=2 born=0 animations=1 ok=1
+Actor birth group=1 type=33 scene=2 born=0 animations=3 ok=1
+Actor birth group=2 type=0 scene=2 born=0 animations=1 ok=1
+Actor birth group=2 type=1 scene=2 born=0 animations=2 ok=1
+Actor birth group=2 type=2 scene=2 born=0 animations=1 ok=1
+Actor birth group=2 type=3 scene=2 born=0 animations=1 ok=1
+Actor birth group=2 type=4 scene=2 born=0 animations=1 ok=1
+Actor birth group=2 type=5 scene=2 born=0 animations=1 ok=1
+Actor birth group=2 type=6 scene=2 born=0 animations=1 ok=1
+Actor birth group=2 type=7 scene=2 born=0 animations=1 ok=1
+Actor birth group=2 type=8 scene=2 born=0 animations=1 ok=1
+Actor birth group=2 type=9 scene=2 born=0 animations=1 ok=1
+Actor birth group=2 type=10 scene=2 born=0 animations=1 ok=1
+Actor birth group=2 type=11 scene=2 born=0 animations=1 ok=1
+Actor birth group=2 type=12 scene=2 born=0 animations=1 ok=1
+Actor birth group=2 type=13 scene=2 born=0 animations=1 ok=1
+Actor birth group=2 type=14 scene=2 born=0 animations=1 ok=1
+Actor birth group=2 type=15 scene=2 born=0 animations=1 ok=1
+Actor birth group=2 type=16 scene=2 born=0 animations=1 ok=1
+Actor birth group=2 type=17 scene=2 born=0 animations=1 ok=1
+Actor birth group=2 type=18 scene=2 born=0 animations=1 ok=1
+Actor birth group=2 type=19 scene=2 born=0 animations=1 ok=1
+Actor birth group=2 type=20 scene=2 born=0 animations=1 ok=1
+Actor birth group=2 type=21 scene=2 born=0 animations=1 ok=1
+Actor birth group=2 type=22 scene=2 born=0 animations=1 ok=1
+Actor birth group=2 type=23 scene=2 born=0 animations=1 ok=1
+Actor birth group=2 type=24 scene=2 born=0 animations=1 ok=1
+Actor birth group=2 type=25 scene=2 born=0 animations=2 ok=1
+Actor birth group=2 type=26 scene=2 born=0 animations=2 ok=1
+Actor birth group=2 type=27 scene=2 born=0 animations=2 ok=1
+Actor birth group=2 type=28 scene=2 born=0 animations=2 ok=1
+Actor birth group=2 type=29 scene=2 born=0 animations=2 ok=1
+Actor birth group=2 type=30 scene=2 born=0 animations=2 ok=1
+Actor birth group=2 type=31 scene=2 born=0 animations=2 ok=1
+Actor birth group=2 type=32 scene=2 born=0 animations=1 ok=1
+Actor birth group=2 type=33 scene=2 born=0 animations=3 ok=1
+Actor birth group=3 type=0 scene=2 born=0 animations=1 ok=1
+Actor birth group=3 type=1 scene=2 born=0 animations=2 ok=1
+Actor birth group=3 type=2 scene=2 born=0 animations=1 ok=1
+Actor birth group=3 type=3 scene=2 born=0 animations=1 ok=1
+Actor birth group=3 type=4 scene=2 born=0 animations=1 ok=1
+Actor birth group=3 type=5 scene=2 born=0 animations=1 ok=1
+Actor birth group=3 type=6 scene=2 born=0 animations=1 ok=1
+Actor birth group=3 type=7 scene=2 born=0 animations=1 ok=1
+Actor birth group=3 type=8 scene=2 born=0 animations=1 ok=1
+Actor birth group=3 type=9 scene=2 born=0 animations=1 ok=1
+Actor birth group=3 type=10 scene=2 born=0 animations=1 ok=1
+Actor birth group=3 type=11 scene=2 born=0 animations=1 ok=1
+Actor birth group=3 type=12 scene=2 born=0 animations=1 ok=1
+Actor birth group=3 type=13 scene=2 born=0 animations=1 ok=1
+Actor birth group=3 type=14 scene=2 born=0 animations=1 ok=1
+Actor birth group=3 type=15 scene=2 born=0 animations=1 ok=1
+Actor birth group=3 type=16 scene=2 born=0 animations=1 ok=1
+Actor birth group=3 type=17 scene=2 born=0 animations=1 ok=1
+Actor birth group=3 type=18 scene=2 born=0 animations=1 ok=1
+Actor birth group=3 type=19 scene=2 born=0 animations=1 ok=1
+Actor birth group=3 type=20 scene=2 born=0 animations=1 ok=1
+Actor birth group=3 type=21 scene=2 born=0 animations=1 ok=1
+Actor birth group=3 type=22 scene=2 born=0 animations=1 ok=1
+Actor birth group=3 type=23 scene=2 born=0 animations=1 ok=1
+Actor birth group=3 type=24 scene=2 born=0 animations=1 ok=1
+Actor birth group=3 type=25 scene=2 born=0 animations=2 ok=1
+Actor birth group=3 type=26 scene=2 born=0 animations=2 ok=1
+Actor birth group=3 type=27 scene=2 born=0 animations=2 ok=1
+Actor birth group=3 type=28 scene=2 born=0 animations=2 ok=1
+Actor birth group=3 type=29 scene=2 born=0 animations=2 ok=1
+Actor birth group=3 type=30 scene=2 born=0 animations=2 ok=1
+Actor birth group=3 type=31 scene=2 born=0 animations=2 ok=1
+Actor birth group=3 type=32 scene=2 born=0 animations=1 ok=1
+Actor birth group=3 type=33 scene=2 born=0 animations=3 ok=1
+Actor birth group=0 type=0 scene=2 born=31234567890 animations=2 ok=1
+Actor birth group=0 type=1 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=0 type=2 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=0 type=3 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=0 type=4 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=0 type=5 scene=2 born=31234567890 animations=2 ok=1
+Actor birth group=0 type=6 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=0 type=7 scene=2 born=31234567890 animations=2 ok=1
+Actor birth group=0 type=8 scene=2 born=31234567890 animations=2 ok=1
+Actor birth group=0 type=9 scene=2 born=31234567890 animations=2 ok=1
+Actor birth group=0 type=10 scene=2 born=31234567890 animations=2 ok=1
+Actor birth group=0 type=11 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=0 type=12 scene=2 born=31234567890 animations=2 ok=1
+Actor birth group=0 type=13 scene=2 born=31234567890 animations=2 ok=1
+Actor birth group=0 type=14 scene=2 born=31234567890 animations=2 ok=1
+Actor birth group=0 type=15 scene=2 born=31234567890 animations=2 ok=1
+Actor birth group=0 type=16 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=0 type=17 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=0 type=18 scene=2 born=31234567890 animations=4 ok=1
+Actor birth group=0 type=19 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=0 type=20 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=0 type=21 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=0 type=22 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=0 type=23 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=0 type=24 scene=2 born=31234567890 animations=2 ok=1
+Actor birth group=0 type=25 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=0 type=26 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=0 type=27 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=0 type=28 scene=2 born=31234567890 animations=3 ok=1
+Actor birth group=0 type=29 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=0 type=30 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=0 type=31 scene=2 born=31234567890 animations=2 ok=1
+Actor birth group=0 type=32 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=0 type=33 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=0 type=34 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=0 type=35 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=0 type=36 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=0 type=37 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=0 type=38 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=0 type=39 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=0 type=40 scene=2 born=31234567890 animations=2 ok=1
+Actor birth group=0 type=41 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=0 type=42 scene=2 born=31234567890 animations=2 ok=1
+Actor birth group=0 type=43 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=0 type=44 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=0 type=45 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=0 type=46 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=0 type=47 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=0 type=48 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=0 type=49 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=0 type=50 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=0 type=51 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=0 type=52 scene=2 born=31234567890 animations=2 ok=1
+Actor birth group=1 type=0 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=1 type=1 scene=2 born=31234567890 animations=2 ok=1
+Actor birth group=1 type=2 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=1 type=3 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=1 type=4 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=1 type=5 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=1 type=6 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=1 type=7 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=1 type=8 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=1 type=9 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=1 type=10 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=1 type=11 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=1 type=12 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=1 type=13 scene=2 born=31234567890 animations=4 ok=1
+Actor birth group=1 type=14 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=1 type=15 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=1 type=16 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=1 type=17 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=1 type=18 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=1 type=19 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=1 type=20 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=1 type=21 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=1 type=22 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=1 type=23 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=1 type=24 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=1 type=25 scene=2 born=31234567890 animations=2 ok=1
+Actor birth group=1 type=26 scene=2 born=31234567890 animations=2 ok=1
+Actor birth group=1 type=27 scene=2 born=31234567890 animations=2 ok=1
+Actor birth group=1 type=28 scene=2 born=31234567890 animations=2 ok=1
+Actor birth group=1 type=29 scene=2 born=31234567890 animations=2 ok=1
+Actor birth group=1 type=30 scene=2 born=31234567890 animations=2 ok=1
+Actor birth group=1 type=31 scene=2 born=31234567890 animations=2 ok=1
+Actor birth group=1 type=32 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=1 type=33 scene=2 born=31234567890 animations=3 ok=1
+Actor birth group=2 type=0 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=2 type=1 scene=2 born=31234567890 animations=2 ok=1
+Actor birth group=2 type=2 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=2 type=3 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=2 type=4 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=2 type=5 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=2 type=6 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=2 type=7 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=2 type=8 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=2 type=9 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=2 type=10 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=2 type=11 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=2 type=12 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=2 type=13 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=2 type=14 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=2 type=15 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=2 type=16 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=2 type=17 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=2 type=18 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=2 type=19 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=2 type=20 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=2 type=21 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=2 type=22 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=2 type=23 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=2 type=24 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=2 type=25 scene=2 born=31234567890 animations=2 ok=1
+Actor birth group=2 type=26 scene=2 born=31234567890 animations=2 ok=1
+Actor birth group=2 type=27 scene=2 born=31234567890 animations=2 ok=1
+Actor birth group=2 type=28 scene=2 born=31234567890 animations=2 ok=1
+Actor birth group=2 type=29 scene=2 born=31234567890 animations=2 ok=1
+Actor birth group=2 type=30 scene=2 born=31234567890 animations=2 ok=1
+Actor birth group=2 type=31 scene=2 born=31234567890 animations=2 ok=1
+Actor birth group=2 type=32 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=2 type=33 scene=2 born=31234567890 animations=3 ok=1
+Actor birth group=3 type=0 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=3 type=1 scene=2 born=31234567890 animations=2 ok=1
+Actor birth group=3 type=2 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=3 type=3 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=3 type=4 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=3 type=5 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=3 type=6 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=3 type=7 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=3 type=8 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=3 type=9 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=3 type=10 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=3 type=11 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=3 type=12 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=3 type=13 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=3 type=14 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=3 type=15 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=3 type=16 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=3 type=17 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=3 type=18 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=3 type=19 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=3 type=20 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=3 type=21 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=3 type=22 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=3 type=23 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=3 type=24 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=3 type=25 scene=2 born=31234567890 animations=2 ok=1
+Actor birth group=3 type=26 scene=2 born=31234567890 animations=2 ok=1
+Actor birth group=3 type=27 scene=2 born=31234567890 animations=2 ok=1
+Actor birth group=3 type=28 scene=2 born=31234567890 animations=2 ok=1
+Actor birth group=3 type=29 scene=2 born=31234567890 animations=2 ok=1
+Actor birth group=3 type=30 scene=2 born=31234567890 animations=2 ok=1
+Actor birth group=3 type=31 scene=2 born=31234567890 animations=2 ok=1
+Actor birth group=3 type=32 scene=2 born=31234567890 animations=1 ok=1
+Actor birth group=3 type=33 scene=2 born=31234567890 animations=3 ok=1
+FAIL image runtime: Actor birth clock cases failed or the catalog is incomplete

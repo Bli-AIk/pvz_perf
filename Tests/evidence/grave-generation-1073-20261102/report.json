@@ -1,0 +1,923 @@
+{
+  "scope": "52 actual night-wave count boundaries and 16 Whack 62-second timelines; no production grave rule changed",
+  "night_wave_cases": [
+    {
+      "mode": 0,
+      "level": 11,
+      "Hz": 100,
+      "initial": 4,
+      "final": 4,
+      "limit": 0,
+      "ok": 1
+    },
+    {
+      "mode": 0,
+      "level": 14,
+      "Hz": 100,
+      "initial": 7,
+      "final": 7,
+      "limit": 0,
+      "ok": 1
+    },
+    {
+      "mode": 0,
+      "level": 16,
+      "Hz": 100,
+      "initial": 7,
+      "final": 7,
+      "limit": 0,
+      "ok": 1
+    },
+    {
+      "mode": 0,
+      "level": 20,
+      "Hz": 100,
+      "initial": 13,
+      "final": 13,
+      "limit": 0,
+      "ok": 1
+    },
+    {
+      "mode": 0,
+      "level": 11,
+      "Hz": 30,
+      "initial": 4,
+      "final": 4,
+      "limit": 0,
+      "ok": 1
+    },
+    {
+      "mode": 0,
+      "level": 14,
+      "Hz": 30,
+      "initial": 7,
+      "final": 7,
+      "limit": 0,
+      "ok": 1
+    },
+    {
+      "mode": 0,
+      "level": 16,
+      "Hz": 30,
+      "initial": 7,
+      "final": 7,
+      "limit": 0,
+      "ok": 1
+    },
+    {
+      "mode": 0,
+      "level": 20,
+      "Hz": 30,
+      "initial": 13,
+      "final": 13,
+      "limit": 0,
+      "ok": 1
+    },
+    {
+      "mode": 0,
+      "level": 11,
+      "Hz": 240,
+      "initial": 4,
+      "final": 4,
+      "limit": 0,
+      "ok": 1
+    },
+    {
+      "mode": 0,
+      "level": 14,
+      "Hz": 240,
+      "initial": 7,
+      "final": 7,
+      "limit": 0,
+      "ok": 1
+    },
+    {
+      "mode": 0,
+      "level": 16,
+      "Hz": 240,
+      "initial": 7,
+      "final": 7,
+      "limit": 0,
+      "ok": 1
+    },
+    {
+      "mode": 0,
+      "level": 20,
+      "Hz": 240,
+      "initial": 13,
+      "final": 13,
+      "limit": 0,
+      "ok": 1
+    },
+    {
+      "mode": 0,
+      "level": 11,
+      "Hz": 0,
+      "initial": 4,
+      "final": 4,
+      "limit": 0,
+      "ok": 1
+    },
+    {
+      "mode": 0,
+      "level": 14,
+      "Hz": 0,
+      "initial": 7,
+      "final": 7,
+      "limit": 0,
+      "ok": 1
+    },
+    {
+      "mode": 0,
+      "level": 16,
+      "Hz": 0,
+      "initial": 7,
+      "final": 7,
+      "limit": 0,
+      "ok": 1
+    },
+    {
+      "mode": 0,
+      "level": 20,
+      "Hz": 0,
+      "initial": 13,
+      "final": 13,
+      "limit": 0,
+      "ok": 1
+    },
+    {
+      "mode": 67,
+      "level": 11,
+      "Hz": 100,
+      "initial": 0,
+      "final": 1,
+      "limit": 8,
+      "ok": 1
+    },
+    {
+      "mode": 67,
+      "level": 11,
+      "Hz": 100,
+      "initial": 7,
+      "final": 8,
+      "limit": 8,
+      "ok": 1
+    },
+    {
+      "mode": 67,
+      "level": 11,
+      "Hz": 100,
+      "initial": 8,
+      "final": 8,
+      "limit": 8,
+      "ok": 1
+    },
+    {
+      "mode": 67,
+      "level": 11,
+      "Hz": 30,
+      "initial": 0,
+      "final": 1,
+      "limit": 8,
+      "ok": 1
+    },
+    {
+      "mode": 67,
+      "level": 11,
+      "Hz": 30,
+      "initial": 7,
+      "final": 8,
+      "limit": 8,
+      "ok": 1
+    },
+    {
+      "mode": 67,
+      "level": 11,
+      "Hz": 30,
+      "initial": 8,
+      "final": 8,
+      "limit": 8,
+      "ok": 1
+    },
+    {
+      "mode": 67,
+      "level": 11,
+      "Hz": 240,
+      "initial": 0,
+      "final": 1,
+      "limit": 8,
+      "ok": 1
+    },
+    {
+      "mode": 67,
+      "level": 11,
+      "Hz": 240,
+      "initial": 7,
+      "final": 8,
+      "limit": 8,
+      "ok": 1
+    },
+    {
+      "mode": 67,
+      "level": 11,
+      "Hz": 240,
+      "initial": 8,
+      "final": 8,
+      "limit": 8,
+      "ok": 1
+    },
+    {
+      "mode": 67,
+      "level": 11,
+      "Hz": 0,
+      "initial": 0,
+      "final": 1,
+      "limit": 8,
+      "ok": 1
+    },
+    {
+      "mode": 67,
+      "level": 11,
+      "Hz": 0,
+      "initial": 7,
+      "final": 8,
+      "limit": 8,
+      "ok": 1
+    },
+    {
+      "mode": 67,
+      "level": 11,
+      "Hz": 0,
+      "initial": 8,
+      "final": 8,
+      "limit": 8,
+      "ok": 1
+    },
+    {
+      "mode": 62,
+      "level": 11,
+      "Hz": 100,
+      "initial": 0,
+      "final": 1,
+      "limit": 12,
+      "ok": 1
+    },
+    {
+      "mode": 62,
+      "level": 11,
+      "Hz": 100,
+      "initial": 11,
+      "final": 12,
+      "limit": 12,
+      "ok": 1
+    },
+    {
+      "mode": 62,
+      "level": 11,
+      "Hz": 100,
+      "initial": 12,
+      "final": 12,
+      "limit": 12,
+      "ok": 1
+    },
+    {
+      "mode": 62,
+      "level": 11,
+      "Hz": 30,
+      "initial": 0,
+      "final": 1,
+      "limit": 12,
+      "ok": 1
+    },
+    {
+      "mode": 62,
+      "level": 11,
+      "Hz": 30,
+      "initial": 11,
+      "final": 12,
+      "limit": 12,
+      "ok": 1
+    },
+    {
+      "mode": 62,
+      "level": 11,
+      "Hz": 30,
+      "initial": 12,
+      "final": 12,
+      "limit": 12,
+      "ok": 1
+    },
+    {
+      "mode": 62,
+      "level": 11,
+      "Hz": 240,
+      "initial": 0,
+      "final": 1,
+      "limit": 12,
+      "ok": 1
+    },
+    {
+      "mode": 62,
+      "level": 11,
+      "Hz": 240,
+      "initial": 11,
+      "final": 12,
+      "limit": 12,
+      "ok": 1
+    },
+    {
+      "mode": 62,
+      "level": 11,
+      "Hz": 240,
+      "initial": 12,
+      "final": 12,
+      "limit": 12,
+      "ok": 1
+    },
+    {
+      "mode": 62,
+      "level": 11,
+      "Hz": 0,
+      "initial": 0,
+      "final": 1,
+      "limit": 12,
+      "ok": 1
+    },
+    {
+      "mode": 62,
+      "level": 11,
+      "Hz": 0,
+      "initial": 11,
+      "final": 12,
+      "limit": 12,
+      "ok": 1
+    },
+    {
+      "mode": 62,
+      "level": 11,
+      "Hz": 0,
+      "initial": 12,
+      "final": 12,
+      "limit": 12,
+      "ok": 1
+    },
+    {
+      "mode": 57,
+      "level": 11,
+      "Hz": 100,
+      "initial": 0,
+      "final": 1,
+      "limit": 12,
+      "ok": 1
+    },
+    {
+      "mode": 57,
+      "level": 11,
+      "Hz": 100,
+      "initial": 11,
+      "final": 12,
+      "limit": 12,
+      "ok": 1
+    },
+    {
+      "mode": 57,
+      "level": 11,
+      "Hz": 100,
+      "initial": 12,
+      "final": 12,
+      "limit": 12,
+      "ok": 1
+    },
+    {
+      "mode": 57,
+      "level": 11,
+      "Hz": 30,
+      "initial": 0,
+      "final": 1,
+      "limit": 12,
+      "ok": 1
+    },
+    {
+      "mode": 57,
+      "level": 11,
+      "Hz": 30,
+      "initial": 11,
+      "final": 12,
+      "limit": 12,
+      "ok": 1
+    },
+    {
+      "mode": 57,
+      "level": 11,
+      "Hz": 30,
+      "initial": 12,
+      "final": 12,
+      "limit": 12,
+      "ok": 1
+    },
+    {
+      "mode": 57,
+      "level": 11,
+      "Hz": 240,
+      "initial": 0,
+      "final": 1,
+      "limit": 12,
+      "ok": 1
+    },
+    {
+      "mode": 57,
+      "level": 11,
+      "Hz": 240,
+      "initial": 11,
+      "final": 12,
+      "limit": 12,
+      "ok": 1
+    },
+    {
+      "mode": 57,
+      "level": 11,
+      "Hz": 240,
+      "initial": 12,
+      "final": 12,
+      "limit": 12,
+      "ok": 1
+    },
+    {
+      "mode": 57,
+      "level": 11,
+      "Hz": 0,
+      "initial": 0,
+      "final": 1,
+      "limit": 12,
+      "ok": 1
+    },
+    {
+      "mode": 57,
+      "level": 11,
+      "Hz": 0,
+      "initial": 11,
+      "final": 12,
+      "limit": 12,
+      "ok": 1
+    },
+    {
+      "mode": 57,
+      "level": 11,
+      "Hz": 0,
+      "initial": 12,
+      "final": 12,
+      "limit": 12,
+      "ok": 1
+    }
+  ],
+  "whack_events": [
+    {
+      "mode": 0,
+      "Hz": 100,
+      "depleted": 0,
+      "event": 0,
+      "timeNs": 21000000000,
+      "count": 10,
+      "ok": 1
+    },
+    {
+      "mode": 0,
+      "Hz": 100,
+      "depleted": 0,
+      "event": 1,
+      "timeNs": 41000000000,
+      "count": 11,
+      "ok": 1
+    },
+    {
+      "mode": 0,
+      "Hz": 100,
+      "depleted": 0,
+      "event": 2,
+      "timeNs": 61000000000,
+      "count": 12,
+      "ok": 1
+    },
+    {
+      "mode": 0,
+      "Hz": 100,
+      "depleted": 1,
+      "event": 0,
+      "timeNs": 21000000000,
+      "count": 5,
+      "ok": 1
+    },
+    {
+      "mode": 0,
+      "Hz": 100,
+      "depleted": 1,
+      "event": 1,
+      "timeNs": 41000000000,
+      "count": 6,
+      "ok": 1
+    },
+    {
+      "mode": 0,
+      "Hz": 100,
+      "depleted": 1,
+      "event": 2,
+      "timeNs": 61000000000,
+      "count": 7,
+      "ok": 1
+    },
+    {
+      "mode": 0,
+      "Hz": 30,
+      "depleted": 0,
+      "event": 0,
+      "timeNs": 21066666456,
+      "count": 10,
+      "ok": 1
+    },
+    {
+      "mode": 0,
+      "Hz": 30,
+      "depleted": 0,
+      "event": 1,
+      "timeNs": 41099999589,
+      "count": 11,
+      "ok": 1
+    },
+    {
+      "mode": 0,
+      "Hz": 30,
+      "depleted": 0,
+      "event": 2,
+      "timeNs": 61133332722,
+      "count": 12,
+      "ok": 1
+    },
+    {
+      "mode": 0,
+      "Hz": 30,
+      "depleted": 1,
+      "event": 0,
+      "timeNs": 21066666456,
+      "count": 5,
+      "ok": 1
+    },
+    {
+      "mode": 0,
+      "Hz": 30,
+      "depleted": 1,
+      "event": 1,
+      "timeNs": 41099999589,
+      "count": 6,
+      "ok": 1
+    },
+    {
+      "mode": 0,
+      "Hz": 30,
+      "depleted": 1,
+      "event": 2,
+      "timeNs": 61133332722,
+      "count": 7,
+      "ok": 1
+    },
+    {
+      "mode": 0,
+      "Hz": 240,
+      "depleted": 0,
+      "event": 0,
+      "timeNs": 21008329972,
+      "count": 10,
+      "ok": 1
+    },
+    {
+      "mode": 0,
+      "Hz": 240,
+      "depleted": 0,
+      "event": 1,
+      "timeNs": 41012493438,
+      "count": 11,
+      "ok": 1
+    },
+    {
+      "mode": 0,
+      "Hz": 240,
+      "depleted": 0,
+      "event": 2,
+      "timeNs": 61016656904,
+      "count": 12,
+      "ok": 1
+    },
+    {
+      "mode": 0,
+      "Hz": 240,
+      "depleted": 1,
+      "event": 0,
+      "timeNs": 21008329972,
+      "count": 5,
+      "ok": 1
+    },
+    {
+      "mode": 0,
+      "Hz": 240,
+      "depleted": 1,
+      "event": 1,
+      "timeNs": 41012493438,
+      "count": 6,
+      "ok": 1
+    },
+    {
+      "mode": 0,
+      "Hz": 240,
+      "depleted": 1,
+      "event": 2,
+      "timeNs": 61016656904,
+      "count": 7,
+      "ok": 1
+    },
+    {
+      "mode": 0,
+      "Hz": 0,
+      "depleted": 0,
+      "event": 0,
+      "timeNs": 21019567420,
+      "count": 10,
+      "ok": 1
+    },
+    {
+      "mode": 0,
+      "Hz": 0,
+      "depleted": 0,
+      "event": 1,
+      "timeNs": 41029924036,
+      "count": 11,
+      "ok": 1
+    },
+    {
+      "mode": 0,
+      "Hz": 0,
+      "depleted": 0,
+      "event": 2,
+      "timeNs": 61060280652,
+      "count": 12,
+      "ok": 1
+    },
+    {
+      "mode": 0,
+      "Hz": 0,
+      "depleted": 1,
+      "event": 0,
+      "timeNs": 21019567420,
+      "count": 5,
+      "ok": 1
+    },
+    {
+      "mode": 0,
+      "Hz": 0,
+      "depleted": 1,
+      "event": 1,
+      "timeNs": 41029924036,
+      "count": 6,
+      "ok": 1
+    },
+    {
+      "mode": 0,
+      "Hz": 0,
+      "depleted": 1,
+      "event": 2,
+      "timeNs": 61060280652,
+      "count": 7,
+      "ok": 1
+    },
+    {
+      "mode": 19,
+      "Hz": 100,
+      "depleted": 0,
+      "event": 0,
+      "timeNs": 21000000000,
+      "count": 10,
+      "ok": 1
+    },
+    {
+      "mode": 19,
+      "Hz": 100,
+      "depleted": 0,
+      "event": 1,
+      "timeNs": 41000000000,
+      "count": 11,
+      "ok": 1
+    },
+    {
+      "mode": 19,
+      "Hz": 100,
+      "depleted": 0,
+      "event": 2,
+      "timeNs": 61000000000,
+      "count": 12,
+      "ok": 1
+    },
+    {
+      "mode": 19,
+      "Hz": 100,
+      "depleted": 1,
+      "event": 0,
+      "timeNs": 21000000000,
+      "count": 5,
+      "ok": 1
+    },
+    {
+      "mode": 19,
+      "Hz": 100,
+      "depleted": 1,
+      "event": 1,
+      "timeNs": 41000000000,
+      "count": 6,
+      "ok": 1
+    },
+    {
+      "mode": 19,
+      "Hz": 100,
+      "depleted": 1,
+      "event": 2,
+      "timeNs": 61000000000,
+      "count": 7,
+      "ok": 1
+    },
+    {
+      "mode": 19,
+      "Hz": 30,
+      "depleted": 0,
+      "event": 0,
+      "timeNs": 21066666456,
+      "count": 10,
+      "ok": 1
+    },
+    {
+      "mode": 19,
+      "Hz": 30,
+      "depleted": 0,
+      "event": 1,
+      "timeNs": 41099999589,
+      "count": 11,
+      "ok": 1
+    },
+    {
+      "mode": 19,
+      "Hz": 30,
+      "depleted": 0,
+      "event": 2,
+      "timeNs": 61133332722,
+      "count": 12,
+      "ok": 1
+    },
+    {
+      "mode": 19,
+      "Hz": 30,
+      "depleted": 1,
+      "event": 0,
+      "timeNs": 21066666456,
+      "count": 5,
+      "ok": 1
+    },
+    {
+      "mode": 19,
+      "Hz": 30,
+      "depleted": 1,
+      "event": 1,
+      "timeNs": 41099999589,
+      "count": 6,
+      "ok": 1
+    },
+    {
+      "mode": 19,
+      "Hz": 30,
+      "depleted": 1,
+      "event": 2,
+      "timeNs": 61133332722,
+      "count": 7,
+      "ok": 1
+    },
+    {
+      "mode": 19,
+      "Hz": 240,
+      "depleted": 0,
+      "event": 0,
+      "timeNs": 21008329972,
+      "count": 10,
+      "ok": 1
+    },
+    {
+      "mode": 19,
+      "Hz": 240,
+      "depleted": 0,
+      "event": 1,
+      "timeNs": 41012493438,
+      "count": 11,
+      "ok": 1
+    },
+    {
+      "mode": 19,
+      "Hz": 240,
+      "depleted": 0,
+      "event": 2,
+      "timeNs": 61016656904,
+      "count": 12,
+      "ok": 1
+    },
+    {
+      "mode": 19,
+      "Hz": 240,
+      "depleted": 1,
+      "event": 0,
+      "timeNs": 21008329972,
+      "count": 5,
+      "ok": 1
+    },
+    {
+      "mode": 19,
+      "Hz": 240,
+      "depleted": 1,
+      "event": 1,
+      "timeNs": 41012493438,
+      "count": 6,
+      "ok": 1
+    },
+    {
+      "mode": 19,
+      "Hz": 240,
+      "depleted": 1,
+      "event": 2,
+      "timeNs": 61016656904,
+      "count": 7,
+      "ok": 1
+    },
+    {
+      "mode": 19,
+      "Hz": 0,
+      "depleted": 0,
+      "event": 0,
+      "timeNs": 21019567420,
+      "count": 10,
+      "ok": 1
+    },
+    {
+      "mode": 19,
+      "Hz": 0,
+      "depleted": 0,
+      "event": 1,
+      "timeNs": 41029924036,
+      "count": 11,
+      "ok": 1
+    },
+    {
+      "mode": 19,
+      "Hz": 0,
+      "depleted": 0,
+      "event": 2,
+      "timeNs": 61060280652,
+      "count": 12,
+      "ok": 1
+    },
+    {
+      "mode": 19,
+      "Hz": 0,
+      "depleted": 1,
+      "event": 0,
+      "timeNs": 21019567420,
+      "count": 5,
+      "ok": 1
+    },
+    {
+      "mode": 19,
+      "Hz": 0,
+      "depleted": 1,
+      "event": 1,
+      "timeNs": 41029924036,
+      "count": 6,
+      "ok": 1
+    },
+    {
+      "mode": 19,
+      "Hz": 0,
+      "depleted": 1,
+      "event": 2,
+      "timeNs": 61060280652,
+      "count": 7,
+      "ok": 1
+    }
+  ],
+  "sources": {
+    "Tests/native/ImageRuntimeTests.cpp": "9af01c6387995043693c21f85951247c2f5e704d4657dffbd44ea6be08334550",
+    "tools/test-image-runtime.ps1": "c2e96e7cd82eff2c3ff36bdc706d4c7d0636c40f98d40cf159bcbacd958e1fb8",
+    "pvzPerf/Lawn/Board.cpp": "aaeba6b3444a494b2be3e312be677fde3b0d7b8e47bdf52707f385992b86d668",
+    "pvzPerf/Lawn/Challenge.cpp": "64c61a3b42ca52c862bdcb7099796cfb91429023c703c11211fa458be5f05e32",
+    "pvzPerf/Lawn/GridItem.cpp": "f5fb26a6dfbc87d6f9c84aa69774029374ceab83092afec6dfa581977c19ae9b",
+    "pvzPerf/Lawn/CutScene.cpp": "7620445871b799f8fd8222cc95c3c52f908c4214dbc170b22fadccc45a5fd749",
+    "pvzPerf/SexyAppFramework/misc/TimeCounter.h": "4f5cf7945fdd4f590785f416014c5693b7fe957a8ff5617ac54d2ce8b8798651"
+  },
+  "test_executable_sha256": "4c51bca22e460ca53a93956a2f4bcae949a0417941e1dd23f3c66770fd1391d9",
+  "pak_sha256": "5bdd71c632d945304ae3752bfed61941bb8c7e4351e616e1ff6fbceab1431545",
+  "limits": [
+    "Wave indices and starting grave-count boundaries are constructed.",
+    "Whack zombies are removed after each update to isolate the 62-second spawning timeline; not a human whole-level playthrough.",
+    "This is desktop production-object verification, not a fresh phone trace."
+  ]
+}

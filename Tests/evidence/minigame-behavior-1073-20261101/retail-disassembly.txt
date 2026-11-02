@@ -1,0 +1,149 @@
+SHA256: 5f650f52d12751e08b63e590edb0d9b9f09d087cea900baa0eb39e4af8eda251
+
+Board normal pass, then Challenge update
+004188CF: mov edi, ebp
+004188D1: call 0x420510
+004188D6: mov ebx, ebp
+004188D8: call 0x420400
+004188DD: mov ecx, ebp
+004188DF: call 0x4181e0
+004188E4: push ebp
+004188E5: call 0x41d0c0
+004188EA: mov eax, dword ptr [ebp + 0x178]
+004188F0: call 0x4271b0
+
+Challenge speed mode 29 repeats Board::UpdateGame
+004273AF: mov ecx, dword ptr [esi]
+004273B1: cmp dword ptr [ecx + 0x918], 0x1d
+004273B8: jne 0x4273c2
+004273BA: mov ecx, dword ptr [esi + 4]
+004273BD: call 0x4181e0
+
+Independent effects outside UpdateGame
+00418744: mov eax, dword ptr [ebp + 0xa4]
+0041874A: mov edi, dword ptr [eax + 0x940]
+00418750: call 0x4484b0
+
+Pool counter outside UpdateGame
+00418835: mov eax, dword ptr [ebp + 0x5564]
+0041883B: mov edi, 1
+00418840: add dword ptr [ebp + 0x5584], edi
+00418846: cmp eax, 2
+00418849: je 0x418850
+0041884B: cmp eax, 3
+0041884E: jne 0x418880
+00418850: cmp dword ptr [ebp + 0x5630], 0
+00418857: jne 0x418880
+00418859: mov esi, dword ptr [ebp + 0xa4]
+0041885F: cmp dword ptr [esi + 0x91c], 4
+00418866: je 0x418880
+00418868: mov edx, dword ptr [ebp + 0x174]
+0041886E: call 0x43d980
+00418873: test al, al
+00418875: jne 0x418880
+00418877: mov eax, dword ptr [esi + 0x938]
+0041887D: add dword ptr [eax + 0xc], edi
+
+Board main counter advances only while playing (or special upsell)
+004183B0: cmp dword ptr [edi + 0x91c], 3
+004183B7: je 0x4183e4
+004183B9: mov eax, dword ptr [esi + 0x174]
+004183BF: mov ecx, dword ptr [eax]
+004183C1: mov ecx, dword ptr [ecx + 0x918]
+004183C7: cmp ecx, 0x47
+004183CA: je 0x4183d5
+004183CC: cmp ecx, 0x48
+004183CF: jne 0x4185e5
+004183D5: cmp byte ptr [eax + 0x40], 0
+004183D9: sete al
+004183DC: test al, al
+004183DE: je 0x4185e5
+004183E4: mov edi, 1
+004183E9: add dword ptr [esi + 0x5580], edi
+004183EF: call 0x4163d0
+
+Loss scene set before WalkIntoHouse
+004160C0: mov dword ptr [ecx + 0x91c], 4
+004160CA: call 0x5451f0
+
+Aquarium input routing
+00424C25: cmp dword ptr [ecx + 0x918], 0x17
+00424C2C: jne 0x424c6b
+00424C2E: cmp dword ptr [esp + 0x24], -1
+00424C33: jg 0x424c4f
+00424C35: mov edx, dword ptr [ecx]
+00424C37: mov eax, dword ptr [0x726948]
+00424C3C: mov edx, dword ptr [edx + 0xd8]
+00424C42: push eax
+00424C43: call edx
+00424C45: mov al, 1
+00424C47: pop edi
+00424C48: pop esi
+00424C49: pop ebp
+00424C4A: pop ebx
+00424C4B: pop ecx
+00424C4C: ret 0x10
+00424C4F: cmp dword ptr [ebx + 4], 0
+00424C53: jne 0x424c6b
+00424C55: mov eax, dword ptr [esp + 0x1c]
+00424C59: push esi
+00424C5A: push eax
+00424C5B: push ebp
+00424C5C: call 0x42aa70
+00424C61: mov al, 1
+00424C63: pop edi
+00424C64: pop esi
+00424C65: pop ebp
+00424C66: pop ebx
+00424C67: pop ecx
+00424C68: ret 0x10
+
+Aquarium bounds, existing-brain count, cost and creation
+0042AA70: mov eax, dword ptr [esp + 8]
+0042AA74: add eax, -0x50
+0042AA77: push ebp
+0042AA78: mov ebp, dword ptr [esp + 8]
+0042AA7C: cmp eax, 0x280
+0042AA81: ja 0x42aaf4
+0042AA83: mov ecx, dword ptr [esp + 0x10]
+0042AA87: add ecx, -0x5a
+0042AA8A: cmp ecx, 0x154
+0042AA90: ja 0x42aaf4
+0042AA92: mov edx, dword ptr [ebp + 4]
+0042AA95: push ebx
+0042AA96: push esi
+0042AA97: push edi
+0042AA98: xor edi, edi
+0042AA9A: lea esi, [esp + 0x14]
+0042AA9E: mov dword ptr [esp + 0x14], edi
+0042AAA2: call 0x41f890
+0042AAA7: test al, al
+0042AAA9: je 0x42aacf
+0042AAAB: mov ebx, 6
+0042AAB0: mov edx, dword ptr [esp + 0x14]
+0042AAB4: cmp dword ptr [edx + 8], ebx
+0042AAB7: jne 0x42aaba
+0042AAB9: inc edi
+0042AABA: mov edx, dword ptr [ebp + 4]
+0042AABD: lea esi, [esp + 0x14]
+0042AAC1: call 0x41f890
+0042AAC6: test al, al
+0042AAC8: jne 0x42aab0
+0042AACA: cmp edi, 3
+0042AACD: jge 0x42aaf1
+0042AACF: mov edi, dword ptr [ebp + 4]
+0042AAD2: mov ebx, 5
+0042AAD7: call 0x41e830
+0042AADC: test al, al
+0042AADE: je 0x42aaf1
+0042AAE0: mov eax, dword ptr [esp + 0x1c]
+0042AAE4: mov ecx, dword ptr [esp + 0x18]
+0042AAE8: push eax
+0042AAE9: push ecx
+0042AAEA: mov edi, ebp
+0042AAEC: call 0x42a9c0
+0042AAF1: pop edi
+0042AAF2: pop esi
+0042AAF3: pop ebx
+0042AAF4: pop ebp
+0042AAF5: ret 0xc

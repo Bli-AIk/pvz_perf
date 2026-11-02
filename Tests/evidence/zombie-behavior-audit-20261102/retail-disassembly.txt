@@ -1,0 +1,9 @@
+SHA256: 5f650f52d12751e08b63e590edb0d9b9f09d087cea900baa0eb39e4af8eda251
+
+Catapult initial ammunition: twenty balls
+00533302: mov dword ptr [edi + 0x114], 0x14
+
+Completed launch decrements one; subsequent comparisons hide remaining balls
+00536128: dec dword ptr [edi + 0x114]
+0053612E: mov eax, dword ptr [edi + 0x114]
+00536134: cmp eax, 4

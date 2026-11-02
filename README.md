@@ -4,13 +4,13 @@
 文档维护当前有效机制与修复；现行实测和历史算法证据分开标注，不按日期追加开发过程。
 
 发行下载：[GitHub Releases](https://github.com/YuHao2006/pvz_perf/releases)。
-**当前版本 v3.2.4，沿用 v3.0 引入的 DAT64 v4：v1.x/v2.x 的旧存档与旧 PAK64 不能直接混用。**
-v3.2.4提供Win10 Vulkan 1.3、Win7 OpenGL 3.3和Android Vulkan 1.3整包，以及完美用户档与统一无尽基准。
+**当前版本 v3.2.5，沿用 v3.0 引入的 DAT64 v4：v1.x/v2.x 的旧存档与旧 PAK64 不能直接混用。**
+v3.2.5提供Win10 Vulkan 1.3、Win7 OpenGL 3.3和Android Vulkan 1.3整包，以及完美用户档与统一无尽基准。
 完整解压到新的可写目录后运行 `pvz_perf.exe`。
 游戏只读取 **DAT64 v4 / schema 0x10745**；原版 DAT、DAT64 v1/v2 需使用附带转换器升级。
 未发布的 v3 系列中间存档不受支持。用户摘要 `users.dat` 和玩家详情 `PVZUSR64` v13 独立管理。
 资源采用当前静态定义和离线图集，EXE、shaders 与 PAK64 必须成套更新。
-本次修复见 [v3.2.4 发布说明](docs/releases/v3.2.4.md)，存档迁移背景见 [v3.0 发布说明](docs/releases/v3.0.md)。
+本次修复见 [v3.2.5 发布说明](docs/releases/v3.2.5.md)，存档迁移背景见 [v3.0 发布说明](docs/releases/v3.0.md)。
 生成的 PerfTest 完美用户档包含全解锁进度，DAT64 v4 无尽档来自仓库原版基准；不包含个人进度或设置。
 普通生存完成记录为 5 旗，困难生存为 10 旗。
 **Win7 统一 SDR，不支持 HDR；DX9/OpenGL 的默认配置不启用自定义缩放效果。**

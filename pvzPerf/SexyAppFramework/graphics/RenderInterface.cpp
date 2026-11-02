@@ -643,6 +643,11 @@ GpuTexture* RenderInterface::UploadAtlasTexture(ImageLib::Image*& decoded)
 	if (!decoded || !decoded->mBits || decoded->HasComposition())
 		throw std::logic_error("Atlas has no plain loading payload");
 	RequireImageDimensions(mRenderer,decoded->mWidth,decoded->mHeight);
+	// Atlases bypass ResourceManager's ordinary image sanding. Transparent
+	// source texels may still contain white RGB, which linear sampling blends
+	// into visible edges. Repair once before upload; alpha and visible RGB stay
+	// unchanged, and the decoded pixels are still discarded below.
+	ImageLib::FixTransparentEdges(*decoded);
 	auto* texture=mRenderer->CreateTexture(decoded->mWidth,decoded->mHeight,
 		decoded->mBits,decoded->mWidth*4,false);
 	if (!texture)

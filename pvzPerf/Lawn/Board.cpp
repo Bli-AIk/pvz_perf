@@ -508,6 +508,10 @@ GridItem* Board::AddAGraveStone(int theGridX, int theGridY)
 	GridItem* aGraveStone = mGridItems.DataArrayAlloc();
 	aGraveStone->mGridItemType = GridItemType::GRIDITEM_GRAVESTONE;
 	aGraveStone->mStateStartTimeNs = static_cast<std::int64_t>(mLevelTimeNs) + static_cast<std::int64_t>(Rand(50)) * 10'000'000;
+	// Before the intro enables runtime graves, scenery is already fully risen.
+	// Keep the random draw above so later gameplay RNG is unchanged.
+	if (!mEnableGraveStones)
+		aGraveStone->mStateStartTimeNs = static_cast<std::int64_t>(mLevelTimeNs) - 1'000'000'000;
 	aGraveStone->mRenderOrder = MakeRenderOrder(RenderLayer::RENDER_LAYER_GRAVE_STONE, theGridY, 3);
 	aGraveStone->mGridX = theGridX;
 	aGraveStone->mGridY = theGridY;
@@ -2356,9 +2360,20 @@ bool Board::IsPoolSquare(int theGridX, int theGridY)
 //0x40CE20
 Plant* Board::NewPlant(int theGridX, int theGridY, SeedType theSeedType, SeedType theImitaterType)
 {
+	const auto domain = AnimationTimeDomain();
+	const auto visualNowNs = mApp->mEffectSystem->mReanimationHolder->mVisualTimeNs;
+	const auto animationNowNs = domain == ReanimTimeDomain::Battle ? static_cast<std::int64_t>(mLevelTimeNs) : visualNowNs;
 	Plant* aPlant = mPlants.DataArrayAlloc();
 	aPlant->mIsOnBoard = true;
-	aPlant->PlantInitialize(static_cast<std::int64_t>(mLevelTimeNs), mApp->mEffectSystem->mReanimationHolder->mVisualTimeNs, (AnimationTimeDomain() == ReanimTimeDomain::Battle ? static_cast<std::int64_t>(mLevelTimeNs) : mApp->mEffectSystem->mReanimationHolder->mVisualTimeNs), theGridX, theGridY, theSeedType, theImitaterType);
+	aPlant->PlantInitialize(static_cast<std::int64_t>(mLevelTimeNs), visualNowNs, animationNowNs, theGridX, theGridY, theSeedType, theImitaterType);
+	// Creation already supplied timestamps in this owner's clock. Deferring the
+	// binding to the next update would rebase at its end and discard that step.
+	auto& holder = *mApp->mEffectSystem->mReanimationHolder;
+	for (const auto id : {aPlant->mBodyReanimID, aPlant->mHeadReanimID, aPlant->mHeadReanimID2,
+		aPlant->mHeadReanimID3, aPlant->mBlinkReanimID, aPlant->mLightReanimID, aPlant->mSleepingReanimID})
+		if (auto* animation = mApp->ReanimationTryToGet(id))
+			holder.BindAnimationTime(*animation, animation->mIsAttachment ? domain : ReanimTimeDomain::Visual,
+				animation->mIsAttachment ? animationNowNs : visualNowNs);
 	RegisterPlantCellBucket(aPlant);
 	return aPlant;
 }
@@ -3524,8 +3539,24 @@ Zombie* Board::AddZombieInRow(ZombieType theZombieType, int theRow, int theFromW
 	const bool preview = theFromWave == Zombie::ZOMBIE_WAVE_CUTSCENE || theFromWave == Zombie::ZOMBIE_WAVE_UI;
 	const auto ownerNowNs = preview ? visualNowNs : static_cast<std::int64_t>(mLevelTimeNs);
 	const auto domain = preview ? ReanimTimeDomain::Visual : AnimationTimeDomain();
+	const auto animationNowNs = domain == ReanimTimeDomain::Battle ? ownerNowNs : visualNowNs;
+	auto& holder = *mApp->mEffectSystem->mReanimationHolder;
+	const auto bindBirth = [&](Zombie& zombie) {
+		for (const auto id : {zombie.mBodyReanimID, zombie.mSpecialHeadReanimID, zombie.mZombatarHeadReanimID,
+			zombie.mMoweredReanimID, zombie.mBossFireBallReanimID})
+			if (auto* animation = mApp->ReanimationTryToGet(id))
+				holder.BindAnimationTime(*animation, animation->mIsAttachment ? domain : ReanimTimeDomain::Visual,
+					animation->mIsAttachment ? animationNowNs : visualNowNs);
+		if (auto* attachment = mApp->mEffectSystem->mAttachmentHolder->mAttachments.DataArrayTryToGet(
+			static_cast<unsigned int>(zombie.mAttachmentID)))
+			for (int i = 0; i < attachment->mNumEffects; ++i)
+				if (attachment->mEffectArray[i].mEffectType == EffectType::EFFECT_REANIM)
+					if (auto* animation = holder.mReanimations.DataArrayTryToGet(attachment->mEffectArray[i].mEffectID))
+						holder.BindAnimationTime(*animation, preview ? ReanimTimeDomain::Visual : ReanimTimeDomain::Battle, ownerNowNs);
+	};
 	Zombie* aZombie = mZombies.DataArrayAlloc();
-	aZombie->ZombieInitialize(ownerNowNs, visualNowNs, domain == ReanimTimeDomain::Battle ? ownerNowNs : visualNowNs, theRow, theZombieType, aVariant, nullptr, theFromWave);
+	aZombie->ZombieInitialize(ownerNowNs, visualNowNs, animationNowNs, theRow, theZombieType, aVariant, nullptr, theFromWave);
+	bindBirth(*aZombie);
 	// 行段桶入场（2026-10-04 用户方案）：注册在池分配漏斗（池成员资格有
 	// 保证——烟测夹具的栈上僵尸直调 ZombieInitialize 不入桶；存档整池
 	// 镜像装载亦不走此，由装载侧 RebuildZombieRowBucket 兜底）
@@ -3535,7 +3566,8 @@ Zombie* Board::AddZombieInRow(ZombieType theZombieType, int theRow, int theFromW
 		for (int _i = 0; _i < 3; _i++)
 		{
 			Zombie* aFollower = mZombies.DataArrayAlloc();
-			aFollower->ZombieInitialize(ownerNowNs, visualNowNs, domain == ReanimTimeDomain::Battle ? ownerNowNs : visualNowNs, theRow, ZombieType::ZOMBIE_BOBSLED, false, aZombie, theFromWave);
+			aFollower->ZombieInitialize(ownerNowNs, visualNowNs, animationNowNs, theRow, ZombieType::ZOMBIE_BOBSLED, false, aZombie, theFromWave);
+			bindBirth(*aFollower);
 			RegisterZombieRowBucket(aFollower);
 		}
 	}
@@ -11245,8 +11277,6 @@ void Board::UpdateGridItems()
 	while (IterateGridItems(aGridItem))
 	{
 		const auto nowNs = static_cast<std::int64_t>(mLevelTimeNs);
-		if (!mEnableGraveStones && aGridItem->mGridItemType == GridItemType::GRIDITEM_GRAVESTONE)
-			aGridItem->mStateStartTimeNs += static_cast<std::int64_t>(Sexy::gUpdateIntervalNs);
 		if (aGridItem->mGridItemType == GridItemType::GRIDITEM_CRATER)
 		{
 			if (mApp->mGameScene == GameScenes::SCENE_PLAYING)

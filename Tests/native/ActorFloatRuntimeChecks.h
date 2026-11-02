@@ -590,6 +590,46 @@ inline void LaunchDeadlines(LawnApp& app, Board& board)
             (seed == SeedType::SEED_CATTAIL ? 50 : 26) * PlantLaunchClock::Tick,
             "Secondary launch was suppressed by an unfinished shooting timer");
     }
+    for (const auto seed : {SeedType::SEED_REPEATER, SeedType::SEED_LEFTPEATER})
+    for (const int frequency : {100, 144, 240, 1000, 30, 0})
+    {
+        app.mEffectSystem->EffectSystemFreeAll();
+        board.mProjectiles.DataArrayFreeAll();
+        board.mLevelTimeNs = 0;
+        Sexy::SRand(0x601982);
+        Plant plant;
+        plant.PlantInitialize(0, 0, 0, 3, 2, seed, SeedType::SEED_NONE);
+        target->mX = seed == SeedType::SEED_LEFTPEATER ? 150 : 340;
+        plant.mNextLaunchTimeNs = 1'013'456'789;
+        plant.mLaunchWindowStartNs = 0;
+        Require(plant.FindTargetZombie(2, PlantWeapon::WEAPON_PRIMARY) == target,
+            "Repeater fixture did not acquire its real target");
+        int attacks = 0, shots = 0;
+        Schedule(frequency, 8'000'000'000, [&](std::int64_t delta) {
+            board.mLevelTimeNs += delta;
+            plant.UpdateShooting(board.mLevelTimeNs, board.mLevelTimeNs, board.mLevelTimeNs);
+            const auto due = plant.mNextLaunchTimeNs;
+            plant.UpdateShooter(board.mLevelTimeNs, board.mLevelTimeNs, board.mLevelTimeNs);
+            if (due <= board.mLevelTimeNs)
+            {
+                Require(board.mProjectiles.mSize == 1,
+                    "Repeater lost its first projectile when the second shot restarted its timer");
+                Require(shots == attacks * 2,
+                    "Repeater lost or duplicated a projectile in its preceding attack pair");
+                ++attacks;
+            }
+            if (board.mProjectiles.mSize)
+            {
+                Require(board.mProjectiles.mSize == 1,
+                    "Repeater emitted duplicate projectiles in one firing interval");
+                ++shots;
+                board.mProjectiles.DataArrayFreeAll();
+            }
+        });
+        Require(attacks >= 5 && shots >= attacks * 2 - 1,
+            "Repeater fixture did not cover complete attack pairs");
+    }
+    target->mX = 340;
     app.mEffectSystem->EffectSystemFreeAll();
     board.mZombies.DataArrayFreeAll();
     board.RebuildZombieRowBucket();

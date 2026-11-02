@@ -1169,16 +1169,22 @@ void Plant::UpdateShooter(std::int64_t ownerNowNs, std::int64_t visualNowNs, std
             PlantLaunchClock::Crossed(aWindowStart, aWindowEnd,
                 mNextLaunchTimeNs - 50 * PlantLaunchClock::Tick))
             FindTargetAndFire(ownerNowNs, visualNowNs, animationNowNs, mRow, PlantWeapon::WEAPON_PRIMARY);
-        if (PlantLaunchClock::Crossed(aWindowStart, aWindowEnd,
-                mNextLaunchTimeNs - 25 * PlantLaunchClock::Tick))
+        const auto aFirstShotStart = mNextLaunchTimeNs - 25 * PlantLaunchClock::Tick;
+        if (PlantLaunchClock::Crossed(aWindowStart, aWindowEnd, aFirstShotStart))
         {
+            bool aStartedShooting = false;
             if (mSeedType == SeedType::SEED_REPEATER || mSeedType == SeedType::SEED_LEFTPEATER)
-                FindTargetAndFire(ownerNowNs, visualNowNs, animationNowNs, mRow, PlantWeapon::WEAPON_PRIMARY);
+                aStartedShooting = FindTargetAndFire(ownerNowNs, visualNowNs, animationNowNs, mRow, PlantWeapon::WEAPON_PRIMARY);
             else if (mSeedType == SeedType::SEED_SPLITPEA)
             {
-                FindTargetAndFire(ownerNowNs, visualNowNs, animationNowNs, mRow, PlantWeapon::WEAPON_PRIMARY);
-                FindTargetAndFire(ownerNowNs, visualNowNs, animationNowNs, mRow, PlantWeapon::WEAPON_SECONDARY);
+                aStartedShooting = FindTargetAndFire(ownerNowNs, visualNowNs, animationNowNs, mRow, PlantWeapon::WEAPON_PRIMARY);
+                aStartedShooting |= FindTargetAndFire(ownerNowNs, visualNowNs, animationNowNs, mRow, PlantWeapon::WEAPON_SECONDARY);
             }
+            // The first shot starts at its deadline inside this update, not
+            // at the update endpoint. Otherwise the next trigger can reset
+            // its 26-unit timer before it crosses the one-unit fire event.
+            if (aStartedShooting)
+                mShootingCounter.AddNanoseconds(aFirstShotStart - aNow);
         }
     };
     int aEvents = 0;

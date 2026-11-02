@@ -1,0 +1,64 @@
+ImageRuntimeTests.cpp
+正在生成代码
+已完成代码的生成
+PASS pure wrapped text measurement: wrapping, newlines, color tags, no glyph draws and empty fill
+pool GPU day-normal-nearest: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU night-normal-linear: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU day-additive-partial-fractional: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU night-additive-phase-wrap: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU day-opaque-partial-fractional: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU night-opaque-large-counter: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU feedback-float-source-pending-batch: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+PASS production GPU pool vs independent legacy CPU mesh: day/night, normal/additive/opaque, nearest/linear/repeat, phase wrap, destination scissor, fractional translation, ordinary painter order and float target feedback
+PASS precomputed transparent edges: alpha, visible RGB, idempotency, nearest/linear, upload-discard
+PASS public font upload: deferred alpha, upload-and-discard, texture reuse, independent copies
+PASS nonzero source rectangles and repacked whole-sheet atlas views: translation, scale origins, clipping, tint, additive, local-source views and floating scales
+PASS necessary local-clip contract: independent full-pixel rect/image/source/mirror/matrix/particle/convex oracles, disjoint/partial/empty clips and negative framebuffer crossings
+PASS actual TitleScreen grass reveal: widths 0/1/157/313/314/400, translated draw and unrevealed black pixels
+PASS actual GameButton atlas states: normal, hover, press/fallbacks, disabled, overAlpha, additive glow, translation/offsets and hidden state match independent images
+PASS direct shared-image snapshots and reference lifetime
+PASS actual boss back-arm drawing: four attack offsets, reference pixels, 1024 exact shared-animation translation restorations
+PASS reanimation appearances: independent options, image slots, atlas dimensions, original centers and actual AttachmentDraw visibility pixels
+PASS fullscreen reanimation: destination fill pixels, hidden/zero alpha, color modulation, both blend modes, translation and effective clip without track matrices
+Store clock fixture: initialize
+Almanac begin level=0 width=800 Hz=100
+Almanac clock level=0 width=800 Hz=100 closed=1
+Almanac begin level=0 width=800 Hz=30
+Almanac clock level=0 width=800 Hz=30 closed=1
+Almanac begin level=0 width=800 Hz=240
+Almanac clock level=0 width=800 Hz=240 closed=1
+Almanac begin level=0 width=800 Hz=0
+Almanac clock level=0 width=800 Hz=0 closed=1
+Almanac begin level=0 width=1400 Hz=100
+Almanac clock level=0 width=1400 Hz=100 closed=1
+Almanac begin level=0 width=1400 Hz=30
+Almanac clock level=0 width=1400 Hz=30 closed=1
+Almanac begin level=0 width=1400 Hz=240
+Almanac clock level=0 width=1400 Hz=240 closed=1
+Almanac begin level=0 width=1400 Hz=0
+Almanac clock level=0 width=1400 Hz=0 closed=1
+Almanac begin level=1 width=800 Hz=100
+Almanac resume width=800 Hz=100 birthDomain=0 domain=1 battle=7891011 expectedPhase=7891011 actualPhase=0
+Almanac failed level=1 width=800 Hz=100 message=Closing Almanac caught up paused UI time instead of one battle step
+Almanac begin level=1 width=800 Hz=30
+Almanac resume width=800 Hz=30 birthDomain=0 domain=1 battle=7891011 expectedPhase=7891011 actualPhase=0
+Almanac failed level=1 width=800 Hz=30 message=Closing Almanac caught up paused UI time instead of one battle step
+Almanac begin level=1 width=800 Hz=240
+Almanac resume width=800 Hz=240 birthDomain=0 domain=1 battle=7891011 expectedPhase=7891011 actualPhase=0
+Almanac failed level=1 width=800 Hz=240 message=Closing Almanac caught up paused UI time instead of one battle step
+Almanac begin level=1 width=800 Hz=0
+Almanac resume width=800 Hz=0 birthDomain=0 domain=1 battle=7891011 expectedPhase=7891011 actualPhase=0
+Almanac failed level=1 width=800 Hz=0 message=Closing Almanac caught up paused UI time instead of one battle step
+Almanac begin level=1 width=1400 Hz=100
+Almanac resume width=1400 Hz=100 birthDomain=0 domain=1 battle=7891011 expectedPhase=7891011 actualPhase=0
+Almanac failed level=1 width=1400 Hz=100 message=Closing Almanac caught up paused UI time instead of one battle step
+Almanac begin level=1 width=1400 Hz=30
+Almanac resume width=1400 Hz=30 birthDomain=0 domain=1 battle=7891011 expectedPhase=7891011 actualPhase=0
+Almanac failed level=1 width=1400 Hz=30 message=Closing Almanac caught up paused UI time instead of one battle step
+Almanac begin level=1 width=1400 Hz=240
+Almanac resume width=1400 Hz=240 birthDomain=0 domain=1 battle=7891011 expectedPhase=7891011 actualPhase=0
+Almanac failed level=1 width=1400 Hz=240 message=Closing Almanac caught up paused UI time instead of one battle step
+Almanac begin level=1 width=1400 Hz=0
+Almanac resume width=1400 Hz=0 birthDomain=0 domain=1 battle=7891011 expectedPhase=7891011 actualPhase=0
+Almanac failed level=1 width=1400 Hz=0 message=Closing Almanac caught up paused UI time instead of one battle step
+FAIL image runtime: Almanac rules have failed cases; inspect per-case output

@@ -1,0 +1,1571 @@
+{
+  "scope": "Twenty puzzles: actual listed inputs, attacks, bites, payloads, terminal states and first endless repopulation",
+  "limits": "Controlled combat targets; vases opened non-zombies first; later stages constructed explicitly, not played through",
+  "cases": [
+    {
+      "mode": "36",
+      "schedule": "100",
+      "stage": "0",
+      "award": "0",
+      "result": "2"
+    },
+    {
+      "mode": "36",
+      "schedule": "30",
+      "stage": "0",
+      "award": "0",
+      "result": "2"
+    },
+    {
+      "mode": "36",
+      "schedule": "240",
+      "stage": "0",
+      "award": "0",
+      "result": "2"
+    },
+    {
+      "mode": "36",
+      "schedule": "0",
+      "stage": "0",
+      "award": "0",
+      "result": "2"
+    },
+    {
+      "mode": "37",
+      "schedule": "100",
+      "stage": "0",
+      "award": "0",
+      "result": "2"
+    },
+    {
+      "mode": "37",
+      "schedule": "30",
+      "stage": "0",
+      "award": "0",
+      "result": "2"
+    },
+    {
+      "mode": "37",
+      "schedule": "240",
+      "stage": "0",
+      "award": "0",
+      "result": "2"
+    },
+    {
+      "mode": "37",
+      "schedule": "0",
+      "stage": "0",
+      "award": "0",
+      "result": "2"
+    },
+    {
+      "mode": "38",
+      "schedule": "100",
+      "stage": "0",
+      "award": "0",
+      "result": "2"
+    },
+    {
+      "mode": "38",
+      "schedule": "30",
+      "stage": "0",
+      "award": "0",
+      "result": "2"
+    },
+    {
+      "mode": "38",
+      "schedule": "240",
+      "stage": "0",
+      "award": "0",
+      "result": "2"
+    },
+    {
+      "mode": "38",
+      "schedule": "0",
+      "stage": "0",
+      "award": "0",
+      "result": "2"
+    },
+    {
+      "mode": "39",
+      "schedule": "100",
+      "stage": "0",
+      "award": "0",
+      "result": "2"
+    },
+    {
+      "mode": "39",
+      "schedule": "30",
+      "stage": "0",
+      "award": "0",
+      "result": "2"
+    },
+    {
+      "mode": "39",
+      "schedule": "240",
+      "stage": "0",
+      "award": "0",
+      "result": "2"
+    },
+    {
+      "mode": "39",
+      "schedule": "0",
+      "stage": "0",
+      "award": "0",
+      "result": "2"
+    },
+    {
+      "mode": "40",
+      "schedule": "100",
+      "stage": "0",
+      "award": "0",
+      "result": "2"
+    },
+    {
+      "mode": "40",
+      "schedule": "30",
+      "stage": "0",
+      "award": "0",
+      "result": "2"
+    },
+    {
+      "mode": "40",
+      "schedule": "240",
+      "stage": "0",
+      "award": "0",
+      "result": "2"
+    },
+    {
+      "mode": "40",
+      "schedule": "0",
+      "stage": "0",
+      "award": "0",
+      "result": "2"
+    },
+    {
+      "mode": "41",
+      "schedule": "100",
+      "stage": "0",
+      "award": "0",
+      "result": "2"
+    },
+    {
+      "mode": "41",
+      "schedule": "30",
+      "stage": "0",
+      "award": "0",
+      "result": "2"
+    },
+    {
+      "mode": "41",
+      "schedule": "240",
+      "stage": "0",
+      "award": "0",
+      "result": "2"
+    },
+    {
+      "mode": "41",
+      "schedule": "0",
+      "stage": "0",
+      "award": "0",
+      "result": "2"
+    },
+    {
+      "mode": "42",
+      "schedule": "100",
+      "stage": "0",
+      "award": "0",
+      "result": "2"
+    },
+    {
+      "mode": "42",
+      "schedule": "30",
+      "stage": "0",
+      "award": "0",
+      "result": "2"
+    },
+    {
+      "mode": "42",
+      "schedule": "240",
+      "stage": "0",
+      "award": "0",
+      "result": "2"
+    },
+    {
+      "mode": "42",
+      "schedule": "0",
+      "stage": "0",
+      "award": "0",
+      "result": "2"
+    },
+    {
+      "mode": "43",
+      "schedule": "100",
+      "stage": "0",
+      "award": "0",
+      "result": "2"
+    },
+    {
+      "mode": "43",
+      "schedule": "30",
+      "stage": "0",
+      "award": "0",
+      "result": "2"
+    },
+    {
+      "mode": "43",
+      "schedule": "240",
+      "stage": "0",
+      "award": "0",
+      "result": "2"
+    },
+    {
+      "mode": "43",
+      "schedule": "0",
+      "stage": "0",
+      "award": "0",
+      "result": "2"
+    },
+    {
+      "mode": "44",
+      "schedule": "100",
+      "stage": "0",
+      "award": "0",
+      "result": "2"
+    },
+    {
+      "mode": "44",
+      "schedule": "30",
+      "stage": "0",
+      "award": "0",
+      "result": "2"
+    },
+    {
+      "mode": "44",
+      "schedule": "240",
+      "stage": "0",
+      "award": "0",
+      "result": "2"
+    },
+    {
+      "mode": "44",
+      "schedule": "0",
+      "stage": "0",
+      "award": "0",
+      "result": "2"
+    },
+    {
+      "mode": "45",
+      "schedule": "100",
+      "stage": "1",
+      "award": "0",
+      "result": "2"
+    },
+    {
+      "mode": "45",
+      "schedule": "30",
+      "stage": "1",
+      "award": "0",
+      "result": "2"
+    },
+    {
+      "mode": "45",
+      "schedule": "240",
+      "stage": "1",
+      "award": "0",
+      "result": "2"
+    },
+    {
+      "mode": "45",
+      "schedule": "0",
+      "stage": "1",
+      "award": "0",
+      "result": "2"
+    },
+    {
+      "mode": "46",
+      "schedule": "100",
+      "stage": "0",
+      "award": "1",
+      "result": "1"
+    },
+    {
+      "mode": "46",
+      "schedule": "30",
+      "stage": "0",
+      "award": "1",
+      "result": "1"
+    },
+    {
+      "mode": "46",
+      "schedule": "240",
+      "stage": "0",
+      "award": "1",
+      "result": "1"
+    },
+    {
+      "mode": "46",
+      "schedule": "0",
+      "stage": "0",
+      "award": "1",
+      "result": "1"
+    },
+    {
+      "mode": "47",
+      "schedule": "100",
+      "stage": "0",
+      "award": "1",
+      "result": "1"
+    },
+    {
+      "mode": "47",
+      "schedule": "30",
+      "stage": "0",
+      "award": "1",
+      "result": "1"
+    },
+    {
+      "mode": "47",
+      "schedule": "240",
+      "stage": "0",
+      "award": "1",
+      "result": "1"
+    },
+    {
+      "mode": "47",
+      "schedule": "0",
+      "stage": "0",
+      "award": "1",
+      "result": "1"
+    },
+    {
+      "mode": "48",
+      "schedule": "100",
+      "stage": "0",
+      "award": "1",
+      "result": "1"
+    },
+    {
+      "mode": "48",
+      "schedule": "30",
+      "stage": "0",
+      "award": "1",
+      "result": "1"
+    },
+    {
+      "mode": "48",
+      "schedule": "240",
+      "stage": "0",
+      "award": "1",
+      "result": "1"
+    },
+    {
+      "mode": "48",
+      "schedule": "0",
+      "stage": "0",
+      "award": "1",
+      "result": "1"
+    },
+    {
+      "mode": "49",
+      "schedule": "100",
+      "stage": "0",
+      "award": "1",
+      "result": "1"
+    },
+    {
+      "mode": "49",
+      "schedule": "30",
+      "stage": "0",
+      "award": "1",
+      "result": "1"
+    },
+    {
+      "mode": "49",
+      "schedule": "240",
+      "stage": "0",
+      "award": "1",
+      "result": "1"
+    },
+    {
+      "mode": "49",
+      "schedule": "0",
+      "stage": "0",
+      "award": "1",
+      "result": "1"
+    },
+    {
+      "mode": "50",
+      "schedule": "100",
+      "stage": "0",
+      "award": "1",
+      "result": "1"
+    },
+    {
+      "mode": "50",
+      "schedule": "30",
+      "stage": "0",
+      "award": "1",
+      "result": "1"
+    },
+    {
+      "mode": "50",
+      "schedule": "240",
+      "stage": "0",
+      "award": "1",
+      "result": "1"
+    },
+    {
+      "mode": "50",
+      "schedule": "0",
+      "stage": "0",
+      "award": "1",
+      "result": "1"
+    },
+    {
+      "mode": "51",
+      "schedule": "100",
+      "stage": "0",
+      "award": "1",
+      "result": "1"
+    },
+    {
+      "mode": "51",
+      "schedule": "30",
+      "stage": "0",
+      "award": "1",
+      "result": "1"
+    },
+    {
+      "mode": "51",
+      "schedule": "240",
+      "stage": "0",
+      "award": "1",
+      "result": "1"
+    },
+    {
+      "mode": "51",
+      "schedule": "0",
+      "stage": "0",
+      "award": "1",
+      "result": "1"
+    },
+    {
+      "mode": "52",
+      "schedule": "100",
+      "stage": "0",
+      "award": "1",
+      "result": "1"
+    },
+    {
+      "mode": "52",
+      "schedule": "30",
+      "stage": "0",
+      "award": "1",
+      "result": "1"
+    },
+    {
+      "mode": "52",
+      "schedule": "240",
+      "stage": "0",
+      "award": "1",
+      "result": "1"
+    },
+    {
+      "mode": "52",
+      "schedule": "0",
+      "stage": "0",
+      "award": "1",
+      "result": "1"
+    },
+    {
+      "mode": "53",
+      "schedule": "100",
+      "stage": "0",
+      "award": "1",
+      "result": "1"
+    },
+    {
+      "mode": "53",
+      "schedule": "30",
+      "stage": "0",
+      "award": "1",
+      "result": "1"
+    },
+    {
+      "mode": "53",
+      "schedule": "240",
+      "stage": "0",
+      "award": "1",
+      "result": "1"
+    },
+    {
+      "mode": "53",
+      "schedule": "0",
+      "stage": "0",
+      "award": "1",
+      "result": "1"
+    },
+    {
+      "mode": "54",
+      "schedule": "100",
+      "stage": "0",
+      "award": "1",
+      "result": "1"
+    },
+    {
+      "mode": "54",
+      "schedule": "30",
+      "stage": "0",
+      "award": "1",
+      "result": "1"
+    },
+    {
+      "mode": "54",
+      "schedule": "240",
+      "stage": "0",
+      "award": "1",
+      "result": "1"
+    },
+    {
+      "mode": "54",
+      "schedule": "0",
+      "stage": "0",
+      "award": "1",
+      "result": "1"
+    },
+    {
+      "mode": "55",
+      "schedule": "100",
+      "stage": "1",
+      "award": "0",
+      "result": "1"
+    },
+    {
+      "mode": "55",
+      "schedule": "30",
+      "stage": "1",
+      "award": "0",
+      "result": "1"
+    },
+    {
+      "mode": "55",
+      "schedule": "240",
+      "stage": "1",
+      "award": "0",
+      "result": "1"
+    },
+    {
+      "mode": "55",
+      "schedule": "0",
+      "stage": "1",
+      "award": "0",
+      "result": "1"
+    }
+  ],
+  "defenders": [
+    {
+      "mode": "36",
+      "schedule": "100",
+      "kind": "shoot"
+    },
+    {
+      "mode": "36",
+      "schedule": "30",
+      "kind": "shoot"
+    },
+    {
+      "mode": "36",
+      "schedule": "240",
+      "kind": "shoot"
+    },
+    {
+      "mode": "36",
+      "schedule": "0",
+      "kind": "shoot"
+    },
+    {
+      "mode": "37",
+      "schedule": "100",
+      "kind": "shoot"
+    },
+    {
+      "mode": "37",
+      "schedule": "30",
+      "kind": "shoot"
+    },
+    {
+      "mode": "37",
+      "schedule": "240",
+      "kind": "shoot"
+    },
+    {
+      "mode": "37",
+      "schedule": "0",
+      "kind": "shoot"
+    },
+    {
+      "mode": "38",
+      "schedule": "100",
+      "kind": "shoot"
+    },
+    {
+      "mode": "38",
+      "schedule": "30",
+      "kind": "shoot"
+    },
+    {
+      "mode": "38",
+      "schedule": "240",
+      "kind": "shoot"
+    },
+    {
+      "mode": "38",
+      "schedule": "0",
+      "kind": "shoot"
+    },
+    {
+      "mode": "39",
+      "schedule": "100",
+      "kind": "shoot"
+    },
+    {
+      "mode": "39",
+      "schedule": "30",
+      "kind": "shoot"
+    },
+    {
+      "mode": "39",
+      "schedule": "240",
+      "kind": "shoot"
+    },
+    {
+      "mode": "39",
+      "schedule": "0",
+      "kind": "shoot"
+    },
+    {
+      "mode": "40",
+      "schedule": "100",
+      "kind": "shoot"
+    },
+    {
+      "mode": "40",
+      "schedule": "30",
+      "kind": "shoot"
+    },
+    {
+      "mode": "40",
+      "schedule": "240",
+      "kind": "shoot"
+    },
+    {
+      "mode": "40",
+      "schedule": "0",
+      "kind": "shoot"
+    },
+    {
+      "mode": "41",
+      "schedule": "100",
+      "kind": "shoot"
+    },
+    {
+      "mode": "41",
+      "schedule": "30",
+      "kind": "shoot"
+    },
+    {
+      "mode": "41",
+      "schedule": "240",
+      "kind": "shoot"
+    },
+    {
+      "mode": "41",
+      "schedule": "0",
+      "kind": "shoot"
+    },
+    {
+      "mode": "42",
+      "schedule": "100",
+      "kind": "mine"
+    },
+    {
+      "mode": "42",
+      "schedule": "30",
+      "kind": "mine"
+    },
+    {
+      "mode": "42",
+      "schedule": "240",
+      "kind": "mine"
+    },
+    {
+      "mode": "42",
+      "schedule": "0",
+      "kind": "mine"
+    },
+    {
+      "mode": "43",
+      "schedule": "100",
+      "kind": "shoot"
+    },
+    {
+      "mode": "43",
+      "schedule": "30",
+      "kind": "shoot"
+    },
+    {
+      "mode": "43",
+      "schedule": "240",
+      "kind": "shoot"
+    },
+    {
+      "mode": "43",
+      "schedule": "0",
+      "kind": "shoot"
+    },
+    {
+      "mode": "44",
+      "schedule": "100",
+      "kind": "shoot"
+    },
+    {
+      "mode": "44",
+      "schedule": "30",
+      "kind": "shoot"
+    },
+    {
+      "mode": "44",
+      "schedule": "240",
+      "kind": "shoot"
+    },
+    {
+      "mode": "44",
+      "schedule": "0",
+      "kind": "shoot"
+    },
+    {
+      "mode": "45",
+      "schedule": "100",
+      "kind": "shoot"
+    },
+    {
+      "mode": "45",
+      "schedule": "30",
+      "kind": "shoot"
+    },
+    {
+      "mode": "45",
+      "schedule": "240",
+      "kind": "shoot"
+    },
+    {
+      "mode": "45",
+      "schedule": "0",
+      "kind": "shoot"
+    }
+  ],
+  "brain_bites": [
+    {
+      "mode": "36",
+      "schedule": "100",
+      "zombie_type": "0"
+    },
+    {
+      "mode": "36",
+      "schedule": "30",
+      "zombie_type": "0"
+    },
+    {
+      "mode": "36",
+      "schedule": "240",
+      "zombie_type": "0"
+    },
+    {
+      "mode": "36",
+      "schedule": "0",
+      "zombie_type": "0"
+    },
+    {
+      "mode": "37",
+      "schedule": "100",
+      "zombie_type": "0"
+    },
+    {
+      "mode": "37",
+      "schedule": "30",
+      "zombie_type": "0"
+    },
+    {
+      "mode": "37",
+      "schedule": "240",
+      "zombie_type": "0"
+    },
+    {
+      "mode": "37",
+      "schedule": "0",
+      "zombie_type": "0"
+    },
+    {
+      "mode": "38",
+      "schedule": "100",
+      "zombie_type": "0"
+    },
+    {
+      "mode": "38",
+      "schedule": "30",
+      "zombie_type": "0"
+    },
+    {
+      "mode": "38",
+      "schedule": "240",
+      "zombie_type": "0"
+    },
+    {
+      "mode": "38",
+      "schedule": "0",
+      "zombie_type": "0"
+    },
+    {
+      "mode": "39",
+      "schedule": "100",
+      "zombie_type": "0"
+    },
+    {
+      "mode": "39",
+      "schedule": "30",
+      "zombie_type": "0"
+    },
+    {
+      "mode": "39",
+      "schedule": "240",
+      "zombie_type": "0"
+    },
+    {
+      "mode": "39",
+      "schedule": "0",
+      "zombie_type": "0"
+    },
+    {
+      "mode": "40",
+      "schedule": "100",
+      "zombie_type": "0"
+    },
+    {
+      "mode": "40",
+      "schedule": "30",
+      "zombie_type": "0"
+    },
+    {
+      "mode": "40",
+      "schedule": "240",
+      "zombie_type": "0"
+    },
+    {
+      "mode": "40",
+      "schedule": "0",
+      "zombie_type": "0"
+    },
+    {
+      "mode": "41",
+      "schedule": "100",
+      "zombie_type": "0"
+    },
+    {
+      "mode": "41",
+      "schedule": "30",
+      "zombie_type": "0"
+    },
+    {
+      "mode": "41",
+      "schedule": "240",
+      "zombie_type": "0"
+    },
+    {
+      "mode": "41",
+      "schedule": "0",
+      "zombie_type": "0"
+    },
+    {
+      "mode": "42",
+      "schedule": "100",
+      "zombie_type": "0"
+    },
+    {
+      "mode": "42",
+      "schedule": "30",
+      "zombie_type": "0"
+    },
+    {
+      "mode": "42",
+      "schedule": "240",
+      "zombie_type": "0"
+    },
+    {
+      "mode": "42",
+      "schedule": "0",
+      "zombie_type": "0"
+    },
+    {
+      "mode": "43",
+      "schedule": "100",
+      "zombie_type": "24"
+    },
+    {
+      "mode": "43",
+      "schedule": "30",
+      "zombie_type": "24"
+    },
+    {
+      "mode": "43",
+      "schedule": "240",
+      "zombie_type": "24"
+    },
+    {
+      "mode": "43",
+      "schedule": "0",
+      "zombie_type": "24"
+    },
+    {
+      "mode": "44",
+      "schedule": "100",
+      "zombie_type": "24"
+    },
+    {
+      "mode": "44",
+      "schedule": "30",
+      "zombie_type": "24"
+    },
+    {
+      "mode": "44",
+      "schedule": "240",
+      "zombie_type": "24"
+    },
+    {
+      "mode": "44",
+      "schedule": "0",
+      "zombie_type": "24"
+    },
+    {
+      "mode": "45",
+      "schedule": "100",
+      "zombie_type": "24"
+    },
+    {
+      "mode": "45",
+      "schedule": "30",
+      "zombie_type": "24"
+    },
+    {
+      "mode": "45",
+      "schedule": "240",
+      "zombie_type": "24"
+    },
+    {
+      "mode": "45",
+      "schedule": "0",
+      "zombie_type": "24"
+    }
+  ],
+  "complete_brains": [
+    {
+      "mode": "36",
+      "schedule": "100",
+      "stage": "0"
+    },
+    {
+      "mode": "36",
+      "schedule": "30",
+      "stage": "0"
+    },
+    {
+      "mode": "36",
+      "schedule": "240",
+      "stage": "0"
+    },
+    {
+      "mode": "36",
+      "schedule": "0",
+      "stage": "0"
+    },
+    {
+      "mode": "37",
+      "schedule": "100",
+      "stage": "0"
+    },
+    {
+      "mode": "37",
+      "schedule": "30",
+      "stage": "0"
+    },
+    {
+      "mode": "37",
+      "schedule": "240",
+      "stage": "0"
+    },
+    {
+      "mode": "37",
+      "schedule": "0",
+      "stage": "0"
+    },
+    {
+      "mode": "38",
+      "schedule": "100",
+      "stage": "0"
+    },
+    {
+      "mode": "38",
+      "schedule": "30",
+      "stage": "0"
+    },
+    {
+      "mode": "38",
+      "schedule": "240",
+      "stage": "0"
+    },
+    {
+      "mode": "38",
+      "schedule": "0",
+      "stage": "0"
+    },
+    {
+      "mode": "39",
+      "schedule": "100",
+      "stage": "0"
+    },
+    {
+      "mode": "39",
+      "schedule": "30",
+      "stage": "0"
+    },
+    {
+      "mode": "39",
+      "schedule": "240",
+      "stage": "0"
+    },
+    {
+      "mode": "39",
+      "schedule": "0",
+      "stage": "0"
+    },
+    {
+      "mode": "40",
+      "schedule": "100",
+      "stage": "0"
+    },
+    {
+      "mode": "40",
+      "schedule": "30",
+      "stage": "0"
+    },
+    {
+      "mode": "40",
+      "schedule": "240",
+      "stage": "0"
+    },
+    {
+      "mode": "40",
+      "schedule": "0",
+      "stage": "0"
+    },
+    {
+      "mode": "41",
+      "schedule": "100",
+      "stage": "0"
+    },
+    {
+      "mode": "41",
+      "schedule": "30",
+      "stage": "0"
+    },
+    {
+      "mode": "41",
+      "schedule": "240",
+      "stage": "0"
+    },
+    {
+      "mode": "41",
+      "schedule": "0",
+      "stage": "0"
+    },
+    {
+      "mode": "42",
+      "schedule": "100",
+      "stage": "0"
+    },
+    {
+      "mode": "42",
+      "schedule": "30",
+      "stage": "0"
+    },
+    {
+      "mode": "42",
+      "schedule": "240",
+      "stage": "0"
+    },
+    {
+      "mode": "42",
+      "schedule": "0",
+      "stage": "0"
+    },
+    {
+      "mode": "43",
+      "schedule": "100",
+      "stage": "0"
+    },
+    {
+      "mode": "43",
+      "schedule": "30",
+      "stage": "0"
+    },
+    {
+      "mode": "43",
+      "schedule": "240",
+      "stage": "0"
+    },
+    {
+      "mode": "43",
+      "schedule": "0",
+      "stage": "0"
+    },
+    {
+      "mode": "44",
+      "schedule": "100",
+      "stage": "0"
+    },
+    {
+      "mode": "44",
+      "schedule": "30",
+      "stage": "0"
+    },
+    {
+      "mode": "44",
+      "schedule": "240",
+      "stage": "0"
+    },
+    {
+      "mode": "44",
+      "schedule": "0",
+      "stage": "0"
+    },
+    {
+      "mode": "45",
+      "schedule": "100",
+      "stage": "1"
+    },
+    {
+      "mode": "45",
+      "schedule": "30",
+      "stage": "1"
+    },
+    {
+      "mode": "45",
+      "schedule": "240",
+      "stage": "1"
+    },
+    {
+      "mode": "45",
+      "schedule": "0",
+      "stage": "1"
+    }
+  ],
+  "opened_pots": [
+    {
+      "mode": "46",
+      "schedule": "100",
+      "opened": "25",
+      "stage": "0"
+    },
+    {
+      "mode": "46",
+      "schedule": "30",
+      "opened": "25",
+      "stage": "0"
+    },
+    {
+      "mode": "46",
+      "schedule": "240",
+      "opened": "25",
+      "stage": "0"
+    },
+    {
+      "mode": "46",
+      "schedule": "0",
+      "opened": "25",
+      "stage": "0"
+    },
+    {
+      "mode": "47",
+      "schedule": "100",
+      "opened": "25",
+      "stage": "0"
+    },
+    {
+      "mode": "47",
+      "schedule": "30",
+      "opened": "25",
+      "stage": "0"
+    },
+    {
+      "mode": "47",
+      "schedule": "240",
+      "opened": "25",
+      "stage": "0"
+    },
+    {
+      "mode": "47",
+      "schedule": "0",
+      "opened": "25",
+      "stage": "0"
+    },
+    {
+      "mode": "48",
+      "schedule": "100",
+      "opened": "30",
+      "stage": "0"
+    },
+    {
+      "mode": "48",
+      "schedule": "30",
+      "opened": "30",
+      "stage": "0"
+    },
+    {
+      "mode": "48",
+      "schedule": "240",
+      "opened": "30",
+      "stage": "0"
+    },
+    {
+      "mode": "48",
+      "schedule": "0",
+      "opened": "30",
+      "stage": "0"
+    },
+    {
+      "mode": "49",
+      "schedule": "100",
+      "opened": "35",
+      "stage": "0"
+    },
+    {
+      "mode": "49",
+      "schedule": "30",
+      "opened": "35",
+      "stage": "0"
+    },
+    {
+      "mode": "49",
+      "schedule": "240",
+      "opened": "35",
+      "stage": "0"
+    },
+    {
+      "mode": "49",
+      "schedule": "0",
+      "opened": "35",
+      "stage": "0"
+    },
+    {
+      "mode": "50",
+      "schedule": "100",
+      "opened": "35",
+      "stage": "0"
+    },
+    {
+      "mode": "50",
+      "schedule": "30",
+      "opened": "35",
+      "stage": "0"
+    },
+    {
+      "mode": "50",
+      "schedule": "240",
+      "opened": "35",
+      "stage": "0"
+    },
+    {
+      "mode": "50",
+      "schedule": "0",
+      "opened": "35",
+      "stage": "0"
+    },
+    {
+      "mode": "51",
+      "schedule": "100",
+      "opened": "35",
+      "stage": "0"
+    },
+    {
+      "mode": "51",
+      "schedule": "30",
+      "opened": "35",
+      "stage": "0"
+    },
+    {
+      "mode": "51",
+      "schedule": "240",
+      "opened": "35",
+      "stage": "0"
+    },
+    {
+      "mode": "51",
+      "schedule": "0",
+      "opened": "35",
+      "stage": "0"
+    },
+    {
+      "mode": "52",
+      "schedule": "100",
+      "opened": "30",
+      "stage": "0"
+    },
+    {
+      "mode": "52",
+      "schedule": "30",
+      "opened": "30",
+      "stage": "0"
+    },
+    {
+      "mode": "52",
+      "schedule": "240",
+      "opened": "30",
+      "stage": "0"
+    },
+    {
+      "mode": "52",
+      "schedule": "0",
+      "opened": "30",
+      "stage": "0"
+    },
+    {
+      "mode": "53",
+      "schedule": "100",
+      "opened": "35",
+      "stage": "0"
+    },
+    {
+      "mode": "53",
+      "schedule": "30",
+      "opened": "35",
+      "stage": "0"
+    },
+    {
+      "mode": "53",
+      "schedule": "240",
+      "opened": "35",
+      "stage": "0"
+    },
+    {
+      "mode": "53",
+      "schedule": "0",
+      "opened": "35",
+      "stage": "0"
+    },
+    {
+      "mode": "54",
+      "schedule": "100",
+      "opened": "35",
+      "stage": "0"
+    },
+    {
+      "mode": "54",
+      "schedule": "30",
+      "opened": "35",
+      "stage": "0"
+    },
+    {
+      "mode": "54",
+      "schedule": "240",
+      "opened": "35",
+      "stage": "0"
+    },
+    {
+      "mode": "54",
+      "schedule": "0",
+      "opened": "35",
+      "stage": "0"
+    },
+    {
+      "mode": "55",
+      "schedule": "100",
+      "opened": "35",
+      "stage": "1"
+    },
+    {
+      "mode": "55",
+      "schedule": "30",
+      "opened": "35",
+      "stage": "1"
+    },
+    {
+      "mode": "55",
+      "schedule": "240",
+      "opened": "35",
+      "stage": "1"
+    },
+    {
+      "mode": "55",
+      "schedule": "0",
+      "opened": "35",
+      "stage": "1"
+    }
+  ],
+  "constructed_endless_boundaries": [
+    {
+      "mode": "45",
+      "stage": "0",
+      "reward": "0",
+      "giants": "0",
+      "puffs": "0",
+      "sunflowers": "8"
+    },
+    {
+      "mode": "45",
+      "stage": "1",
+      "reward": "0",
+      "giants": "0",
+      "puffs": "1",
+      "sunflowers": "7"
+    },
+    {
+      "mode": "45",
+      "stage": "2",
+      "reward": "1",
+      "giants": "0",
+      "puffs": "4",
+      "sunflowers": "4"
+    },
+    {
+      "mode": "45",
+      "stage": "8",
+      "reward": "1",
+      "giants": "0",
+      "puffs": "5",
+      "sunflowers": "3"
+    },
+    {
+      "mode": "45",
+      "stage": "9",
+      "reward": "0",
+      "giants": "0",
+      "puffs": "5",
+      "sunflowers": "3"
+    },
+    {
+      "mode": "45",
+      "stage": "10",
+      "reward": "0",
+      "giants": "0",
+      "puffs": "7",
+      "sunflowers": "1"
+    },
+    {
+      "mode": "45",
+      "stage": "19",
+      "reward": "0",
+      "giants": "0",
+      "puffs": "7",
+      "sunflowers": "1"
+    },
+    {
+      "mode": "45",
+      "stage": "79",
+      "reward": "0",
+      "giants": "0",
+      "puffs": "7",
+      "sunflowers": "1"
+    },
+    {
+      "mode": "45",
+      "stage": "80",
+      "reward": "1",
+      "giants": "0",
+      "puffs": "7",
+      "sunflowers": "1"
+    },
+    {
+      "mode": "55",
+      "stage": "0",
+      "reward": "0",
+      "giants": "1",
+      "puffs": "0",
+      "sunflowers": "0"
+    },
+    {
+      "mode": "55",
+      "stage": "1",
+      "reward": "0",
+      "giants": "1",
+      "puffs": "0",
+      "sunflowers": "0"
+    },
+    {
+      "mode": "55",
+      "stage": "2",
+      "reward": "0",
+      "giants": "1",
+      "puffs": "0",
+      "sunflowers": "0"
+    },
+    {
+      "mode": "55",
+      "stage": "8",
+      "reward": "0",
+      "giants": "1",
+      "puffs": "0",
+      "sunflowers": "0"
+    },
+    {
+      "mode": "55",
+      "stage": "9",
+      "reward": "1",
+      "giants": "1",
+      "puffs": "0",
+      "sunflowers": "0"
+    },
+    {
+      "mode": "55",
+      "stage": "10",
+      "reward": "0",
+      "giants": "2",
+      "puffs": "0",
+      "sunflowers": "0"
+    },
+    {
+      "mode": "55",
+      "stage": "19",
+      "reward": "1",
+      "giants": "2",
+      "puffs": "0",
+      "sunflowers": "0"
+    },
+    {
+      "mode": "55",
+      "stage": "79",
+      "reward": "1",
+      "giants": "8",
+      "puffs": "0",
+      "sunflowers": "0"
+    },
+    {
+      "mode": "55",
+      "stage": "80",
+      "reward": "0",
+      "giants": "9",
+      "puffs": "0",
+      "sunflowers": "0"
+    }
+  ],
+  "sources": {
+    "Tests/native/ImageRuntimeTests.cpp": "e36386fbab68682c4944b36e5cfa655c3b2700f03243ddd79ff6fbc613cfa6b0",
+    "pvzPerf/Lawn/Challenge.cpp": "879162e40f591fc1e55e58d2e1d8cc8ec0c056086148109300dafda7bcdfa06b",
+    "pvzPerf/Lawn/Plant.cpp": "73b26c024546a00f191b0c3dd32f012977b0ccacd5a450bb24209ea3113b7051",
+    "pvzPerf/Lawn/Zombie.cpp": "b33f98427234ebb2153c72d4fdfc4e08870cd8a5d59af7116fb0fd569771a1cf",
+    "pvzPerf/Lawn/Board.cpp": "aaeba6b3444a494b2be3e312be677fde3b0d7b8e47bdf52707f385992b86d668"
+  },
+  "executable_sha256": "85f32d7db4264ee387740b5a8badda2684c5b11ba800af48cc474b62e243228b",
+  "pak_sha256": "5bdd71c632d945304ae3752bfed61941bb8c7e4351e616e1ff6fbceab1431545",
+  "git_head": "68d61123de7b073f5479f32bec1772106b6141b9",
+  "working_tree_modified": true
+}

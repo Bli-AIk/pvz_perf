@@ -114,6 +114,46 @@ void EffectSystem::UpdateAt(std::int64_t visualNowNs, std::int64_t battleNowNs, 
 				== ReanimTimeDomain::Battle ? battleNowNs : visualNowNs);
 }
 
+namespace
+{
+void RebaseAnimationTree(EffectSystem& effects, Reanimation& animation, std::int64_t nowNs)
+{
+    animation.RebaseTime(nowNs);
+    if (!animation.mDefinition || !animation.mTrackInstances) return;
+    for (int i = 0; i < animation.mDefinition->mTracks.count; ++i)
+        if (auto* attachment = effects.mAttachmentHolder->mAttachments.DataArrayTryToGet(
+                static_cast<unsigned int>(animation.mTrackInstances[i].mAttachmentID)))
+            for (int j = 0; j < attachment->mNumEffects; ++j)
+            {
+                const auto& child = attachment->mEffectArray[j];
+                if (child.mEffectType == EFFECT_REANIM)
+                {
+                    if (auto* reanim = effects.mReanimationHolder->mReanimations.DataArrayTryToGet(child.mEffectID))
+                        RebaseAnimationTree(effects, *reanim, nowNs);
+                }
+                else if (child.mEffectType == EFFECT_PARTICLE)
+                    if (auto* particle = effects.mParticleHolder->mParticleSystems.DataArrayTryToGet(child.mEffectID))
+                        particle->Update(0, nowNs);
+            }
+}
+}
+
+void EffectSystem::RebaseIndependentBattleEffects(std::int64_t battleNowNs)
+{
+    // An actor-only extra pass must not age independently updated effects.
+    // This traversal is used only by the speed minigame; ordinary updates
+    // keep the same hot loop and the same per-effect branches.
+    TodParticleSystem* particle = nullptr;
+    while (mParticleHolder->mParticleSystems.IterateNext(particle))
+        if (!particle->mIsAttachment)
+            particle->Update(0, battleNowNs);
+    Reanimation* animation = nullptr;
+    while (mReanimationHolder->mReanimations.IterateNext(animation))
+        if (!animation->mIsAttachment && mReanimationHolder->mTimeDomains[
+                mReanimationHolder->mReanimations.DataArrayIndexOf(animation)] == ReanimTimeDomain::Battle)
+            RebaseAnimationTree(*this, *animation, battleNowNs);
+}
+
 // #################################################################################################### //
 // #################################################################################################### //
 // #################################################################################################### //

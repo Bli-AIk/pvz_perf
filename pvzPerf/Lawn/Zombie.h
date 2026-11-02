@@ -146,7 +146,7 @@ public:
     int                             mParticleOffsetX;                           //+0x108
     int                             mParticleOffsetY;                           //+0x10C
     AttachmentID                    mAttachmentID;                              //+0x110
-    Sexy::TimeCounter                             mSummonCounter;                             //+0x114
+    Sexy::TimeCounter                             mSummonCounter;                             //+0x114; Catapult uses encoded whole units as ammo, not elapsed time.
     ReanimationID                   mBodyReanimID;                              //+0x118
     float                           mScaleZombie;                               //+0x11C
     float                           mVelZ;                                      //+0x120

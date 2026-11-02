@@ -1,0 +1,4061 @@
+{
+  "scope": "Fifty adventure levels, first/replay: listed init/clock/rules, teaching actions, first wave, pause and real death-driven rewards",
+  "limits": "Legal banks supplied directly; teaching funds increased; conveyor delay shortened; intermediate combat skipped; Vase stages constructed; no full campaign/award-screen claim",
+  "cases": [
+    {
+      "level": 1,
+      "replay": false,
+      "schedule": 100,
+      "background": 0,
+      "waves": 4,
+      "rows": 1,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 1,
+      "replay": false,
+      "schedule": 30,
+      "background": 0,
+      "waves": 4,
+      "rows": 1,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 1,
+      "replay": false,
+      "schedule": 240,
+      "background": 0,
+      "waves": 4,
+      "rows": 1,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 1,
+      "replay": false,
+      "schedule": 0,
+      "background": 0,
+      "waves": 4,
+      "rows": 1,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 2,
+      "replay": false,
+      "schedule": 100,
+      "background": 0,
+      "waves": 6,
+      "rows": 3,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 2,
+      "replay": false,
+      "schedule": 30,
+      "background": 0,
+      "waves": 6,
+      "rows": 3,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 2,
+      "replay": false,
+      "schedule": 240,
+      "background": 0,
+      "waves": 6,
+      "rows": 3,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 2,
+      "replay": false,
+      "schedule": 0,
+      "background": 0,
+      "waves": 6,
+      "rows": 3,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 3,
+      "replay": false,
+      "schedule": 100,
+      "background": 0,
+      "waves": 8,
+      "rows": 3,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 3,
+      "replay": false,
+      "schedule": 30,
+      "background": 0,
+      "waves": 8,
+      "rows": 3,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 3,
+      "replay": false,
+      "schedule": 240,
+      "background": 0,
+      "waves": 8,
+      "rows": 3,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 3,
+      "replay": false,
+      "schedule": 0,
+      "background": 0,
+      "waves": 8,
+      "rows": 3,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 4,
+      "replay": false,
+      "schedule": 100,
+      "background": 0,
+      "waves": 10,
+      "rows": 5,
+      "conveyor": false,
+      "award": 9
+    },
+    {
+      "level": 4,
+      "replay": false,
+      "schedule": 30,
+      "background": 0,
+      "waves": 10,
+      "rows": 5,
+      "conveyor": false,
+      "award": 9
+    },
+    {
+      "level": 4,
+      "replay": false,
+      "schedule": 240,
+      "background": 0,
+      "waves": 10,
+      "rows": 5,
+      "conveyor": false,
+      "award": 9
+    },
+    {
+      "level": 4,
+      "replay": false,
+      "schedule": 0,
+      "background": 0,
+      "waves": 10,
+      "rows": 5,
+      "conveyor": false,
+      "award": 9
+    },
+    {
+      "level": 5,
+      "replay": false,
+      "schedule": 100,
+      "background": 0,
+      "waves": 8,
+      "rows": 5,
+      "conveyor": true,
+      "award": 7
+    },
+    {
+      "level": 5,
+      "replay": false,
+      "schedule": 30,
+      "background": 0,
+      "waves": 8,
+      "rows": 5,
+      "conveyor": true,
+      "award": 7
+    },
+    {
+      "level": 5,
+      "replay": false,
+      "schedule": 240,
+      "background": 0,
+      "waves": 8,
+      "rows": 5,
+      "conveyor": true,
+      "award": 7
+    },
+    {
+      "level": 5,
+      "replay": false,
+      "schedule": 0,
+      "background": 0,
+      "waves": 8,
+      "rows": 5,
+      "conveyor": true,
+      "award": 7
+    },
+    {
+      "level": 6,
+      "replay": false,
+      "schedule": 100,
+      "background": 0,
+      "waves": 10,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 6,
+      "replay": false,
+      "schedule": 30,
+      "background": 0,
+      "waves": 10,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 6,
+      "replay": false,
+      "schedule": 240,
+      "background": 0,
+      "waves": 10,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 6,
+      "replay": false,
+      "schedule": 0,
+      "background": 0,
+      "waves": 10,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 7,
+      "replay": false,
+      "schedule": 100,
+      "background": 0,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 7,
+      "replay": false,
+      "schedule": 30,
+      "background": 0,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 7,
+      "replay": false,
+      "schedule": 240,
+      "background": 0,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 7,
+      "replay": false,
+      "schedule": 0,
+      "background": 0,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 8,
+      "replay": false,
+      "schedule": 100,
+      "background": 0,
+      "waves": 10,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 8,
+      "replay": false,
+      "schedule": 30,
+      "background": 0,
+      "waves": 10,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 8,
+      "replay": false,
+      "schedule": 240,
+      "background": 0,
+      "waves": 10,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 8,
+      "replay": false,
+      "schedule": 0,
+      "background": 0,
+      "waves": 10,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 9,
+      "replay": false,
+      "schedule": 100,
+      "background": 0,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 15
+    },
+    {
+      "level": 9,
+      "replay": false,
+      "schedule": 30,
+      "background": 0,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 15
+    },
+    {
+      "level": 9,
+      "replay": false,
+      "schedule": 240,
+      "background": 0,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 15
+    },
+    {
+      "level": 9,
+      "replay": false,
+      "schedule": 0,
+      "background": 0,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 15
+    },
+    {
+      "level": 10,
+      "replay": false,
+      "schedule": 100,
+      "background": 0,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": true,
+      "award": 7
+    },
+    {
+      "level": 10,
+      "replay": false,
+      "schedule": 30,
+      "background": 0,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": true,
+      "award": 7
+    },
+    {
+      "level": 10,
+      "replay": false,
+      "schedule": 240,
+      "background": 0,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": true,
+      "award": 7
+    },
+    {
+      "level": 10,
+      "replay": false,
+      "schedule": 0,
+      "background": 0,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": true,
+      "award": 7
+    },
+    {
+      "level": 11,
+      "replay": false,
+      "schedule": 100,
+      "background": 1,
+      "waves": 10,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 11,
+      "replay": false,
+      "schedule": 30,
+      "background": 1,
+      "waves": 10,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 11,
+      "replay": false,
+      "schedule": 240,
+      "background": 1,
+      "waves": 10,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 11,
+      "replay": false,
+      "schedule": 0,
+      "background": 1,
+      "waves": 10,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 12,
+      "replay": false,
+      "schedule": 100,
+      "background": 1,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 12,
+      "replay": false,
+      "schedule": 30,
+      "background": 1,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 12,
+      "replay": false,
+      "schedule": 240,
+      "background": 1,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 12,
+      "replay": false,
+      "schedule": 0,
+      "background": 1,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 13,
+      "replay": false,
+      "schedule": 100,
+      "background": 1,
+      "waves": 10,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 13,
+      "replay": false,
+      "schedule": 30,
+      "background": 1,
+      "waves": 10,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 13,
+      "replay": false,
+      "schedule": 240,
+      "background": 1,
+      "waves": 10,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 13,
+      "replay": false,
+      "schedule": 0,
+      "background": 1,
+      "waves": 10,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 14,
+      "replay": false,
+      "schedule": 100,
+      "background": 1,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 10
+    },
+    {
+      "level": 14,
+      "replay": false,
+      "schedule": 30,
+      "background": 1,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 10
+    },
+    {
+      "level": 14,
+      "replay": false,
+      "schedule": 240,
+      "background": 1,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 10
+    },
+    {
+      "level": 14,
+      "replay": false,
+      "schedule": 0,
+      "background": 1,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 10
+    },
+    {
+      "level": 15,
+      "replay": false,
+      "schedule": 100,
+      "background": 1,
+      "waves": 8,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 15,
+      "replay": false,
+      "schedule": 30,
+      "background": 1,
+      "waves": 8,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 15,
+      "replay": false,
+      "schedule": 240,
+      "background": 1,
+      "waves": 8,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 15,
+      "replay": false,
+      "schedule": 0,
+      "background": 1,
+      "waves": 8,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 16,
+      "replay": false,
+      "schedule": 100,
+      "background": 1,
+      "waves": 10,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 16,
+      "replay": false,
+      "schedule": 30,
+      "background": 1,
+      "waves": 10,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 16,
+      "replay": false,
+      "schedule": 240,
+      "background": 1,
+      "waves": 10,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 16,
+      "replay": false,
+      "schedule": 0,
+      "background": 1,
+      "waves": 10,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 17,
+      "replay": false,
+      "schedule": 100,
+      "background": 1,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 17,
+      "replay": false,
+      "schedule": 30,
+      "background": 1,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 17,
+      "replay": false,
+      "schedule": 240,
+      "background": 1,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 17,
+      "replay": false,
+      "schedule": 0,
+      "background": 1,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 18,
+      "replay": false,
+      "schedule": 100,
+      "background": 1,
+      "waves": 10,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 18,
+      "replay": false,
+      "schedule": 30,
+      "background": 1,
+      "waves": 10,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 18,
+      "replay": false,
+      "schedule": 240,
+      "background": 1,
+      "waves": 10,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 18,
+      "replay": false,
+      "schedule": 0,
+      "background": 1,
+      "waves": 10,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 19,
+      "replay": false,
+      "schedule": 100,
+      "background": 1,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 15
+    },
+    {
+      "level": 19,
+      "replay": false,
+      "schedule": 30,
+      "background": 1,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 15
+    },
+    {
+      "level": 19,
+      "replay": false,
+      "schedule": 240,
+      "background": 1,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 15
+    },
+    {
+      "level": 19,
+      "replay": false,
+      "schedule": 0,
+      "background": 1,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 15
+    },
+    {
+      "level": 20,
+      "replay": false,
+      "schedule": 100,
+      "background": 1,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": true,
+      "award": 7
+    },
+    {
+      "level": 20,
+      "replay": false,
+      "schedule": 30,
+      "background": 1,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": true,
+      "award": 7
+    },
+    {
+      "level": 20,
+      "replay": false,
+      "schedule": 240,
+      "background": 1,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": true,
+      "award": 7
+    },
+    {
+      "level": 20,
+      "replay": false,
+      "schedule": 0,
+      "background": 1,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": true,
+      "award": 7
+    },
+    {
+      "level": 21,
+      "replay": false,
+      "schedule": 100,
+      "background": 2,
+      "waves": 10,
+      "rows": 6,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 21,
+      "replay": false,
+      "schedule": 30,
+      "background": 2,
+      "waves": 10,
+      "rows": 6,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 21,
+      "replay": false,
+      "schedule": 240,
+      "background": 2,
+      "waves": 10,
+      "rows": 6,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 21,
+      "replay": false,
+      "schedule": 0,
+      "background": 2,
+      "waves": 10,
+      "rows": 6,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 22,
+      "replay": false,
+      "schedule": 100,
+      "background": 2,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 22,
+      "replay": false,
+      "schedule": 30,
+      "background": 2,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 22,
+      "replay": false,
+      "schedule": 240,
+      "background": 2,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 22,
+      "replay": false,
+      "schedule": 0,
+      "background": 2,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 23,
+      "replay": false,
+      "schedule": 100,
+      "background": 2,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 23,
+      "replay": false,
+      "schedule": 30,
+      "background": 2,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 23,
+      "replay": false,
+      "schedule": 240,
+      "background": 2,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 23,
+      "replay": false,
+      "schedule": 0,
+      "background": 2,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 24,
+      "replay": false,
+      "schedule": 100,
+      "background": 2,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": false,
+      "award": 11
+    },
+    {
+      "level": 24,
+      "replay": false,
+      "schedule": 30,
+      "background": 2,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": false,
+      "award": 11
+    },
+    {
+      "level": 24,
+      "replay": false,
+      "schedule": 240,
+      "background": 2,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": false,
+      "award": 11
+    },
+    {
+      "level": 24,
+      "replay": false,
+      "schedule": 0,
+      "background": 2,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": false,
+      "award": 11
+    },
+    {
+      "level": 25,
+      "replay": false,
+      "schedule": 100,
+      "background": 2,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": true,
+      "award": 7
+    },
+    {
+      "level": 25,
+      "replay": false,
+      "schedule": 30,
+      "background": 2,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": true,
+      "award": 7
+    },
+    {
+      "level": 25,
+      "replay": false,
+      "schedule": 240,
+      "background": 2,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": true,
+      "award": 7
+    },
+    {
+      "level": 25,
+      "replay": false,
+      "schedule": 0,
+      "background": 2,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": true,
+      "award": 7
+    },
+    {
+      "level": 26,
+      "replay": false,
+      "schedule": 100,
+      "background": 2,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 26,
+      "replay": false,
+      "schedule": 30,
+      "background": 2,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 26,
+      "replay": false,
+      "schedule": 240,
+      "background": 2,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 26,
+      "replay": false,
+      "schedule": 0,
+      "background": 2,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 27,
+      "replay": false,
+      "schedule": 100,
+      "background": 2,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 27,
+      "replay": false,
+      "schedule": 30,
+      "background": 2,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 27,
+      "replay": false,
+      "schedule": 240,
+      "background": 2,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 27,
+      "replay": false,
+      "schedule": 0,
+      "background": 2,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 28,
+      "replay": false,
+      "schedule": 100,
+      "background": 2,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 28,
+      "replay": false,
+      "schedule": 30,
+      "background": 2,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 28,
+      "replay": false,
+      "schedule": 240,
+      "background": 2,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 28,
+      "replay": false,
+      "schedule": 0,
+      "background": 2,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 29,
+      "replay": false,
+      "schedule": 100,
+      "background": 2,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": false,
+      "award": 15
+    },
+    {
+      "level": 29,
+      "replay": false,
+      "schedule": 30,
+      "background": 2,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": false,
+      "award": 15
+    },
+    {
+      "level": 29,
+      "replay": false,
+      "schedule": 240,
+      "background": 2,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": false,
+      "award": 15
+    },
+    {
+      "level": 29,
+      "replay": false,
+      "schedule": 0,
+      "background": 2,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": false,
+      "award": 15
+    },
+    {
+      "level": 30,
+      "replay": false,
+      "schedule": 100,
+      "background": 2,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": true,
+      "award": 7
+    },
+    {
+      "level": 30,
+      "replay": false,
+      "schedule": 30,
+      "background": 2,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": true,
+      "award": 7
+    },
+    {
+      "level": 30,
+      "replay": false,
+      "schedule": 240,
+      "background": 2,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": true,
+      "award": 7
+    },
+    {
+      "level": 30,
+      "replay": false,
+      "schedule": 0,
+      "background": 2,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": true,
+      "award": 7
+    },
+    {
+      "level": 31,
+      "replay": false,
+      "schedule": 100,
+      "background": 3,
+      "waves": 10,
+      "rows": 6,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 31,
+      "replay": false,
+      "schedule": 30,
+      "background": 3,
+      "waves": 10,
+      "rows": 6,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 31,
+      "replay": false,
+      "schedule": 240,
+      "background": 3,
+      "waves": 10,
+      "rows": 6,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 31,
+      "replay": false,
+      "schedule": 0,
+      "background": 3,
+      "waves": 10,
+      "rows": 6,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 32,
+      "replay": false,
+      "schedule": 100,
+      "background": 3,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 32,
+      "replay": false,
+      "schedule": 30,
+      "background": 3,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 32,
+      "replay": false,
+      "schedule": 240,
+      "background": 3,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 32,
+      "replay": false,
+      "schedule": 0,
+      "background": 3,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 33,
+      "replay": false,
+      "schedule": 100,
+      "background": 3,
+      "waves": 10,
+      "rows": 6,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 33,
+      "replay": false,
+      "schedule": 30,
+      "background": 3,
+      "waves": 10,
+      "rows": 6,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 33,
+      "replay": false,
+      "schedule": 240,
+      "background": 3,
+      "waves": 10,
+      "rows": 6,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 33,
+      "replay": false,
+      "schedule": 0,
+      "background": 3,
+      "waves": 10,
+      "rows": 6,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 34,
+      "replay": false,
+      "schedule": 100,
+      "background": 3,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 14
+    },
+    {
+      "level": 34,
+      "replay": false,
+      "schedule": 30,
+      "background": 3,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 14
+    },
+    {
+      "level": 34,
+      "replay": false,
+      "schedule": 240,
+      "background": 3,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 14
+    },
+    {
+      "level": 34,
+      "replay": false,
+      "schedule": 0,
+      "background": 3,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 14
+    },
+    {
+      "level": 35,
+      "replay": false,
+      "schedule": 100,
+      "background": 1,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 35,
+      "replay": false,
+      "schedule": 30,
+      "background": 1,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 35,
+      "replay": false,
+      "schedule": 240,
+      "background": 1,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 35,
+      "replay": false,
+      "schedule": 0,
+      "background": 1,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 36,
+      "replay": false,
+      "schedule": 100,
+      "background": 3,
+      "waves": 10,
+      "rows": 6,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 36,
+      "replay": false,
+      "schedule": 30,
+      "background": 3,
+      "waves": 10,
+      "rows": 6,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 36,
+      "replay": false,
+      "schedule": 240,
+      "background": 3,
+      "waves": 10,
+      "rows": 6,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 36,
+      "replay": false,
+      "schedule": 0,
+      "background": 3,
+      "waves": 10,
+      "rows": 6,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 37,
+      "replay": false,
+      "schedule": 100,
+      "background": 3,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 37,
+      "replay": false,
+      "schedule": 30,
+      "background": 3,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 37,
+      "replay": false,
+      "schedule": 240,
+      "background": 3,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 37,
+      "replay": false,
+      "schedule": 0,
+      "background": 3,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 38,
+      "replay": false,
+      "schedule": 100,
+      "background": 3,
+      "waves": 10,
+      "rows": 6,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 38,
+      "replay": false,
+      "schedule": 30,
+      "background": 3,
+      "waves": 10,
+      "rows": 6,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 38,
+      "replay": false,
+      "schedule": 240,
+      "background": 3,
+      "waves": 10,
+      "rows": 6,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 38,
+      "replay": false,
+      "schedule": 0,
+      "background": 3,
+      "waves": 10,
+      "rows": 6,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 39,
+      "replay": false,
+      "schedule": 100,
+      "background": 3,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 15
+    },
+    {
+      "level": 39,
+      "replay": false,
+      "schedule": 30,
+      "background": 3,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 15
+    },
+    {
+      "level": 39,
+      "replay": false,
+      "schedule": 240,
+      "background": 3,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 15
+    },
+    {
+      "level": 39,
+      "replay": false,
+      "schedule": 0,
+      "background": 3,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 15
+    },
+    {
+      "level": 40,
+      "replay": false,
+      "schedule": 100,
+      "background": 3,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": true,
+      "award": 7
+    },
+    {
+      "level": 40,
+      "replay": false,
+      "schedule": 30,
+      "background": 3,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": true,
+      "award": 7
+    },
+    {
+      "level": 40,
+      "replay": false,
+      "schedule": 240,
+      "background": 3,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": true,
+      "award": 7
+    },
+    {
+      "level": 40,
+      "replay": false,
+      "schedule": 0,
+      "background": 3,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": true,
+      "award": 7
+    },
+    {
+      "level": 41,
+      "replay": false,
+      "schedule": 100,
+      "background": 4,
+      "waves": 10,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 41,
+      "replay": false,
+      "schedule": 30,
+      "background": 4,
+      "waves": 10,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 41,
+      "replay": false,
+      "schedule": 240,
+      "background": 4,
+      "waves": 10,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 41,
+      "replay": false,
+      "schedule": 0,
+      "background": 4,
+      "waves": 10,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 42,
+      "replay": false,
+      "schedule": 100,
+      "background": 4,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 42,
+      "replay": false,
+      "schedule": 30,
+      "background": 4,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 42,
+      "replay": false,
+      "schedule": 240,
+      "background": 4,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 42,
+      "replay": false,
+      "schedule": 0,
+      "background": 4,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 43,
+      "replay": false,
+      "schedule": 100,
+      "background": 4,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 43,
+      "replay": false,
+      "schedule": 30,
+      "background": 4,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 43,
+      "replay": false,
+      "schedule": 240,
+      "background": 4,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 43,
+      "replay": false,
+      "schedule": 0,
+      "background": 4,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 44,
+      "replay": false,
+      "schedule": 100,
+      "background": 4,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 13
+    },
+    {
+      "level": 44,
+      "replay": false,
+      "schedule": 30,
+      "background": 4,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 13
+    },
+    {
+      "level": 44,
+      "replay": false,
+      "schedule": 240,
+      "background": 4,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 13
+    },
+    {
+      "level": 44,
+      "replay": false,
+      "schedule": 0,
+      "background": 4,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 13
+    },
+    {
+      "level": 45,
+      "replay": false,
+      "schedule": 100,
+      "background": 4,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": true,
+      "award": 7
+    },
+    {
+      "level": 45,
+      "replay": false,
+      "schedule": 30,
+      "background": 4,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": true,
+      "award": 7
+    },
+    {
+      "level": 45,
+      "replay": false,
+      "schedule": 240,
+      "background": 4,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": true,
+      "award": 7
+    },
+    {
+      "level": 45,
+      "replay": false,
+      "schedule": 0,
+      "background": 4,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": true,
+      "award": 7
+    },
+    {
+      "level": 46,
+      "replay": false,
+      "schedule": 100,
+      "background": 4,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 46,
+      "replay": false,
+      "schedule": 30,
+      "background": 4,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 46,
+      "replay": false,
+      "schedule": 240,
+      "background": 4,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 46,
+      "replay": false,
+      "schedule": 0,
+      "background": 4,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 47,
+      "replay": false,
+      "schedule": 100,
+      "background": 4,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 47,
+      "replay": false,
+      "schedule": 30,
+      "background": 4,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 47,
+      "replay": false,
+      "schedule": 240,
+      "background": 4,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 47,
+      "replay": false,
+      "schedule": 0,
+      "background": 4,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 48,
+      "replay": false,
+      "schedule": 100,
+      "background": 4,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 48,
+      "replay": false,
+      "schedule": 30,
+      "background": 4,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 48,
+      "replay": false,
+      "schedule": 240,
+      "background": 4,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 48,
+      "replay": false,
+      "schedule": 0,
+      "background": 4,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 7
+    },
+    {
+      "level": 49,
+      "replay": false,
+      "schedule": 100,
+      "background": 4,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 15
+    },
+    {
+      "level": 49,
+      "replay": false,
+      "schedule": 30,
+      "background": 4,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 15
+    },
+    {
+      "level": 49,
+      "replay": false,
+      "schedule": 240,
+      "background": 4,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 15
+    },
+    {
+      "level": 49,
+      "replay": false,
+      "schedule": 0,
+      "background": 4,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 15
+    },
+    {
+      "level": 50,
+      "replay": false,
+      "schedule": 100,
+      "background": 5,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": true,
+      "award": 21
+    },
+    {
+      "level": 50,
+      "replay": false,
+      "schedule": 30,
+      "background": 5,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": true,
+      "award": 21
+    },
+    {
+      "level": 50,
+      "replay": false,
+      "schedule": 240,
+      "background": 5,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": true,
+      "award": 21
+    },
+    {
+      "level": 50,
+      "replay": false,
+      "schedule": 0,
+      "background": 5,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": true,
+      "award": 21
+    },
+    {
+      "level": 1,
+      "replay": true,
+      "schedule": 100,
+      "background": 0,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 1,
+      "replay": true,
+      "schedule": 30,
+      "background": 0,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 1,
+      "replay": true,
+      "schedule": 240,
+      "background": 0,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 1,
+      "replay": true,
+      "schedule": 0,
+      "background": 0,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 2,
+      "replay": true,
+      "schedule": 100,
+      "background": 0,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 2,
+      "replay": true,
+      "schedule": 30,
+      "background": 0,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 2,
+      "replay": true,
+      "schedule": 240,
+      "background": 0,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 2,
+      "replay": true,
+      "schedule": 0,
+      "background": 0,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 3,
+      "replay": true,
+      "schedule": 100,
+      "background": 0,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 3,
+      "replay": true,
+      "schedule": 30,
+      "background": 0,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 3,
+      "replay": true,
+      "schedule": 240,
+      "background": 0,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 3,
+      "replay": true,
+      "schedule": 0,
+      "background": 0,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 4,
+      "replay": true,
+      "schedule": 100,
+      "background": 0,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 4,
+      "replay": true,
+      "schedule": 30,
+      "background": 0,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 4,
+      "replay": true,
+      "schedule": 240,
+      "background": 0,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 4,
+      "replay": true,
+      "schedule": 0,
+      "background": 0,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 5,
+      "replay": true,
+      "schedule": 100,
+      "background": 0,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": true,
+      "award": 18
+    },
+    {
+      "level": 5,
+      "replay": true,
+      "schedule": 30,
+      "background": 0,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": true,
+      "award": 18
+    },
+    {
+      "level": 5,
+      "replay": true,
+      "schedule": 240,
+      "background": 0,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": true,
+      "award": 18
+    },
+    {
+      "level": 5,
+      "replay": true,
+      "schedule": 0,
+      "background": 0,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": true,
+      "award": 18
+    },
+    {
+      "level": 6,
+      "replay": true,
+      "schedule": 100,
+      "background": 0,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 6,
+      "replay": true,
+      "schedule": 30,
+      "background": 0,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 6,
+      "replay": true,
+      "schedule": 240,
+      "background": 0,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 6,
+      "replay": true,
+      "schedule": 0,
+      "background": 0,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 7,
+      "replay": true,
+      "schedule": 100,
+      "background": 0,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 7,
+      "replay": true,
+      "schedule": 30,
+      "background": 0,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 7,
+      "replay": true,
+      "schedule": 240,
+      "background": 0,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 7,
+      "replay": true,
+      "schedule": 0,
+      "background": 0,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 8,
+      "replay": true,
+      "schedule": 100,
+      "background": 0,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 8,
+      "replay": true,
+      "schedule": 30,
+      "background": 0,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 8,
+      "replay": true,
+      "schedule": 240,
+      "background": 0,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 8,
+      "replay": true,
+      "schedule": 0,
+      "background": 0,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 9,
+      "replay": true,
+      "schedule": 100,
+      "background": 0,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 15
+    },
+    {
+      "level": 9,
+      "replay": true,
+      "schedule": 30,
+      "background": 0,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 15
+    },
+    {
+      "level": 9,
+      "replay": true,
+      "schedule": 240,
+      "background": 0,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 15
+    },
+    {
+      "level": 9,
+      "replay": true,
+      "schedule": 0,
+      "background": 0,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 15
+    },
+    {
+      "level": 10,
+      "replay": true,
+      "schedule": 100,
+      "background": 0,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": true,
+      "award": 18
+    },
+    {
+      "level": 10,
+      "replay": true,
+      "schedule": 30,
+      "background": 0,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": true,
+      "award": 18
+    },
+    {
+      "level": 10,
+      "replay": true,
+      "schedule": 240,
+      "background": 0,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": true,
+      "award": 18
+    },
+    {
+      "level": 10,
+      "replay": true,
+      "schedule": 0,
+      "background": 0,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": true,
+      "award": 18
+    },
+    {
+      "level": 11,
+      "replay": true,
+      "schedule": 100,
+      "background": 1,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 11,
+      "replay": true,
+      "schedule": 30,
+      "background": 1,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 11,
+      "replay": true,
+      "schedule": 240,
+      "background": 1,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 11,
+      "replay": true,
+      "schedule": 0,
+      "background": 1,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 12,
+      "replay": true,
+      "schedule": 100,
+      "background": 1,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 12,
+      "replay": true,
+      "schedule": 30,
+      "background": 1,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 12,
+      "replay": true,
+      "schedule": 240,
+      "background": 1,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 12,
+      "replay": true,
+      "schedule": 0,
+      "background": 1,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 13,
+      "replay": true,
+      "schedule": 100,
+      "background": 1,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 13,
+      "replay": true,
+      "schedule": 30,
+      "background": 1,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 13,
+      "replay": true,
+      "schedule": 240,
+      "background": 1,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 13,
+      "replay": true,
+      "schedule": 0,
+      "background": 1,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 14,
+      "replay": true,
+      "schedule": 100,
+      "background": 1,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 14,
+      "replay": true,
+      "schedule": 30,
+      "background": 1,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 14,
+      "replay": true,
+      "schedule": 240,
+      "background": 1,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 14,
+      "replay": true,
+      "schedule": 0,
+      "background": 1,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 15,
+      "replay": true,
+      "schedule": 100,
+      "background": 1,
+      "waves": 8,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 15,
+      "replay": true,
+      "schedule": 30,
+      "background": 1,
+      "waves": 8,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 15,
+      "replay": true,
+      "schedule": 240,
+      "background": 1,
+      "waves": 8,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 15,
+      "replay": true,
+      "schedule": 0,
+      "background": 1,
+      "waves": 8,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 16,
+      "replay": true,
+      "schedule": 100,
+      "background": 1,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 16,
+      "replay": true,
+      "schedule": 30,
+      "background": 1,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 16,
+      "replay": true,
+      "schedule": 240,
+      "background": 1,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 16,
+      "replay": true,
+      "schedule": 0,
+      "background": 1,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 17,
+      "replay": true,
+      "schedule": 100,
+      "background": 1,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 17,
+      "replay": true,
+      "schedule": 30,
+      "background": 1,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 17,
+      "replay": true,
+      "schedule": 240,
+      "background": 1,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 17,
+      "replay": true,
+      "schedule": 0,
+      "background": 1,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 18,
+      "replay": true,
+      "schedule": 100,
+      "background": 1,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 18,
+      "replay": true,
+      "schedule": 30,
+      "background": 1,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 18,
+      "replay": true,
+      "schedule": 240,
+      "background": 1,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 18,
+      "replay": true,
+      "schedule": 0,
+      "background": 1,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 19,
+      "replay": true,
+      "schedule": 100,
+      "background": 1,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 15
+    },
+    {
+      "level": 19,
+      "replay": true,
+      "schedule": 30,
+      "background": 1,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 15
+    },
+    {
+      "level": 19,
+      "replay": true,
+      "schedule": 240,
+      "background": 1,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 15
+    },
+    {
+      "level": 19,
+      "replay": true,
+      "schedule": 0,
+      "background": 1,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 15
+    },
+    {
+      "level": 20,
+      "replay": true,
+      "schedule": 100,
+      "background": 1,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": true,
+      "award": 18
+    },
+    {
+      "level": 20,
+      "replay": true,
+      "schedule": 30,
+      "background": 1,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": true,
+      "award": 18
+    },
+    {
+      "level": 20,
+      "replay": true,
+      "schedule": 240,
+      "background": 1,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": true,
+      "award": 18
+    },
+    {
+      "level": 20,
+      "replay": true,
+      "schedule": 0,
+      "background": 1,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": true,
+      "award": 18
+    },
+    {
+      "level": 21,
+      "replay": true,
+      "schedule": 100,
+      "background": 2,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 21,
+      "replay": true,
+      "schedule": 30,
+      "background": 2,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 21,
+      "replay": true,
+      "schedule": 240,
+      "background": 2,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 21,
+      "replay": true,
+      "schedule": 0,
+      "background": 2,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 22,
+      "replay": true,
+      "schedule": 100,
+      "background": 2,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 22,
+      "replay": true,
+      "schedule": 30,
+      "background": 2,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 22,
+      "replay": true,
+      "schedule": 240,
+      "background": 2,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 22,
+      "replay": true,
+      "schedule": 0,
+      "background": 2,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 23,
+      "replay": true,
+      "schedule": 100,
+      "background": 2,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 23,
+      "replay": true,
+      "schedule": 30,
+      "background": 2,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 23,
+      "replay": true,
+      "schedule": 240,
+      "background": 2,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 23,
+      "replay": true,
+      "schedule": 0,
+      "background": 2,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 24,
+      "replay": true,
+      "schedule": 100,
+      "background": 2,
+      "waves": 40,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 24,
+      "replay": true,
+      "schedule": 30,
+      "background": 2,
+      "waves": 40,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 24,
+      "replay": true,
+      "schedule": 240,
+      "background": 2,
+      "waves": 40,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 24,
+      "replay": true,
+      "schedule": 0,
+      "background": 2,
+      "waves": 40,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 25,
+      "replay": true,
+      "schedule": 100,
+      "background": 2,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": true,
+      "award": 18
+    },
+    {
+      "level": 25,
+      "replay": true,
+      "schedule": 30,
+      "background": 2,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": true,
+      "award": 18
+    },
+    {
+      "level": 25,
+      "replay": true,
+      "schedule": 240,
+      "background": 2,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": true,
+      "award": 18
+    },
+    {
+      "level": 25,
+      "replay": true,
+      "schedule": 0,
+      "background": 2,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": true,
+      "award": 18
+    },
+    {
+      "level": 26,
+      "replay": true,
+      "schedule": 100,
+      "background": 2,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 26,
+      "replay": true,
+      "schedule": 30,
+      "background": 2,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 26,
+      "replay": true,
+      "schedule": 240,
+      "background": 2,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 26,
+      "replay": true,
+      "schedule": 0,
+      "background": 2,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 27,
+      "replay": true,
+      "schedule": 100,
+      "background": 2,
+      "waves": 40,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 27,
+      "replay": true,
+      "schedule": 30,
+      "background": 2,
+      "waves": 40,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 27,
+      "replay": true,
+      "schedule": 240,
+      "background": 2,
+      "waves": 40,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 27,
+      "replay": true,
+      "schedule": 0,
+      "background": 2,
+      "waves": 40,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 28,
+      "replay": true,
+      "schedule": 100,
+      "background": 2,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 28,
+      "replay": true,
+      "schedule": 30,
+      "background": 2,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 28,
+      "replay": true,
+      "schedule": 240,
+      "background": 2,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 28,
+      "replay": true,
+      "schedule": 0,
+      "background": 2,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 29,
+      "replay": true,
+      "schedule": 100,
+      "background": 2,
+      "waves": 40,
+      "rows": 6,
+      "conveyor": false,
+      "award": 15
+    },
+    {
+      "level": 29,
+      "replay": true,
+      "schedule": 30,
+      "background": 2,
+      "waves": 40,
+      "rows": 6,
+      "conveyor": false,
+      "award": 15
+    },
+    {
+      "level": 29,
+      "replay": true,
+      "schedule": 240,
+      "background": 2,
+      "waves": 40,
+      "rows": 6,
+      "conveyor": false,
+      "award": 15
+    },
+    {
+      "level": 29,
+      "replay": true,
+      "schedule": 0,
+      "background": 2,
+      "waves": 40,
+      "rows": 6,
+      "conveyor": false,
+      "award": 15
+    },
+    {
+      "level": 30,
+      "replay": true,
+      "schedule": 100,
+      "background": 2,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": true,
+      "award": 18
+    },
+    {
+      "level": 30,
+      "replay": true,
+      "schedule": 30,
+      "background": 2,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": true,
+      "award": 18
+    },
+    {
+      "level": 30,
+      "replay": true,
+      "schedule": 240,
+      "background": 2,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": true,
+      "award": 18
+    },
+    {
+      "level": 30,
+      "replay": true,
+      "schedule": 0,
+      "background": 2,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": true,
+      "award": 18
+    },
+    {
+      "level": 31,
+      "replay": true,
+      "schedule": 100,
+      "background": 3,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 31,
+      "replay": true,
+      "schedule": 30,
+      "background": 3,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 31,
+      "replay": true,
+      "schedule": 240,
+      "background": 3,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 31,
+      "replay": true,
+      "schedule": 0,
+      "background": 3,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 32,
+      "replay": true,
+      "schedule": 100,
+      "background": 3,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 32,
+      "replay": true,
+      "schedule": 30,
+      "background": 3,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 32,
+      "replay": true,
+      "schedule": 240,
+      "background": 3,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 32,
+      "replay": true,
+      "schedule": 0,
+      "background": 3,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 33,
+      "replay": true,
+      "schedule": 100,
+      "background": 3,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 33,
+      "replay": true,
+      "schedule": 30,
+      "background": 3,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 33,
+      "replay": true,
+      "schedule": 240,
+      "background": 3,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 33,
+      "replay": true,
+      "schedule": 0,
+      "background": 3,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 34,
+      "replay": true,
+      "schedule": 100,
+      "background": 3,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 34,
+      "replay": true,
+      "schedule": 30,
+      "background": 3,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 34,
+      "replay": true,
+      "schedule": 240,
+      "background": 3,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 34,
+      "replay": true,
+      "schedule": 0,
+      "background": 3,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 35,
+      "replay": true,
+      "schedule": 100,
+      "background": 1,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 35,
+      "replay": true,
+      "schedule": 30,
+      "background": 1,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 35,
+      "replay": true,
+      "schedule": 240,
+      "background": 1,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 35,
+      "replay": true,
+      "schedule": 0,
+      "background": 1,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 36,
+      "replay": true,
+      "schedule": 100,
+      "background": 3,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 36,
+      "replay": true,
+      "schedule": 30,
+      "background": 3,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 36,
+      "replay": true,
+      "schedule": 240,
+      "background": 3,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 36,
+      "replay": true,
+      "schedule": 0,
+      "background": 3,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 37,
+      "replay": true,
+      "schedule": 100,
+      "background": 3,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 37,
+      "replay": true,
+      "schedule": 30,
+      "background": 3,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 37,
+      "replay": true,
+      "schedule": 240,
+      "background": 3,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 37,
+      "replay": true,
+      "schedule": 0,
+      "background": 3,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 38,
+      "replay": true,
+      "schedule": 100,
+      "background": 3,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 38,
+      "replay": true,
+      "schedule": 30,
+      "background": 3,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 38,
+      "replay": true,
+      "schedule": 240,
+      "background": 3,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 38,
+      "replay": true,
+      "schedule": 0,
+      "background": 3,
+      "waves": 20,
+      "rows": 6,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 39,
+      "replay": true,
+      "schedule": 100,
+      "background": 3,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": false,
+      "award": 15
+    },
+    {
+      "level": 39,
+      "replay": true,
+      "schedule": 30,
+      "background": 3,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": false,
+      "award": 15
+    },
+    {
+      "level": 39,
+      "replay": true,
+      "schedule": 240,
+      "background": 3,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": false,
+      "award": 15
+    },
+    {
+      "level": 39,
+      "replay": true,
+      "schedule": 0,
+      "background": 3,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": false,
+      "award": 15
+    },
+    {
+      "level": 40,
+      "replay": true,
+      "schedule": 100,
+      "background": 3,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": true,
+      "award": 18
+    },
+    {
+      "level": 40,
+      "replay": true,
+      "schedule": 30,
+      "background": 3,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": true,
+      "award": 18
+    },
+    {
+      "level": 40,
+      "replay": true,
+      "schedule": 240,
+      "background": 3,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": true,
+      "award": 18
+    },
+    {
+      "level": 40,
+      "replay": true,
+      "schedule": 0,
+      "background": 3,
+      "waves": 30,
+      "rows": 6,
+      "conveyor": true,
+      "award": 18
+    },
+    {
+      "level": 41,
+      "replay": true,
+      "schedule": 100,
+      "background": 4,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 41,
+      "replay": true,
+      "schedule": 30,
+      "background": 4,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 41,
+      "replay": true,
+      "schedule": 240,
+      "background": 4,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 41,
+      "replay": true,
+      "schedule": 0,
+      "background": 4,
+      "waves": 20,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 42,
+      "replay": true,
+      "schedule": 100,
+      "background": 4,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 42,
+      "replay": true,
+      "schedule": 30,
+      "background": 4,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 42,
+      "replay": true,
+      "schedule": 240,
+      "background": 4,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 42,
+      "replay": true,
+      "schedule": 0,
+      "background": 4,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 43,
+      "replay": true,
+      "schedule": 100,
+      "background": 4,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 43,
+      "replay": true,
+      "schedule": 30,
+      "background": 4,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 43,
+      "replay": true,
+      "schedule": 240,
+      "background": 4,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 43,
+      "replay": true,
+      "schedule": 0,
+      "background": 4,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 44,
+      "replay": true,
+      "schedule": 100,
+      "background": 4,
+      "waves": 40,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 44,
+      "replay": true,
+      "schedule": 30,
+      "background": 4,
+      "waves": 40,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 44,
+      "replay": true,
+      "schedule": 240,
+      "background": 4,
+      "waves": 40,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 44,
+      "replay": true,
+      "schedule": 0,
+      "background": 4,
+      "waves": 40,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 45,
+      "replay": true,
+      "schedule": 100,
+      "background": 4,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": true,
+      "award": 18
+    },
+    {
+      "level": 45,
+      "replay": true,
+      "schedule": 30,
+      "background": 4,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": true,
+      "award": 18
+    },
+    {
+      "level": 45,
+      "replay": true,
+      "schedule": 240,
+      "background": 4,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": true,
+      "award": 18
+    },
+    {
+      "level": 45,
+      "replay": true,
+      "schedule": 0,
+      "background": 4,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": true,
+      "award": 18
+    },
+    {
+      "level": 46,
+      "replay": true,
+      "schedule": 100,
+      "background": 4,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 46,
+      "replay": true,
+      "schedule": 30,
+      "background": 4,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 46,
+      "replay": true,
+      "schedule": 240,
+      "background": 4,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 46,
+      "replay": true,
+      "schedule": 0,
+      "background": 4,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 47,
+      "replay": true,
+      "schedule": 100,
+      "background": 4,
+      "waves": 40,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 47,
+      "replay": true,
+      "schedule": 30,
+      "background": 4,
+      "waves": 40,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 47,
+      "replay": true,
+      "schedule": 240,
+      "background": 4,
+      "waves": 40,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 47,
+      "replay": true,
+      "schedule": 0,
+      "background": 4,
+      "waves": 40,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 48,
+      "replay": true,
+      "schedule": 100,
+      "background": 4,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 48,
+      "replay": true,
+      "schedule": 30,
+      "background": 4,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 48,
+      "replay": true,
+      "schedule": 240,
+      "background": 4,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 48,
+      "replay": true,
+      "schedule": 0,
+      "background": 4,
+      "waves": 30,
+      "rows": 5,
+      "conveyor": false,
+      "award": 18
+    },
+    {
+      "level": 49,
+      "replay": true,
+      "schedule": 100,
+      "background": 4,
+      "waves": 40,
+      "rows": 5,
+      "conveyor": false,
+      "award": 15
+    },
+    {
+      "level": 49,
+      "replay": true,
+      "schedule": 30,
+      "background": 4,
+      "waves": 40,
+      "rows": 5,
+      "conveyor": false,
+      "award": 15
+    },
+    {
+      "level": 49,
+      "replay": true,
+      "schedule": 240,
+      "background": 4,
+      "waves": 40,
+      "rows": 5,
+      "conveyor": false,
+      "award": 15
+    },
+    {
+      "level": 49,
+      "replay": true,
+      "schedule": 0,
+      "background": 4,
+      "waves": 40,
+      "rows": 5,
+      "conveyor": false,
+      "award": 15
+    },
+    {
+      "level": 50,
+      "replay": true,
+      "schedule": 100,
+      "background": 5,
+      "waves": 40,
+      "rows": 5,
+      "conveyor": true,
+      "award": 18
+    },
+    {
+      "level": 50,
+      "replay": true,
+      "schedule": 30,
+      "background": 5,
+      "waves": 40,
+      "rows": 5,
+      "conveyor": true,
+      "award": 18
+    },
+    {
+      "level": 50,
+      "replay": true,
+      "schedule": 240,
+      "background": 5,
+      "waves": 40,
+      "rows": 5,
+      "conveyor": true,
+      "award": 18
+    },
+    {
+      "level": 50,
+      "replay": true,
+      "schedule": 0,
+      "background": 5,
+      "waves": 40,
+      "rows": 5,
+      "conveyor": true,
+      "award": 18
+    }
+  ],
+  "initial_teaching": [
+    {
+      "level": 1,
+      "schedule": 100,
+      "planted": 2
+    },
+    {
+      "level": 1,
+      "schedule": 30,
+      "planted": 2
+    },
+    {
+      "level": 1,
+      "schedule": 240,
+      "planted": 2
+    },
+    {
+      "level": 1,
+      "schedule": 0,
+      "planted": 2
+    },
+    {
+      "level": 2,
+      "schedule": 100,
+      "planted": 3
+    },
+    {
+      "level": 2,
+      "schedule": 30,
+      "planted": 3
+    },
+    {
+      "level": 2,
+      "schedule": 240,
+      "planted": 3
+    },
+    {
+      "level": 2,
+      "schedule": 0,
+      "planted": 3
+    }
+  ],
+  "sources": {
+    "Tests/native/ImageRuntimeTests.cpp": "e36386fbab68682c4944b36e5cfa655c3b2700f03243ddd79ff6fbc613cfa6b0",
+    "pvzPerf/Lawn/Board.cpp": "aaeba6b3444a494b2be3e312be677fde3b0d7b8e47bdf52707f385992b86d668",
+    "pvzPerf/Lawn/Challenge.cpp": "879162e40f591fc1e55e58d2e1d8cc8ec0c056086148109300dafda7bcdfa06b",
+    "pvzPerf/Lawn/Zombie.cpp": "b33f98427234ebb2153c72d4fdfc4e08870cd8a5d59af7116fb0fd569771a1cf",
+    "pvzPerf/Lawn/Coin.cpp": "ff83061d2e60663b7d543ac8da411ccdc24b650c42e8c77f5c2108fb325b14e8",
+    "pvzPerf/Lawn/SeedPacket.cpp": "34c019752fef34ea7f0484a1444c73496f3d75b89667066b0c605f842b62acde",
+    "pvzPerf/LawnApp.cpp": "9876be2ca0f5ec3efb582f94b2258ab4a341e80b724e95329b1a33544cc45d9d"
+  },
+  "executable_sha256": "85f32d7db4264ee387740b5a8badda2684c5b11ba800af48cc474b62e243228b",
+  "pak_sha256": "5bdd71c632d945304ae3752bfed61941bb8c7e4351e616e1ff6fbceab1431545",
+  "git_head": "68d61123de7b073f5479f32bec1772106b6141b9",
+  "working_tree_modified": true
+}

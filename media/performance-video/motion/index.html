@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>pvz_perf 3.2.5 · 把一帧拆开看</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;background:#091017;color:#eef5ec;font-family:'Microsoft YaHei',sans-serif;height:100%;overflow:hidden}
+body{display:grid;place-items:center}main{width:min(100vw,calc((100vh - 72px)*16/9));position:relative}.stage{position:relative}canvas{display:block;width:100%;height:auto;aspect-ratio:16/9}
+#repo-link{position:absolute;left:21.354167%;top:76.574074%;width:57.291667%;height:6.666667%;border-radius:10px}#repo-link:focus-visible{outline:3px solid #c9f477;outline-offset:4px}
+nav{height:60px;display:flex;gap:16px;align-items:center;padding:8px 16px;background:#111e27}button,select{font:inherit;background:#23343f;color:#eef5ec;border:0;border-radius:6px;padding:9px 12px;cursor:pointer}input{flex:1;accent-color:#c9f477;min-width:60px}time{font:14px Consolas,monospace;white-space:nowrap}button:focus-visible,select:focus-visible{outline:2px solid #c9f477}
+nav label{display:flex;align-items:center;gap:6px;white-space:nowrap;font-size:13px}nav label input{min-width:auto;flex:0}select{max-width:340px}
+@media(max-width:700px){nav{gap:8px;padding:6px}select{max-width:130px;font-size:12px}time{font-size:11px}}
+</style>
+</head>
+<body><main><div class="stage"><canvas id="film" width="1920" height="1080" aria-label="植物大战僵尸性能优化动态演示"></canvas><a id="repo-link" href="https://github.com/YuHao2006/pvz_perf" target="_blank" rel="noopener noreferrer" aria-label="打开 pvz_perf GitHub 仓库" title="打开 GitHub 仓库" hidden></a></div><nav><button id="play" aria-label="播放或暂停">播放</button><input id="seek" type="range" min="0" max="1" value="0" step="0.01" aria-label="视频进度"><time id="clock"></time><label><input id="track-bounds" type="checkbox">轨道边框</label><select id="chapters" aria-label="跳转章节"></select></nav></main>
+<script>/*__DATA__*/</script>
+<script>/*__FILM__*/</script>
+</body></html>

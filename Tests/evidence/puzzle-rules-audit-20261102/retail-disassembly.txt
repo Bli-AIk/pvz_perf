@@ -1,0 +1,56 @@
+SHA256: 5f650f52d12751e08b63e590edb0d9b9f09d087cea900baa0eb39e4af8eda251
+
+PuzzleIsAwardStage: stage+1, signed remainder 3 for I-Zombie / 10 for Vasebreaker
+0042C4D0: mov eax, dword ptr [edx]
+0042C4D2: mov eax, dword ptr [eax + 0x918]
+0042C4D8: test eax, eax
+0042C4DA: jne 0x42c4df
+0042C4DC: xor al, al
+0042C4DE: ret 
+0042C4DF: mov ecx, 1
+0042C4E4: cmp eax, 0x46
+0042C4E7: jne 0x42c4fb
+0042C4E9: mov eax, dword ptr [edx + 0x6c]
+0042C4EC: inc eax
+0042C4ED: cdq 
+0042C4EE: mov ecx, 3
+0042C4F3: idiv ecx
+0042C4F5: test edx, edx
+0042C4F7: sete al
+0042C4FA: ret 
+0042C4FB: cmp eax, 0x3c
+0042C4FE: jne 0x42c505
+0042C500: mov ecx, 0xa
+0042C505: mov eax, dword ptr [edx + 0x6c]
+0042C508: inc eax
+0042C509: cdq 
+0042C50A: idiv ecx
+0042C50C: test edx, edx
+0042C50E: sete al
+0042C511: ret 
+
+PuzzlePhaseComplete repeats the same one-based reward boundary
+0042C520: push ebx
+0042C521: push ebp
+0042C522: push esi
+0042C523: push edi
+0042C524: mov edi, eax
+0042C526: mov ebx, ecx
+0042C528: mov eax, dword ptr [ebx]
+0042C52A: mov eax, dword ptr [eax + 0x918]
+0042C530: test eax, eax
+0042C532: je 0x42c64f
+0042C538: mov ecx, 1
+0042C53D: cmp eax, 0x46
+0042C540: jne 0x42c547
+0042C542: lea ecx, [eax - 0x43]
+0042C545: jmp 0x42c551
+0042C547: cmp eax, 0x3c
+0042C54A: jne 0x42c551
+0042C54C: mov ecx, 0xa
+0042C551: mov eax, dword ptr [ebx + 0x6c]
+0042C554: inc eax
+0042C555: cdq 
+0042C556: idiv ecx
+0042C558: test edx, edx
+0042C55A: jne 0x42c64f

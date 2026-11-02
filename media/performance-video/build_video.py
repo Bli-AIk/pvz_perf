@@ -144,7 +144,7 @@ def slide(scene, number, tables, output):
                 y=paragraph(draw,(140,y),item,33,780,spacing=15)+38
     if scene.get('footer'):
         paragraph(draw,(100,900),scene['footer'],22,1700,MUTED,spacing=5)
-    draw.text((100,1020),'pvz_perf  /  v3.2.4  /  实现与数据可追溯',font=font(20),fill=MUTED)
+    draw.text((100,1020),'pvz_perf  /  v3.2.5  /  实现与数据可追溯',font=font(20),fill=MUTED)
     image.save(output)
 
 

@@ -1,0 +1,47 @@
+SHA256: 5f650f52d12751e08b63e590edb0d9b9f09d087cea900baa0eb39e4af8eda251
+
+Movie dispatcher: mode 72, add 10 and call UpdateIntro
+0043F540: cmp dword ptr [ebp + 0x918], 0x48
+0043F547: jne 0x43f558
+0043F549: add dword ptr [esi + 8], 0xa
+0043F54D: pop ebp
+0043F54E: pop ebx
+0043F54F: pop edi
+0043F550: mov eax, esi
+0043F552: pop esi
+0043F553: jmp 0x4445a0
+
+Intro time 10 calls LoadIntroBoard
+004445D6: cmp dword ptr [edi + 8], 0xa
+004445DA: jne 0x4445e1
+004445DC: call 0x440dc0
+
+LoadIntroBoard: pre-update flag, 100 virtual Board updates, restore flag
+00441A46: mov byte ptr [edi + 0x48], bl
+00441A49: mov esi, 0x64
+00441A4E: mov edi, edi
+00441A50: mov ecx, dword ptr [edi + 4]
+00441A53: mov eax, dword ptr [ecx]
+00441A55: mov edx, dword ptr [eax + 0x58]
+00441A58: call edx
+00441A5A: sub esi, ebx
+00441A5C: jne 0x441a50
+00441A5E: pop esi
+00441A5F: mov byte ptr [edi + 0x48], 0
+00441A63: pop ebx
+00441A64: mov esp, ebp
+00441A66: pop ebp
+00441A67: ret 
+
+Intro end dispatches the first Adventure game
+00444696: mov edx, dword ptr [edi + 8]
+00444699: cmp edx, dword ptr [0x729a5c]
+0044469F: jne 0x4446ac
+004446A1: mov esi, dword ptr [edi]
+004446A3: push 0
+004446A5: push 0
+004446A7: call 0x452820
+004446AC: pop edi
+004446AD: pop esi
+004446AE: pop ebp
+004446AF: ret 

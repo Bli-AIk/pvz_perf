@@ -35,6 +35,7 @@
 #include "Sexy.TodLib/generated/EntityStrings.h"
 #include "widget/WidgetManager.h"
 #include "Widget/AchievementsWidget.h"
+#include <stdexcept>
 
 int gZombieWaves[NUM_LEVELS] = {  //0x6A34E8
 	4,  6,  8,  10, 8,  10, 20, 10, 20, 20,
@@ -322,9 +323,10 @@ Challenge::Challenge()
 
 	if (mApp->mBoard && mApp->mGameMode == GAMEMODE_MINIGAME_SLOT_MACHINE)
 	{
-		Rect aHandleRect = SlotMachineGetHandleRect();
 		ReanimatorEnsureDefinitionLoaded(REANIM_SLOT_MACHINE_HANDLE, true);
-		Reanimation* aHandleReanim = mApp->AddReanimation(aHandleRect.mX - 377, aHandleRect.mY - 20, 0, REANIM_SLOT_MACHINE_HANDLE, (mBoard && mBoard->AnimationTimeDomain() == ReanimTimeDomain::Battle ? static_cast<std::int64_t>(mBoard->mLevelTimeNs) : mApp->mEffectSystem->mReanimationHolder->mVisualTimeNs), (mBoard ? mBoard->AnimationTimeDomain() : ReanimTimeDomain::Visual));
+		// The authored handle origin is local to the seed bank, independent of
+		// the current viewport and the Board camera used by hit testing.
+		Reanimation* aHandleReanim = mApp->AddReanimation(96, -20, 0, REANIM_SLOT_MACHINE_HANDLE, (mBoard && mBoard->AnimationTimeDomain() == ReanimTimeDomain::Battle ? static_cast<std::int64_t>(mBoard->mLevelTimeNs) : mApp->mEffectSystem->mReanimationHolder->mVisualTimeNs), (mBoard ? mBoard->AnimationTimeDomain() : ReanimTimeDomain::Visual));
 		aHandleReanim->mIsAttachment = true;
 		aHandleReanim->ApplyRate(0.0f);
 		mReanimChallenge = mApp->ReanimationGetID(aHandleReanim);
@@ -1409,11 +1411,20 @@ int Challenge::MouseDown(int x, int y, int theClickCount, HitResult* theHitResul
 		return true;
 	}
 
-	if (mApp->mGameMode == GAMEMODE_MINIGAME_ZOMBIQUARIUM && theClickCount <= 0)
+	if (mApp->mGameMode == GAMEMODE_MINIGAME_ZOMBIQUARIUM)
 	{
-		mApp->PlaySample(Sexy::SOUND_TAPGLASS);
-		ZombiquariumMouseDown(x, y);
-		return true;
+		// 1073 00424C2E: right click only taps glass; left click on empty
+		// aquarium space reaches the paid feeding path (00424C5C).
+		if (theClickCount < 0)
+		{
+			mApp->PlaySample(Sexy::SOUND_TAPGLASS);
+			return true;
+		}
+		if (theHitResult->mObjectType == OBJECT_TYPE_NONE)
+		{
+			ZombiquariumMouseDown(x, y);
+			return true;
+		}
 	}
 
 	if (mApp->IsScaryPotterLevel() && theHitResult->mObjectType == OBJECT_TYPE_SCARY_POT)
@@ -1428,7 +1439,10 @@ int Challenge::MouseDown(int x, int y, int theClickCount, HitResult* theHitResul
 //0x4221B0
 Rect Challenge::SlotMachineGetHandleRect()
 {
-	return Rect(mBoard->mSeedBank->mX + 473, mBoard->mSeedBank->mY, 55, 80);
+	// MouseHitTest takes Board-local coordinates; the handle belongs to the
+	// viewport's left HUD, so invert the camera only for this HUD rectangle.
+	return Rect(mApp->mScreenBounds.mX - mBoard->mX + mBoard->mSeedBank->mX + 473,
+		mApp->mScreenBounds.mY - mBoard->mY + mBoard->mSeedBank->mY, 55, 80);
 }
 
 //0x4221E0
@@ -1662,7 +1676,8 @@ void Challenge::UpdateBeghouled()
 
 	if (mApp->mGameMode == GAMEMODE_MINIGAME_BEGHOULED_TWIST && mChallengeState == STATECHALLENGE_NORMAL)
 	{
-		if (BeghouledTwistSquareFromMouse(mApp->mWidgetManager->mLastMouseX, mApp->mWidgetManager->mLastMouseY, mChallengeGridX, mChallengeGridY))
+		if (BeghouledTwistSquareFromMouse(mApp->mWidgetManager->mLastMouseX - mBoard->mX,
+			mApp->mWidgetManager->mLastMouseY - mBoard->mY, mChallengeGridX, mChallengeGridY))
 		{
 			BeghouledBoardState aBoardState;
 			LoadBeghouledBoardState(&aBoardState);
@@ -2254,6 +2269,112 @@ void Challenge::ZombieAtePlant(/*Zombie* theZombie,*/ Plant* thePlant)
 	BeghouledUpdateCraters();
 }
 
+namespace
+{
+void UpdateChallengeDefault(Challenge&, std::uint64_t)
+{
+}
+
+void UpdateChallengeSeedBank(Challenge& challenge)
+{
+	auto& board=*challenge.mBoard;
+	if (board.mSeedBank->mY < 0 &&
+		(board.mSunMoney + board.CountSunBeingCollected() > 0 || board.mSeedBank->mY > Sexy::IMAGE_SEEDBANK->mWidth))
+	{
+		board.mSeedBank->mY += 2;
+		if (board.mSeedBank->mY > 0)
+			board.mSeedBank->mY = 0;
+	}
+}
+
+void UpdateChallengeVases(Challenge& challenge, std::uint64_t)
+{
+	challenge.ScaryPotterUpdate();
+	UpdateChallengeSeedBank(challenge);
+}
+
+void UpdateChallengeWhack(Challenge& challenge, std::uint64_t)
+{
+	// Its tutorial update does not read/write the HUD position, sun or coins.
+	challenge.WhackAZombieUpdate();
+	UpdateChallengeSeedBank(challenge);
+}
+
+void UpdateChallengeBeghouled(Challenge& challenge, std::uint64_t)
+{
+	challenge.UpdateBeghouled();
+}
+
+void UpdateChallengeIZombie(Challenge& challenge, std::uint64_t)
+{
+	challenge.IZombieUpdate();
+}
+
+void UpdateChallengeAdventure(Challenge& challenge, std::uint64_t deltaNs)
+{
+	// Match the old predicates' profile level, including out-of-range no-ops.
+	const auto index=static_cast<unsigned>(challenge.mApp->mPlayerInfo->mLevel)-1;
+	if (index < Challenge::kAdventureChallengeUpdates.size())
+		Challenge::kAdventureChallengeUpdates[index](challenge, deltaNs);
+}
+}
+
+// Static member declarations remain in the header; constexpr definitions and
+// handler bodies stay here. Neither table needs runtime initialization.
+constexpr std::array<Challenge::UpdateFn, NUM_LEVELS> Challenge::kAdventureChallengeUpdates = [] {
+	std::array<Challenge::UpdateFn, NUM_LEVELS> updates{};
+	updates.fill(UpdateChallengeDefault);
+	updates[15-1] = UpdateChallengeWhack;
+	updates[35-1] = UpdateChallengeVases;
+	return updates;
+}();
+static_assert(Challenge::kAdventureChallengeUpdates[15-1] == UpdateChallengeWhack &&
+	Challenge::kAdventureChallengeUpdates[35-1] == UpdateChallengeVases &&
+	Challenge::kAdventureChallengeUpdates[1-1] == UpdateChallengeDefault);
+
+constexpr std::array<Challenge::UpdateFn, NUM_GAME_MODES> Challenge::kChallengeUpdates = [] {
+	std::array<Challenge::UpdateFn, NUM_GAME_MODES> updates{};
+	updates.fill(UpdateChallengeDefault);
+	updates[GAMEMODE_ADVENTURE] = UpdateChallengeAdventure;
+	updates[GAMEMODE_MINIGAME_BEGHOULED] =
+		updates[GAMEMODE_MINIGAME_BEGHOULED_TWIST] = UpdateChallengeBeghouled;
+	for (int mode=GAMEMODE_SCARY_POTTER_1; mode<=GAMEMODE_SCARY_POTTER_ENDLESS; ++mode)
+		updates[mode] = UpdateChallengeVases;
+	updates[GAMEMODE_MINIGAME_WHACK_A_ZOMBIE] = UpdateChallengeWhack;
+	for (int mode=GAMEMODE_PUZZLE_I_ZOMBIE_1; mode<=GAMEMODE_PUZZLE_I_ZOMBIE_ENDLESS; ++mode)
+		updates[mode] = UpdateChallengeIZombie;
+	updates[GAMEMODE_MINIGAME_SLOT_MACHINE] = +[](Challenge& c, std::uint64_t) { c.UpdateSlotMachine(); };
+	updates[GAMEMODE_MINIGAME_SPEED] = +[](Challenge& c, std::uint64_t deltaNs) {
+		// Keep the second object update; independent effects retain normal age.
+		auto& board=*c.mBoard;
+		if (board.mLevelTimeNs > std::uint64_t(INT64_MAX) ||
+			deltaNs > std::uint64_t(INT64_MAX) - board.mLevelTimeNs)
+			throw std::overflow_error("speed-mode battle timestamp exceeds clock range");
+		board.mLevelTimeNs += deltaNs;
+		c.mApp->mEffectSystem->mReanimationHolder->mBattleTimeNs = static_cast<std::int64_t>(board.mLevelTimeNs);
+		c.mApp->mEffectSystem->RebaseIndependentBattleEffects(static_cast<std::int64_t>(board.mLevelTimeNs));
+		board.UpdateGame(deltaNs);
+	};
+	updates[GAMEMODE_MINIGAME_RAINING_SEEDS] = +[](Challenge& c, std::uint64_t) { c.UpdateRainingSeeds(); };
+	updates[GAMEMODE_MINIGAME_PORTAL_COMBAT] = +[](Challenge& c, std::uint64_t) { c.UpdatePortalCombat(); };
+	updates[GAMEMODE_LIMBO_SQUIRREL] = +[](Challenge& c, std::uint64_t) { c.SquirrelUpdate(); };
+	updates[GAMEMODE_MINIGAME_ZOMBIQUARIUM] = +[](Challenge& c, std::uint64_t) { c.ZombiquariumUpdate(); };
+	updates[GAMEMODE_TREE_OF_WISDOM] = +[](Challenge& c, std::uint64_t) { c.TreeOfWisdomUpdate(); };
+	updates[GAMEMODE_LIMBO_ICE] = +[](Challenge& c, std::uint64_t deltaNs) {
+		if (c.mBoard->mLevelTimeNs - deltaNs < 30'000'000'000 && c.mBoard->mLevelTimeNs >= 30'000'000'000)
+		{
+			c.mApp->PlayFoley(FOLEY_FLOOP);
+			c.mApp->PlaySample(Sexy::SOUND_LOSEMUSIC);
+		}
+	};
+	updates[GAMEMODE_MINIGAME_LAST_STAND] = +[](Challenge& c, std::uint64_t) { c.LastStandUpdate(); };
+	return updates;
+}();
+static_assert(Challenge::kChallengeUpdates[GAMEMODE_SCARY_POTTER_1] ==
+	Challenge::kAdventureChallengeUpdates[35-1] &&
+	Challenge::kChallengeUpdates[GAMEMODE_MINIGAME_WHACK_A_ZOMBIE] ==
+	Challenge::kAdventureChallengeUpdates[15-1]);
+
 //0x4246B0
 void Challenge::Update(std::uint64_t theLevelDeltaNs)
 {
@@ -2282,74 +2403,7 @@ void Challenge::Update(std::uint64_t theLevelDeltaNs)
 	{
 		UpdateConveyorBelt();
 	}
-	if (mApp->mGameMode == GAMEMODE_MINIGAME_BEGHOULED || mApp->mGameMode == GAMEMODE_MINIGAME_BEGHOULED_TWIST)
-	{
-		UpdateBeghouled();
-	}
-	if (mApp->IsScaryPotterLevel())
-	{
-		ScaryPotterUpdate();
-	}
-	if ((mApp->IsScaryPotterLevel() || mApp->IsWhackAZombieLevel()) && mBoard->mSeedBank->mY < 0)
-	{
-		if (mBoard->mSunMoney + mBoard->CountSunBeingCollected() > 0 || mBoard->mSeedBank->mY > Sexy::IMAGE_SEEDBANK->mWidth)
-		{
-			mBoard->mSeedBank->mY += 2;
-			if (mBoard->mSeedBank->mY > 0)
-			{
-				mBoard->mSeedBank->mY = 0;
-			}
-		}
-	}
-
-	if (mApp->IsWhackAZombieLevel())
-	{
-		WhackAZombieUpdate();
-	}
-	if (mApp->IsIZombieLevel())
-	{
-		IZombieUpdate();
-	}
-	if (mApp->IsSlotMachineLevel())
-	{
-		UpdateSlotMachine();
-	}
-	if (mApp->mGameMode == GAMEMODE_MINIGAME_SPEED)
-	{
-		// The speed mode repeats object logic without advancing the level clock.
-		mBoard->UpdateGame(0);
-	}
-	if (mApp->mGameMode == GAMEMODE_MINIGAME_RAINING_SEEDS)
-	{
-		UpdateRainingSeeds();
-	}
-	if (mApp->mGameMode == GAMEMODE_MINIGAME_PORTAL_COMBAT)
-	{
-		UpdatePortalCombat();
-	}
-	if (mApp->IsSquirrelLevel())
-	{
-		SquirrelUpdate();
-	}
-	if (mApp->mGameMode == GAMEMODE_MINIGAME_ZOMBIQUARIUM)
-	{
-		ZombiquariumUpdate();
-	}
-	if (mApp->mGameMode == GAMEMODE_TREE_OF_WISDOM)
-	{
-		TreeOfWisdomUpdate();
-	}
-	if (mApp->mGameMode == GAMEMODE_LIMBO_ICE &&
-		mBoard->mLevelTimeNs - theLevelDeltaNs < 30'000'000'000 &&
-		mBoard->mLevelTimeNs >= 30'000'000'000)
-	{
-		mApp->PlayFoley(FOLEY_FLOOP);
-		mApp->PlaySample(Sexy::SOUND_LOSEMUSIC);
-	}
-	if (mApp->mGameMode == GAMEMODE_MINIGAME_LAST_STAND)
-	{
-		LastStandUpdate();
-	}
+	kChallengeUpdates[mApp->mGameMode](*this, theLevelDeltaNs);
 
 	Reanimation* aReanim = mApp->ReanimationTryToGet(mReanimChallenge);
 	if (aReanim && aReanim->mIsAttachment)
@@ -2477,7 +2531,8 @@ void Challenge::DrawBeghouled(Graphics* g)
 	if (mApp->mGameMode == GAMEMODE_MINIGAME_BEGHOULED_TWIST)
 	{
 		HitResult aHitResult;
-		mBoard->MouseHitTest(mApp->mWidgetManager->mLastMouseX, mApp->mWidgetManager->mLastMouseY, &aHitResult);
+		mBoard->MouseHitTest(mApp->mWidgetManager->mLastMouseX - mBoard->mX,
+			mApp->mWidgetManager->mLastMouseY - mBoard->mY, &aHitResult);
 		if (mChallengeGridX != -1 && mChallengeGridY != -1 && aHitResult.mObjectType != OBJECT_TYPE_COIN)
 		{
 			float aPixelX = mBoard->GridToPixelX(mChallengeGridX, mChallengeGridY) + 80;
@@ -2511,8 +2566,8 @@ void Challenge::DrawSlotMachine(Graphics* g)
 		gBoardParent.mColor = GetFlashingColorNs(mBoard->mLevelTimeNs, 750'000'000);
 		gBoardParent.mColorizeImages = true;
 	}
-	gBoardParent.mTransX = mBoard->mSeedBank->mX - mBoard->mX;
-	gBoardParent.mTransY = mBoard->mSeedBank->mY - mBoard->mY;
+	gBoardParent.Translate(mApp->mScreenBounds.mX - mBoard->mX + mBoard->mSeedBank->mX,
+		mApp->mScreenBounds.mY - mBoard->mY + mBoard->mSeedBank->mY);
 	mApp->ReanimationGet(mReanimChallenge)->Draw(&gBoardParent);
 }
 
@@ -3301,6 +3356,11 @@ void Challenge::UpdatePortal(GridItem* thePortal)
 
 				aZombie->SetRow(anOtherPortal->mGridY);
 				aZombie->mY = (aZombie->GetPosYBasedOnRow(anOtherPortal->mGridY));
+				// Teleportation ends the old world-position segment. Zamboni
+				// reuses X's slot for its tire-speed ramp, not position.
+				if (aZombie->mZombieType != ZOMBIE_ZAMBONI)
+					aZombie->mVelocityX.bound = false;
+				aZombie->mVelocityY.bound = false;
 
 				aZombie->mLastPortalX = anOtherPortal->mGridX;
 			}

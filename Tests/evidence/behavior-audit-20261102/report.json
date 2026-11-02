@@ -1,0 +1,781 @@
+{
+  "scope": "Every real plant, zombie and supported GameMode (including Intro and gardens) has a bounded principal-workflow check; additional application opening, UI and lifecycle routes are checked separately",
+  "seed_types": 53,
+  "zombie_types": 34,
+  "supported_modes": [
+    {
+      "id": 0,
+      "name": "GAMEMODE_ADVENTURE",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 1,
+      "name": "GAMEMODE_MINIGAME_BEGHOULED",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 2,
+      "name": "GAMEMODE_MINIGAME_BEGHOULED_TWIST",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 3,
+      "name": "GAMEMODE_MINIGAME_BOBSLED_BONANZA",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 4,
+      "name": "GAMEMODE_MINIGAME_COLUMN",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 5,
+      "name": "GAMEMODE_MINIGAME_FINAL_BOSS",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 6,
+      "name": "GAMEMODE_MINIGAME_INVISIGHOUL",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 7,
+      "name": "GAMEMODE_MINIGAME_LAST_STAND",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 8,
+      "name": "GAMEMODE_MINIGAME_LITTLE_TROUBLE",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 9,
+      "name": "GAMEMODE_MINIGAME_POGO_PARTY",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 10,
+      "name": "GAMEMODE_MINIGAME_PORTAL_COMBAT",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 11,
+      "name": "GAMEMODE_MINIGAME_RAINING_SEEDS",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 12,
+      "name": "GAMEMODE_MINIGAME_SEEING_STARS",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 13,
+      "name": "GAMEMODE_MINIGAME_SLOT_MACHINE",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 14,
+      "name": "GAMEMODE_MINIGAME_SPEED",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 15,
+      "name": "GAMEMODE_MINIGAME_WALLNUT_BOWLING",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 16,
+      "name": "GAMEMODE_MINIGAME_WALLNUT_BOWLING_2",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 17,
+      "name": "GAMEMODE_MINIGAME_WAR_AND_PEAS",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 18,
+      "name": "GAMEMODE_MINIGAME_WAR_AND_PEAS_2",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 19,
+      "name": "GAMEMODE_MINIGAME_WHACK_A_ZOMBIE",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 20,
+      "name": "GAMEMODE_MINIGAME_ZOMBIQUARIUM",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 21,
+      "name": "GAMEMODE_LIMBO_AIR_RAID",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 22,
+      "name": "GAMEMODE_LIMBO_ART_CHALLENGE_SUNFLOWER",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 23,
+      "name": "GAMEMODE_LIMBO_ART_CHALLENGE_WALLNUT",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 24,
+      "name": "GAMEMODE_LIMBO_BIG_TIME",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 25,
+      "name": "GAMEMODE_LIMBO_BUNGEE_BLITZ",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 26,
+      "name": "GAMEMODE_LIMBO_GRAVE_DANGER",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 27,
+      "name": "GAMEMODE_LIMBO_HIGH_GRAVITY",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 28,
+      "name": "GAMEMODE_LIMBO_ICE",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 29,
+      "name": "GAMEMODE_LIMBO_RESODDED",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 30,
+      "name": "GAMEMODE_LIMBO_SHOVEL",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 31,
+      "name": "GAMEMODE_LIMBO_SQUIRREL",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 32,
+      "name": "GAMEMODE_LIMBO_STORMY_NIGHT",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 33,
+      "name": "GAMEMODE_LIMBO_SUNNY_DAY",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 34,
+      "name": "GAMEMODE_LIMBO_ZEN_GARDEN",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 35,
+      "name": "GAMEMODE_INTRO",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 36,
+      "name": "GAMEMODE_PUZZLE_I_ZOMBIE_1",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 37,
+      "name": "GAMEMODE_PUZZLE_I_ZOMBIE_2",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 38,
+      "name": "GAMEMODE_PUZZLE_I_ZOMBIE_3",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 39,
+      "name": "GAMEMODE_PUZZLE_I_ZOMBIE_4",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 40,
+      "name": "GAMEMODE_PUZZLE_I_ZOMBIE_5",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 41,
+      "name": "GAMEMODE_PUZZLE_I_ZOMBIE_6",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 42,
+      "name": "GAMEMODE_PUZZLE_I_ZOMBIE_7",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 43,
+      "name": "GAMEMODE_PUZZLE_I_ZOMBIE_8",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 44,
+      "name": "GAMEMODE_PUZZLE_I_ZOMBIE_9",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 45,
+      "name": "GAMEMODE_PUZZLE_I_ZOMBIE_ENDLESS",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 46,
+      "name": "GAMEMODE_SCARY_POTTER_1",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 47,
+      "name": "GAMEMODE_SCARY_POTTER_2",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 48,
+      "name": "GAMEMODE_SCARY_POTTER_3",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 49,
+      "name": "GAMEMODE_SCARY_POTTER_4",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 50,
+      "name": "GAMEMODE_SCARY_POTTER_5",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 51,
+      "name": "GAMEMODE_SCARY_POTTER_6",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 52,
+      "name": "GAMEMODE_SCARY_POTTER_7",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 53,
+      "name": "GAMEMODE_SCARY_POTTER_8",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 54,
+      "name": "GAMEMODE_SCARY_POTTER_9",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 55,
+      "name": "GAMEMODE_SCARY_POTTER_ENDLESS",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 56,
+      "name": "GAMEMODE_SURVIVAL_ENDLESS_STAGE_1",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 57,
+      "name": "GAMEMODE_SURVIVAL_ENDLESS_STAGE_2",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 58,
+      "name": "GAMEMODE_SURVIVAL_ENDLESS_STAGE_3",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 59,
+      "name": "GAMEMODE_SURVIVAL_ENDLESS_STAGE_4",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 60,
+      "name": "GAMEMODE_SURVIVAL_ENDLESS_STAGE_5",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 61,
+      "name": "GAMEMODE_SURVIVAL_HARD_STAGE_1",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 62,
+      "name": "GAMEMODE_SURVIVAL_HARD_STAGE_2",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 63,
+      "name": "GAMEMODE_SURVIVAL_HARD_STAGE_3",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 64,
+      "name": "GAMEMODE_SURVIVAL_HARD_STAGE_4",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 65,
+      "name": "GAMEMODE_SURVIVAL_HARD_STAGE_5",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 66,
+      "name": "GAMEMODE_SURVIVAL_NORMAL_STAGE_1",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 67,
+      "name": "GAMEMODE_SURVIVAL_NORMAL_STAGE_2",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 68,
+      "name": "GAMEMODE_SURVIVAL_NORMAL_STAGE_3",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 69,
+      "name": "GAMEMODE_SURVIVAL_NORMAL_STAGE_4",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 70,
+      "name": "GAMEMODE_SURVIVAL_NORMAL_STAGE_5",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    },
+    {
+      "id": 71,
+      "name": "GAMEMODE_TREE_OF_WISDOM",
+      "schedules": [
+        0,
+        30,
+        100,
+        240
+      ]
+    }
+  ],
+  "reserved_modes": [
+    {
+      "id": 72,
+      "name": "GAMEMODE_CUSTOM_LEVEL",
+      "reason": "No playable retail level; retained enum slot"
+    }
+  ],
+  "runtime_executable_sha256": "85f32d7db4264ee387740b5a8badda2684c5b11ba800af48cc474b62e243228b",
+  "pak_sha256": "5bdd71c632d945304ae3752bfed61941bb8c7e4351e616e1ff6fbceab1431545",
+  "reports": {
+    "plant-behavior-audit-20261101": "511d3f76c8db9d0c972d66f4eda9c81aa038c3c9d0d4738c3af42d66ec214419",
+    "zombie-behavior-audit-20261102": "b2fd7eec1faa4f01c612b0f892c067aae6c70d8b906686ad29a83655480b53e5",
+    "minigame-rules-audit-20261102": "f6fd6522f4d47fd73906b1e615751e43efca4dac2882cf1dd9f6b8a0c4952761",
+    "puzzle-rules-audit-20261102": "42d408340e8c5b7b9f8a2303ccf34597812dcaa4061eb10929584400ec24dcab",
+    "survival-rules-audit-20261102": "0e163a0fcf7c714d39ea9859647d9fc3a19f384d37df47d123b55948f87dcb06",
+    "adventure-rules-audit-20261102": "f5e89320dec12f7a3635942200cf1b36f1f87f56b53c52ce096c53b68564e9a9",
+    "hidden-rules-audit-20261102": "bb8aba2faa00ba2852dfb4f4d05cc4f13cec68dffeacd4dac4b5c1551082bd7c",
+    "garden-intro-rules-audit-20261102": "60c99f685f7a9de9d163f4523e2e055e9e42a6e9e9661f5cb893debdb1715f16",
+    "ui-routes-audit-20261102": "d365bfd1a79310d0052b7fe260b09a6b7ed795b82398a78b531751c97c412c02"
+  },
+  "sources": {
+    "Tests/native/ImageRuntimeTests.cpp": "e36386fbab68682c4944b36e5cfa655c3b2700f03243ddd79ff6fbc613cfa6b0",
+    "tools/test-image-runtime.ps1": "1c8c1837d27db283b6266a4ae579f2f3da3780f3d1e836d67423f55a65acd379",
+    "pvzPerf/Lawn/Plant.cpp": "73b26c024546a00f191b0c3dd32f012977b0ccacd5a450bb24209ea3113b7051",
+    "pvzPerf/Lawn/Zombie.cpp": "b33f98427234ebb2153c72d4fdfc4e08870cd8a5d59af7116fb0fd569771a1cf",
+    "pvzPerf/Lawn/Board.cpp": "aaeba6b3444a494b2be3e312be677fde3b0d7b8e47bdf52707f385992b86d668",
+    "pvzPerf/Lawn/Projectile.cpp": "25ad79d2b26a267946e41c16a501c32feaa04c1860ca08f9ae2df936a6876c5d",
+    "pvzPerf/Sexy.TodLib/EffectSystem.cpp": "f9e8d665083529ad6f0325e1213ccb47ce3340df29a18624cf16af544601c984",
+    "pvzPerf/Sexy.TodLib/Reanimator.cpp": "869dfe5fcf7a28c4fe946dbd6661afb502e90f80248a7f8916af411571c2202e",
+    "pvzPerf/SexyAppFramework/misc/TimeCounter.h": "4f5cf7945fdd4f590785f416014c5693b7fe957a8ff5617ac54d2ce8b8798651",
+    "pvzPerf/Lawn/Zombie.h": "8f0e46eaefa6e1f1260e8d118e0eb767285273362b59a29536996e026b1f0280",
+    "pvzPerf/Lawn/Motion.cpp": "5af7abcd32b9d5987b5310dbf94953611b5980f36b27b4b01b1ab8cb91e591b6",
+    "pvzPerf/Lawn/Challenge.cpp": "879162e40f591fc1e55e58d2e1d8cc8ec0c056086148109300dafda7bcdfa06b",
+    "pvzPerf/Lawn/System/SaveClockProjection.cpp": "e95d569807b1d829782ae896d69497d4d9953fc3a07e93cdeeaa29b5788258db",
+    "pvzPerf/Lawn/CutScene.cpp": "7620445871b799f8fd8222cc95c3c52f908c4214dbc170b22fadccc45a5fd749",
+    "pvzPerf/Lawn/Widget/SeedChooserScreen.cpp": "d90f8fb990b2c34b35efb26d70f9acc8e9120d4f1ce051e01b64af54801c323f",
+    "pvzPerf/LawnApp.cpp": "9876be2ca0f5ec3efb582f94b2258ab4a341e80b724e95329b1a33544cc45d9d",
+    "pvzPerf/Lawn/Coin.cpp": "ff83061d2e60663b7d543ac8da411ccdc24b650c42e8c77f5c2108fb325b14e8",
+    "pvzPerf/Lawn/SeedPacket.cpp": "34c019752fef34ea7f0484a1444c73496f3d75b89667066b0c605f842b62acde",
+    "pvzPerf/Lawn/Cutscene.h": "7db9262f65ce98e34be44d1819c5c50100d441535f9f304f703b335a0c3c1a0f",
+    "pvzPerf/Lawn/ZenGarden.cpp": "32a17a414815087eb8d4cbc61f2195fca4dc93a051c3a58fa95d3013f7c3049e",
+    "Tests/native/OpeningFlowRuntimeChecks.h": "841760239d759dcf0265332747e3463911ad0fbd2979fe896f12e05c6737d14f",
+    "Tests/native/OpeningFlowRuntimeChecks.cpp": "3b2b9385390ccb8e1a21bfc7b0009909a9911be802c4c8df59e01013c4988712",
+    "pvzPerf/Lawn/Widget/Almanac.cpp": "920925d203bba5f6d11e6fd69c38928a16ad532271356d1a2b81b80e0c851e01",
+    "pvzPerf/Lawn/Widget/AwardScreen.cpp": "0eeb83bf0377abe77faa0f26b31f526fdcf45aef8364a28b240ada2be1e6aadd",
+    "pvzPerf/Lawn/Widget/StoreScreen.cpp": "cfd6c46fa4327c506b68219b2d1eee0469505e08425e263eccda52b6c37bcd60",
+    "pvzPerf/Lawn/Widget/CreditScreen.cpp": "724dbeaebad0d61215e8c27d25c8bbda91320a0b336b46191a41d6b8a2b75d6c"
+  },
+  "limits": [
+    "This is not exhaustive verification of every interaction, random outcome, save interruption, terrain or state combination.",
+    "High-health targets, supplied profiles and constructed completion boundaries are described in each report; they are not full player playthroughs.",
+    "The reported Blover coin-location incident remains unreproduced in the six-row native drop test and is not labelled fixed.",
+    "These Windows production-object checks do not constitute Android or other-platform device acceptance or a performance result."
+  ]
+}

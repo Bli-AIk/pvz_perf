@@ -1,0 +1,36 @@
+ImageRuntimeTests.cpp
+正在生成代码
+已完成代码的生成
+PASS pure wrapped text measurement: wrapping, newlines, color tags, no glyph draws and empty fill
+pool GPU day-normal-nearest: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU night-normal-linear: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU day-additive-partial-fractional: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU night-additive-phase-wrap: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU day-opaque-partial-fractional: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU night-opaque-large-counter: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU feedback-float-source-pending-batch: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+PASS production GPU pool vs independent legacy CPU mesh: day/night, normal/additive/opaque, nearest/linear/repeat, phase wrap, destination scissor, fractional translation, ordinary painter order and float target feedback
+PASS precomputed transparent edges: alpha, visible RGB, idempotency, nearest/linear, upload-discard
+PASS public font upload: deferred alpha, upload-and-discard, texture reuse, independent copies
+PASS nonzero source rectangles and repacked whole-sheet atlas views: translation, scale origins, clipping, tint, additive, local-source views and floating scales
+PASS necessary local-clip contract: independent full-pixel rect/image/source/mirror/matrix/particle/convex oracles, disjoint/partial/empty clips and negative framebuffer crossings
+PASS actual TitleScreen grass reveal: widths 0/1/157/313/314/400, translated draw and unrevealed black pixels
+PASS actual GameButton atlas states: normal, hover, press/fallbacks, disabled, overAlpha, additive glow, translation/offsets and hidden state match independent images
+PASS direct shared-image snapshots and reference lifetime
+PASS actual boss back-arm drawing: four attack offsets, reference pixels, 1024 exact shared-animation translation restorations
+PASS reanimation appearances: independent options, image slots, atlas dimensions, original centers and actual AttachmentDraw visibility pixels
+PASS fullscreen reanimation: destination fill pixels, hidden/zero alpha, color modulation, both blend modes, translation and effective clip without track matrices
+Store clock fixture: initialize
+Intro begin Hz=100
+Intro warmup Hz=100 triggerElapsedNs=10000000 boardNs=1010000000
+Intro primary Hz=100 warmupNs=1000000000 adventure=1 audio=1 elapsedNs=13890000000
+Intro begin Hz=30
+Intro warmup Hz=30 triggerElapsedNs=33333333 boardNs=3366666633
+Intro failed Hz=30 message=Intro warmup simulated a target-FPS-dependent duration instead of its authored one second
+Intro begin Hz=240
+Intro warmup Hz=240 triggerElapsedNs=12499998 boardNs=429166598
+Intro begin Hz=0
+Intro failed Hz=240 message=Intro warmup simulated a target-FPS-dependent duration instead of its authored one second
+Intro warmup Hz=0 triggerElapsedNs=20000000 boardNs=1896543300
+Intro failed Hz=0 message=Intro warmup simulated a target-FPS-dependent duration instead of its authored one second
+FAIL image runtime: Intro rules have failed cases; inspect per-schedule output

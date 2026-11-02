@@ -102,19 +102,6 @@ void android_main(android_app* state) {
         if (env && state->activity->vm) {
             state->activity->vm->AttachCurrentThread(&env, nullptr);
             const jclass cls = env->GetObjectClass(state->activity->clazz);
-            const jmethodID getInfo=env->GetMethodID(cls,"getApplicationInfo","()Landroid/content/pm/ApplicationInfo;");
-            const jobject info=getInfo ? env->CallObjectMethod(state->activity->clazz,getInfo) : nullptr;
-            if (!env->ExceptionCheck() && info) {
-                const jclass infoClass=env->GetObjectClass(info);
-                const jfieldID flags=env->GetFieldID(infoClass,"flags","I");
-                // ApplicationInfo.FLAG_DEBUGGABLE: FPS only, not cheat/debug input.
-                if (flags && (env->GetIntField(info,flags)&2)!=0)
-                    setenv("PVZ_ANDROID_TEST_FPS","1",1);
-                else
-                    unsetenv("PVZ_ANDROID_TEST_FPS");
-                env->DeleteLocalRef(infoClass);env->DeleteLocalRef(info);
-            }
-            if (env->ExceptionCheck()) env->ExceptionClear();
             // Android equivalent of a launch option; persists through the normal settings file.
             const jmethodID getIntent=env->GetMethodID(cls,"getIntent","()Landroid/content/Intent;");
             const jobject intent=getIntent ? env->CallObjectMethod(state->activity->clazz,getIntent) : nullptr;

@@ -14,6 +14,7 @@
 #include "graphics/ImageFont.h"
 #include "graphics/AtlasDraw.h"
 #include "Sexy.TodLib/generated/SceneAtlasData.h"
+#include <chrono>
 
 namespace { using enum FixedUIAtlas::Sprite; }
 
@@ -405,7 +406,9 @@ void ReanimationWidget::AddReanimation(float x, float y, ReanimationType theRean
     
     mPosX = x;
     mPosY = y;
-    mReanim = mApp->mEffectSystem->mReanimationHolder->AllocReanimation(x, y, 0, theReanimationType, mApp->mEffectSystem->mReanimationHolder->mVisualTimeNs, ReanimTimeDomain::Visual);
+    const auto aNowNs = std::chrono::duration_cast<std::chrono::nanoseconds>(
+        std::chrono::steady_clock::now().time_since_epoch()).count();
+    mReanim = mApp->mEffectSystem->mReanimationHolder->AllocReanimation(x, y, 0, theReanimationType, aNowNs);
     mReanim->ChangeLoopType(ReanimLoopType::REANIM_LOOP);
     mReanim->mIsAttachment = true;
     if (mReanim->TrackExists(ReanimTrackId::anim_idle))
@@ -426,7 +429,10 @@ void ReanimationWidget::Update()
 {
     if (mReanim)
     {
-        mReanim->UpdateAt(mApp->mEffectSystem->mReanimationHolder->mVisualTimeNs);
+        // The pause dialog owns this animation. Both game clocks may be frozen.
+        const auto aNowNs = std::chrono::duration_cast<std::chrono::nanoseconds>(
+            std::chrono::steady_clock::now().time_since_epoch()).count();
+        mReanim->UpdateAt(aNowNs);
         MarkDirty();
     }
 }

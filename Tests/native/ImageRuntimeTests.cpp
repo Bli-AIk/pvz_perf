@@ -1,4 +1,4 @@
-﻿#include "ReanimClock.h"
+#include "ReanimClock.h"
 #include "SexyAppFramework/SexyAppBase.h"
 #include "SexyAppFramework/graphics/DDInterface.h"
 #include "SexyAppFramework/graphics/Graphics.h"
@@ -30,16 +30,27 @@
 #include "Lawn/ProjectileResources.h"
 #include "Lawn/Zombie.h"
 #include "Lawn/SeedPacket.h"
+#include "Lawn/CursorObject.h"
+#include "Lawn/LawnMower.h"
 #include "Lawn/Widget/GameButton.h"
 #include "SexyAppFramework/widget/WidgetManager.h"
+#include "SexyAppFramework/widget/WidgetLifetimeHold.h"
 #include "Lawn/System/PlayerInfo.h"
 #include "Lawn/System/Music.h"
 #include "Lawn/System/ReanimationLawn.h"
 #include "Lawn/Widget/StoreScreen.h"
+#include "Lawn/Widget/SeedChooserScreen.h"
 #include "Lawn/Widget/TitleScreen.h"
 #include "Lawn/Widget/CreditScreen.h"
 #include "Lawn/Widget/LawnDialog.h"
+#include "Lawn/Widget/AchievementsWidget.h"
+#include "Lawn/Widget/Almanac.h"
+#include "Lawn/Widget/AwardScreen.h"
+#include "Lawn/Widget/ChallengeScreen.h"
+#include "Lawn/Widget/GameSelector.h"
+#include <chrono>
 #include "SexyAppFramework/widget/HyperlinkWidget.h"
+#include "SexyAppFramework/misc/MTRand.h"
 #include "Sexy.TodLib/TodFoley.h"
 #include "SexyAppFramework/imagelib/ImageLib.h"
 #include "SexyAppFramework/sound/SoundManager.h"
@@ -51,14 +62,18 @@
 #include "Lawn/System/V7SaveSchema.h"
 #include "Lawn/System/SaveClockProjection.h"
 #include "QuitDialogRuntimeChecks.h"
+#include "OpeningFlowRuntimeChecks.h"
 #include <array>
 #include <algorithm>
 #include <cmath>
 #include <cstdlib>
+#include <filesystem>
+#include <functional>
 #include <iostream>
 #include <DbgHelp.h>
 #pragma comment(lib, "dbghelp.lib")
 #include <stdexcept>
+#include <string_view>
 #include <vector>
 
 // The normal application entry point defines this callback. This executable
@@ -69,6 +84,24 @@ bool (*gAppCloseRequest)() = FixtureCloseRequest;
 namespace
 {
 using namespace Sexy;
+bool gPlantCatalogOnly=false;
+bool gZombieCatalogOnly=false;
+bool gMinigameRulesOnly=false;
+bool gPuzzleRulesOnly=false;
+bool gSurvivalRulesOnly=false;
+bool gAdventureRulesOnly=false;
+bool gHiddenRulesOnly=false;
+bool gGardenRulesOnly=false;
+bool gIntroRulesOnly=false;
+bool gUiRulesOnly=false;
+bool gAwardRulesOnly=false;
+bool gAlmanacClockOnly=false;
+bool gActorBirthOnly=false;
+bool gLossRulesOnly=false;
+bool gOpeningRulesOnly=false;
+bool gLifecycleRulesOnly=false;
+bool gGraveRulesOnly=false;
+bool gHudSeamsOnly=false;
 
 LONG CALLBACK SuppressFixtureCrashDialogs(EXCEPTION_POINTERS* exception)
 {
@@ -102,6 +135,10 @@ class TestApp final : public LawnApp
 {
 public:
     using SexyAppBase::ProcessSafeDeleteList;
+    std::function<bool(bool*)> fixtureNestedPump;
+    bool UpdateAppStep(bool* updated) override {
+        return fixtureNestedPump?fixtureNestedPump(updated):LawnApp::UpdateAppStep(updated);
+    }
     void ButtonPress(int) override {}
     void ButtonDepress(int) override {}
     void ButtonDownTick(int) override {}
@@ -1214,6 +1251,7 @@ public:
     SoundDecoderLease decoder;
     struct Slot { bool live=false; double volume=-1; int pan=0; };
     std::array<Slot,MAX_SOURCE_SOUNDS> slots{};
+    std::array<unsigned int,MAX_SOURCE_SOUNDS> playbackRequests{};
     std::vector<ResourceManager::SoundRes> expected;
     unsigned nextExpected=0,loads=0,releases=0,volumeCalls=0,panCalls=0,invalidReleases=0;
     bool allowSilentPlayback=false;
@@ -1255,9 +1293,12 @@ public:
             "Sound pan was applied to the wrong handle or value");
         ++panCalls; return true;
     }
-    SoundInstance* GetSoundInstance(unsigned) override
+    SoundInstance* GetSoundInstance(unsigned id) override
     {
-        if (allowSilentPlayback) return nullptr;
+        if (allowSilentPlayback) {
+            if(id<playbackRequests.size()) ++playbackRequests[id];
+            return nullptr;
+        }
         throw std::runtime_error("Resource loading unexpectedly requested sound playback");
     }
     void ReleaseSounds() override
@@ -2046,6 +2087,3584 @@ void PoolSparkleOwnerClockRuntime(TestApp& app, int hz)
     std::cout<<"PASS pool Board clock "<<hz<<" Hz: Visual intro, paused freeze, phase-preserving Battle handoff, IceZombies and repick resume\n";
 }
 
+void PauseDialogWallClockRuntime(TestApp& app, Board& board)
+{
+    auto& clocks=*app.mEffectSystem->mReanimationHolder;
+    const auto wallNow=[] {
+        return std::chrono::duration_cast<std::chrono::nanoseconds>(
+            std::chrono::steady_clock::now().time_since_epoch()).count();
+    };
+    struct RestorePause {
+        TestApp& app;
+        Board& board;
+        Board* previousBoard;
+        bool paused;
+        std::int64_t visual, battle;
+        unsigned long long interval=Sexy::gUpdateIntervalNs;
+        double ticks=Sexy::gUpdateTicks, steps=Sexy::gStepsPerLegacyTick;
+        ~RestorePause() {
+            app.KillDialog(Dialogs::DIALOG_PAUSED);
+            app.ProcessSafeDeleteList();
+            board.Pause(paused);
+            app.mBoard=previousBoard;
+            auto& clocks=*app.mEffectSystem->mReanimationHolder;
+            clocks.mVisualTimeNs=visual;
+            clocks.mBattleTimeNs=battle;
+            Sexy::gUpdateIntervalNs=interval;
+            Sexy::gUpdateTicks=ticks;
+            Sexy::gStepsPerLegacyTick=steps;
+        }
+    } restore{app,board,app.mBoard,board.mPaused,clocks.mVisualTimeNs,clocks.mBattleTimeNs};
+    app.mBoard=&board;
+    clocks.mVisualTimeNs=7'000'000'000;
+    clocks.mBattleTimeNs=9'000'000'000;
+    const auto before=wallNow();
+    app.DoPauseDialog();
+    auto* dialog=static_cast<LawnDialog*>(app.GetDialog(Dialogs::DIALOG_PAUSED));
+    Require(dialog && dialog->mReanimation->mReanim,
+        "Pause dialog did not create its newspaper animation");
+    auto& animation=*dialog->mReanimation->mReanim;
+    Require(board.mPaused && animation.mLastUpdateTimeNs>=before &&
+        animation.mLastUpdateTimeNs<=wallNow(),
+        "Pause newspaper was created on a frozen game clock instead of steady_clock");
+    // Simulate time since the preceding UI update without sleeping or advancing
+    // either game clock. The real widget update must sample the wall clock.
+    animation.RebaseTime(wallNow()-123'456'789);
+    const auto previous=animation.mLastUpdateTimeNs;
+    const auto phase=animation.SamplePlayback().phaseNs;
+    const auto boardTime=board.mLevelTimeNs;
+    Sexy::ApplySimulationStep(0);
+    app.UpdateFrames();
+    Require(animation.mLastUpdateTimeNs>=previous+123'456'789 &&
+        animation.mLastUpdateTimeNs<=wallNow() && animation.SamplePlayback().phaseNs!=phase,
+        "Pause newspaper did not advance with wall time through the actual widget update");
+    Require(board.mLevelTimeNs==boardTime && clocks.mVisualTimeNs==7'000'000'000 &&
+        clocks.mBattleTimeNs==9'000'000'000,
+        "Pause newspaper advanced a frozen Board or Visual clock");
+    std::cout<<"PASS pause newspaper: steady-clock creation and actual UI update, zero simulation step, frozen Board/Visual clocks\n";
+}
+
+void InitialGraveAppearanceRuntime(TestApp& app, Board& board)
+{
+    auto& clocks=*app.mEffectSystem->mReanimationHolder;
+    struct RestoreGrave {
+        TestApp& app;
+        Board& board;
+        GameMode mode;
+        GameScenes scene;
+        std::uint64_t battle;
+        std::int64_t visual;
+        bool enabled;
+        std::array<GridSquareType,MAX_GRID_SIZE_Y> squares;
+        unsigned long long interval=Sexy::gUpdateIntervalNs;
+        double ticks=Sexy::gUpdateTicks, steps=Sexy::gStepsPerLegacyTick;
+        ~RestoreGrave() {
+            board.mGridItems.DataArrayFreeAll();
+            board.mLevelTimeNs=battle;
+            board.mEnableGraveStones=enabled;
+            app.mGameMode=mode;
+            app.mGameScene=scene;
+            app.mEffectSystem->mReanimationHolder->mVisualTimeNs=visual;
+            for (int row=0;row<MAX_GRID_SIZE_Y;++row)
+                board.mGridSquareType[3][row]=squares[row];
+            Sexy::gUpdateIntervalNs=interval;
+            Sexy::gUpdateTicks=ticks;
+            Sexy::gStepsPerLegacyTick=steps;
+        }
+    } restore{app,board,app.mGameMode,app.mGameScene,board.mLevelTimeNs,
+        clocks.mVisualTimeNs,board.mEnableGraveStones,{}};
+    for (int row=0;row<MAX_GRID_SIZE_Y;++row)
+    {
+        restore.squares[row]=board.mGridSquareType[3][row];
+        board.mGridSquareType[3][row]=GRIDSQUARE_GRASS;
+    }
+    Require(board.mGridItems.mSize==0,"Grave fixture requires an empty Board");
+    app.mGameMode=GAMEMODE_ADVENTURE;
+    app.mGameScene=SCENE_LEVEL_INTRO;
+    board.mLevelTimeNs=0;
+    board.mEnableGraveStones=false;
+    MTRand levelRng(0x601982);
+    board.AddGraveStones(3,1,levelRng);
+    GridItem* grave=nullptr;
+    Require(board.IterateGridItems(grave) &&
+        static_cast<std::int64_t>(board.mLevelTimeNs)-grave->mStateStartTimeNs>=1'000'000'000,
+        "Initial grave did not start fully risen before any Board update");
+    grave->mGridItemState=GRIDITEM_STATE_NORMAL;
+    auto& render=*app.mDDInterface->mRenderInterface;
+    std::unique_ptr<Image> target(render.CreateRenderImage(160,140));
+    const auto capture=[&] {
+        {
+            GpuImageDrawScope destination(render,target.get());
+            Graphics g(target.get());
+            g.mColor=Color::Black;
+            g.FillRect(0,0,160,140);
+            const int x=grave->mGridX,y=grave->mGridY;
+            g.mTransX=20-(board.GridToPixelX(x,y)+board.mGridCelOffset[x][y][0]-4);
+            g.mTransY=110-(board.GridToPixelY(x,y)+91+board.mGridCelOffset[x][y][1]-9);
+            grave->DrawGridItem(&g);
+        }
+        render.Flush();
+        return render.ReadImagePixels(*target).pixels;
+    };
+    const auto mature=capture();
+    Require(std::any_of(mature.begin(),mature.end(),[](unsigned pixel){return (pixel&0xffffff)!=0;}),
+        "Mature grave fixture did not draw its production textures");
+    const auto birth=grave->mStateStartTimeNs;
+    Sexy::ApplySimulationStep(37'123'457);
+    for (int i=0;i<100;++i)
+    {
+        clocks.mVisualTimeNs+=Sexy::gUpdateIntervalNs;
+        board.UpdateGridItems();
+    }
+    Require(grave->mStateStartTimeNs==birth && capture()==mature,
+        "Intro hid a fully risen initial grave while Board time was frozen");
+    // Whack-a-Zombie creates its initial graves through a separate caller.
+    board.mChallenge->WhackAZombiePlaceGraves(1);
+    Require(board.mGridItems.mSize==2,"Whack-a-Zombie did not place its initial grave");
+    GridItem* initial=nullptr;
+    while (board.IterateGridItems(initial))
+        Require(static_cast<std::int64_t>(board.mLevelTimeNs)-initial->mStateStartTimeNs>=1'000'000'000,
+            "Whack-a-Zombie initial grave was not fully risen");
+    board.mEnableGraveStones=true;
+    for (int i=0;i<50;++i)
+    {
+        clocks.mVisualTimeNs+=Sexy::gUpdateIntervalNs;
+        board.UpdateGridItems();
+    }
+    Require(board.mLevelTimeNs==0 && capture()==mature,
+        "Initial grave changed its full-height pixels during the intro");
+    app.mGameScene=SCENE_PLAYING;
+    board.mLevelTimeNs+=Sexy::gUpdateIntervalNs;
+    board.UpdateGridItems();
+    Require(capture()==mature,"Entering battle hid an already visible grave");
+    Require(board.CanPlantAt(grave->mGridX,grave->mGridY,SEED_PEASHOOTER)==PlantingReason::PLANTING_NOT_ON_GRAVE &&
+        board.CanPlantAt(grave->mGridX,grave->mGridY,SEED_GRAVEBUSTER)==PlantingReason::PLANTING_OK,
+        "Grave appearance changed its planting obstruction");
+    const auto offset=offsetof(GridItem,mStateStartTimeNs);
+    const auto wire=SaveClockProjection::Encode(*grave,offset,grave->mStateStartTimeNs);
+    grave->mStateStartTimeNs=SaveClockProjection::Decode(*grave,offset,wire);
+    board.mLevelTimeNs=0;
+    SaveClockProjection::Bind(*grave);
+    Require(capture()==mature,"Save/reload lost the grave's visible appearance age");
+    grave=board.AddAGraveStone(4,2);
+    grave->mGridItemState=GRIDITEM_STATE_NORMAL;
+    Require(grave->mStateStartTimeNs>=static_cast<std::int64_t>(board.mLevelTimeNs) &&
+        grave->mStateStartTimeNs<static_cast<std::int64_t>(board.mLevelTimeNs)+500'000'000,
+        "Runtime grave lost its original staggered rise");
+    const auto pending=capture();
+    Require(std::none_of(pending.begin(),pending.end(),[](unsigned pixel){return (pixel&0xffffff)!=0;}),
+        "Runtime grave was displayed before its rise began");
+    for (int i=0;i<50;++i)
+    {
+        board.mLevelTimeNs+=Sexy::gUpdateIntervalNs;
+        board.UpdateGridItems();
+    }
+    const auto risen=capture();
+    Require(std::any_of(risen.begin(),risen.end(),[](unsigned pixel){return (pixel&0xffffff)!=0;}),
+        "Runtime grave failed to finish its original rise");
+    std::cout<<"PASS real grave pixels: initial full height, frozen intro, battle, planting obstruction, saved age and preserved runtime rise\n";
+}
+
+void MinigameBehaviorRuntime(TestApp& app)
+{
+    auto& clocks=*app.mEffectSystem->mReanimationHolder;
+    struct RestoreBlover {
+        TestApp& app;
+        Board* board;
+        PlayerInfo* profile;
+        ZenGarden* garden;
+        PoolEffect* pool;
+        GameMode mode;
+        GameScenes scene;
+        std::int64_t visual, battle;
+        unsigned long long interval=Sexy::gUpdateIntervalNs;
+        double ticks=Sexy::gUpdateTicks, steps=Sexy::gStepsPerLegacyTick;
+        int mouseX=app.mWidgetManager->mLastMouseX, mouseY=app.mWidgetManager->mLastMouseY;
+        ~RestoreBlover() {
+            app.mBoard=board;app.mPlayerInfo=profile;app.mZenGarden=garden;app.mGameMode=mode;app.mGameScene=scene;
+            app.mPoolEffect=pool;
+            app.mWidgetManager->mLastMouseX=mouseX;app.mWidgetManager->mLastMouseY=mouseY;
+            auto& clocks=*app.mEffectSystem->mReanimationHolder;
+            clocks.mVisualTimeNs=visual;clocks.mBattleTimeNs=battle;
+            Sexy::gUpdateIntervalNs=interval;Sexy::gUpdateTicks=ticks;Sexy::gStepsPerLegacyTick=steps;
+        }
+    } restore{app,app.mBoard,app.mPlayerInfo,app.mZenGarden,app.mPoolEffect,app.mGameMode,app.mGameScene,
+        clocks.mVisualTimeNs,clocks.mBattleTimeNs};
+    PlayerInfo profile;
+    ZenGarden garden;
+    profile.mLevel=11;profile.mCoins=0;profile.mFinishedAdventure=0;
+    app.mPlayerInfo=&profile;app.mZenGarden=&garden;app.mGameMode=GAMEMODE_ADVENTURE;app.mGameScene=SCENE_PLAYING;
+    Board board(&app);
+    board.mLevel=11;board.mCurrentWave=6;board.mNumWaves=20;board.mTotalSpawnedWaves=0;
+    board.mBackground=BACKGROUND_3_POOL;
+    for(int row=0;row<MAX_GRID_SIZE_Y;++row)
+        board.mPlantRow[row]=(row==2||row==3)?PLANTROW_POOL:PLANTROW_NORMAL;
+    for(const int hz:{30,100,240})
+    for(int row=0;row<MAX_GRID_SIZE_Y;++row)
+    {
+        board.mDroppedFirstCoin=false;
+        Zombie* balloon=board.AddZombieInRow(ZOMBIE_BALLOON,row,0);
+        Plant blover;
+        blover.BlowAwayFliers();
+        Require(balloon->mBlowingAway,"Blover did not mark the flying balloon");
+        const auto step=1'000'000'000ULL/hz;
+        for(int n=0;n<hz*2 && !balloon->mDead;++n)
+        {
+            Sexy::ApplySimulationStep(step);
+            board.mLevelTimeNs+=step;clocks.mVisualTimeNs+=step;
+            balloon->Update(static_cast<std::int64_t>(board.mLevelTimeNs),
+                clocks.mVisualTimeNs,static_cast<std::int64_t>(board.mLevelTimeNs),step);
+        }
+        Require(balloon->mDead && balloon->mDroppedLoot,"Blown balloon never reached its loot exit");
+        Coin* coin=nullptr;
+        Require(board.IterateCoins(coin) && !coin->mDead,"Guaranteed first-coin fixture did not drop a coin");
+        const auto hitbox=balloon->GetZombieRect();
+        const int expectedY=hitbox.mY+hitbox.mHeight/4-8;
+        std::cout<<"Blover loot "<<hz<<" Hz row="<<row<<" zombie=("<<balloon->mX<<','<<balloon->mY
+            <<") coin=("<<coin->mPosX<<','<<coin->mPosY<<") ground="<<coin->mGroundY<<'\n';
+        Require(coin->mPosY==expectedY,"Blover coin lost its source row at creation");
+        Require(coin->mPosX==hitbox.mX+hitbox.mWidth/2-50,
+            "Blover coin did not use the source zombie's right-edge position");
+        board.mCoins.DataArrayFreeAll();board.mZombies.DataArrayFreeAll();board.RebuildZombieRowBucket();
+    }
+    std::cout<<"PASS actual Blover loot: every pool row, right-edge exit and per-row coin creation at 30/100/240 Hz\n";
+
+    auto& challenge=*board.mChallenge;
+    app.mGameMode=GAMEMODE_MINIGAME_ZOMBIQUARIUM;
+    board.mSunMoney=25;
+    HitResult empty;
+    empty.mObject=nullptr;empty.mObjectType=OBJECT_TYPE_NONE;
+    Require(challenge.MouseDown(300,200,-1,&empty) && board.mGridItems.mSize==0 && board.mSunMoney==25,
+        "Aquarium right click must only tap glass, without food or payment");
+    for(const int click:{1,0,2})
+        Require(challenge.MouseDown(300,200,click,&empty),"Aquarium left click did not reach paid feeding");
+    Require(board.mGridItems.mSize==3 && board.mSunMoney==10,
+        "Aquarium left feeding must spend five sun per brain");
+    challenge.MouseDown(300,200,1,&empty);
+    Require(board.mGridItems.mSize==3 && board.mSunMoney==10,
+        "Aquarium did not retain the retail three-brain cap without charging a rejected feed");
+    board.mGridItems.DataArrayFreeAll();board.mSunMoney=4;
+    challenge.MouseDown(300,200,1,&empty);
+    Require(board.mGridItems.mSize==0 && board.mSunMoney==4,"Aquarium accepted food without enough sun");
+    board.mSunMoney=5;
+    challenge.MouseDown(300,200,1,&empty);
+    Require(board.mGridItems.mSize==1 && board.mSunMoney==0,"Aquarium exact-cost feed failed");
+    board.mGridItems.DataArrayFreeAll();
+    std::cout<<"PASS actual Aquarium input: left/touch feeding, right glass tap, five-sun cost and three-brain cap\n";
+
+    app.mGameMode=GAMEMODE_MINIGAME_BEGHOULED_TWIST;
+    board.mBackground=BACKGROUND_1_DAY;
+    challenge.mChallengeState=STATECHALLENGE_NORMAL;
+    challenge.mChallengeStateCounter=100000;
+    const std::array<SeedType,4> seeds{SEED_PEASHOOTER,SEED_SUNFLOWER,SEED_SNOWPEA,SEED_WALLNUT};
+    for(int i=0;i<4;++i) board.NewPlant(2+i%2,1+i/2,seeds[i],SEED_NONE);
+    const int localX=board.GridToPixelX(2,1)+60, localY=board.GridToPixelY(2,1)+60;
+    int expectedX=-1,expectedY=-1;
+    Require(challenge.BeghouledTwistSquareFromMouse(localX,localY,expectedX,expectedY),"Twist fixture missed its local square");
+    for(const int offset:{0,-220,100})
+    {
+        board.Move(offset,17);
+        app.mWidgetManager->mLastMouseX=localX+offset;
+        app.mWidgetManager->mLastMouseY=localY+17;
+        challenge.UpdateBeghouled();
+        Require(challenge.mChallengeGridX==expectedX && challenge.mChallengeGridY==expectedY,
+            "Twist hover used global mouse coordinates instead of Board-local coordinates");
+    }
+    board.mPlants.DataArrayFreeAll();board.RebuildPlantCellBucket();board.Move(0,0);
+    std::cout<<"PASS actual Beghouled Twist hover: matching click coordinates across negative/positive Board offsets\n";
+
+    app.mGameMode=GAMEMODE_MINIGAME_SPEED;
+    board.mBackground=BACKGROUND_3_POOL;
+    board.mLevelTimeNs=0;clocks.mBattleTimeNs=0;clocks.mVisualTimeNs=0;
+    board.mZombieCountDown=100000;board.mSunCountDown=100000;
+    PoolEffect pool;
+    pool.PoolEffectInitialize();app.mPoolEffect=&pool;
+    auto* shooter=board.NewPlant(3,0,SEED_PEASHOOTER,SEED_NONE);
+    shooter->mNextLaunchTimeNs=300'000'000;shooter->mLaunchWindowStartNs=0;
+    auto* target=board.AddZombieInRow(ZOMBIE_NORMAL,0,0);
+    target->mX=650;target->mVelocityX={};target->mBodyHealth=target->mBodyMaxHealth=1000000;
+    target->mRootBindingGeneration=0;
+    Require(shooter->FindTargetZombie(0,WEAPON_PRIMARY)==target,"Speed-mode fixture could not acquire its target");
+    auto* body=app.ReanimationGet(shooter->mBodyReanimID);
+    auto* independent=app.AddReanimation(0,0,0,REANIM_SUN,0,ReanimTimeDomain::Battle);
+    auto* child=app.AddReanimation(0,0,0,REANIM_SUN,0,ReanimTimeDomain::Battle);
+    auto* reference=app.AddReanimation(0,0,0,REANIM_SUN,0,ReanimTimeDomain::Battle);
+    reference->mIsAttachment=true;
+    for(auto* animation:{independent,child,reference})
+    {
+        animation->ApplyRate(6);
+        animation->ChangeLoopType(REANIM_LOOP);
+    }
+    AttachReanim(independent->mTrackInstances[0].mAttachmentID,child,0,0);
+    auto* childParticle=app.AddTodParticle(0,0,0,PARTICLE_POOL_SPARKLY,0);
+    AttachParticle(child->mTrackInstances[0].mAttachmentID,childParticle,0,0);
+    constexpr auto speedStep=37'123'457ULL;
+    bool emitted=false;
+    for(int i=0;i<20;++i)
+    {
+        Sexy::ApplySimulationStep(speedStep);clocks.mVisualTimeNs+=speedStep;
+        board.Update();
+        emitted|=board.mProjectiles.mSize>0;
+        reference->UpdateAt((i+1)*speedStep);
+        Require(independent->SamplePlayback().phaseNs==reference->SamplePlayback().phaseNs &&
+            child->SamplePlayback().phaseNs==reference->SamplePlayback().phaseNs &&
+            child->mLastUpdateTimeNs==static_cast<std::int64_t>(board.mLevelTimeNs) &&
+            childParticle->mLastUpdateTimeNs==static_cast<std::int64_t>(board.mLevelTimeNs),
+            "Speed mode failed to preserve the independent animation/attachment clock tree");
+        Require(board.mLevelTimeNs==(i+1)*2*speedStep && clocks.mBattleTimeNs==board.mLevelTimeNs,
+            "Speed mode repeated logic without advancing its actor timestamps");
+        Require(body->mLastUpdateTimeNs==static_cast<std::int64_t>(board.mLevelTimeNs),
+            "Speed-mode plant animation missed the second actor pass");
+        Require(pool.mSampleTimeNs-pool.mBirthTimeNs==static_cast<std::int64_t>((i+1)*speedStep),
+            "Speed mode doubled the independent water phase");
+    }
+    Require(emitted,"Speed-mode shooter failed to emit actual projectiles");
+    auto* sparkle=app.ParticleGet(board.mPoolSparklyParticleID);
+    auto* emitter=sparkle->EmitterRosterEmitterAt(0);
+    Require(sparkle->mLastUpdateTimeNs-emitter->mBirthTimeNs==20*speedStep,
+        "Speed mode doubled independent pool-sparkle age");
+    std::cout<<"PASS actual Speed mode: double Board time, two actor passes, real shots, ordinary-speed water/sparkles and independent attachment trees\n";
+
+    app.mGameMode=GAMEMODE_ADVENTURE;
+    board.mBackground=BACKGROUND_1_DAY;
+    board.ZombiesWon(target);
+    Require(app.mGameScene==SCENE_ZOMBIES_WON,"Actual home invasion did not enter the loss scene");
+    const auto frozen=board.mLevelTimeNs;
+    const auto cutscene=board.mCutScene->mCutsceneTime.mNanoseconds;
+    for(int i=0;i<10;++i)
+    {
+        Sexy::ApplySimulationStep(speedStep);clocks.mVisualTimeNs+=speedStep;board.Update();
+        Require(board.mLevelTimeNs==frozen && clocks.mBattleTimeNs==frozen,
+            "Home invasion advanced the frozen battle clock");
+    }
+    Require(board.mCutScene->mCutsceneTime.mNanoseconds>cutscene,"Freezing battle time stopped the loss cutscene");
+    std::cout<<"PASS actual home invasion: Board clock frozen while the loss cutscene continues\n";
+}
+
+constexpr std::array kSpecialPlantAuditSeeds{SEED_CHERRYBOMB,SEED_POTATOMINE,SEED_CHOMPER,SEED_GRAVEBUSTER,
+        SEED_HYPNOSHROOM,SEED_ICESHROOM,SEED_DOOMSHROOM,SEED_SQUASH,SEED_TANGLEKELP,
+        SEED_JALAPENO,SEED_INSTANT_COFFEE,SEED_GARLIC,SEED_UMBRELLA,SEED_COBCANNON,SEED_IMITATER,
+        SEED_WALLNUT,SEED_TALLNUT,SEED_PUMPKINSHELL,SEED_LILYPAD,SEED_FLOWERPOT,SEED_SPIKEWEED,
+        SEED_SPIKEROCK,SEED_TORCHWOOD,SEED_PLANTERN,SEED_BLOVER,SEED_MAGNETSHROOM,SEED_GOLD_MAGNET,
+        SEED_EXPLODE_O_NUT,SEED_GIANT_WALLNUT,SEED_SPROUT};
+
+void PlantSpecialCatalogRuntime(TestApp& app)
+{
+    auto& clocks=*app.mEffectSystem->mReanimationHolder;
+    for(const auto seed:kSpecialPlantAuditSeeds)
+    for(const int hz:{100,30,240,0})
+    {
+        app.mGameScene=SCENE_PLAYING;
+        std::cout<<"Plant special begin seed="<<int(seed)<<" Hz="<<hz<<'\n';
+        Sexy::SRand(0xF170A);Sexy::gLegacyTickPhaseNs=0;
+        clocks.mVisualTimeNs=clocks.mBattleTimeNs=0;
+        app.mGameMode=(seed==SEED_EXPLODE_O_NUT||seed==SEED_GIANT_WALLNUT)?GAMEMODE_MINIGAME_WALLNUT_BOWLING:
+            seed==SEED_SPROUT?GAMEMODE_LIMBO_ZEN_GARDEN:GAMEMODE_ADVENTURE;
+        Board board(&app);
+        board.mLevel=31;board.mCurrentWave=6;board.mNumWaves=20;board.mTotalSpawnedWaves=0;
+        board.mSeedBank->mNumPackets=0;
+        board.mBackground=seed==SEED_INSTANT_COFFEE?BACKGROUND_3_POOL:BACKGROUND_4_FOG;
+        for(int row=0;row<MAX_GRID_SIZE_Y;++row)
+        {
+            board.mPlantRow[row]=(row==2||row==3)?PLANTROW_POOL:PLANTROW_NORMAL;
+            board.mIceMinX[row]=1000;board.mIceTimer[row]=0;board.mIceParticleID[row]=PARTICLESYSTEMID_NULL;
+        }
+        const int row=(seed==SEED_TANGLEKELP||seed==SEED_LILYPAD)?2:1;
+        if(seed==SEED_GRAVEBUSTER) board.AddAGraveStone(3,row);
+        Plant* sleeper=nullptr;
+        if(seed==SEED_INSTANT_COFFEE)
+        {
+            sleeper=board.NewPlant(3,row,SEED_PUFFSHROOM,SEED_NONE);
+            Require(sleeper->mIsAsleep,"Coffee fixture mushroom was not sleeping in daylight");
+        }
+        auto* plant=board.NewPlant(3,row,seed,seed==SEED_IMITATER?SEED_PEASHOOTER:SEED_NONE);
+        const int startingHealth=plant->mPlantHealth;
+        if(seed==SEED_SPROUT)
+        {
+            app.mPlayerInfo->mNumPottedPlants=1;
+            app.mPlayerInfo->mPottedPlant[0].InitializePottedPlant(SEED_SUNFLOWER);
+            app.mPlayerInfo->mPottedPlant[0].mPlantAge=PLANTAGE_SPROUT;
+            plant->mPottedPlantIndex=0;
+        }
+        auto* target=board.AddZombieInRow(seed==SEED_MAGNETSHROOM?ZOMBIE_PAIL:
+            seed==SEED_BLOVER?ZOMBIE_BALLOON:ZOMBIE_NORMAL,row,0);
+        target->mX=plant->mX+(seed==SEED_CHOMPER?50:0);
+        target->mRootBindingGeneration=0;target->mVelX=0;target->mVelocityX={};
+        target->mBodyHealth=target->mBodyMaxHealth=1000000;
+        app.ReanimationGet(target->mBodyReanimID)->ApplyRate(0);
+        if(seed==SEED_TANGLEKELP)
+        {
+            target->mInPool=true;target->mZombieHeight=HEIGHT_ZOMBIE_NORMAL;
+            target->mZombiePhase=PHASE_ZOMBIE_NORMAL;
+        }
+        // These scenarios test the plant action; a huge-health target keeps
+        // explosion damage observable without replacing death with a stub.
+        if(seed!=SEED_HYPNOSHROOM && seed!=SEED_WALLNUT && seed!=SEED_TALLNUT && seed!=SEED_PUMPKINSHELL)
+            plant->mPlantHealth=1000000;
+        if(seed==SEED_GRAVEBUSTER||seed==SEED_INSTANT_COFFEE||seed==SEED_UMBRELLA||seed==SEED_IMITATER||seed==SEED_COBCANNON||
+            seed==SEED_LILYPAD||seed==SEED_FLOWERPOT||seed==SEED_TORCHWOOD||seed==SEED_PLANTERN||seed==SEED_GOLD_MAGNET||seed==SEED_SPROUT)
+        {
+            target->mX=700;target->mRootBindingGeneration=0;
+        }
+        if(seed==SEED_UMBRELLA) plant->DoSpecial(0,0,0);
+        Projectile* cold=nullptr;
+        Projectile* warm=nullptr;
+        if(seed==SEED_TORCHWOOD)
+        {
+            cold=board.AddProjectile(plant->mX-50,plant->mY+20,0,row,PROJECTILE_SNOWPEA);
+            warm=board.AddProjectile(plant->mX-70,plant->mY+20,0,row,PROJECTILE_PEA);
+        }
+        if(seed==SEED_GOLD_MAGNET)
+        {
+            board.AddCoin(plant->mX+150,plant->mY,COIN_GOLD,COIN_MOTION_COIN);
+            plant->mState=STATE_MAGNETSHROOM_SUCKING;
+            plant->PlayBodyReanim(0,ReanimTrackId::anim_attract,REANIM_PLAY_ONCE_AND_HOLD,20,12);
+        }
+        const auto duration=(seed==SEED_POTATOMINE||seed==SEED_COBCANNON)?20'000'000'000ULL:
+            (seed==SEED_GRAVEBUSTER||seed==SEED_GOLD_MAGNET)?8'000'000'000ULL:4'000'000'000ULL;
+        bool firedCob=false,seenCob=false,seenCrater=false,seenFrozen=false,seenReflecting=false;
+        constexpr std::array<long long,7> jitter{1'234'567,18'765'433,4'000'003,32'333'333,7'891'011,5'432'109,11'111'111};
+        for(int stepIndex=0;board.mLevelTimeNs<duration;++stepIndex)
+        {
+            const auto step=std::min<unsigned long long>(hz?1'000'000'000ULL/hz:jitter[stepIndex%jitter.size()],duration-board.mLevelTimeNs);
+            Sexy::ApplySimulationStep(step);
+            board.mLevelTimeNs+=step;clocks.mVisualTimeNs+=step;clocks.mBattleTimeNs=board.mLevelTimeNs;
+            app.mEffectSystem->UpdateAt(clocks.mVisualTimeNs,clocks.mBattleTimeNs);
+            board.UpdateGameObjects(step);
+            if(seed==SEED_COBCANNON && !firedCob && plant->mState==STATE_COBCANNON_READY)
+            {
+                plant->CobCannonFire(board.mLevelTimeNs,650,board.GridToPixelY(0,row)+40);
+                firedCob=true;
+            }
+            Projectile* projectile=nullptr;
+            while(board.IterateProjectiles(projectile)) seenCob|=projectile->mProjectileType==PROJECTILE_COBBIG;
+            seenCrater|=board.GetCraterAt(3,row)!=nullptr;
+            seenFrozen|=target->mIceTrapEndTimeNs>static_cast<std::int64_t>(board.mLevelTimeNs);
+            seenReflecting|=plant->mState==STATE_UMBRELLA_REFLECTING;
+            app.mEffectSystem->ProcessDeleteQueue();
+        }
+        std::cout<<"Plant special end seed="<<int(seed)<<" Hz="<<hz<<" state="<<int(plant->mState)
+            <<" dead="<<plant->mDead<<" targetDead="<<target->mDead<<" damage="<<1000000-target->mBodyHealth
+            <<" targetRow="<<target->mRow<<'\n';
+        switch(seed)
+        {
+        case SEED_CHERRYBOMB:case SEED_POTATOMINE:case SEED_DOOMSHROOM:case SEED_SQUASH:case SEED_JALAPENO:
+            Require(plant->mDead && 1000000-target->mBodyHealth==1800,"Instant plant missed or repeated its damage action");
+            if(seed==SEED_DOOMSHROOM) Require(seenCrater,"Doom-shroom did not create its crater");
+            break;
+        case SEED_CHOMPER:
+            Require(target->mDead && plant->mState==STATE_CHOMPER_DIGESTING,"Chomper did not complete its swallow/digestion transition");break;
+        case SEED_GRAVEBUSTER:
+            Require(plant->mDead && !board.GetGraveStoneAt(3,row) && board.mGravesCleared==1,
+                "Grave Buster did not remove exactly one grave");break;
+        case SEED_HYPNOSHROOM:
+            Require(plant->mDead && target->mMindControlled,"Eating Hypno-shroom did not hypnotize the eater");break;
+        case SEED_ICESHROOM:
+            Require(plant->mDead && seenFrozen,"Ice-shroom did not freeze its target");break;
+        case SEED_TANGLEKELP:
+            Require(plant->mDead && target->mDead,"Tangle Kelp did not drown its swimming target");break;
+        case SEED_INSTANT_COFFEE:
+            Require(plant->mDead && !sleeper->mIsAsleep && sleeper->mWakeUpEndTimeNs==0,
+                "Coffee did not disappear and finish waking its mushroom");break;
+        case SEED_GARLIC:
+            Require(target->mRow!=row && !target->mDead,"Garlic eater failed to change to a permitted neighbouring row");break;
+        case SEED_UMBRELLA:
+            Require(seenReflecting && plant->mState==STATE_NOTREADY,"Umbrella did not enter reflecting and return to idle");break;
+        case SEED_COBCANNON:
+            Require(firedCob && seenCob,"Cob Cannon did not complete charging and launch a real cob");break;
+        case SEED_IMITATER:
+        {
+            auto* replacement=board.GetTopPlantAt(3,row,TOPPLANT_ONLY_NORMAL_POSITION);
+            Require(plant->mDead && replacement && replacement!=plant && replacement->mSeedType==SEED_PEASHOOTER &&
+                replacement->mImitaterType==SEED_IMITATER,"Imitater did not publish its replacement in the cell bucket");break;
+        }
+        case SEED_WALLNUT:case SEED_TALLNUT:case SEED_PUMPKINSHELL:
+            Require(startingHealth==(seed==SEED_TALLNUT?8000:4000) && !plant->mDead &&
+                plant->mPlantHealth>0 && plant->mPlantHealth<startingHealth,
+                "Defensive plant health or real chewing damage changed");break;
+        case SEED_LILYPAD:case SEED_FLOWERPOT:
+            Require(!plant->mDead && plant->mState==STATE_NOTREADY && plant->mStateCountdown==0,
+                "Support plant did not finish its initial invulnerability");break;
+        case SEED_SPIKEWEED:case SEED_SPIKEROCK:
+            Require(target->mBodyHealth<1000000 && (1000000-target->mBodyHealth)%20==0 && !plant->mDead,
+                "Spike ground damage did not reach the overlapping zombie");break;
+        case SEED_TORCHWOOD:
+            Require(cold->mProjectileType==PROJECTILE_PEA && warm->mProjectileType==PROJECTILE_FIREBALL,
+                "Torchwood did not thaw snow peas and ignite peas exactly once");break;
+        case SEED_PLANTERN:
+            Require(!plant->mDead && app.ParticleTryToGet(plant->mParticleID),
+                "Plantern lost its persistent shine particle");break;
+        case SEED_BLOVER:
+            Require(target->mDead && target->mBlowingAway && plant->mDead,"Blover did not blow away its balloon and disappear");break;
+        case SEED_MAGNETSHROOM:
+            Require(target->mHelmType==HELMTYPE_NONE && plant->mMagnetItems[0].mItemType!=MAGNET_ITEM_NONE,
+                "Magnet-shroom did not remove and retain the metal helmet");break;
+        case SEED_GOLD_MAGNET:
+            Require(board.mCoinsCollected==Coin::GetCoinValue(COIN_GOLD),"Gold Magnet lost or duplicated its collected gold coin");break;
+        case SEED_EXPLODE_O_NUT:
+            Require(plant->mDead && 1000000-target->mBodyHealth==1800,"Explode-o-nut collision did not apply its explosion");break;
+        case SEED_GIANT_WALLNUT:
+            Require(target->mBodyHealth<=0,"Giant Wall-nut did not kill its collision target");break;
+        case SEED_SPROUT:
+            Require(!plant->mDead && plant->mPottedPlantIndex==0 && app.ReanimationTryToGet(plant->mBodyReanimID),
+                "Garden sprout lost its owned plant animation");break;
+        default:Require(false,"Unhandled plant-special audit case");
+        }
+    }
+    app.mGameMode=GAMEMODE_ADVENTURE;
+    std::cout<<"PASS actual Plant specials/support: 30 types, real damage/status/consumption, defenses, torchwood, magnets, bowling and garden sprout at four schedules\n";
+}
+
+void PlantAttackCatalogRuntime(TestApp& app)
+{
+    auto& clocks=*app.mEffectSystem->mReanimationHolder;
+    struct Restore {
+        TestApp& app;
+        Board* board=app.mBoard;
+        PlayerInfo* player=app.mPlayerInfo;
+        ZenGarden* garden=app.mZenGarden;
+        GameMode mode=app.mGameMode;
+        GameScenes scene=app.mGameScene;
+        unsigned long long interval=Sexy::gUpdateIntervalNs, phase=Sexy::gLegacyTickPhaseNs;
+        int whole=Sexy::gWholeLegacyTicks;
+        double ticks=Sexy::gUpdateTicks, steps=Sexy::gStepsPerLegacyTick;
+        std::int64_t visual=app.mEffectSystem->mReanimationHolder->mVisualTimeNs;
+        std::int64_t battle=app.mEffectSystem->mReanimationHolder->mBattleTimeNs;
+        ~Restore() {
+            app.mBoard=board;app.mPlayerInfo=player;app.mZenGarden=garden;
+            app.mGameMode=mode;app.mGameScene=scene;
+            Sexy::gUpdateIntervalNs=interval;Sexy::gLegacyTickPhaseNs=phase;Sexy::gWholeLegacyTicks=whole;
+            Sexy::gUpdateTicks=ticks;Sexy::gStepsPerLegacyTick=steps;
+            app.mEffectSystem->mReanimationHolder->mVisualTimeNs=visual;
+            app.mEffectSystem->mReanimationHolder->mBattleTimeNs=battle;
+        }
+    } restore{app};
+    PlayerInfo profile;
+    ZenGarden garden;
+    profile.mLevel=31;profile.mFinishedAdventure=1;
+    app.mPlayerInfo=&profile;app.mZenGarden=&garden;
+    app.mGameMode=GAMEMODE_ADVENTURE;app.mGameScene=SCENE_PLAYING;
+    struct Attack {
+        SeedType seed;
+        int projectiles;
+        unsigned int types;
+        int damage;
+        int coins;
+        unsigned int coinTypes;
+    };
+    constexpr auto projectile=[](ProjectileType type){return 1u<<type;};
+    constexpr auto coin=[](CoinType type){return 1u<<type;};
+    const std::array cases{
+        Attack{SEED_PEASHOOTER,1,projectile(PROJECTILE_PEA),0,0,0},
+        Attack{SEED_SNOWPEA,1,projectile(PROJECTILE_SNOWPEA),0,0,0},
+        Attack{SEED_REPEATER,2,projectile(PROJECTILE_PEA),0,0,0},
+        Attack{SEED_PUFFSHROOM,1,projectile(PROJECTILE_PUFF),0,0,0},
+        Attack{SEED_FUMESHROOM,0,0,20,0,0},
+        Attack{SEED_SCAREDYSHROOM,1,projectile(PROJECTILE_PUFF),0,0,0},
+        Attack{SEED_THREEPEATER,3,projectile(PROJECTILE_PEA),0,0,0},
+        Attack{SEED_SEASHROOM,1,projectile(PROJECTILE_PUFF),0,0,0},
+        Attack{SEED_CACTUS,1,projectile(PROJECTILE_SPIKE),0,0,0},
+        Attack{SEED_SPLITPEA,3,projectile(PROJECTILE_PEA),0,0,0},
+        Attack{SEED_STARFRUIT,5,projectile(PROJECTILE_STAR),0,0,0},
+        Attack{SEED_CABBAGEPULT,1,projectile(PROJECTILE_CABBAGE),0,0,0},
+        Attack{SEED_KERNELPULT,1,projectile(PROJECTILE_KERNEL)|projectile(PROJECTILE_BUTTER),0,0,0},
+        Attack{SEED_MELONPULT,1,projectile(PROJECTILE_MELON),0,0,0},
+        Attack{SEED_GATLINGPEA,4,projectile(PROJECTILE_PEA),0,0,0},
+        Attack{SEED_GLOOMSHROOM,0,0,80,0,0},
+        Attack{SEED_CATTAIL,2,projectile(PROJECTILE_SPIKE),0,0,0},
+        Attack{SEED_WINTERMELON,1,projectile(PROJECTILE_WINTERMELON),0,0,0},
+        Attack{SEED_LEFTPEATER,2,projectile(PROJECTILE_PEA),0,0,0},
+        Attack{SEED_SUNFLOWER,0,0,0,1,coin(COIN_SUN)},
+        Attack{SEED_TWINSUNFLOWER,0,0,0,2,coin(COIN_SUN)},
+        Attack{SEED_SUNSHROOM,0,0,0,1,coin(COIN_SMALLSUN)},
+        Attack{SEED_MARIGOLD,0,0,0,1,coin(COIN_SILVER)|coin(COIN_GOLD)},
+    };
+    std::array<unsigned char,NUM_SEED_TYPES> coverage{};
+    for(const auto& test:cases) ++coverage[test.seed];
+    for(const auto seed:kSpecialPlantAuditSeeds) ++coverage[seed];
+    Require(std::all_of(coverage.begin(),coverage.end(),[](auto count){return count==1;}),
+        "Plant behavior catalog must audit every actual SeedType exactly once");
+    for(const auto& test:cases)
+    for(const int hz:{100,30,240,0})
+    {
+        Sexy::SRand(0x4A715);
+        clocks.mVisualTimeNs=0;clocks.mBattleTimeNs=0;
+        Sexy::gLegacyTickPhaseNs=0;
+        Board board(&app);
+        board.mLevel=31;board.mCurrentWave=6;board.mNumWaves=20;board.mTotalSpawnedWaves=0;
+        board.mSeedBank->mNumPackets=0;
+        board.mBackground=BACKGROUND_4_FOG;
+        for(int row=0;row<MAX_GRID_SIZE_Y;++row)
+        {
+            board.mPlantRow[row]=(row==2||row==3)?PLANTROW_POOL:PLANTROW_NORMAL;
+            board.mIceMinX[row]=1000;board.mIceTimer[row]=0;
+            board.mIceParticleID[row]=PARTICLESYSTEMID_NULL;
+        }
+        const int row=(test.seed==SEED_SEASHROOM||test.seed==SEED_CATTAIL)?2:1;
+        auto* plant=board.NewPlant(3,row,test.seed,SEED_NONE);
+        plant->mPlantHealth=1000000;
+        plant->mNextLaunchTimeNs=1'000'000'000;plant->mLaunchWindowStartNs=0;
+        plant->mLaunchRate=1000000;
+        const auto targetAt=[&](int targetRow,float x) {
+            auto* target=board.AddZombieInRow(ZOMBIE_NORMAL,targetRow,0);
+            target->mX=x;target->mRootBindingGeneration=0;target->mVelocityX={};target->mVelX=0;
+            target->mBodyHealth=target->mBodyMaxHealth=1000000;
+            app.ReanimationGet(target->mBodyReanimID)->ApplyRate(0);
+            return target;
+        };
+        auto* target=targetAt(row,test.seed==SEED_GLOOMSHROOM?plant->mX+60:500);
+        if(test.seed==SEED_THREEPEATER) {targetAt(row-1,500);targetAt(row+1,500);}
+        if(test.seed==SEED_SPLITPEA||test.seed==SEED_LEFTPEATER||test.seed==SEED_STARFRUIT)
+            targetAt(row,100);
+        Require(plant->MakesSun()||test.seed==SEED_MARIGOLD||
+            plant->FindTargetZombie(row,WEAPON_PRIMARY)||plant->FindTargetZombie(row,WEAPON_SECONDARY),
+            "Plant catalog fixture did not acquire its intended target");
+        std::vector<unsigned int> shots,coins;
+        unsigned int shotTypes=0,coinTypes=0;
+        constexpr std::array<long long,7> jitter{1'234'567,18'765'433,4'000'003,32'333'333,7'891'011,5'432'109,11'111'111};
+        for(int stepIndex=0;board.mLevelTimeNs<4'000'000'000ULL;++stepIndex)
+        {
+            const auto step=std::min<unsigned long long>(hz?1'000'000'000ULL/hz:jitter[stepIndex%jitter.size()],
+                4'000'000'000ULL-board.mLevelTimeNs);
+            Sexy::ApplySimulationStep(step);
+            board.mLevelTimeNs+=step;clocks.mVisualTimeNs+=step;clocks.mBattleTimeNs=board.mLevelTimeNs;
+            app.mEffectSystem->UpdateAt(clocks.mVisualTimeNs,clocks.mBattleTimeNs);
+            board.UpdateGameObjects(step);
+            Projectile* bullet=nullptr;
+            while(board.IterateProjectiles(bullet))
+            {
+                const auto id=board.mProjectiles.DataArrayGetID(bullet);
+                if(std::find(shots.begin(),shots.end(),id)==shots.end()) shots.push_back(id);
+                shotTypes|=projectile(bullet->mProjectileType);
+            }
+            Coin* drop=nullptr;
+            while(board.IterateCoins(drop))
+            {
+                const auto id=board.mCoins.DataArrayGetID(drop);
+                if(std::find(coins.begin(),coins.end(),id)==coins.end()) coins.push_back(id);
+                coinTypes|=coin(drop->mType);
+            }
+            app.mEffectSystem->ProcessDeleteQueue();
+        }
+        std::cout<<"Plant attack seed="<<int(test.seed)<<" Hz="<<hz<<" shots="<<shots.size()
+            <<" types="<<shotTypes<<" damage="<<1000000-target->mBodyHealth<<" coins="<<coins.size()<<'\n';
+        Require(shots.size()==test.projectiles,"Plant catalog lost or duplicated a projectile in one attack");
+        Require((shotTypes&~test.types)==0 && (test.projectiles==0||shotTypes!=0),"Plant catalog emitted the wrong projectile type");
+        if(test.damage) Require(1000000-target->mBodyHealth==test.damage,"Plant catalog area-damage pulse count changed");
+        Require(coins.size()==test.coins && (coinTypes&~test.coinTypes)==0,
+            "Plant catalog production count/type changed");
+    }
+    std::cout<<"PASS actual Plant attack catalog: 23 types, first-volley counts/types, area pulses and production at 100/30/240Hz and jitter\n";
+    PlantSpecialCatalogRuntime(app);
+    std::cout<<"PASS complete Plant primary-behavior catalog: all "<<NUM_SEED_TYPES<<" SeedType values, four schedules each\n";
+}
+
+void ZombieBehaviorCatalogRuntime(TestApp& app)
+{
+    auto& clocks=*app.mEffectSystem->mReanimationHolder;
+    struct Restore {
+        TestApp& app;
+        Board* board=app.mBoard;
+        PlayerInfo* player=app.mPlayerInfo;
+        ZenGarden* garden=app.mZenGarden;
+        GameMode mode=app.mGameMode;
+        GameScenes scene=app.mGameScene;
+        Sexy::UnsignedTimeCounter appCounter=app.mAppCounter;
+        unsigned long long interval=Sexy::gUpdateIntervalNs, phase=Sexy::gLegacyTickPhaseNs;
+        int whole=Sexy::gWholeLegacyTicks;
+        double ticks=Sexy::gUpdateTicks, steps=Sexy::gStepsPerLegacyTick;
+        std::int64_t visual=app.mEffectSystem->mReanimationHolder->mVisualTimeNs;
+        std::int64_t battle=app.mEffectSystem->mReanimationHolder->mBattleTimeNs;
+        ~Restore() {
+            app.mBoard=board;app.mPlayerInfo=player;app.mZenGarden=garden;
+            app.mGameMode=mode;app.mGameScene=scene;
+            app.mAppCounter=appCounter;
+            Sexy::gUpdateIntervalNs=interval;Sexy::gLegacyTickPhaseNs=phase;Sexy::gWholeLegacyTicks=whole;
+            Sexy::gUpdateTicks=ticks;Sexy::gStepsPerLegacyTick=steps;
+            app.mEffectSystem->mReanimationHolder->mVisualTimeNs=visual;
+            app.mEffectSystem->mReanimationHolder->mBattleTimeNs=battle;
+        }
+    } restore{app};
+    PlayerInfo profile;
+    ZenGarden garden;
+    profile.mLevel=31;profile.mFinishedAdventure=1;
+    app.mPlayerInfo=&profile;app.mZenGarden=&garden;
+    app.mGameMode=GAMEMODE_ADVENTURE;app.mGameScene=SCENE_PLAYING;
+    for(const int hz:{100,30,240,0})
+    {
+        Sexy::SRand(0x6C715);Sexy::gLegacyTickPhaseNs=0;
+        app.mGameScene=SCENE_PLAYING;
+        clocks.mVisualTimeNs=clocks.mBattleTimeNs=0;
+        Board board(&app);
+        board.mLevel=31;board.mCurrentWave=6;board.mNumWaves=20;board.mTotalSpawnedWaves=0;
+        board.mSeedBank->mNumPackets=0;board.mBackground=BACKGROUND_1_DAY;
+        for(int row=0;row<MAX_GRID_SIZE_Y;++row)
+        {
+            board.mPlantRow[row]=row==5?PLANTROW_DIRT:PLANTROW_NORMAL;
+            board.mIceMinX[row]=1000;board.mIceTimer[row]=0;board.mIceParticleID[row]=PARTICLESYSTEMID_NULL;
+        }
+        auto* plant=board.NewPlant(3,1,SEED_WALLNUT,SEED_NONE);
+        plant->mPlantHealth=1000000;
+        auto* zombie=board.AddZombieInRow(ZOMBIE_CATAPULT,1,0);
+        zombie->mX=660;zombie->mRootBindingGeneration=0;
+        int launches=0;
+        std::vector<unsigned int> shots;
+        constexpr std::array<long long,7> jitter{1'234'567,18'765'433,4'000'003,32'333'333,7'891'011,5'432'109,11'111'111};
+        for(int stepIndex=0;board.mLevelTimeNs<80'000'000'000ULL && launches<20;++stepIndex)
+        {
+            const auto step=std::min<unsigned long long>(hz?1'000'000'000ULL/hz:jitter[stepIndex%jitter.size()],80'000'000'000ULL-board.mLevelTimeNs);
+            const bool launching=zombie->mZombiePhase==PHASE_CATAPULT_LAUNCHING;
+            Sexy::ApplySimulationStep(step);
+            board.mLevelTimeNs+=step;clocks.mVisualTimeNs+=step;clocks.mBattleTimeNs=board.mLevelTimeNs;
+            app.mEffectSystem->UpdateAt(clocks.mVisualTimeNs,clocks.mBattleTimeNs);
+            board.UpdateGameObjects(step);
+            Projectile* bullet=nullptr;
+            while(board.IterateProjectiles(bullet))
+                if(bullet->mProjectileType==PROJECTILE_BASKETBALL)
+                {
+                    const auto id=board.mProjectiles.DataArrayGetID(bullet);
+                    if(std::find(shots.begin(),shots.end(),id)==shots.end()) shots.push_back(id);
+                }
+            if(launching && zombie->mZombiePhase!=PHASE_CATAPULT_LAUNCHING)
+            {
+                ++launches;
+                std::cout<<"Catapult Hz="<<hz<<" launch="<<launches<<" ammoNs="<<zombie->mSummonCounter.mNanoseconds
+                    <<" shots="<<shots.size()<<'\n';
+                Require(zombie->mSummonCounter.mNanoseconds==TimeCounter::Encode(20-launches),
+                    "Catapult ammunition was decremented by elapsed time instead of one launch");
+            }
+            app.mEffectSystem->ProcessDeleteQueue();
+        }
+        std::cout<<"Catapult end Hz="<<hz<<" launches="<<launches<<" shots="<<shots.size()
+            <<" ammoNs="<<zombie->mSummonCounter.mNanoseconds<<" x="<<zombie->mX<<" scene="<<app.mGameScene<<'\n';
+        Require(app.mGameScene==SCENE_PLAYING && zombie->mX>500,
+            "Catapult resumed its walking segment by catching up the stationary shooting time");
+        Require(launches==20 && shots.size()==20 && zombie->mSummonCounter.mNanoseconds==0,
+            "Catapult did not fire exactly twenty basketballs before exhausting ammunition");
+    }
+    std::cout<<"PASS actual Catapult ammunition: twenty shots and one unit per completed launch at four schedules\n";
+    for(const auto type:{ZOMBIE_CATAPULT,ZOMBIE_SNORKEL,ZOMBIE_DOLPHIN_RIDER,ZOMBIE_NORMAL,ZOMBIE_DUCKY_TUBE})
+    for(const int hz:{100,30,240,0})
+    {
+        Sexy::SRand(0x207B);Sexy::gLegacyTickPhaseNs=0;
+        clocks.mVisualTimeNs=clocks.mBattleTimeNs=0;app.mGameScene=SCENE_PLAYING;
+        Board board(&app);
+        board.mLevel=21;board.mCurrentWave=6;board.mNumWaves=20;board.mTotalSpawnedWaves=0;
+        board.mSeedBank->mNumPackets=0;board.mBackground=BACKGROUND_3_POOL;
+        for(int row=0;row<MAX_GRID_SIZE_Y;++row)
+        {
+            board.mPlantRow[row]=(row==2||row==3)?PLANTROW_POOL:PLANTROW_NORMAL;
+            board.mIceMinX[row]=1000;board.mIceTimer[row]=0;board.mIceParticleID[row]=PARTICLESYSTEMID_NULL;
+        }
+        const bool poolMover=type==ZOMBIE_SNORKEL||type==ZOMBIE_DOLPHIN_RIDER||type==ZOMBIE_DUCKY_TUBE;
+        const int row=poolMover?2:1;
+        auto* zombie=board.AddZombieInRow(type,row,0);
+        zombie->mX=660;zombie->mRootBindingGeneration=0;
+        if(type==ZOMBIE_SNORKEL) zombie->mZombiePhase=PHASE_SNORKEL_WALKING_IN_POOL;
+        if(type==ZOMBIE_DOLPHIN_RIDER) zombie->mZombiePhase=PHASE_DOLPHIN_RIDING;
+        if(poolMover) {zombie->mInPool=true;zombie->mAltitude=-40;}
+        if(type==ZOMBIE_DUCKY_TUBE) {zombie->mZombieHeight=HEIGHT_IN_TO_POOL;zombie->mAltitude=-5;}
+        bool applied=false,resumed=false;
+        float frozenX=0,frozenAltitude=0,maxResumeJump=0,maxAltitudeJump=0;
+        constexpr std::array<long long,7> jitter{1'234'567,18'765'433,4'000'003,32'333'333,7'891'011,5'432'109,11'111'111};
+        for(int n=0;board.mLevelTimeNs<5'000'000'000ULL;++n)
+        {
+            const auto step=std::min<unsigned long long>(hz?1'000'000'000ULL/hz:jitter[n%jitter.size()],5'000'000'000ULL-board.mLevelTimeNs);
+            if(!applied && board.mLevelTimeNs>=(type==ZOMBIE_DUCKY_TUBE?50'000'000ULL:500'000'000ULL))
+            {
+                zombie->ApplyButter(board.mLevelTimeNs);
+                Require(zombie->mButteredEndTimeNs>static_cast<std::int64_t>(board.mLevelTimeNs),"Linear mover rejected its legal butter fixture");
+                applied=true;frozenX=zombie->mX;frozenAltitude=zombie->mAltitude;
+            }
+            if(type==ZOMBIE_NORMAL&&!applied) zombie->mPendingAdditionalSpeedX=-1.0f;
+            const auto before=zombie->mX;
+            const auto beforeAltitude=zombie->mAltitude;
+            Sexy::ApplySimulationStep(step);
+            board.mLevelTimeNs+=step;clocks.mVisualTimeNs+=step;clocks.mBattleTimeNs=board.mLevelTimeNs;
+            app.mEffectSystem->UpdateAt(clocks.mVisualTimeNs,clocks.mBattleTimeNs);
+            board.UpdateGameObjects(step);
+            if(applied)
+            {
+                if(zombie->IsImmobilizied(board.mLevelTimeNs))
+                {
+                    Require(zombie->mX==frozenX,"Buttered linear zombie moved while immobilized");
+                    Require(zombie->mAltitude==frozenAltitude,"Buttered zombie changed altitude while immobilized");
+                }
+                else
+                {
+                    resumed=true;maxResumeJump=std::max(maxResumeJump,std::abs(zombie->mX-before));
+                    maxAltitudeJump=std::max(maxAltitudeJump,std::abs(zombie->mAltitude-beforeAltitude));
+                }
+            }
+            app.mEffectSystem->ProcessDeleteQueue();
+        }
+        std::cout<<"Zombie butter type="<<int(type)<<" Hz="<<hz<<" maxResumeJump="<<maxResumeJump
+            <<" finalX="<<zombie->mX<<'\n';
+        Require(resumed && maxResumeJump<10 && zombie->mX<frozenX,
+            "Linear zombie caught up the immobilized interval when butter expired");
+        Require(maxAltitudeJump<4,"Zombie altitude caught up the immobilized interval on resume");
+    }
+    std::cout<<"PASS actual zombie butter: three linear movers, root plus offset, and pool entry hold/resume at four schedules\n";
+    enum class Action { Chew, Paper, Vault, Snorkel, Dolphin, Zamboni, Sled, Jack, Balloon,
+        Digger, Pogo, Yeti, Bungee, Ladder, Giant, Dancer, Pea, Gatling, Jalapeno, Squash };
+    struct Entry {ZombieType type;Action action;};
+    static constexpr Entry entries[]{
+        {ZOMBIE_NORMAL,Action::Chew},{ZOMBIE_FLAG,Action::Chew},{ZOMBIE_TRAFFIC_CONE,Action::Chew},
+        {ZOMBIE_POLEVAULTER,Action::Vault},{ZOMBIE_PAIL,Action::Chew},{ZOMBIE_NEWSPAPER,Action::Paper},
+        {ZOMBIE_DOOR,Action::Chew},{ZOMBIE_FOOTBALL,Action::Chew},{ZOMBIE_DANCER,Action::Dancer},
+        {ZOMBIE_BACKUP_DANCER,Action::Chew},{ZOMBIE_DUCKY_TUBE,Action::Chew},{ZOMBIE_SNORKEL,Action::Snorkel},
+        {ZOMBIE_ZAMBONI,Action::Zamboni},{ZOMBIE_BOBSLED,Action::Sled},{ZOMBIE_DOLPHIN_RIDER,Action::Dolphin},
+        {ZOMBIE_JACK_IN_THE_BOX,Action::Jack},{ZOMBIE_BALLOON,Action::Balloon},{ZOMBIE_DIGGER,Action::Digger},
+        {ZOMBIE_POGO,Action::Pogo},{ZOMBIE_YETI,Action::Yeti},{ZOMBIE_BUNGEE,Action::Bungee},
+        {ZOMBIE_LADDER,Action::Ladder},{ZOMBIE_GARGANTUAR,Action::Giant},{ZOMBIE_IMP,Action::Chew},
+        {ZOMBIE_PEA_HEAD,Action::Pea},{ZOMBIE_WALLNUT_HEAD,Action::Chew},{ZOMBIE_JALAPENO_HEAD,Action::Jalapeno},
+        {ZOMBIE_GATLING_HEAD,Action::Gatling},{ZOMBIE_SQUASH_HEAD,Action::Squash},{ZOMBIE_TALLNUT_HEAD,Action::Chew},
+        {ZOMBIE_REDEYE_GARGANTUAR,Action::Giant},{ZOMBIE_ZOMBATAR,Action::Chew}
+    };
+    static_assert(std::size(entries)+2==NUM_ZOMBIE_TYPES);
+    std::array<bool,NUM_ZOMBIE_TYPES> covered{};
+    covered[ZOMBIE_CATAPULT]=covered[ZOMBIE_BOSS]=true;
+    for(const auto& entry:entries)
+    {
+        Require(!covered[entry.type],"Zombie primary catalog contains duplicate types");
+        covered[entry.type]=true;
+    }
+    Require(std::all_of(covered.begin(),covered.end(),[](bool value){return value;}),"Zombie primary catalog misses a type");
+    bool allPassed=true;
+    for(const auto [type,action]:entries)
+    for(const int hz:{100,30,240,0})
+    {
+        Sexy::SRand(0x58B10+int(type));Sexy::gLegacyTickPhaseNs=0;
+        app.mAppCounter=0;
+        clocks.mVisualTimeNs=clocks.mBattleTimeNs=0;app.mGameScene=SCENE_PLAYING;
+        Board board(&app);
+        board.mLevel=31;board.mCurrentWave=6;board.mNumWaves=20;board.mTotalSpawnedWaves=0;
+        board.mSeedBank->mNumPackets=0;board.mBackground=BACKGROUND_1_DAY;
+        const bool pool=action==Action::Snorkel||action==Action::Dolphin;
+        if(pool) board.mBackground=BACKGROUND_3_POOL;
+        for(int row=0;row<MAX_GRID_SIZE_Y;++row)
+        {
+            board.mPlantRow[row]=pool&&(row==2||row==3)?PLANTROW_POOL:row==5?PLANTROW_DIRT:PLANTROW_NORMAL;
+            board.mIceMinX[row]=1000;board.mIceTimer[row]=0;board.mIceParticleID[row]=PARTICLESYSTEMID_NULL;
+        }
+        const int row=pool?2:1;
+        auto* plant=board.NewPlant(action==Action::Giant?5:3,row,action==Action::Ladder?SEED_TALLNUT:SEED_WALLNUT,SEED_NONE);
+        plant->mPlantHealth=1000000;
+        if(action==Action::Sled) board.mIceMinX[row]=0;
+        auto* zombie=board.AddZombieInRow(type,row,0);
+        Require(zombie!=nullptr&&!zombie->mDead,"Zombie catalog initialization failed");
+        if(action!=Action::Bungee)
+        {
+            zombie->mX=pool?725.0f:action==Action::Dancer?720.0f:action==Action::Yeti?780.0f:
+                action==Action::Digger?200.0f:action==Action::Sled?660.0f:action==Action::Giant?600.0f:440.0f;
+            zombie->mRootBindingGeneration=0;
+        }
+        if(action==Action::Dancer)
+        {
+            plant->Die(0,0,0);
+            // Give the leader a full middle-row cross for its four followers.
+            zombie->SetRow(2);zombie->mY=zombie->GetPosYBasedOnRow(2);
+        }
+        const float initialX=zombie->mX;
+        float minimumX=initialX;
+        bool ate=false,acted=false,completed=false,damaged=false;
+        bool modified=false,seenAir=false,seenPool=false;
+        bool mounted=false,checkedRideStep=false;
+        float mountDelta=0,firstRideDelta=0;
+        int maxFollowers=0;
+        std::vector<unsigned int> shots;
+        constexpr std::array<long long,7> jitter{1'234'567,18'765'433,4'000'003,32'333'333,7'891'011,5'432'109,11'111'111};
+        const unsigned long long limit=action==Action::Digger?35'000'000'000ULL:25'000'000'000ULL;
+        for(int n=0;board.mLevelTimeNs<limit&&!completed;++n)
+        {
+            const auto step=std::min<unsigned long long>(hz?1'000'000'000ULL/hz:jitter[n%jitter.size()],limit-board.mLevelTimeNs);
+            if(action==Action::Paper&&ate&&!modified)
+            {
+                zombie->TakeShieldDamage(board.mLevelTimeNs,clocks.mVisualTimeNs,board.mLevelTimeNs,zombie->mShieldHealth,0);
+                modified=true;
+            }
+            if(action==Action::Giant&&plant->mDead&&!modified)
+            {
+                zombie->TakeDamage(board.mLevelTimeNs,clocks.mVisualTimeNs,board.mLevelTimeNs,zombie->mBodyMaxHealth/2+1,0);
+                modified=true;
+            }
+            if(action==Action::Sled&&board.mLevelTimeNs>=7'000'000'000ULL) board.mIceMinX[row]=1000;
+            const auto oldPhase=zombie->mZombiePhase;
+            const auto oldX=zombie->mX;
+            Sexy::ApplySimulationStep(step);
+            board.mLevelTimeNs+=step;clocks.mVisualTimeNs+=step;clocks.mBattleTimeNs=board.mLevelTimeNs;
+            app.mEffectSystem->UpdateAt(clocks.mVisualTimeNs,clocks.mBattleTimeNs);
+            board.UpdateGameObjects(step);
+            if(action==Action::Dolphin)
+            {
+                if(oldPhase==PHASE_DOLPHIN_INTO_POOL&&zombie->mZombiePhase==PHASE_DOLPHIN_RIDING)
+                {
+                    mounted=true;mountDelta=zombie->mX-oldX;
+                }
+                else if(mounted&&!checkedRideStep&&oldPhase==PHASE_DOLPHIN_RIDING)
+                {
+                    checkedRideStep=true;firstRideDelta=zombie->mX-oldX;
+                }
+            }
+            // The production outer update advances this application clock;
+            // legacy dancer phases read it independently of Board time.
+            app.mAppCounter++;
+            minimumX=std::min(minimumX,zombie->mX);
+            ate|=zombie->mIsEating;damaged|=plant->mPlantHealth<1000000;
+            seenAir|=zombie->mAltitude>5;seenPool|=zombie->mInPool;
+            Projectile* bullet=nullptr;
+            while(board.IterateProjectiles(bullet))
+                if(bullet->mProjectileType==PROJECTILE_ZOMBIE_PEA)
+                {
+                    const auto id=board.mProjectiles.DataArrayGetID(bullet);
+                    if(std::find(shots.begin(),shots.end(),id)==shots.end()) shots.push_back(id);
+                }
+            int followers=0;Zombie* other=nullptr;
+            while(board.IterateZombies(other))
+                if(other!=zombie&&(other->mZombieType==ZOMBIE_BACKUP_DANCER||other->mZombieType==ZOMBIE_BOBSLED||other->mZombieType==ZOMBIE_IMP)) ++followers;
+            maxFollowers=std::max(maxFollowers,followers);
+            switch(action)
+            {
+            case Action::Chew: completed=ate&&damaged;break;
+            case Action::Paper: completed=ate&&damaged&&zombie->mZombiePhase==PHASE_NEWSPAPER_MAD;break;
+            case Action::Vault: acted|=zombie->mZombiePhase==PHASE_POLEVAULTER_IN_VAULT;
+                completed=acted&&zombie->mZombiePhase==PHASE_POLEVAULTER_POST_VAULT&&!zombie->mHasObject&&zombie->mX>100;break;
+            case Action::Snorkel: completed=seenPool&&ate&&damaged&&zombie->mZombiePhase==PHASE_SNORKEL_EATING_IN_POOL;break;
+            case Action::Dolphin: acted|=zombie->mZombiePhase==PHASE_DOLPHIN_IN_JUMP;
+                completed=seenPool&&acted&&zombie->mZombiePhase==PHASE_DOLPHIN_WALKING_IN_POOL;break;
+            case Action::Zamboni: completed=plant->mDead&&board.mIceMinX[row]<1000;break;
+            case Action::Sled: acted|=zombie->mZombiePhase==PHASE_BOBSLED_CRASHING;
+                completed=acted&&maxFollowers==3&&zombie->mZombiePhase==PHASE_ZOMBIE_NORMAL;break;
+            case Action::Jack: acted|=zombie->mZombiePhase==PHASE_JACK_IN_THE_BOX_POPPING;completed=acted&&zombie->mDead;break;
+            case Action::Balloon: completed=zombie->mZombiePhase==PHASE_BALLOON_FLYING&&zombie->mX<plant->mX-100&&!damaged;break;
+            case Action::Digger: acted|=zombie->mZombiePhase==PHASE_DIGGER_RISING;
+                completed=acted&&zombie->mZombiePhase==PHASE_DIGGER_WALKING&&zombie->mX>30;break;
+            case Action::Pogo: completed=seenAir&&zombie->mX<plant->mX-100&&zombie->mHasObject&&!damaged;break;
+            case Action::Yeti: completed=zombie->mZombiePhase==PHASE_YETI_RUNNING&&zombie->mX>minimumX+20;break;
+            case Action::Bungee: acted|=zombie->mZombiePhase==PHASE_BUNGEE_GRABBING;completed=acted&&plant->mDead&&zombie->mDead;break;
+            case Action::Ladder: completed=board.GetLadderAt(plant->mPlantCol,row)!=nullptr&&zombie->mShieldHealth==0;break;
+            case Action::Giant: acted|=zombie->mZombiePhase==PHASE_GARGANTUAR_SMASHING;
+                completed=acted&&plant->mDead&&modified&&maxFollowers==1&&!zombie->mHasObject;break;
+            case Action::Dancer: completed=maxFollowers==4&&zombie->mZombiePhase==PHASE_DANCER_DANCING_LEFT;break;
+            case Action::Pea: completed=shots.size()==1;break;
+            case Action::Gatling: completed=shots.size()==4;break;
+            case Action::Jalapeno: completed=plant->mDead&&zombie->mDead;break;
+            case Action::Squash: completed=plant->mSquished&&zombie->mZombiePhase==PHASE_SQUASH_DONE_FALLING;break;
+            }
+            app.mEffectSystem->ProcessDeleteQueue();
+            if(zombie->mDead&&!completed) break;
+        }
+        const bool mountPassed=action!=Action::Dolphin||
+            (mounted&&checkedRideStep&&mountDelta<-65&&mountDelta>-80&&firstRideDelta<=0&&firstRideDelta>-10);
+        if(action==Action::Dolphin)
+            std::cout<<"Dolphin mount Hz="<<hz<<" delta="<<mountDelta<<" nextDelta="<<firstRideDelta<<" ok="<<mountPassed<<'\n';
+        const bool passed=completed&&mountPassed&&app.mGameScene==SCENE_PLAYING;
+        std::cout<<"Zombie primary type="<<int(type)<<" Hz="<<hz<<" ok="<<passed
+            <<" phase="<<int(zombie->mZombiePhase)<<" x="<<zombie->mX<<" timeNs="<<board.mLevelTimeNs
+            <<" dead="<<zombie->mDead<<" plantDead="<<plant->mDead<<" ate="<<ate<<" shots="<<shots.size()
+            <<" followers="<<maxFollowers<<'\n';
+        allPassed&=passed;
+    }
+    if(allPassed) std::cout<<"PASS actual Zombie primary catalog: 32 types plus twenty-shot Catapult, four schedules each\n";
+    for(const int hz:{100,30,240,0})
+    {
+        Sexy::SRand(0xB055);Sexy::gLegacyTickPhaseNs=0;
+        clocks.mVisualTimeNs=clocks.mBattleTimeNs=0;app.mGameScene=SCENE_PLAYING;
+        Board board(&app);
+        board.mLevel=50;board.mCurrentWave=6;board.mNumWaves=20;board.mTotalSpawnedWaves=0;
+        board.mSeedBank->mNumPackets=0;board.mBackground=BACKGROUND_5_ROOF;
+        for(int row=0;row<MAX_GRID_SIZE_Y;++row)
+        {
+            board.mPlantRow[row]=row==5?PLANTROW_DIRT:PLANTROW_NORMAL;
+            board.mIceMinX[row]=1000;board.mIceTimer[row]=0;board.mIceParticleID[row]=PARTICLESYSTEMID_NULL;
+            if(row<5)
+                for(int col=0;col<9;++col)
+                {
+                    auto* target=board.NewPlant(col,row,SEED_WALLNUT,SEED_NONE);
+                    target->mPlantHealth=1000000;
+                }
+        }
+        auto* boss=board.AddZombieInRow(ZOMBIE_BOSS,0,0);
+        bool spawned=false,ball=false,rv=false,bungee=false,stomp=false;
+        int stage=0;
+        constexpr std::array<long long,7> jitter{1'234'567,18'765'433,4'000'003,32'333'333,7'891'011,5'432'109,11'111'111};
+        for(int n=0;board.mLevelTimeNs<100'000'000'000ULL&&stage<5;++n)
+        {
+            if(boss->mZombiePhase==PHASE_BOSS_IDLE)
+            {
+                if(stage==0&&spawned) {boss->BossHeadAttack(board.mLevelTimeNs);stage=1;}
+                else if(stage==1&&ball) {boss->BossRVAttack(board.mLevelTimeNs);stage=2;}
+                else if(stage==2&&rv) {boss->BossBungeeAttack(board.mLevelTimeNs);stage=3;}
+                else if(stage==3&&bungee) {boss->BossStompAttack(board.mLevelTimeNs);stage=4;}
+                else if(stage==4&&stomp) {stage=5;break;}
+            }
+            const auto step=hz?1'000'000'000ULL/hz:static_cast<unsigned long long>(jitter[n%jitter.size()]);
+            Sexy::ApplySimulationStep(step);
+            board.mLevelTimeNs+=step;clocks.mVisualTimeNs+=step;clocks.mBattleTimeNs=board.mLevelTimeNs;
+            app.mEffectSystem->UpdateAt(clocks.mVisualTimeNs,clocks.mBattleTimeNs);
+            board.UpdateGameObjects(step);
+            Zombie* other=nullptr;
+            while(board.IterateZombies(other))
+            {
+                if(other->mZombieType==ZOMBIE_NORMAL) spawned=true;
+                if(other->mZombieType==ZOMBIE_BUNGEE) bungee=true;
+            }
+            ball|=boss->mBossFireBallReanimID!=REANIMATIONID_NULL;
+            if(stage==2||stage==4)
+            {
+                Plant* target=nullptr;
+                while(board.IteratePlants(target))
+                    if(target->mSquished) {if(stage==2) rv=true;else stomp=true;}
+            }
+            app.mEffectSystem->ProcessDeleteQueue();
+        }
+        std::cout<<"Zombie Boss Hz="<<hz<<" stage="<<stage<<" spawn="<<spawned<<" ball="<<ball
+            <<" rv="<<rv<<" bungee="<<bungee<<" stomp="<<stomp<<" phase="<<int(boss->mZombiePhase)<<'\n';
+        Require(stage==5&&app.mGameScene==SCENE_PLAYING,"Boss entry/spawn/head/RV/bungee/stomp actions did not complete");
+    }
+    std::cout<<"PASS actual Boss primary actions: entry, spawn, head ball, RV, bungee and stomp at four schedules\n";
+    Require(allPassed,"Zombie primary behavior catalog has failed cases; inspect per-type results");
+}
+
+void MinigameRulesRuntime(TestApp& app)
+{
+    auto& clocks=*app.mEffectSystem->mReanimationHolder;
+    struct Restore {
+        TestApp& app;
+        Board* board=app.mBoard;
+        PlayerInfo* player=app.mPlayerInfo;
+        ZenGarden* garden=app.mZenGarden;
+        PoolEffect* pool=app.mPoolEffect;
+        GameMode mode=app.mGameMode;
+        GameScenes scene=app.mGameScene;
+        BoardResult result=app.mBoardResult;
+        Sexy::UnsignedTimeCounter counter=app.mAppCounter;
+        unsigned long long interval=Sexy::gUpdateIntervalNs,phase=Sexy::gLegacyTickPhaseNs;
+        int whole=Sexy::gWholeLegacyTicks;
+        double ticks=Sexy::gUpdateTicks,steps=Sexy::gStepsPerLegacyTick;
+        std::int64_t visual=app.mEffectSystem->mReanimationHolder->mVisualTimeNs;
+        std::int64_t battle=app.mEffectSystem->mReanimationHolder->mBattleTimeNs;
+        int mouseX=app.mWidgetManager->mLastMouseX,mouseY=app.mWidgetManager->mLastMouseY;
+        ~Restore() {
+            app.mBoard=board;app.mPlayerInfo=player;app.mZenGarden=garden;app.mPoolEffect=pool;
+            app.mGameMode=mode;app.mGameScene=scene;app.mBoardResult=result;app.mAppCounter=counter;
+            app.mWidgetManager->mLastMouseX=mouseX;app.mWidgetManager->mLastMouseY=mouseY;
+            Sexy::gUpdateIntervalNs=interval;Sexy::gLegacyTickPhaseNs=phase;Sexy::gWholeLegacyTicks=whole;
+            Sexy::gUpdateTicks=ticks;Sexy::gStepsPerLegacyTick=steps;
+            app.mEffectSystem->mReanimationHolder->mVisualTimeNs=visual;
+            app.mEffectSystem->mReanimationHolder->mBattleTimeNs=battle;
+        }
+    } restore{app};
+    PlayerInfo profile;
+    ZenGarden garden;
+    profile.mId=42;profile.mLevel=50;profile.mFinishedAdventure=1;
+    app.mPlayerInfo=&profile;app.mZenGarden=&garden;
+    static constexpr BackgroundType backgrounds[]{
+        BACKGROUND_2_NIGHT,BACKGROUND_2_NIGHT,BACKGROUND_3_POOL,BACKGROUND_5_ROOF,BACKGROUND_6_BOSS,
+        BACKGROUND_4_FOG,BACKGROUND_3_POOL,BACKGROUND_3_POOL,BACKGROUND_5_ROOF,BACKGROUND_2_NIGHT,
+        BACKGROUND_4_FOG,BACKGROUND_1_DAY,BACKGROUND_1_DAY,BACKGROUND_3_POOL,BACKGROUND_1_DAY,
+        BACKGROUND_1_DAY,BACKGROUND_1_DAY,BACKGROUND_3_POOL,BACKGROUND_2_NIGHT,BACKGROUND_ZOMBIQUARIUM
+    };
+    bool allPassed=true;
+    for(int mode=GAMEMODE_MINIGAME_BEGHOULED;mode<=GAMEMODE_MINIGAME_ZOMBIQUARIUM;++mode)
+    for(const int hz:{100,30,240,0})
+    {
+        std::cout<<"Minigame begin mode="<<mode<<" Hz="<<hz<<'\n';
+        Sexy::SRand(0x81F00+mode);Sexy::gLegacyTickPhaseNs=0;
+        clocks.mVisualTimeNs=clocks.mBattleTimeNs=0;app.mAppCounter=0;
+        app.mGameMode=static_cast<GameMode>(mode);app.mGameScene=SCENE_PLAYING;app.mBoardResult=BOARDRESULT_NONE;
+        PoolEffect pool;pool.PoolEffectInitialize();app.mPoolEffect=&pool;
+        Board board(&app);
+        try
+        {
+        board.InitLevel();
+        Require(board.mBackground==backgrounds[mode-1],"Minigame selected the wrong background");
+        const int initialSun=mode==GAMEMODE_MINIGAME_BEGHOULED||mode==GAMEMODE_MINIGAME_BEGHOULED_TWIST||
+            mode==GAMEMODE_MINIGAME_WHACK_A_ZOMBIE?0:mode==GAMEMODE_MINIGAME_LAST_STAND?5000:50;
+        Require(board.mSunMoney==initialSun,"Minigame starting sun differs from its rule");
+        board.StartLevel();
+        auto& challenge=*board.mChallenge;
+        int sequence=0;
+        constexpr std::array<long long,7> jitter{1'234'567,18'765'433,4'000'003,32'333'333,7'891'011,5'432'109,11'111'111};
+        const auto update=[&](unsigned long long step) {
+            Sexy::ApplySimulationStep(step);clocks.mVisualTimeNs+=step;
+            board.Update();app.mAppCounter++;
+            board.ProcessDeleteQueue();app.mEffectSystem->ProcessDeleteQueue();
+        };
+        const auto advance=[&](unsigned long long duration) {
+            unsigned long long elapsed=0;
+            while(elapsed<duration)
+            {
+                const auto step=std::min<unsigned long long>(hz?1'000'000'000ULL/hz:jitter[sequence++%jitter.size()],duration-elapsed);
+                update(step);
+                elapsed+=step;
+            }
+        };
+        const auto plantFromBank=[&](SeedType seed,int col,int row) {
+            board.mSeedBank->mSeedPackets[0].SetPacketType(seed,SEED_NONE);
+            board.mCursorObject->mCursorType=CURSOR_TYPE_PLANT_FROM_BANK;
+            board.mCursorObject->mType=seed;board.mCursorObject->mImitaterType=SEED_NONE;
+            board.mCursorObject->mSeedBankIndex=0;
+            board.MouseDownWithPlant(board.GridToPixelX(col,row)+20,board.GridToPixelY(col,row)+20,1);
+        };
+        switch(app.mGameMode)
+        {
+        case GAMEMODE_MINIGAME_BEGHOULED:
+        case GAMEMODE_MINIGAME_BEGHOULED_TWIST:
+        {
+            board.mZombieCountDown=100000;
+            advance(2'000'000'000);
+            Require(board.mPlants.mSize==40,"Beghouled initial board is not a full 8 by 5 grid");
+            BeghouledBoardState state;
+            challenge.LoadBeghouledBoardState(&state);
+            Require(!challenge.BeghouledBoardHasMatch(&state),"Beghouled started with an unsolicited match");
+            bool moved=false;
+            for(int row=0;row<5&&!moved;++row)
+            for(int col=0;col<8&&!moved;++col)
+            {
+                if(mode==GAMEMODE_MINIGAME_BEGHOULED_TWIST)
+                {
+                    if(col>=7||row>=4||!challenge.BeghouledTwistMoveCausesMatch(col,row,&state)) continue;
+                    HitResult hit;hit.mObject=nullptr;hit.mObjectType=OBJECT_TYPE_NONE;
+                    challenge.MouseDown(board.GridToPixelX(col,row)+60,board.GridToPixelY(col,row)+60,1,&hit);
+                    moved=true;
+                }
+                else
+                {
+                    for(const auto offset:{Point{1,0},Point{0,1}})
+                    {
+                        const int toCol=col+offset.mX,toRow=row+offset.mY;
+                        if(toCol>=8||toRow>=5||!challenge.BeghouledIsValidMove(col,row,toCol,toRow,&state)) continue;
+                        HitResult hit;hit.mObject=board.GetTopPlantAt(col,row,TOPPLANT_ONLY_NORMAL_POSITION);hit.mObjectType=OBJECT_TYPE_PLANT;
+                        challenge.MouseDown(board.GridToPixelX(col,row)+40,board.GridToPixelY(col,row)+40,1,&hit);
+                        challenge.MouseMove(board.GridToPixelX(toCol,toRow)+40,board.GridToPixelY(toCol,toRow)+40);
+                        challenge.MouseUp(0,0);moved=true;break;
+                    }
+                }
+            }
+            Require(moved,"Beghouled fixture has no playable move");
+            advance(4'000'000'000);
+            Require(challenge.mChallengeScore>0&&board.mPlants.mSize==40,"Beghouled input failed to score/refill its grid");
+            challenge.mChallengeScore=BEGHOULED_WINNING_SCORE-1;
+            challenge.BeghouledScore(3,2,3,true);
+            Require(board.HasLevelAwardDropped()&&challenge.mChallengeScore==BEGHOULED_WINNING_SCORE,"Beghouled match threshold did not award the level");
+            break;
+        }
+        case GAMEMODE_MINIGAME_BOBSLED_BONANZA:
+            for(int row=0;row<6;++row)
+                Require((board.mIceMinX[row]==400)==(board.mPlantRow[row]!=PLANTROW_POOL),"Bobsled mode did not initialize its four land ice lanes");
+            board.mZombieCountDown=1;advance(100'000'000);
+            Require(board.mZombies.mSize>0,"Bobsled mode failed to spawn its first wave");
+            break;
+        case GAMEMODE_MINIGAME_COLUMN:
+            Require(board.mCurrentWave==9&&board.mSeedBank->GetNumSeedsOnConveyorBelt()==6,"Column mode lost its initial wave or conveyor");
+            plantFromBank(SEED_FLOWERPOT,3,2);
+            Require(board.CountPlantByType(SEED_FLOWERPOT)==5,"Column planting failed to populate five roof rows");
+            plantFromBank(SEED_MELONPULT,3,2);
+            Require(board.CountPlantByType(SEED_MELONPULT)==5,"Column plant propagation did not use the pots in every row");
+            break;
+        case GAMEMODE_MINIGAME_FINAL_BOSS:
+            Require(board.mSeedBank->GetNumSeedsOnConveyorBelt()==4&&board.HasConveyorBeltSeedBank(),"Boss mode lost its initial conveyor cards");
+            challenge.PlayBossEnter();advance(1'000'000'000);
+            Require(board.GetBossZombie()!=nullptr,"Boss mode entry did not create the boss");
+            break;
+        case GAMEMODE_MINIGAME_INVISIGHOUL:
+        {
+            auto* zombie=board.AddZombieInRow(ZOMBIE_NORMAL,1,0);
+            zombie->mX=300;zombie->mRootBindingGeneration=0;
+            auto& render=*app.mDDInterface->mRenderInterface;
+            const auto draw=[&]() {
+                auto* image=render.CreateRenderImage(800,600);
+                {GpuImageDrawScope destination(render,image);Graphics graphics(image);zombie->Draw(0,&graphics);}
+                render.Flush();auto pixels=render.ReadImagePixels(*image).pixels;
+                delete image;return pixels;
+            };
+            const auto hidden=draw();
+            Require(std::none_of(hidden.begin(),hidden.end(),[](unsigned pixel){return pixel!=0;}),"Invisible zombie rendered a body");
+            app.mGameMode=GAMEMODE_ADVENTURE;
+            const auto visible=draw();
+            Require(std::any_of(visible.begin(),visible.end(),[](unsigned pixel){return pixel!=0;}),"Invisible-zombie reference failed to draw the same body");
+            app.mGameMode=GAMEMODE_MINIGAME_INVISIGHOUL;
+            break;
+        }
+        case GAMEMODE_MINIGAME_LAST_STAND:
+            board.mZombieCountDown=0;advance(500'000'000);
+            Require(board.mZombies.mSize==0&&challenge.mChallengeState==STATECHALLENGE_NORMAL,"Last Stand spawned zombies during preparation");
+            Require(!board.mStoreButton->mBtnNoDraw,"Last Stand did not expose Start Onslaught");
+            app.mWidgetManager->mLastMouseX=board.mStoreButton->mX+20;
+            app.mWidgetManager->mLastMouseY=board.mStoreButton->mY+20;
+            board.MouseUp(app.mWidgetManager->mLastMouseX,app.mWidgetManager->mLastMouseY,1);
+            advance(500'000'000);
+            Require(challenge.mChallengeState==STATECHALLENGE_LAST_STAND_ONSLAUGHT&&board.mZombies.mSize>0,"Last Stand button failed to start waves");
+            break;
+        case GAMEMODE_MINIGAME_LITTLE_TROUBLE:
+        {
+            auto* zombie=board.AddZombieInRow(ZOMBIE_NORMAL,1,0);
+            Require(zombie->mScaleZombie==0.5f,"Little Trouble zombie did not use half scale");
+            Require(board.HasConveyorBeltSeedBank(),"Little Trouble lost its conveyor");
+            break;
+        }
+        case GAMEMODE_MINIGAME_POGO_PARTY:
+        case GAMEMODE_MINIGAME_WAR_AND_PEAS:
+        case GAMEMODE_MINIGAME_WAR_AND_PEAS_2:
+        {
+            board.mZombieCountDown=1;advance(100'000'000);
+            Require(board.mZombies.mSize>0,"Special roster mode failed to spawn a wave");
+            Zombie* zombie=nullptr;
+            while(board.IterateZombies(zombie))
+            {
+                const auto type=zombie->mZombieType;
+                Require(mode==GAMEMODE_MINIGAME_POGO_PARTY?type==ZOMBIE_POGO:
+                    type==ZOMBIE_PEA_HEAD||type==ZOMBIE_WALLNUT_HEAD||
+                    (mode==GAMEMODE_MINIGAME_WAR_AND_PEAS_2&&type>=ZOMBIE_JALAPENO_HEAD&&type<=ZOMBIE_TALLNUT_HEAD),
+                    "Special roster spawned an unrelated zombie type");
+            }
+            break;
+        }
+        case GAMEMODE_MINIGAME_PORTAL_COMBAT:
+        {
+            advance(500'000'000);
+            auto* portal=challenge.GetPortalAt(2,0);
+            Require(portal&&challenge.GetOtherPortal(portal),"Portal mode lost its paired square portals");
+            auto* exit=challenge.GetOtherPortal(portal);
+            for(const auto type:{ZOMBIE_NORMAL,ZOMBIE_BALLOON,ZOMBIE_CATAPULT})
+            {
+                auto* zombie=board.AddZombieInRow(type,0,0);
+                zombie->mX=200;zombie->mRootBindingGeneration=0;
+                advance(100'000'000);
+                const auto rect=zombie->GetZombieRect();
+                zombie->mX+=(portal->mGridX*80+25)-(rect.mX+rect.mWidth/2);
+                zombie->mRootBindingGeneration=0;
+                // Bind movement at the entrance before the real teleport.
+                zombie->mVelocityX.bound=false;
+                update(hz?1'000'000'000ULL/hz:1'234'567ULL);
+                challenge.UpdatePortal(portal);
+                Require(zombie->mRow==exit->mGridY&&zombie->mLastPortalX==exit->mGridX,"Portal did not move the zombie to its paired exit");
+                const auto arrivalX=zombie->mX;
+                Require(arrivalX>600&&arrivalX<760,"Zombie did not remain at the portal exit at the end of its teleport update");
+                advance(100'000'000);
+                std::cout<<"Portal zombie type="<<int(type)<<" Hz="<<hz<<" arrivalX="<<arrivalX
+                    <<" nextX="<<zombie->mX<<" row="<<zombie->mRow<<'\n';
+                Require(std::abs(zombie->mX-arrivalX)<15,"Zombie sampled its old movement origin after teleporting");
+                zombie->DieNoLoot(board.mLevelTimeNs,clocks.mVisualTimeNs,board.mLevelTimeNs);
+            }
+            auto* projectile=board.AddProjectile(portal->mGridX*80+55,180,RENDER_LAYER_PROJECTILE,0,PROJECTILE_PEA);
+            const auto projectileRect=projectile->GetProjectileRect();
+            projectile->mX+=(portal->mGridX*80+55)-(projectileRect.mX+projectileRect.mWidth/2);
+            projectile->mPosX=projectile->mX;
+            const float oldY=projectile->mY,oldShadow=projectile->mShadowY;
+            challenge.UpdatePortal(portal);
+            Require(projectile->mRow==exit->mGridY&&projectile->mLastPortalX==exit->mGridX&&
+                projectile->mX==projectile->mPosX&&projectile->mY==projectile->mPosY&&
+                projectile->mY==oldY+100&&projectile->mShadowY==oldShadow+100,
+                "Portal failed to move projectile coordinates, shadow and row together");
+            auto* mower=board.mLawnMowers.DataArrayAlloc();
+            mower->LawnMowerInitialize(0);mower->StartMower();
+            mower->mPosX=portal->mGridX*80+25-45;
+            challenge.UpdatePortal(portal);
+            Require(mower->mRow==exit->mGridY&&mower->mLastPortalX==exit->mGridX&&
+                mower->mPosY==board.GetPosYBasedOnRow(mower->mPosX+40,mower->mRow)+23,
+                "Portal failed to settle the mower on its destination row");
+            break;
+        }
+        case GAMEMODE_MINIGAME_RAINING_SEEDS:
+        {
+            board.mZombieCountDown=100000;advance(1'500'000'000);
+            bool found=false;Coin* coin=nullptr;
+            while(board.IterateCoins(coin)) if(coin->mType==COIN_USABLE_SEED_PACKET)
+            {
+                found=true;
+                Require(coin->mUsableSeedType!=SEED_SUNFLOWER&&coin->mUsableSeedType!=SEED_SUNSHROOM&&
+                    coin->mUsableSeedType!=SEED_UMBRELLA&&!Plant::IsUpgrade(coin->mUsableSeedType),"Raining Seeds produced an excluded card");
+            }
+            Require(found,"Raining Seeds failed to drop a usable card");
+            break;
+        }
+        case GAMEMODE_MINIGAME_SEEING_STARS:
+        {
+            int stars=0;
+            for(int row=0;row<6;++row) for(int col=0;col<9;++col)
+                if(challenge.GetArtChallengeSeed(col,row)==SEED_STARFRUIT)
+                {
+                    Require(challenge.CanPlantAt(col,row,SEED_PEASHOOTER)==PLANTING_NOT_ON_ART,"Seeing Stars allowed the wrong plant on a target");
+                    board.AddPlant(col,row,SEED_STARFRUIT,SEED_NONE);++stars;
+                }
+            Require(stars>0&&board.HasLevelAwardDropped(),"Seeing Stars failed to award its completed pattern");
+            break;
+        }
+        case GAMEMODE_MINIGAME_SLOT_MACHINE:
+        {
+            board.mZombieCountDown=100000;board.mSunCountDown=100000;
+            HitResult hit;hit.mObjectType=OBJECT_TYPE_SLOT_MACHINE_HANDLE;hit.mObject=nullptr;
+            challenge.MouseDown(0,0,1,&hit);
+            Require(board.mSunMoney==25&&challenge.mSlotMachineRollCount==1&&challenge.mChallengeState==STATECHALLENGE_SLOT_MACHINE_ROLLING,
+                "Slot-machine handle did not charge 25 sun and start one roll");
+            advance(8'000'000'000);
+            Require(challenge.mChallengeState==STATECHALLENGE_NORMAL,"Slot machine failed to finish its roll");
+            for(int packet=0;packet<3;++packet)
+                Require(board.mSeedBank->mSeedPackets[packet].mSlotMachineEndTimeNs==0,"Slot reel did not stop");
+            board.mSunMoney=2000;challenge.UpdateSlotMachine();
+            Require(board.HasLevelAwardDropped(),"Slot-machine sun threshold did not award the level");
+            break;
+        }
+        case GAMEMODE_MINIGAME_SPEED:
+        {
+            board.mZombieCountDown=100000;advance(500'000'000);
+            Require(board.mLevelTimeNs==1'000'000'000ULL,"Speed mode did not advance twice per outer update");
+            break;
+        }
+        case GAMEMODE_MINIGAME_WALLNUT_BOWLING:
+        case GAMEMODE_MINIGAME_WALLNUT_BOWLING_2:
+        {
+            Require(challenge.CanPlantAt(3,1,SEED_WALLNUT)==PLANTING_NOT_PASSED_LINE&&
+                challenge.CanPlantAt(2,1,SEED_WALLNUT)==PLANTING_OK,"Bowling placement line was not enforced");
+            plantFromBank(SEED_WALLNUT,2,1);
+            Plant* nut=nullptr;Plant* candidate=nullptr;
+            while(board.IteratePlants(candidate)) if(candidate->mSeedType==SEED_WALLNUT) nut=candidate;
+            Require(nut&&nut->mSeedType==SEED_WALLNUT,"Bowling placement did not create a nut");
+            const float x=nut->mX;advance(500'000'000);
+            Require(nut->mX>x+50,"Bowling mode nut did not roll forwards");
+            break;
+        }
+        case GAMEMODE_MINIGAME_WHACK_A_ZOMBIE:
+        {
+            Require(board.mCursorObject->mCursorType==CURSOR_TYPE_HAMMER,"Whack mode did not select the hammer");
+            board.mSunMoney=25;board.mSeedBank->mY=-1;board.mTutorialState=TUTORIAL_OFF;
+            challenge.Update(0);
+            Require(board.mSeedBank->mY==0 && board.mTutorialState==TUTORIAL_WHACK_A_ZOMBIE_BEFORE_PICK_SEED,
+                "Unified Whack update lost its same-update tutorial trigger or final HUD clamp");
+            board.mSeedBank->mY=-1;board.mPaused=true;
+            challenge.Update(0);
+            Require(board.mSeedBank->mY==-1,"Paused challenge dispatched its seed-bank slide");
+            board.mPaused=false;board.mSeedBank->mY=0;
+            advance(2'500'000'000);
+            Zombie* zombie=nullptr;
+            Require(board.IterateZombies(zombie),"Whack mode did not spawn its first zombie");
+            const auto id=board.ZombieGetID(zombie);
+            const auto rect=zombie->GetZombieRect();
+            HitResult hit;hit.mObjectType=OBJECT_TYPE_NONE;hit.mObject=nullptr;
+            challenge.MouseDown(rect.mX+rect.mWidth/2,rect.mY+rect.mHeight/2+20,1,&hit);
+            Require(!board.ZombieTryToGet(id)||zombie->mDead||zombie->IsDeadOrDying(),"Hammer hit did not defeat an unarmored zombie");
+            break;
+        }
+        case GAMEMODE_MINIGAME_ZOMBIQUARIUM:
+        {
+            Require(board.mZombies.mSize==2,"Aquarium did not start with two fish");
+            HitResult hit;hit.mObjectType=OBJECT_TYPE_NONE;hit.mObject=nullptr;
+            challenge.MouseDown(400,220,1,&hit);
+            Require(board.mSunMoney==45,"Aquarium feed did not charge five sun");
+            board.mSunMoney=150;
+            challenge.ZombiquariumPacketClicked(&board.mSeedBank->mSeedPackets[0]);
+            Require(board.mZombies.mSize==3&&board.mSunMoney==50,"Aquarium did not sell one fish for 100 sun");
+            GridItem* brain=nullptr;
+            while(board.IterateGridItems(brain)) if(brain->mGridItemType==GRIDITEM_BRAIN) break;
+            Require(brain!=nullptr,"Aquarium feeding did not create a brain");
+            const auto brainID=board.mGridItems.DataArrayGetID(brain);
+            Zombie* fish=nullptr;
+            Require(board.IterateZombies(fish),"Aquarium lost its fish");
+            const auto hungryID=board.ZombieGetID(fish);
+            fish->mBodyHealth=150;fish->mX=350;fish->mY=180;fish->mRootBindingGeneration=0;
+            advance(149'999'999);
+            Require(board.mGridItems.DataArrayTryToGet(brainID)&&fish->mBodyHealth<=150,
+                "Aquarium brain was edible before its 150ms age threshold");
+            advance(1);
+            Require(!board.mGridItems.DataArrayTryToGet(brainID)&&fish->mBodyHealth>150,
+                "Aquarium brain born at time zero was not eaten at 150ms");
+            advance(350'000'000);
+            challenge.MouseDown(400,220,1,&hit);
+            brain=nullptr;while(board.IterateGridItems(brain)) if(brain->mGridItemType==GRIDITEM_BRAIN) break;
+            Require(brain!=nullptr,"Aquarium failed to drop a later brain");
+            const auto laterID=board.mGridItems.DataArrayGetID(brain);
+            fish=board.ZombieGet(hungryID);fish->mBodyHealth=150;fish->mX=350;fish->mY=180;
+            fish->mZombiePhase=PHASE_ZOMBIQUARIUM_DRIFT;fish->mPhaseCounter=100;
+            advance(149'999'999);
+            Require(board.mGridItems.DataArrayTryToGet(laterID),"Nonzero brain birth time was mistaken for its age");
+            advance(1);
+            Require(!board.mGridItems.DataArrayTryToGet(laterID)&&fish->mBodyHealth>150,
+                "Later aquarium brain failed its 150ms age threshold");
+            challenge.MouseDown(200,220,1,&hit);
+            brain=nullptr;while(board.IterateGridItems(brain)) if(brain->mGridItemType==GRIDITEM_BRAIN) break;
+            Require(brain!=nullptr,"Aquarium failed to create a pursuit target");
+            const auto pursuitID=board.mGridItems.DataArrayGetID(brain);
+            fish->mBodyHealth=150;fish->mX=600;fish->mY=180;
+            fish->mZombiePhase=PHASE_ZOMBIQUARIUM_DRIFT;fish->mPhaseCounter=100;
+            // Keep the companions non-hungry so the distant pursuit target
+            // cannot be consumed by a different fish before this one arrives.
+            Zombie* companion=nullptr;
+            while(board.IterateZombies(companion)) if(companion!=fish)
+                companion->mBodyHealth=companion->mBodyMaxHealth=1000;
+            for(int slice=0;slice<24&&board.mGridItems.DataArrayTryToGet(pursuitID);++slice) advance(500'000'000);
+            fish=board.ZombieTryToGet(hungryID);
+            std::cout<<"Aquarium pursuit Hz="<<hz<<" brain="<<bool(board.mGridItems.DataArrayTryToGet(pursuitID))
+                <<" fishHealth="<<(fish?fish->mBodyHealth:0)<<" x="<<(fish?fish->mX:0)<<'\n';
+            Require(!board.mGridItems.DataArrayTryToGet(pursuitID)&&fish&&fish->mBodyHealth>150,
+                "Hungry aquarium fish failed to pursue/eat a falling brain and recover health");
+            board.mSunMoney=999;
+            challenge.ZombiquariumPacketClicked(&board.mSeedBank->mSeedPackets[1]);
+            Require(!board.HasLevelAwardDropped()&&board.mSunMoney==999,"Aquarium sold its trophy below the 1000-sun price");
+            board.mSunMoney=1000;
+            challenge.ZombiquariumPacketClicked(&board.mSeedBank->mSeedPackets[1]);
+            Require(board.HasLevelAwardDropped()&&board.mSunMoney==0,"Aquarium trophy purchase failed to charge 1000 sun and win");
+            break;
+        }
+        default:Require(false,"Missing minigame rules case");
+        }
+        std::cout<<"Minigame primary mode="<<mode<<" Hz="<<hz<<" wave="<<board.mCurrentWave
+            <<" sun="<<board.mSunMoney<<" plants="<<board.mPlants.mSize<<" zombies="<<board.mZombies.mSize
+            <<" score="<<challenge.mChallengeScore<<" award="<<board.HasLevelAwardDropped()<<'\n';
+        Require(app.mGameScene==SCENE_PLAYING,"Minigame unexpectedly ended in the loss scene");
+        board.mPaused=true;
+        const auto battle=board.mLevelTimeNs;
+        advance(100'000'000);
+        Require(board.mLevelTimeNs==battle,"Paused minigame continued advancing Board time");
+        }
+        catch(const std::exception& error)
+        {
+            allPassed=false;
+            std::cerr<<"Minigame failed mode="<<mode<<" Hz="<<hz<<" timeNs="<<board.mLevelTimeNs
+                <<" wave="<<board.mCurrentWave<<" message="<<error.what()<<'\n';
+        }
+    }
+    Require(allPassed,"Minigame rules catalog has failed cases; inspect per-mode results");
+    std::cout<<"PASS actual twenty minigame rules: initial state, primary actions and paused Board clock at four schedules\n";
+}
+
+void PuzzleRulesRuntime(TestApp& app)
+{
+    auto& clocks=*app.mEffectSystem->mReanimationHolder;
+    struct Restore {
+        TestApp& app;
+        Board* board=app.mBoard;
+        PlayerInfo* player=app.mPlayerInfo;
+        ZenGarden* garden=app.mZenGarden;
+        GameMode mode=app.mGameMode;
+        GameScenes scene=app.mGameScene;
+        BoardResult result=app.mBoardResult;
+        Sexy::UnsignedTimeCounter counter=app.mAppCounter;
+        unsigned long long interval=Sexy::gUpdateIntervalNs,phase=Sexy::gLegacyTickPhaseNs;
+        int whole=Sexy::gWholeLegacyTicks;
+        double ticks=Sexy::gUpdateTicks,steps=Sexy::gStepsPerLegacyTick;
+        std::int64_t visual=app.mEffectSystem->mReanimationHolder->mVisualTimeNs;
+        std::int64_t battle=app.mEffectSystem->mReanimationHolder->mBattleTimeNs;
+        ~Restore() {
+            app.mBoard=board;app.mPlayerInfo=player;app.mZenGarden=garden;
+            app.mGameMode=mode;app.mGameScene=scene;app.mBoardResult=result;app.mAppCounter=counter;
+            Sexy::gUpdateIntervalNs=interval;Sexy::gLegacyTickPhaseNs=phase;Sexy::gWholeLegacyTicks=whole;
+            Sexy::gUpdateTicks=ticks;Sexy::gStepsPerLegacyTick=steps;
+            app.mEffectSystem->mReanimationHolder->mVisualTimeNs=visual;
+            app.mEffectSystem->mReanimationHolder->mBattleTimeNs=battle;
+        }
+    } restore{app};
+    PlayerInfo profile;ZenGarden garden;
+    profile.mId=42;profile.mLevel=50;profile.mFinishedAdventure=1;
+    app.mPlayerInfo=&profile;app.mZenGarden=&garden;
+    bool allPassed=true;
+    for(int mode=GAMEMODE_PUZZLE_I_ZOMBIE_1;mode<=GAMEMODE_SCARY_POTTER_ENDLESS;++mode)
+    for(const int hz:{100,30,240,0})
+    {
+        std::cout<<"Puzzle begin mode="<<mode<<" Hz="<<hz<<'\n';
+        Sexy::SRand(0xB68A0+mode);Sexy::gLegacyTickPhaseNs=0;
+        clocks.mVisualTimeNs=clocks.mBattleTimeNs=0;app.mAppCounter=0;
+        app.mGameMode=static_cast<GameMode>(mode);app.mGameScene=SCENE_PLAYING;app.mBoardResult=BOARDRESULT_NONE;
+        Board board(&app);
+        try
+        {
+            board.InitLevel();board.StartLevel();
+            auto& challenge=*board.mChallenge;
+            int sequence=0;
+            constexpr std::array<long long,7> jitter{1'234'567,18'765'433,4'000'003,32'333'333,7'891'011,5'432'109,11'111'111};
+            const auto update=[&](unsigned long long step) {
+                Sexy::ApplySimulationStep(step);clocks.mVisualTimeNs+=step;
+                board.Update();app.mAppCounter++;
+                board.ProcessDeleteQueue();app.mEffectSystem->ProcessDeleteQueue();
+            };
+            const auto advance=[&](unsigned long long duration) {
+                unsigned long long elapsed=0;
+                while(elapsed<duration)
+                {
+                    const auto step=std::min<unsigned long long>(hz?1'000'000'000ULL/hz:jitter[sequence++%jitter.size()],duration-elapsed);
+                    update(step);elapsed+=step;
+                }
+            };
+            if(app.IsIZombieLevel())
+            {
+                static constexpr int packets[]{3,3,3,3,4,4,4,6,8,9};
+                const int index=mode-GAMEMODE_PUZZLE_I_ZOMBIE_1;
+                const int limit=index<5?4:index==8?6:5;
+                Require(board.mSunMoney==150&&board.mSeedBank->mNumPackets==packets[index],"I-Zombie initial sun or card count differs from its rule");
+                Require(board.mPlants.mSize>0,"I-Zombie did not populate its defenders");
+                for(int row=0;row<5;++row)
+                {
+                    auto* brain=board.GetGridItemAt(GRIDITEM_IZOMBIE_BRAIN,0,row);
+                    Require(brain&&brain->mBrainHealth==70,"I-Zombie must initialize five 70-bite brains");
+                }
+                Plant* defender=nullptr;
+                while(board.IteratePlants(defender))
+                {
+                    Require(defender->mPlantCol<limit&&defender->mRow<5,"I-Zombie defender is outside its permitted half");
+                    auto* body=app.ReanimationTryToGet(defender->mBodyReanimID);
+                    Require(!body||body->mAnimRate==0,"I-Zombie cardboard defender retained an idle animation rate");
+                    if(defender->mSeedType==SEED_POTATOMINE) Require(defender->mState==STATE_POTATO_ARMED,"I-Zombie potato mine was not armed");
+                }
+                Require(challenge.CanPlantAt(limit-1,2,SEED_ZOMBIE_NORMAL)==PLANTING_NOT_HERE&&
+                    challenge.CanPlantAt(limit,2,SEED_ZOMBIE_NORMAL)==PLANTING_OK&&
+                    challenge.CanPlantAt(limit-1,2,SEED_ZOMBIE_BUNGEE)==PLANTING_OK&&
+                    challenge.CanPlantAt(limit,2,SEED_ZOMBIE_BUNGEE)==PLANTING_NOT_HERE,
+                    "I-Zombie normal/bungee placement sides disagree with the line");
+                board.mSunMoney=0;
+                board.AddCoin(400,200,COIN_SUN,COIN_MOTION_COIN);
+                board.AddCoin(430,200,COIN_SUN,COIN_MOTION_COIN);
+                challenge.IZombieUpdate();
+                Require(app.mBoardResult!=BOARDRESULT_LOST&&!app.GetDialog(DIALOG_GAME_OVER),"I-Zombie ignored uncollected sun when checking a loss");
+                Coin* coin=nullptr;while(board.IterateCoins(coin)) coin->Die();board.ProcessDeleteQueue();
+                board.mSunMoney=150;
+                const auto seed=board.mSeedBank->mSeedPackets[0].mPacketType;
+                Require(seed==SEED_ZOMBIE_NORMAL||seed==SEED_ZOMBIE_IMP,"I-Zombie initial affordable card changed unexpectedly");
+                const auto select=[&]() {
+                    board.mCursorObject->mCursorType=CURSOR_TYPE_PLANT_FROM_BANK;
+                    board.mCursorObject->mType=seed;board.mCursorObject->mImitaterType=SEED_NONE;
+                    board.mCursorObject->mSeedBankIndex=0;
+                };
+                select();
+                board.MouseDownWithPlant(board.GridToPixelX(limit-1,2)+20,board.GridToPixelY(limit-1,2)+20,1);
+                Require(board.mZombies.mSize==0&&board.mSunMoney==150,"I-Zombie charged/spawned on the forbidden side");
+                select();
+                board.MouseDownWithPlant(board.GridToPixelX(limit,2)+20,board.GridToPixelY(limit,2)+20,1);
+                Require(board.mZombies.mSize==1&&board.mSunMoney==100,"I-Zombie did not charge 50 sun for its first affordable card");
+                Zombie* eater=nullptr;Require(board.IterateZombies(eater),"I-Zombie placement produced no zombie");
+                Require(eater->mZombieType==Challenge::IZombieSeedTypeToZombieType(seed)&&eater->mRow==2,"I-Zombie card mapped to the wrong type or row");
+                const int originalHealth=eater->mBodyHealth,originalMaxHealth=eater->mBodyMaxHealth;
+                Plant* shooter=nullptr;Plant* mine=nullptr;defender=nullptr;
+                while(board.IteratePlants(defender))
+                {
+                    if(defender->mSeedType==SEED_PEASHOOTER||defender->mSeedType==SEED_SNOWPEA||
+                        defender->mSeedType==SEED_FUMESHROOM||defender->mSeedType==SEED_CACTUS||
+                        defender->mSeedType==SEED_PUFFSHROOM||defender->mSeedType==SEED_SPLITPEA) shooter=defender;
+                    if(defender->mSeedType==SEED_POTATOMINE) mine=defender;
+                }
+                Require(shooter||mine,"I-Zombie fixture has no ranged or mine defender to exercise");
+                auto* attack=shooter?shooter:mine;
+                defender=nullptr;while(board.IteratePlants(defender)) if(defender!=attack) defender->Die(0,0,0);
+                board.ProcessDeleteQueue();
+                eater->SetRow(attack->mRow);eater->mX=attack->mX+(shooter?140:10);
+                eater->mY=eater->GetPosYBasedOnRow(eater->mRow);eater->mRootBindingGeneration=0;
+                if(shooter)
+                {
+                    eater->mBodyHealth=eater->mBodyMaxHealth=1000000;
+                    eater->mVelX=0;app.ReanimationGet(eater->mBodyReanimID)->ApplyRate(0);
+                    shooter->mNextLaunchTimeNs=300'000'000;shooter->mLaunchWindowStartNs=0;
+                    advance(1'000'000'000);
+                    Require(eater->mBodyHealth<1000000||board.mProjectiles.mSize>0,
+                        "I-Zombie cardboard shooter never attacked its actual target");
+                    eater->RemoveColdEffects(board.mLevelTimeNs);
+                    eater->mBodyHealth=originalHealth;eater->mBodyMaxHealth=originalMaxHealth;
+                }
+                else
+                {
+                    const auto id=board.ZombieGetID(eater);advance(1'000'000'000);
+                    Require(!board.ZombieTryToGet(id)||board.ZombieGet(id)->IsDeadOrDying(),"I-Zombie armed cardboard mine failed to defeat its target");
+                    select();board.MouseDownWithPlant(board.GridToPixelX(limit,2)+20,board.GridToPixelY(limit,2)+20,1);
+                    eater=nullptr;while(board.IterateZombies(eater)) if(!eater->IsDeadOrDying()) break;
+                    Require(eater!=nullptr,"I-Zombie could not buy a replacement after its mine encounter");
+                }
+                std::cout<<"Puzzle defender mode="<<mode<<" Hz="<<hz<<" kind="<<(shooter?"shoot":"mine")<<" observed=1\n";
+                // Isolate the 70-bite rule after verifying the authored formation.
+                defender=nullptr;while(board.IteratePlants(defender)) defender->Die(0,0,0);
+                Projectile* projectile=nullptr;while(board.IterateProjectiles(projectile)) projectile->Die();
+                board.ProcessDeleteQueue();
+                eater->SetRow(2);eater->mY=eater->GetPosYBasedOnRow(2);
+                eater->mX=-70;eater->mRootBindingGeneration=0;eater->mVelocityX.bound=false;
+                advance(2'760'000'000);
+                auto* brain=board.GetGridItemAt(GRIDITEM_IZOMBIE_BRAIN,0,2);
+                std::cout<<"Puzzle bite mode="<<mode<<" Hz="<<hz<<" type="<<int(eater->mZombieType)
+                    <<" health="<<(brain?brain->mBrainHealth:0)<<" score="<<challenge.mChallengeScore<<'\n';
+                Require(brain&&brain->mBrainHealth==1&&challenge.mChallengeScore==0,"I-Zombie brain was not exactly 69 bites into its consumption");
+                advance(40'000'000);
+                Require(!board.GetGridItemAt(GRIDITEM_IZOMBIE_BRAIN,0,2)&&challenge.mChallengeScore==1,
+                    "The seventieth actual bite did not remove and score the brain");
+                for(const int row:{0,1,3,4})
+                {
+                    eater->SetRow(row);eater->mY=eater->GetPosYBasedOnRow(row);eater->mX=-70;
+                    eater->mRootBindingGeneration=0;eater->mVelocityX.bound=false;eater->mVelocityY.bound=false;
+                    advance(2'800'000'000);
+                }
+                Require(challenge.mChallengeScore==5,"I-Zombie failed to score all five actual brains");
+                if(app.IsEndlessIZombie(app.mGameMode))
+                {
+                    Require(board.mNextSurvivalStageCounter>0,"Endless I-Zombie did not schedule the next round");
+                    const auto battle=board.mLevelTimeNs;advance(5'100'000'000);
+                    Require(challenge.mSurvivalStage==1&&challenge.mChallengeScore==0&&board.mLevelTimeNs==battle+5'100'000'000ULL,
+                        "Endless I-Zombie repopulation reset time or failed to start the next round");
+                    Require(board.GetGridItemAt(GRIDITEM_IZOMBIE_BRAIN,0,4)!=nullptr,"Endless I-Zombie did not repopulate its brains");
+                    PlayerInfo loaded;loaded.mId=42;
+                    Require(loaded.LoadDetails()&&loaded.mChallengeRecords[mode]>=1,"Endless I-Zombie failed to persist its completed-round record");
+                }
+                else Require(board.HasLevelAwardDropped(),"Fixed I-Zombie level did not award five scored brains");
+                std::cout<<"Puzzle brains mode="<<mode<<" Hz="<<hz<<" complete=5 nextStage="<<challenge.mSurvivalStage<<'\n';
+                // Rebuild a legal exhausted-funds state, without an old award.
+                eater=nullptr;while(board.IterateZombies(eater)) eater->DieNoLoot(board.mLevelTimeNs,clocks.mVisualTimeNs,board.mLevelTimeNs);
+                coin=nullptr;while(board.IterateCoins(coin)) coin->Die();
+                defender=nullptr;while(board.IteratePlants(defender)) defender->Die(board.mLevelTimeNs,clocks.mVisualTimeNs,board.mLevelTimeNs);
+                GridItem* item=nullptr;while(board.IterateGridItems(item)) item->GridItemDie();
+                board.ProcessDeleteQueue();app.mEffectSystem->ProcessDeleteQueue();
+                board.mLevelAwardSpawned=false;board.mLevelComplete=false;board.mBoardFadeOutCounter=-1;board.mNextSurvivalStageCounter=0;
+                challenge.IZombieInitLevel();board.mSunMoney=0;app.mBoardResult=BOARDRESULT_NONE;
+                challenge.IZombieUpdate();
+                Require(app.mBoardResult==BOARDRESULT_LOST&&app.GetDialog(DIALOG_GAME_OVER),"I-Zombie did not end when no zombie or spendable sun remained");
+            }
+            else
+            {
+                static constexpr int counts[]{25,25,30,35,35,35,30,35,35,35};
+                static constexpr int firstColumns[]{4,3,3,2,2,2,3,2,2,2};
+                const int index=mode-GAMEMODE_SCARY_POTTER_1;
+                Require(board.StageIsNight()&&board.mSunMoney==0&&board.mSeedBank->mNumPackets==1&&
+                    board.mSeedBank->mSeedPackets[0].mPacketType==SEED_CHERRYBOMB,"Vasebreaker background, starting sun or rescue card changed");
+                Require(challenge.ScaryPotterCountPots()==counts[index]&&!challenge.ScaryPotterIsCompleted(),"Vasebreaker initial pot count or completion rule is wrong");
+                std::vector<unsigned int> seeds,zombies;
+                std::array<bool,54> occupied{};
+                GridItem* pot=nullptr;int green=0;
+                while(board.IterateGridItems(pot)) if(pot->mGridItemType==GRIDITEM_SCARY_POT)
+                {
+                    Require(pot->mGridX>=firstColumns[index]&&pot->mGridX<=(index==1?7:8)&&pot->mGridY<5,
+                        "Vasebreaker placed a pot in an excluded cell");
+                    const int cell=pot->mGridY*9+pot->mGridX;
+                    Require(!occupied[cell],"Vasebreaker placed two pots on one cell");occupied[cell]=true;
+                    if(pot->mGridItemState==GRIDITEM_STATE_SCARY_POT_LEAF)
+                    {++green;Require(pot->mScaryPotType==SCARYPOT_SEED,"Green pot did not contain a plant");}
+                    const auto id=board.mGridItems.DataArrayGetID(pot);
+                    if(pot->mScaryPotType==SCARYPOT_ZOMBIE) zombies.push_back(id);else seeds.push_back(id);
+                }
+                Require(green==2&&!zombies.empty(),"Vasebreaker lost its two green pots or its zombie payloads");
+                seeds.insert(seeds.end(),zombies.begin(),zombies.end());
+                ZombieID lastEnemy=ZOMBIEID_NULL;
+                bool plantedFromCoin=false;
+                for(std::size_t opened=0;opened<seeds.size();++opened)
+                {
+                    pot=board.mGridItems.DataArrayTryToGet(seeds[opened]);
+                    Require(pot!=nullptr,"Vasebreaker pot disappeared before its input");
+                    const auto payload=pot->mScaryPotType;
+                    const auto seed=pot->mSeedType;const auto zombie=pot->mZombieType;
+                    const int sunCount=pot->mSunCount,row=pot->mGridY,col=pot->mGridX;
+                    std::vector<unsigned int> oldCoins;
+                    Coin* coin=nullptr;while(board.IterateCoins(coin)) oldCoins.push_back(board.mCoins.DataArrayGetID(coin));
+                    HitResult hit;hit.mObjectType=OBJECT_TYPE_SCARY_POT;hit.mObject=pot;
+                    challenge.MouseDown(board.GridToPixelX(col,row)+40,board.GridToPixelY(col,row)+40,1,&hit);
+                    Require(challenge.mChallengeState==STATECHALLENGE_SCARY_POTTER_MALLETING,"Vase click did not start the real hammer animation");
+                    for(int frame=0;frame<2*(hz?hz:100)&&board.mGridItems.DataArrayTryToGet(seeds[opened]);++frame)
+                        update(hz?1'000'000'000ULL/hz:static_cast<unsigned long long>(jitter[sequence++%jitter.size()]));
+                    Require(!board.mGridItems.DataArrayTryToGet(seeds[opened])&&challenge.mChallengeState==STATECHALLENGE_NORMAL,
+                        "Vase hammer never released its payload and returned to idle");
+                    if(payload==SCARYPOT_ZOMBIE)
+                    {
+                        Zombie* enemy=nullptr;Require(board.IterateZombies(enemy),"Zombie vase produced no enemy");
+                        Require(enemy->mZombieType==zombie&&enemy->mRow==row&&std::abs(enemy->mX-board.GridToPixelX(col,row))<1,
+                            "Vase zombie type, row or birth position differs from its contents");
+                        if(opened+1==seeds.size()) lastEnemy=board.ZombieGetID(enemy);
+                        else {enemy->DieNoLoot(board.mLevelTimeNs,clocks.mVisualTimeNs,board.mLevelTimeNs);board.ProcessDeleteQueue();}
+                    }
+                    else
+                    {
+                        int produced=0;Coin* usable=nullptr;coin=nullptr;
+                        while(board.IterateCoins(coin)) if(std::find(oldCoins.begin(),oldCoins.end(),board.mCoins.DataArrayGetID(coin))==oldCoins.end())
+                        {
+                            ++produced;
+                            Require(payload==SCARYPOT_SEED?coin->mType==COIN_USABLE_SEED_PACKET&&coin->mUsableSeedType==seed:coin->mType==COIN_SUN,
+                                "Vase released a different plant/sun payload");
+                            if(payload==SCARYPOT_SEED) usable=coin;
+                        }
+                        Require(produced==(payload==SCARYPOT_SEED?1:sunCount),"Vase released the wrong number of payload coins");
+                        if(usable&&!plantedFromCoin)
+                        {
+                            usable->MouseDown(0,0,1);
+                            Require(board.mCursorObject->mCursorType==CURSOR_TYPE_PLANT_FROM_USABLE_COIN&&board.mCursorObject->mType==seed,
+                                "Vase plant card could not be picked up");
+                            const int sun=board.mSunMoney;
+                            board.MouseDownWithPlant(board.GridToPixelX(0,0)+20,board.GridToPixelY(0,0)+20,1);
+                            auto* planted=board.GetTopPlantAt(0,0,TOPPLANT_ONLY_NORMAL_POSITION);
+                            Require(planted&&planted->mSeedType==seed&&board.mSunMoney==sun,"Vase plant card could not be planted without charging sun");
+                            plantedFromCoin=true;
+                        }
+                    }
+                }
+                Require(plantedFromCoin&&challenge.ScaryPotterCountPots()==0&&!challenge.ScaryPotterIsCompleted()&&lastEnemy,
+                    "Vasebreaker incorrectly finished with its last enemy still alive");
+                board.ZombieGet(lastEnemy)->DieNoLoot(board.mLevelTimeNs,clocks.mVisualTimeNs,board.mLevelTimeNs);
+                board.ProcessDeleteQueue();advance(100'000'000);
+                Require(challenge.ScaryPotterIsCompleted(),"Vasebreaker did not finish after pots and enemies were gone");
+                if(app.IsEndlessScaryPotter(app.mGameMode))
+                {
+                    Require(board.mNextSurvivalStageCounter>0,"Endless Vasebreaker did not schedule its next round");
+                    advance(5'100'000'000);
+                    Require(challenge.mSurvivalStage==1&&challenge.ScaryPotterCountPots()==35,"Endless Vasebreaker did not repopulate the next round");
+                    PlayerInfo loaded;loaded.mId=42;
+                    Require(loaded.LoadDetails()&&loaded.mChallengeRecords[mode]>=1,"Endless Vasebreaker failed to persist its streak");
+                }
+                else Require(board.HasLevelAwardDropped(),"Fixed Vasebreaker did not award its completed board");
+                std::cout<<"Puzzle pots mode="<<mode<<" Hz="<<hz<<" opened="<<seeds.size()<<" nextStage="<<challenge.mSurvivalStage<<'\n';
+            }
+            app.KillDialog(DIALOG_GAME_OVER);app.ProcessSafeDeleteList();
+            std::cout<<"Puzzle primary mode="<<mode<<" Hz="<<hz<<" stage="<<challenge.mSurvivalStage
+                <<" award="<<board.HasLevelAwardDropped()<<" result="<<int(app.mBoardResult)<<'\n';
+        }
+        catch(const std::exception& error)
+        {
+            allPassed=false;
+            std::cerr<<"Puzzle failed mode="<<mode<<" Hz="<<hz<<" timeNs="<<board.mLevelTimeNs
+                <<" message="<<error.what()<<'\n';
+            app.KillDialog(DIALOG_GAME_OVER);app.ProcessSafeDeleteList();
+        }
+    }
+    // Construct later rounds explicitly: these check authored endless layouts
+    // and the reward boundary, not a claim that the fixture solved 80 rounds.
+    for(const auto mode:{GAMEMODE_PUZZLE_I_ZOMBIE_ENDLESS,GAMEMODE_SCARY_POTTER_ENDLESS})
+    for(const int stage:{0,1,2,8,9,10,19,79,80})
+    {
+        Sexy::SRand(0xE380+int(mode)*83+stage);
+        clocks.mVisualTimeNs=clocks.mBattleTimeNs=0;app.mAppCounter=0;
+        app.mGameMode=mode;app.mGameScene=SCENE_PLAYING;app.mBoardResult=BOARDRESULT_NONE;
+        Board board(&app);
+        board.mChallenge->mSurvivalStage=stage;
+        board.InitLevel();board.StartLevel();
+        auto& challenge=*board.mChallenge;
+        const bool expectedAward=(stage+1)%(mode==GAMEMODE_PUZZLE_I_ZOMBIE_ENDLESS?3:10)==0;
+        Require(bool(challenge.PuzzleIsAwardStage())==expectedAward,"Endless puzzle reward cadence changed");
+        int gargantuars=0,puffshrooms=0,sunflowers=0;
+        if(mode==GAMEMODE_SCARY_POTTER_ENDLESS)
+        {
+            Require(challenge.ScaryPotterCountPots()==35,"Later endless Vasebreaker round lost a pot");
+            GridItem* pot=nullptr;
+            while(board.IterateGridItems(pot)) if(pot->mGridItemType==GRIDITEM_SCARY_POT)
+            {
+                Require(pot->mGridX>=2&&pot->mGridX<=8&&pot->mGridY>=0&&pot->mGridY<5,
+                    "Later endless Vasebreaker round has an illegal cell");
+                gargantuars+=pot->mScaryPotType==SCARYPOT_ZOMBIE&&pot->mZombieType==ZOMBIE_GARGANTUAR;
+            }
+            Require(gargantuars==1+std::min(stage/10,8),"Endless Vasebreaker giant count did not follow its stage cap");
+        }
+        else
+        {
+            Plant* plant=nullptr;
+            while(board.IteratePlants(plant))
+            {
+                Require(plant->mPlantCol>=0&&plant->mPlantCol<5&&plant->mRow>=0&&plant->mRow<5,
+                    "Later endless I-Zombie defender is outside its half");
+                puffshrooms+=plant->mSeedType==SEED_PUFFSHROOM;
+                sunflowers+=plant->mSeedType==SEED_SUNFLOWER;
+            }
+            Require(puffshrooms+sunflowers>=8,"Endless I-Zombie lost its eight baseline sun/puff plants");
+            if(stage==0) Require(puffshrooms==0,"First endless I-Zombie round has a puffshroom");
+            if(stage==1) Require(puffshrooms==1,"Second endless I-Zombie round must have one puffshroom");
+        }
+        const int coinsBefore=board.mCoins.mSize;
+        challenge.PuzzlePhaseComplete(2,2);
+        Require(expectedAward?board.mCoins.mSize==coinsBefore+1&&board.mNextSurvivalStageCounter==0:
+            board.mCoins.mSize==coinsBefore&&board.mNextSurvivalStageCounter>0,
+            "Endless puzzle completion did not follow its reward/nonreward branch");
+        std::cout<<"Puzzle endless mode="<<int(mode)<<" stage="<<stage<<" reward="<<expectedAward
+            <<" giants="<<gargantuars<<" puffs="<<puffshrooms<<" sunflowers="<<sunflowers<<'\n';
+    }
+    Require(allPassed,"Puzzle rules catalog has failed cases; inspect per-mode results");
+    std::cout<<"PASS actual twenty puzzle rules: formations, inputs, payloads, brain bites, terminal rules and endless repopulation at four schedules\n";
+}
+
+void SurvivalRulesRuntime(TestApp& app)
+{
+    auto& clocks=*app.mEffectSystem->mReanimationHolder;
+    struct Restore {
+        TestApp& app;
+        Board* board=app.mBoard;
+        PlayerInfo* player=app.mPlayerInfo;
+        ZenGarden* garden=app.mZenGarden;
+        PoolEffect* pool=app.mPoolEffect;
+        GameMode mode=app.mGameMode;
+        GameScenes scene=app.mGameScene;
+        BoardResult result=app.mBoardResult;
+        Sexy::UnsignedTimeCounter counter=app.mAppCounter;
+        unsigned long long interval=Sexy::gUpdateIntervalNs,phase=Sexy::gLegacyTickPhaseNs;
+        int whole=Sexy::gWholeLegacyTicks;
+        double ticks=Sexy::gUpdateTicks,steps=Sexy::gStepsPerLegacyTick;
+        std::int64_t visual=app.mEffectSystem->mReanimationHolder->mVisualTimeNs;
+        std::int64_t battle=app.mEffectSystem->mReanimationHolder->mBattleTimeNs;
+        ~Restore() {
+            app.mBoard=board;app.mPlayerInfo=player;app.mZenGarden=garden;app.mPoolEffect=pool;
+            app.mGameMode=mode;app.mGameScene=scene;app.mBoardResult=result;app.mAppCounter=counter;
+            Sexy::gUpdateIntervalNs=interval;Sexy::gLegacyTickPhaseNs=phase;Sexy::gWholeLegacyTicks=whole;
+            Sexy::gUpdateTicks=ticks;Sexy::gStepsPerLegacyTick=steps;
+            app.mEffectSystem->mReanimationHolder->mVisualTimeNs=visual;
+            app.mEffectSystem->mReanimationHolder->mBattleTimeNs=battle;
+        }
+    } restore{app};
+    PlayerInfo profile;ZenGarden garden;
+    profile.mId=42;profile.mLevel=50;profile.mFinishedAdventure=1;
+    app.mPlayerInfo=&profile;app.mZenGarden=&garden;
+    Require(app.mSeedChooserScreen==nullptr,"Survival fixture requires no preexisting chooser");
+    bool allPassed=true;
+    for(int mode=GAMEMODE_SURVIVAL_ENDLESS_STAGE_1;mode<=GAMEMODE_SURVIVAL_NORMAL_STAGE_5;++mode)
+    for(const int hz:{100,30,240,0})
+    {
+        std::cout<<"Survival begin mode="<<mode<<" Hz="<<hz<<'\n';
+        Sexy::SRand(0xC62E0+mode);Sexy::gLegacyTickPhaseNs=0;
+        clocks.mVisualTimeNs=clocks.mBattleTimeNs=0;app.mAppCounter=0;
+        app.mGameMode=static_cast<GameMode>(mode);app.mGameScene=SCENE_PLAYING;app.mBoardResult=BOARDRESULT_NONE;
+        PoolEffect pool;pool.PoolEffectInitialize();app.mPoolEffect=&pool;
+        Board board(&app);
+        try
+        {
+            board.InitLevel();board.StartLevel();
+            auto& challenge=*board.mChallenge;
+            const int background=(mode-GAMEMODE_SURVIVAL_ENDLESS_STAGE_1)%5;
+            const bool normal=app.IsSurvivalNormal(app.mGameMode),endless=app.IsSurvivalEndless(app.mGameMode);
+            Require(int(board.mBackground)==background&&board.mSunMoney==50&&board.mNumWaves==(normal?10:20),
+                "Survival initial background, sun or wave count differs from its rule");
+            Require(board.IsSurvivalStageWithRepick()&&!board.IsFinalSurvivalStage(),"Survival first round cannot be a final stage");
+            // InitLevel precedes normal seed selection. Supply a legal chosen
+            // bank before exercising the real repick constructor, which saves
+            // each chosen seed's cooldown into its authored seed slot.
+            constexpr std::array<SeedType,10> chosen{SEED_SUNFLOWER,SEED_PEASHOOTER,SEED_WALLNUT,SEED_FLOWERPOT,
+                SEED_POTATOMINE,SEED_SNOWPEA,SEED_CHERRYBOMB,SEED_REPEATER,SEED_PUFFSHROOM,SEED_SQUASH};
+            for(int packet=0;packet<board.mSeedBank->mNumPackets;++packet)
+                board.mSeedBank->mSeedPackets[packet].SetPacketType(chosen[packet],SEED_NONE);
+            int sequence=0;
+            constexpr std::array<long long,7> jitter{1'234'567,18'765'433,4'000'003,32'333'333,7'891'011,5'432'109,11'111'111};
+            const auto update=[&](unsigned long long step) {
+                Sexy::ApplySimulationStep(step);clocks.mVisualTimeNs+=step;
+                board.Update();app.mAppCounter++;
+                board.ProcessDeleteQueue();app.mEffectSystem->ProcessDeleteQueue();
+            };
+            const auto advance=[&](unsigned long long duration) {
+                unsigned long long elapsed=0;
+                while(elapsed<duration) {
+                    const auto step=std::min<unsigned long long>(hz?1'000'000'000ULL/hz:jitter[sequence++%jitter.size()],duration-elapsed);
+                    update(step);elapsed+=step;
+                }
+            };
+            const auto removeEnemies=[&]() {
+                Zombie* enemy=nullptr;
+                while(board.IterateZombies(enemy)) if(!enemy->mDead)
+                    enemy->DieNoLoot(board.mLevelTimeNs,clocks.mVisualTimeNs,board.mLevelTimeNs);
+                board.ProcessDeleteQueue();app.mEffectSystem->ProcessDeleteQueue();
+            };
+            const auto validateWaves=[&]() {
+                int scheduled=0;
+                for(int wave=0;wave<board.mNumWaves;++wave)
+                for(int slot=0;slot<MAX_ZOMBIES_IN_WAVE;++slot) {
+                    const auto type=board.mZombiesInWave[wave][slot];
+                    if(type==ZOMBIE_INVALID) break;
+                    ++scheduled;
+                    Require(type>=0&&type<NUM_ZOMBIE_TYPES&&(board.mZombieAllowed[type]||
+                        (type==ZOMBIE_FLAG&&board.IsFlagWave(wave))),"Survival wave contains an unselected zombie type");
+                    Require(board.StageHasPool()||!board.IsZombieTypePoolOnly(type),"Survival wave put a water-only zombie on dry land");
+                    Require(!board.StageHasRoof()||(type!=ZOMBIE_DIGGER&&type!=ZOMBIE_DANCER),"Roof survival selected an incompatible zombie");
+                    Require(board.GetSurvivalFlagsCompleted()>=10||type!=ZOMBIE_REDEYE_GARGANTUAR,"Survival scheduled red-eye before ten completed flags");
+                }
+                Require(scheduled>=board.mNumWaves,"Survival has an empty scheduled campaign");
+            };
+            validateWaves();
+            profile.mPurchases[STORE_ITEM_ROOF_CLEANER]=0;
+            board.mCutScene->PlaceLawnItems();
+            if(board.StageHasRoof()) {
+                Require(board.mLawnMowers.mSize==0,"Roof survival supplied unpurchased cleaners");
+                profile.mPurchases[STORE_ITEM_ROOF_CLEANER]=1;
+                board.InitLawnMowers();
+            }
+            const int mowerCount=board.mLawnMowers.mSize;
+            Require(mowerCount==(board.StageHasPool()?6:5),"Survival did not initialize one mower per row");
+            if(board.StageHasRoof()&&!board.GetFlowerPotAt(1,0)) board.AddPlant(1,0,SEED_FLOWERPOT,SEED_NONE);
+            auto* retained=board.AddPlant(1,0,SEED_PEASHOOTER,SEED_NONE);
+            const auto retainedID=board.mPlants.DataArrayGetID(retained);
+            retained->mNextLaunchTimeNs=100'000'000'000LL;
+            board.mSunMoney=375;
+            auto* retainedBody=app.ReanimationGet(retained->mBodyReanimID);
+            board.mZombieCountDown=1;advance(100'000'000);
+            Require(board.mCurrentWave==1&&board.mZombies.mSize>0,"Survival did not spawn its first scheduled wave");
+            Zombie* enemy=nullptr;
+            while(board.IterateZombies(enemy)) Require(enemy->mRow>=0&&enemy->mRow<(board.StageHasPool()?6:5),"Survival spawned a zombie outside its rows");
+            removeEnemies();
+            // Skip intermediate combat, but use the actual last-wave spawn and
+            // death callbacks to enter the five-second repick sequence.
+            board.mCurrentWave=board.mNumWaves-1;board.SpawnZombieWave();
+            Require(board.mCurrentWave==board.mNumWaves&&board.mZombies.mSize>0,"Survival final wave was not generated");
+            auto& cooling=board.mSeedBank->mSeedPackets[0];
+            cooling.mRefreshing=true;cooling.mActive=false;
+            cooling.mRefreshStartTimeNs=static_cast<std::int64_t>(board.mLevelTimeNs);
+            cooling.mRefreshTime=Plant::GetRefreshTime(cooling.mPacketType,cooling.mImitaterType);
+            removeEnemies();
+            Require(board.mNextSurvivalStageCounter>0&&!board.mLevelComplete,"Survival did not enter its round-end wait");
+            const auto waitStart=board.mLevelTimeNs;
+            advance(500'000'000);
+            Require(board.mLevelTimeNs==waitStart+500'000'000ULL&&!board.mLevelComplete,
+                "Survival froze Board time during the round-end banner");
+            while(!board.mLevelComplete&&board.mLevelTimeNs-waitStart<6'000'000'000ULL)
+                update(hz?1'000'000'000ULL/hz:jitter[sequence++%jitter.size()]);
+            Require(board.mLevelComplete,"Survival round-end wait never completed");
+            Require(board.mLevelTimeNs-waitStart>=5'000'000'000ULL&&board.mLevelTimeNs-waitStart<5'040'000'000ULL,
+                "Survival round-end banner did not retain its five-second duration");
+            const auto beforeRepick=board.mLevelTimeNs;
+            const auto cooldownStart=cooling.mRefreshStartTimeNs;
+            app.CheckForGameEnd();
+            Require(challenge.mSurvivalStage==1&&app.mGameScene==SCENE_LEVEL_INTRO&&app.mSeedChooserScreen&&
+                !board.mLevelComplete&&board.mLevelTimeNs==beforeRepick,"Actual survival completion did not create the next chooser on the same Board");
+            Require(board.mPlants.DataArrayTryToGet(retainedID)==retained&&board.mSunMoney==375&&board.mLawnMowers.mSize==mowerCount,
+                "Survival repick lost retained plants, sun or mowers");
+            const auto phase=retainedBody->SamplePlayback().phaseNs;
+            const auto deadline=retained->mNextLaunchTimeNs;
+            board.mDrawCount=0;
+            advance(200'000'000);
+            Require(board.mLevelTimeNs==beforeRepick&&retainedBody->SamplePlayback().phaseNs==phase&&retained->mNextLaunchTimeNs==deadline,
+                "Survival chooser advanced retained actor time");
+            validateWaves();
+            auto* chooser=app.mSeedChooserScreen;
+            Require(board.mSeedBank->mNumPackets==board.GetNumSeedsInBank(),"Repick bank did not restore its selectable capacity");
+            const int capacity=board.mSeedBank->mNumPackets;
+            for(int packet=0;packet<capacity;++packet) chooser->ClickedSeedInChooser(chooser->mChosenSeeds[chosen[packet]]);
+            // The real application updates the chooser as a separate Widget.
+            // Keep Board's scene held while its Visual-driven cards land.
+            unsigned long long choosing=0;
+            while(choosing<300'000'000ULL) {
+                const auto step=std::min<unsigned long long>(hz?1'000'000'000ULL/hz:jitter[sequence++%jitter.size()],300'000'000ULL-choosing);
+                update(step);chooser->Update();choosing+=step;
+            }
+            Require(chooser->mSeedsInBank==capacity&&chooser->mSeedsInFlight==0,"Survival repick cards did not finish their real flights");
+            chooser->CloseSeedChooser();
+            Require(cooling.mPacketType==chosen[0]&&cooling.mRefreshing&&cooling.mRefreshStartTimeNs==cooldownStart&&
+                board.mLevelTimeNs==beforeRepick,"Survival repick did not preserve the existing cooldown in the held Board epoch");
+            app.StartPlaying();app.ProcessSafeDeleteList();
+            advance(200'000'000);
+            Require(board.mLevelTimeNs==beforeRepick+200'000'000ULL&&retainedBody->SamplePlayback().phaseNs!=phase,
+                "Survival retained actor did not resume with Board time");
+            board.mPaused=true;const auto pause=board.mLevelTimeNs;advance(200'000'000);board.mPaused=false;
+            Require(board.mLevelTimeNs==pause,"Survival pause advanced Board time");
+            if(!endless) {
+                challenge.mSurvivalStage=3;
+                Require(!board.IsFinalSurvivalStage(),"Survival ended before its fifth stage");
+                challenge.mSurvivalStage=4;board.InitZombieWaves();
+                Require(board.IsFinalSurvivalStage()&&!board.IsSurvivalStageWithRepick(),"Survival did not end at five/ten flags");
+                board.mCurrentWave=board.mNumWaves-1;board.SpawnZombieWave();removeEnemies();
+                Require(board.HasLevelAwardDropped()&&board.mNextSurvivalStageCounter==0&&app.mBoardResult==BOARDRESULT_WON,
+                    "Final survival stage attempted another chooser instead of an award");
+            }
+            else {
+                challenge.mSurvivalStage=5;board.InitZombieWaves();validateWaves();
+                Require(!board.IsFinalSurvivalStage()&&board.IsSurvivalStageWithRepick(),"Endless survival acquired a final stage");
+            }
+            std::cout<<"Survival primary mode="<<mode<<" Hz="<<hz<<" background="<<background
+                <<" waves="<<board.mNumWaves<<" retained=1 repick=1 final="<<!endless<<'\n';
+        }
+        catch(const std::exception& error) {
+            allPassed=false;
+            std::cerr<<"Survival failed mode="<<mode<<" Hz="<<hz<<" timeNs="<<board.mLevelTimeNs<<" message="<<error.what()<<'\n';
+        }
+        app.KillSeedChooserScreen();app.ProcessSafeDeleteList();
+    }
+    Require(allPassed,"Survival rules have failed cases; inspect per-mode output");
+    std::cout<<"PASS actual fifteen survival rules: first/final waves, repick callbacks, retained actors, pause and fixed/endless boundaries at four schedules\n";
+}
+
+void AdventureRulesRuntime(TestApp& app)
+{
+    auto& clocks=*app.mEffectSystem->mReanimationHolder;
+    struct Restore {
+        TestApp& app;
+        Board* board=app.mBoard;
+        PlayerInfo* player=app.mPlayerInfo;
+        ZenGarden* garden=app.mZenGarden;
+        PoolEffect* pool=app.mPoolEffect;
+        GameMode mode=app.mGameMode;
+        GameScenes scene=app.mGameScene;
+        BoardResult result=app.mBoardResult;
+        Sexy::UnsignedTimeCounter counter=app.mAppCounter;
+        unsigned long long interval=Sexy::gUpdateIntervalNs,phase=Sexy::gLegacyTickPhaseNs;
+        int whole=Sexy::gWholeLegacyTicks;
+        double ticks=Sexy::gUpdateTicks,steps=Sexy::gStepsPerLegacyTick;
+        std::int64_t visual=app.mEffectSystem->mReanimationHolder->mVisualTimeNs;
+        std::int64_t battle=app.mEffectSystem->mReanimationHolder->mBattleTimeNs;
+        ~Restore() {
+            app.mBoard=board;app.mPlayerInfo=player;app.mZenGarden=garden;app.mPoolEffect=pool;
+            app.mGameMode=mode;app.mGameScene=scene;app.mBoardResult=result;app.mAppCounter=counter;
+            Sexy::gUpdateIntervalNs=interval;Sexy::gLegacyTickPhaseNs=phase;Sexy::gWholeLegacyTicks=whole;
+            Sexy::gUpdateTicks=ticks;Sexy::gStepsPerLegacyTick=steps;
+            app.mEffectSystem->mReanimationHolder->mVisualTimeNs=visual;
+            app.mEffectSystem->mReanimationHolder->mBattleTimeNs=battle;
+        }
+    } restore{app};
+    PlayerInfo profile;ZenGarden garden;
+    profile.mId=43;app.mPlayerInfo=&profile;app.mZenGarden=&garden;
+    static constexpr std::array<int,50> firstWaves{
+        4,6,8,10,8,10,20,10,20,20,10,20,10,20,10,10,20,10,20,20,
+        10,20,20,30,20,20,30,20,30,30,10,20,10,20,20,10,20,10,20,20,
+        10,20,20,30,20,20,30,20,30,30};
+    bool allPassed=true;
+    for(const int replay:{0,1})
+    for(int level=1;level<=50;++level)
+    for(const int hz:{100,30,240,0})
+    {
+        std::cout<<"Adventure begin level="<<level<<" replay="<<replay<<" Hz="<<hz<<'\n';
+        Sexy::SRand(0xA30C0+level+replay*100);Sexy::gLegacyTickPhaseNs=0;
+        profile.mLevel=level;profile.mFinishedAdventure=replay;profile.mPurchases[STORE_ITEM_ROOF_CLEANER]=0;
+        clocks.mVisualTimeNs=clocks.mBattleTimeNs=0;app.mAppCounter=0;
+        app.mGameMode=GAMEMODE_ADVENTURE;app.mGameScene=SCENE_LEVEL_INTRO;app.mBoardResult=BOARDRESULT_NONE;
+        PoolEffect pool;pool.PoolEffectInitialize();app.mPoolEffect=&pool;
+        Board board(&app);
+        try
+        {
+            board.InitLevel();
+            const int background=level==35?int(BACKGROUND_2_NIGHT):level==50?int(BACKGROUND_6_BOSS):(level-1)/10;
+            const bool conveyor=level==5||level==10||level==20||level==25||level==30||level==40||level==45||level==50;
+            const bool miniBoss=level==10||level==20||level==30;
+            const int expectedWaves=level==15?8:replay&&!miniBoss?(firstWaves[level-1]<10?20:firstWaves[level-1]+10):firstWaves[level-1];
+            Require(board.mLevel==level&&int(board.mBackground)==background&&board.mNumWaves==expectedWaves,
+                "Adventure level, background or wave count differs from its original rule");
+            Require(board.HasConveyorBeltSeedBank()==conveyor&&board.ChooseSeedsOnCurrentLevel()==(!conveyor&&level!=15&&level!=35&&(replay||level>7)),
+                "Adventure chose the wrong conveyor/chooser route");
+            const int expectedSun=level==15||level==35?0:!replay&&level==1?150:50;
+            Require(board.mSunMoney==expectedSun,"Adventure starting sun changed");
+            int rows=0;for(int row=0;row<6;++row) rows+=board.mPlantRow[row]!=PLANTROW_DIRT;
+            const int expectedRows=!replay&&level==1?1:!replay&&(level==2||level==3)?3:
+                background==BACKGROUND_3_POOL||background==BACKGROUND_4_FOG?6:5;
+            Require(rows==expectedRows,"Adventure active rows do not match its lawn stage");
+            if(level==15) Require(board.GetGraveStonesCount()==9&&board.mSeedBank->mNumPackets==3&&
+                board.mSeedBank->mSeedPackets[2].mPacketType==SEED_CHERRYBOMB,"Adventure Whack lost its graves or cherry rescue card");
+            if(level==35) Require(board.mChallenge->ScaryPotterCountPots()==15&&board.mSeedBank->mNumPackets==1,
+                "Adventure Vasebreaker first board is not its fifteen-vase tutorial layout");
+            if(level>=11&&level<=20&&level!=15) Require(board.GetGraveStonesCount()>0,"Night adventure did not initialize its graves");
+            // Normal chooser input is covered independently. This catalog
+            // supplies legal chosen seeds before entering each combat fixture.
+            if(!conveyor&&level!=15&&level!=35)
+                for(int packet=0;packet<board.mSeedBank->mNumPackets;++packet)
+                    board.mSeedBank->mSeedPackets[packet].SetPacketType(static_cast<SeedType>(packet),SEED_NONE);
+            int sequence=0;
+            constexpr std::array<long long,7> jitter{1'234'567,18'765'433,4'000'003,32'333'333,7'891'011,5'432'109,11'111'111};
+            const auto update=[&](unsigned long long step) {
+                Sexy::ApplySimulationStep(step);clocks.mVisualTimeNs+=step;
+                board.Update();app.mAppCounter++;
+                board.ProcessDeleteQueue();app.mEffectSystem->ProcessDeleteQueue();
+            };
+            const auto advance=[&](unsigned long long duration) {
+                unsigned long long elapsed=0;
+                while(elapsed<duration) {
+                    const auto step=std::min<unsigned long long>(hz?1'000'000'000ULL/hz:jitter[sequence++%jitter.size()],duration-elapsed);
+                    update(step);elapsed+=step;
+                }
+            };
+            board.mDrawCount=0;advance(100'000'000);
+            Require(board.mLevelTimeNs==0&&board.mTutorialState==TUTORIAL_OFF,
+                "Adventure intro advanced battle time or launched its first tutorial early");
+            app.mGameScene=SCENE_PLAYING;
+            // The real intro creates Zomboss before the conveyor is live.
+            if(level==50) board.mChallenge->PlayBossEnter();
+            board.StartLevel();advance(100'000'000);
+            Require(board.mLevelTimeNs==100'000'000ULL,"Adventure did not start its Board clock with combat");
+            const auto plantFromBank=[&](int packet,int col,int row) {
+                auto& card=board.mSeedBank->mSeedPackets[packet];
+                const auto seed=card.mPacketType;
+                card.MouseDown(0,0,1);
+                Require(board.mCursorObject->mCursorType==CURSOR_TYPE_PLANT_FROM_BANK&&board.mCursorObject->mType==seed,
+                    "Adventure tutorial could not pick up its real seed packet");
+                const int sun=board.mSunMoney,cost=board.GetCurrentPlantCost(seed,SEED_NONE);
+                board.MouseDownWithPlant(board.GridToPixelX(col,row)+20,board.GridToPixelY(col,row)+20,1);
+                auto* planted=board.GetTopPlantAt(col,row,TOPPLANT_ONLY_NORMAL_POSITION);
+                Require(planted&&planted->mSeedType==seed&&board.mSunMoney==sun-cost,
+                    "Adventure tutorial planting or sun deduction failed");
+            };
+            if(!replay&&level<=2) {
+                Require(board.mTutorialState==(level==1?TUTORIAL_LEVEL_1_PICK_UP_PEASHOOTER:TUTORIAL_LEVEL_2_PICK_UP_SUNFLOWER),
+                    "First positive Board time did not trigger the correct tutorial once");
+                board.mSunMoney=1000; // Isolate teaching/card rules from collecting enough sun.
+                const int packet=level==1?0:1;
+                const int count=level==1?2:3;
+                for(int planted=0;planted<count;++planted) {
+                    plantFromBank(packet,planted,2);
+                    if(planted+1<count) advance(7'600'000'000);
+                }
+                Require(board.mTutorialState==(level==1?TUTORIAL_LEVEL_1_COMPLETED:TUTORIAL_LEVEL_2_COMPLETED),
+                    "Real planting and cooldown did not complete the initial teaching chain");
+                std::cout<<"Adventure tutorial level="<<level<<" Hz="<<hz<<" planted="<<count<<" completed=1\n";
+            }
+            if(conveyor) {
+                board.mChallenge->mConveyorBeltCounter=1;advance(100'000'000);
+                Require(board.mSeedBank->mNumPackets>0&&board.mSeedBank->mSeedPackets[0].mPacketType!=SEED_NONE,
+                    "Adventure conveyor never produced an actual usable seed");
+            }
+            if(level==35) {
+                for(int stage=0;stage<3;++stage) {
+                    Require(board.mChallenge->mSurvivalStage==stage&&board.mChallenge->ScaryPotterCountPots()==15+stage*5&&
+                        board.IsFinalScaryPotterStage()==(stage==2),"Adventure Vasebreaker three-board layout/final-stage rule changed");
+                    if(stage<2) {board.mChallenge->PuzzleNextStageClear();board.ProcessDeleteQueue();board.mChallenge->ScaryPotterPopulate();}
+                }
+            }
+            else if(level==50) {
+                advance(200'000'000);
+                Zombie* boss=nullptr;
+                while(board.IterateZombies(boss)&&boss->mZombieType!=ZOMBIE_BOSS) {}
+                Require(boss&&boss->mRow==0,"Adventure final boss did not enter in its required row");
+            }
+            else {
+                board.mZombieCountDown=1;advance(100'000'000);
+                Require(board.mCurrentWave>=1&&board.mZombies.mSize>0,"Adventure did not spawn its actual first wave");
+                Zombie* enemy=nullptr;
+                while(board.IterateZombies(enemy)) {
+                    Require(board.RowCanHaveZombies(enemy->mRow),"Adventure first wave spawned on a dirt/absent row");
+                    if(level==25) Require(enemy->mScaleZombie==0.5f,"Adventure Little Trouble did not use half-size zombies");
+                }
+            }
+            const auto pause=board.mLevelTimeNs;board.mPaused=true;advance(100'000'000);board.mPaused=false;
+            Require(board.mLevelTimeNs==pause,"Adventure pause advanced Board time");
+            // Isolate final-loot selection from solving the whole combat. An
+            // actual final enemy death drives TrySpawnLevelAward in each case.
+            board.mCurrentWave=0;
+            Zombie* enemy=nullptr;while(board.IterateZombies(enemy)) enemy->DieNoLoot(board.mLevelTimeNs,clocks.mVisualTimeNs,board.mLevelTimeNs);
+            GridItem* item=nullptr;while(board.IterateGridItems(item)) if(item->mGridItemType==GRIDITEM_SCARY_POT) item->GridItemDie();
+            Coin* coin=nullptr;while(board.IterateCoins(coin)) coin->Die();
+            board.ProcessDeleteQueue();app.mEffectSystem->ProcessDeleteQueue();
+            board.mCurrentWave=board.mNumWaves;board.mZombieCountDown=0;board.mLevelAwardSpawned=false;
+            board.mBoardFadeOutCounter=-1;board.mNextSurvivalStageCounter=0;board.mLevelComplete=false;
+            auto* finalEnemy=board.AddZombieInRow(level==50?ZOMBIE_BOSS:ZOMBIE_NORMAL,level==50?0:2,board.mNumWaves-1);
+            finalEnemy->mX=500;
+            finalEnemy->DieNoLoot(board.mLevelTimeNs,clocks.mVisualTimeNs,board.mLevelTimeNs);
+            CoinType expectedAward=level%10==9?COIN_NOTE:replay?COIN_AWARD_MONEY_BAG:
+                level==4?COIN_SHOVEL:level==14?COIN_ALMANAC:level==24?COIN_CARKEYS:
+                level==34?COIN_TACO:level==44?COIN_WATERING_CAN:level==50?COIN_AWARD_SILVER_SUNFLOWER:COIN_FINAL_SEED_PACKET;
+            bool found=false;coin=nullptr;
+            while(board.IterateCoins(coin)) if(coin->mType==expectedAward) {
+                found=true;
+                if(expectedAward==COIN_FINAL_SEED_PACKET)
+                    Require(coin->GetFinalSeedPacketType()==static_cast<SeedType>(level-level/5),
+                        "Adventure progression reward contains the wrong newly unlocked plant");
+            }
+            Require(found&&board.HasLevelAwardDropped()&&app.mBoardResult==BOARDRESULT_WON,"Adventure final enemy did not drop its correct progression reward");
+            std::cout<<"Adventure primary level="<<level<<" replay="<<replay<<" Hz="<<hz<<" background="<<background
+                <<" waves="<<expectedWaves<<" rows="<<rows<<" conveyor="<<conveyor<<" award="<<int(expectedAward)<<'\n';
+        }
+        catch(const std::exception& error) {
+            allPassed=false;
+            std::cerr<<"Adventure failed level="<<level<<" replay="<<replay<<" Hz="<<hz<<" timeNs="<<board.mLevelTimeNs<<" message="<<error.what()<<'\n';
+        }
+    }
+    Require(allPassed,"Adventure rules have failed cases; inspect per-level output");
+    std::cout<<"PASS actual fifty adventure levels: first/replay rules, teaching actions, waves, special routes, pause and enemy-driven rewards at four schedules\n";
+}
+
+void HiddenRulesRuntime(TestApp& app, DecodeOnlySoundManager& sounds)
+{
+    auto& clocks=*app.mEffectSystem->mReanimationHolder;
+    struct Restore {
+        TestApp& app;
+        Board* board=app.mBoard;
+        PlayerInfo* player=app.mPlayerInfo;
+        ZenGarden* garden=app.mZenGarden;
+        PoolEffect* pool=app.mPoolEffect;
+        GameMode mode=app.mGameMode;
+        GameScenes scene=app.mGameScene;
+        BoardResult result=app.mBoardResult;
+        Sexy::UnsignedTimeCounter counter=app.mAppCounter;
+        unsigned long long interval=Sexy::gUpdateIntervalNs,phase=Sexy::gLegacyTickPhaseNs;
+        int whole=Sexy::gWholeLegacyTicks;
+        double ticks=Sexy::gUpdateTicks,steps=Sexy::gStepsPerLegacyTick;
+        std::int64_t visual=app.mEffectSystem->mReanimationHolder->mVisualTimeNs;
+        std::int64_t battle=app.mEffectSystem->mReanimationHolder->mBattleTimeNs;
+        ~Restore() {
+            app.mBoard=board;app.mPlayerInfo=player;app.mZenGarden=garden;app.mPoolEffect=pool;
+            app.mGameMode=mode;app.mGameScene=scene;app.mBoardResult=result;app.mAppCounter=counter;
+            Sexy::gUpdateIntervalNs=interval;Sexy::gLegacyTickPhaseNs=phase;Sexy::gWholeLegacyTicks=whole;
+            Sexy::gUpdateTicks=ticks;Sexy::gStepsPerLegacyTick=steps;
+            app.mEffectSystem->mReanimationHolder->mVisualTimeNs=visual;
+            app.mEffectSystem->mReanimationHolder->mBattleTimeNs=battle;
+        }
+    } restore{app};
+    PlayerInfo profile;ZenGarden garden;
+    profile.mId=44;profile.mLevel=50;profile.mFinishedAdventure=1;
+    app.mPlayerInfo=&profile;app.mZenGarden=&garden;
+    static constexpr std::array<int,13> backgrounds{3,0,0,0,4,1,4,0,0,0,0,3,0};
+    static constexpr std::array<int,13> waves{20,40,40,40,30,20,20,40,40,30,0,30,40};
+    bool allPassed=true;
+    for(int mode=GAMEMODE_LIMBO_AIR_RAID;mode<=GAMEMODE_LIMBO_SUNNY_DAY;++mode)
+    for(const int hz:{100,30,240,0})
+    {
+        std::cout<<"Hidden begin mode="<<mode<<" Hz="<<hz<<'\n';
+        Sexy::SRand(0xD7A00+mode);Sexy::gLegacyTickPhaseNs=0;
+        clocks.mVisualTimeNs=clocks.mBattleTimeNs=0;app.mAppCounter=0;
+        app.mGameMode=static_cast<GameMode>(mode);app.mGameScene=SCENE_PLAYING;app.mBoardResult=BOARDRESULT_NONE;
+        PoolEffect pool;pool.PoolEffectInitialize();app.mPoolEffect=&pool;
+        Board board(&app);
+        try
+        {
+            board.InitLevel();board.StartLevel();auto& challenge=*board.mChallenge;
+            Require(int(board.mBackground)==backgrounds[mode-21]&&board.mNumWaves==waves[mode-21]&&board.mSunMoney==50,
+                "Hidden mode background, waves or starting sun differs from its rule");
+            int sequence=0;
+            constexpr std::array<long long,7> jitter{1'234'567,18'765'433,4'000'003,32'333'333,7'891'011,5'432'109,11'111'111};
+            const auto update=[&](unsigned long long step) {
+                Sexy::ApplySimulationStep(step);clocks.mVisualTimeNs+=step;
+                board.Update();app.mAppCounter++;
+                board.ProcessDeleteQueue();app.mEffectSystem->ProcessDeleteQueue();
+            };
+            const auto advance=[&](unsigned long long duration) {
+                unsigned long long elapsed=0;
+                while(elapsed<duration) {
+                    const auto step=std::min<unsigned long long>(hz?1'000'000'000ULL/hz:jitter[sequence++%jitter.size()],duration-elapsed);
+                    update(step);elapsed+=step;
+                }
+            };
+            const auto shovel=[&](Plant& plant) {
+                board.MouseDownWithTool(plant.mX+40,plant.mY+40,1,CURSOR_TYPE_SHOVEL);
+                Require(plant.mDead,"Actual shovel input did not remove its hidden-mode wallnut");
+            };
+            if(mode==GAMEMODE_LIMBO_ART_CHALLENGE_SUNFLOWER||mode==GAMEMODE_LIMBO_ART_CHALLENGE_WALLNUT) {
+                int planted=0;
+                for(int row=0;row<6;++row) for(int col=0;col<9;++col) {
+                    const auto seed=challenge.GetArtChallengeSeed(col,row);
+                    if(seed==SEED_NONE) continue;
+                    Require(challenge.CanPlantAt(col,row,seed==SEED_WALLNUT?SEED_PEASHOOTER:SEED_WALLNUT)==PLANTING_NOT_ON_ART,
+                        "Art challenge accepted a wrong seed in its required pattern");
+                    board.AddPlant(col,row,seed,SEED_NONE);++planted;
+                }
+                Require(planted>0&&board.HasLevelAwardDropped(),"Filling the actual art pattern did not produce its reward");
+            }
+            else if(mode==GAMEMODE_LIMBO_BIG_TIME) {
+                auto* nut=board.AddPlant(1,0,SEED_WALLNUT,SEED_NONE);
+                auto* sun=board.AddPlant(1,1,SEED_SUNFLOWER,SEED_NONE);
+                auto* flower=board.AddPlant(1,2,SEED_MARIGOLD,SEED_NONE);
+                Require(nut->mPlantHealth==8000&&sun->mPlantHealth==600&&flower->mPlantHealth==600,"Big Time did not double its selected plants' health");
+                sun->mNextLaunchTimeNs=flower->mNextLaunchTimeNs=1'000'000'000;
+                sun->mLaunchWindowStartNs=flower->mLaunchWindowStartNs=0;
+                advance(3'000'000'000);
+                int suns=0,money=0,silvers=0;Coin* coin=nullptr;
+                while(board.IterateCoins(coin)) {
+                    suns+=coin->mType==COIN_SUN;
+                    money+=coin->mType==COIN_SILVER||coin->mType==COIN_GOLD;
+                    silvers+=coin->mType==COIN_SILVER;
+                }
+                Require(suns==2&&money==2&&silvers>=1,"Big Time did not produce its extra sun and silver coin");
+                Require(std::abs(app.ReanimationGet(sun->mBodyReanimID)->mOverlayMatrix.m00-1.5f)<0.001f,
+                    "Big Time did not apply its larger visual size");
+            }
+            else if(mode==GAMEMODE_LIMBO_BUNGEE_BLITZ) {
+                board.mCurrentWave=9;board.SpawnZombieWave();int count=0;Zombie* enemy=nullptr;
+                while(board.IterateZombies(enemy)) {Require(enemy->mZombieType==ZOMBIE_BUNGEE,"Bungee Blitz flag wave has a wrong zombie");++count;}
+                Require(count==5&&board.mCurrentWave==10,"Bungee Blitz did not create its five bungees");
+            }
+            else if(mode==GAMEMODE_LIMBO_GRAVE_DANGER) {
+                const int graves=board.GetGraveStonesCount();
+                Require(graves>=4&&graves<=8,"Grave Danger initial columns/count changed");
+                auto* nut=board.AddPlant(4,0,SEED_WALLNUT,SEED_NONE);
+                auto* shell=board.AddPlant(4,0,SEED_PUMPKINSHELL,SEED_NONE);
+                challenge.GraveDangerSpawnGraveAt(4,0);
+                Require(nut->mDead&&shell->mDead&&board.GetGridItemAt(GRIDITEM_GRAVESTONE,4,0)&&board.GetGraveStonesCount()==graves+1,
+                    "Grave Danger did not replace every plant layer in the chosen cell");
+                board.ProcessDeleteQueue();board.mCurrentWave=6;challenge.SpawnZombieWave();
+                Require(board.GetGraveStonesCount()==graves+2,"Grave Danger did not add a grave after its sixth wave");
+            }
+            else if(mode==GAMEMODE_LIMBO_HIGH_GRAVITY) {
+                auto* balloon=board.AddZombieInRow(ZOMBIE_BALLOON,0,0);
+                balloon->mX=700;balloon->mRootBindingGeneration=0;balloon->mVelocityX.bound=false;
+                const float altitude=balloon->mAltitude;
+                advance(1'000'000'000);
+                Require(balloon->mAltitude<altitude-9.9f&&balloon->mAltitude>altitude-10.1f,"High Gravity flyer altitude is not driven by its elapsed time");
+                Projectile pea;pea.ProjectileInitialize(300,200,0,0,PROJECTILE_PEA);
+                pea.mVelX=0;pea.mVelY=0;pea.mVelZ=0;
+                const float y=pea.mPosY;Sexy::ApplySimulationStep(1'000'000'000ULL/(hz?hz:100));
+                pea.UpdateNormalMotion();Require(pea.mVelZ>0&&pea.mPosY>y,"High Gravity did not pull a straight projectile down");pea.Die();
+                advance(9'000'000'000);
+                Require(balloon->mZombiePhase==PHASE_BALLOON_WALKING,"High Gravity balloon did not eventually land");
+            }
+            else if(mode==GAMEMODE_LIMBO_ICE) {
+                Require(!board.NeedSaveGame()&&board.mSeedBank->mNumPackets==6,"Ice demonstration gained persistence or lost its fixed cards");
+                board.mZombieCountDown=1;advance(100'000'000);
+                Require(board.mZombies.mSize==0&&board.mCurrentWave==0,"Ice demonstration used the ordinary wave scheduler");
+                const auto before=sounds.playbackRequests[Sexy::SOUND_LOSEMUSIC];
+                board.mLevelTimeNs=29'999'999'999ULL;clocks.mBattleTimeNs=board.mLevelTimeNs;
+                advance(3);Require(sounds.playbackRequests[Sexy::SOUND_LOSEMUSIC]==before+1,"Ice demonstration missed its thirty-second audio event");
+                advance(200'000'000);Require(sounds.playbackRequests[Sexy::SOUND_LOSEMUSIC]==before+1,"Ice demonstration repeated its one-shot audio event");
+            }
+            else if(mode==GAMEMODE_LIMBO_RESODDED) {
+                Require(board.mPlantRow[0]==PLANTROW_DIRT&&board.mPlantRow[4]==PLANTROW_DIRT&&
+                    !board.RowCanHaveZombieType(0,ZOMBIE_NORMAL)&&!board.RowCanHaveZombieType(4,ZOMBIE_NORMAL),
+                    "Resodded admitted its dirt-edge rows before the fifth wave");
+                board.mZombieCountDown=1;advance(100'000'000);
+                Zombie* enemy=nullptr;while(board.IterateZombies(enemy)) Require(enemy->mRow>=1&&enemy->mRow<=3,"Resodded first wave used an edge row");
+                board.mCurrentWave=5;
+                Require(board.RowCanHaveZombieType(0,ZOMBIE_NORMAL)&&board.RowCanHaveZombieType(4,ZOMBIE_NORMAL),
+                    "Resodded did not unlock its two edge rows after five waves");
+            }
+            else if(mode==GAMEMODE_LIMBO_SHOVEL) {
+                Require(board.mPlants.mSize==45,"Shovel mode did not initialize five full rows of wallnuts");
+                auto* nut=board.GetTopPlantAt(1,2,TOPPLANT_ONLY_NORMAL_POSITION);Require(nut!=nullptr,"Shovel target missing");
+                shovel(*nut);board.ProcessDeleteQueue();Require(board.mPlants.mSize==44&&board.mPlantsShoveled==1,"Shovel removal count changed");
+                challenge.mConveyorBeltCounter=1;advance(100'000'000);
+                Require(board.mSeedBank->mNumPackets>0&&board.mSeedBank->mSeedPackets[0].mPacketType==SEED_PEASHOOTER,"Shovel conveyor did not deliver peashooters");
+                const int sun=board.mSunMoney;board.mSeedBank->mSeedPackets[0].MouseDown(0,0,1);
+                board.MouseDownWithPlant(board.GridToPixelX(1,2)+20,board.GridToPixelY(1,2)+20,1);
+                auto* pea=board.GetTopPlantAt(1,2,TOPPLANT_ONLY_NORMAL_POSITION);
+                Require(pea&&pea->mSeedType==SEED_PEASHOOTER&&board.mSunMoney==sun,"Shovel conveyor could not refill the hole without charging sun");
+            }
+            else if(mode==GAMEMODE_LIMBO_SQUIRREL) {
+                Require(board.mPlants.mSize==45&&challenge.SquirrelCountUncaught()==7,"Squirrel initial wallnut/hidden target count changed");
+                GridItem* squirrel=nullptr;GridItem* moving=nullptr;
+                while(board.IterateGridItems(squirrel)) if(squirrel->mGridItemType==GRIDITEM_SQUIRREL&&squirrel->mGridItemState==GRIDITEM_STATE_SQUIRREL_WAITING) {
+                    for(const auto direction:{std::pair{-1,0},std::pair{1,0},std::pair{0,-1},std::pair{0,1}})
+                        if(!board.GetGridItemAt(GRIDITEM_SQUIRREL,squirrel->mGridX+direction.first,squirrel->mGridY+direction.second)&&
+                            board.GetTopPlantAt(squirrel->mGridX+direction.first,squirrel->mGridY+direction.second,TOPPLANT_EATING_ORDER)) moving=squirrel;
+                }
+                Require(moving!=nullptr,"No squirrel has an open adjacent hiding place");
+                const int x=moving->mGridX,y=moving->mGridY;
+                shovel(*board.GetTopPlantAt(x,y,TOPPLANT_EATING_ORDER));board.ProcessDeleteQueue();advance(100'000'000);
+                Require(std::abs(moving->mGridX-x)+std::abs(moving->mGridY-y)==1&&moving->mGridItemState>=GRIDITEM_STATE_SQUIRREL_RUNNING_UP&&
+                    moving->mGridItemState<=GRIDITEM_STATE_SQUIRREL_RUNNING_RIGHT,"Uncovered squirrel did not run to an adjacent wallnut");
+                advance(600'000'000);
+                Require(moving->mGridItemState==GRIDITEM_STATE_SQUIRREL_WAITING,"Running squirrel did not return to its waiting state");
+                Plant* nut=nullptr;while(board.IteratePlants(nut)) shovel(*nut);
+                board.ProcessDeleteQueue();advance(100'000'000);
+                Require(challenge.SquirrelCountUncaught()==0&&challenge.mChallengeScore==7&&board.HasLevelAwardDropped(),"Catching all seven squirrels did not produce its reward");
+                advance(1'100'000'000);squirrel=nullptr;
+                while(board.IterateGridItems(squirrel)) Require(squirrel->mGridItemType!=GRIDITEM_SQUIRREL,"Caught squirrel did not leave after its deadline");
+            }
+            else if(mode==GAMEMODE_LIMBO_STORMY_NIGHT) {
+                Require(challenge.mChallengeState==STATECHALLENGE_STORM_FLASH_1,"Stormy Night did not begin its first flash");
+                challenge.mChallengeStateCounter=1;advance(100'000'000);
+                Require(challenge.mChallengeState>=STATECHALLENGE_STORM_FLASH_1&&challenge.mChallengeState<=STATECHALLENGE_STORM_FLASH_3&&
+                    challenge.mChallengeStateCounter>0,"Stormy Night did not schedule its next flash");
+                board.mPaused=true;challenge.mChallengeState=STATECHALLENGE_STORM_FLASH_1;challenge.mChallengeStateCounter=151;
+                // Retail checks the paused stop before decrementing. A step
+                // crossing the threshold therefore settles on the next call.
+                advance(100'000'000);Require(challenge.mChallengeStateCounter==1,"Paused storm did not finish at its safe dark frame");
+                const auto held=challenge.mChallengeStateCounter.mNanoseconds;advance(200'000'000);
+                Require(challenge.mChallengeStateCounter.mNanoseconds==held,"Paused storm continued past its safe dark frame");board.mPaused=false;
+            }
+            else if(mode==GAMEMODE_LIMBO_SUNNY_DAY) {
+                board.mSunCountDown=1;advance(100'000'000);
+                Coin* sun=nullptr;bool large=false;while(board.IterateCoins(sun)) large|=sun->mType==COIN_LARGESUN;
+                Require(large,"Sunny Day did not drop a large sun");
+            }
+            else { // Air Raid: use the actual first-wave scheduler, not a hand-created flyer.
+                board.mZombieCountDown=1;advance(100'000'000);int flyers=0;Zombie* enemy=nullptr;
+                while(board.IterateZombies(enemy)) {Require(enemy->mZombieType==ZOMBIE_BALLOON,"Air Raid first wave contains a non-flyer");++flyers;}
+                Require(board.mCurrentWave==1&&flyers>0,"Air Raid did not spawn its first balloon wave");
+            }
+            const auto pause=board.mLevelTimeNs;board.mPaused=true;advance(100'000'000);board.mPaused=false;
+            Require(board.mLevelTimeNs==pause,"Hidden-mode pause advanced Board time");
+            std::cout<<"Hidden primary mode="<<mode<<" Hz="<<hz<<" background="<<backgrounds[mode-21]
+                <<" waves="<<waves[mode-21]<<" checked=1\n";
+        }
+        catch(const std::exception& error) {
+            allPassed=false;
+            std::cerr<<"Hidden failed mode="<<mode<<" Hz="<<hz<<" timeNs="<<board.mLevelTimeNs<<" message="<<error.what()<<'\n';
+        }
+    }
+    Require(allPassed,"Hidden mode rules have failed cases; inspect per-mode output");
+    std::cout<<"PASS actual thirteen hidden modes: authored rules, actions, time thresholds and pause at four schedules\n";
+}
+
+void GardenRulesRuntime(TestApp& app)
+{
+    auto& clocks=*app.mEffectSystem->mReanimationHolder;
+    struct Restore {
+        TestApp& app;
+        Board* board=app.mBoard;
+        PlayerInfo* player=app.mPlayerInfo;
+        ZenGarden* garden=app.mZenGarden;
+        GameMode mode=app.mGameMode;
+        GameScenes scene=app.mGameScene;
+        BoardResult result=app.mBoardResult;
+        Sexy::UnsignedTimeCounter counter=app.mAppCounter;
+        unsigned long long interval=Sexy::gUpdateIntervalNs,phase=Sexy::gLegacyTickPhaseNs;
+        int whole=Sexy::gWholeLegacyTicks;
+        double ticks=Sexy::gUpdateTicks,steps=Sexy::gStepsPerLegacyTick;
+        std::int64_t visual=app.mEffectSystem->mReanimationHolder->mVisualTimeNs;
+        std::int64_t battle=app.mEffectSystem->mReanimationHolder->mBattleTimeNs;
+        ~Restore() {
+            app.mBoard=board;app.mPlayerInfo=player;app.mZenGarden=garden;
+            app.mGameMode=mode;app.mGameScene=scene;app.mBoardResult=result;app.mAppCounter=counter;
+            Sexy::gUpdateIntervalNs=interval;Sexy::gLegacyTickPhaseNs=phase;Sexy::gWholeLegacyTicks=whole;
+            Sexy::gUpdateTicks=ticks;Sexy::gStepsPerLegacyTick=steps;
+            app.mEffectSystem->mReanimationHolder->mVisualTimeNs=visual;
+            app.mEffectSystem->mReanimationHolder->mBattleTimeNs=battle;
+        }
+    } restore{app};
+    bool allPassed=true;
+    constexpr std::array<long long,7> jitter{1'234'567,18'765'433,4'000'003,32'333'333,7'891'011,5'432'109,11'111'111};
+    for(const int hz:{100,30,240,0})
+    {
+        std::cout<<"Garden begin Hz="<<hz<<'\n';
+        Sexy::SRand(0x6A8E0);Sexy::gLegacyTickPhaseNs=0;
+        clocks.mVisualTimeNs=123'456'789'000;clocks.mBattleTimeNs=0;app.mAppCounter=0;
+        PlayerInfo profile;ZenGarden garden;
+        profile.mId=45;profile.mLevel=50;profile.mFinishedAdventure=1;
+        profile.mNumPottedPlants=4;
+        constexpr std::array<SeedType,4> seeds{SEED_PEASHOOTER,SEED_SUNFLOWER,SEED_FUMESHROOM,SEED_TANGLEKELP};
+        constexpr std::array<GardenType,4> gardens{GARDEN_MAIN,GARDEN_MAIN,GARDEN_MUSHROOM,GARDEN_AQUARIUM};
+        for(int index=0;index<4;++index) {
+            auto& spec=profile.mPottedPlant[index];spec.InitializePottedPlant(seeds[index]);
+            spec.mWhichZenGarden=gardens[index];spec.mPlantAge=index?PLANTAGE_FULL:PLANTAGE_SPROUT;
+            spec.mX=index==1?2:1;spec.mY=index<2?1:0;
+            spec.mLastNeedFulfilledTime=garden.mFrameTime;
+        }
+        for(const auto purchase:{STORE_ITEM_MUSHROOM_GARDEN,STORE_ITEM_AQUARIUM_GARDEN,STORE_ITEM_WHEEL_BARROW,STORE_ITEM_PHONOGRAPH})
+            profile.mPurchases[purchase]=1;
+        for(const auto purchase:{STORE_ITEM_FERTILIZER,STORE_ITEM_BUG_SPRAY,STORE_ITEM_CHOCOLATE})
+            profile.mPurchases[purchase]=PURCHASE_COUNT_OFFSET+10;
+        profile.mPurchases[STORE_ITEM_STINKY_THE_SNAIL]=1;
+        profile.mStinkyPosX=400;profile.mStinkyPosY=300;
+        app.mPlayerInfo=&profile;app.mZenGarden=&garden;
+        app.mGameMode=GAMEMODE_LIMBO_ZEN_GARDEN;app.mGameScene=SCENE_PLAYING;app.mBoardResult=BOARDRESULT_NONE;
+        Board board(&app);
+        try
+        {
+            board.InitLevel();board.StartLevel();
+            Require(board.mBackground==BACKGROUND_GREENHOUSE&&!board.NeedSaveGame()&&garden.GetStinky(),
+                "Garden did not initialize its background/snail or gained level-file persistence");
+            int sequence=0;
+            const auto update=[&](unsigned long long step) {
+                Sexy::ApplySimulationStep(step);clocks.mVisualTimeNs+=step;
+                board.Update();app.mAppCounter++;
+                board.ProcessDeleteQueue();app.mEffectSystem->ProcessDeleteQueue();
+            };
+            const auto advance=[&](unsigned long long duration) {
+                unsigned long long elapsed=0;
+                while(elapsed<duration) {
+                    const auto step=std::min<unsigned long long>(hz?1'000'000'000ULL/hz:jitter[sequence++%jitter.size()],duration-elapsed);
+                    update(step);elapsed+=step;
+                }
+            };
+            const auto findPlant=[&](int index) {
+                Plant* plant=nullptr;while(board.IteratePlants(plant)) if(plant->mPottedPlantIndex==index) return plant;
+                return static_cast<Plant*>(nullptr);
+            };
+            const auto setNeed=[&](int index,PottedPlantNeed need) {
+                garden.RefreshTimeCache();auto& spec=profile.mPottedPlant[index];
+                spec.mLastWateredTime=garden.mFrameTime-20;spec.mLastFertilizedTime=0;spec.mLastNeedFulfilledTime=0;
+                spec.mPlantNeed=need;spec.mTimesFed=need==PLANTNEED_WATER?0:spec.mFeedingsPerGrow;
+                Require(garden.GetPlantsNeed(&spec)==need,"Garden fixture did not establish its intended current need");
+            };
+            const auto feed=[&](int index,CursorType tool,int x=-1,int y=-1) {
+                auto* target=findPlant(index);Require(target!=nullptr,"Garden feeding target is not instantiated");
+                Plant* plant=nullptr;while(board.IteratePlants(plant)) plant->mHighlighted=false;
+                target->mHighlighted=true;
+                garden.MouseDownWithTool(x<0?int(target->mX+40):x,y<0?int(target->mY+40):y,tool);
+                GridItem* item=nullptr;unsigned int id=0;
+                while(board.IterateGridItems(item)) if(item->mGridItemType==GRIDITEM_ZEN_TOOL) id=board.mGridItems.DataArrayGetID(item);
+                Require(id!=0,"Garden input did not create a real animated tool");
+                const auto start=clocks.mVisualTimeNs;
+                while(board.mGridItems.DataArrayTryToGet(id)&&clocks.mVisualTimeNs-start<30'000'000'000LL)
+                    update(hz?1'000'000'000ULL/hz:jitter[sequence++%jitter.size()]);
+                Require(!board.mGridItems.DataArrayTryToGet(id),"Garden tool animation never completed and released its item");
+            };
+            Require(findPlant(0)&&findPlant(0)->mSeedType==SEED_SPROUT&&findPlant(1)&&!findPlant(2)&&!findPlant(3),
+                "Garden instantiated the wrong visit's plants");
+            setNeed(0,PLANTNEED_WATER);setNeed(1,PLANTNEED_WATER);
+            feed(0,CURSOR_TYPE_WATERING_CAN);
+            Require(profile.mPottedPlant[0].mTimesFed==1&&profile.mPottedPlant[1].mTimesFed==0,
+                "Ordinary watering affected a neighboring plant or failed to water its target");
+            for(const auto age:{PLANTAGE_SMALL,PLANTAGE_MEDIUM,PLANTAGE_FULL}) {
+                setNeed(0,PLANTNEED_FERTILIZER);
+                const int fertilizer=profile.mPurchases[STORE_ITEM_FERTILIZER];
+                feed(0,CURSOR_TYPE_FERTILIZER);
+                Require(profile.mPottedPlant[0].mPlantAge==age&&profile.mPurchases[STORE_ITEM_FERTILIZER]==fertilizer-1&&
+                    findPlant(0)&&findPlant(0)->mSeedType==SEED_PEASHOOTER,
+                    "Fertilizer did not advance one growth stage, preserve the plant record and charge one item");
+            }
+            profile.mPurchases[STORE_ITEM_GOLD_WATERINGCAN]=1;
+            setNeed(0,PLANTNEED_WATER);setNeed(1,PLANTNEED_WATER);
+            const int waterX=int((findPlant(0)->mX+findPlant(1)->mX)/2+40),waterY=int(findPlant(0)->mY+40);
+            Require(board.IsPlantInGoldWateringCanRange(waterX,waterY,findPlant(0))&&board.IsPlantInGoldWateringCanRange(waterX,waterY,findPlant(1)),
+                "Garden golden-can fixture does not cover both plants");
+            feed(0,CURSOR_TYPE_WATERING_CAN,waterX,waterY);
+            Require(profile.mPottedPlant[0].mTimesFed==1&&profile.mPottedPlant[1].mTimesFed==1,"Golden watering did not feed both eligible plants");
+            for(const auto need:{PLANTNEED_BUGSPRAY,PLANTNEED_PHONOGRAPH}) {
+                setNeed(0,need);
+                const int spray=profile.mPurchases[STORE_ITEM_BUG_SPRAY];
+                feed(0,need==PLANTNEED_BUGSPRAY?CURSOR_TYPE_BUG_SPRAY:CURSOR_TYPE_PHONOGRAPH);
+                Require(profile.mPottedPlant[0].mPlantNeed==PLANTNEED_NONE&&profile.mPottedPlant[0].mLastNeedFulfilledTime>0,
+                    "Garden special need was not fulfilled after its tool completed");
+                Require(profile.mPurchases[STORE_ITEM_BUG_SPRAY]==spray-(need==PLANTNEED_BUGSPRAY),"Garden spray/phonograph inventory charge changed");
+            }
+            auto* grown=findPlant(0);Plant* plant=nullptr;
+            while(board.IteratePlants(plant)) plant->mHighlighted=false;grown->mHighlighted=true;
+            const int chocolate=profile.mPurchases[STORE_ITEM_CHOCOLATE];
+            garden.MouseDownWithTool(grown->mX+40,grown->mY+40,CURSOR_TYPE_CHOCOLATE);
+            Require(profile.mPurchases[STORE_ITEM_CHOCOLATE]==chocolate-1&&profile.mPottedPlant[0].mLastChocolateTime>0,
+                "Garden chocolate did not charge and bind its wall-clock effect");
+            garden.MovePlant(grown,2,2);
+            Require(profile.mPottedPlant[0].mX==2&&profile.mPottedPlant[0].mY==2&&
+                board.GetTopPlantAt(2,2,TOPPLANT_ONLY_NORMAL_POSITION)==grown,"Garden move did not update runtime buckets and persistent coordinates");
+            garden.MouseDownWithTool(grown->mX+40,grown->mY+40,CURSOR_TYPE_WHEEELBARROW);
+            board.ProcessDeleteQueue();
+            Require(garden.GetPottedPlantInWheelbarrow()==&profile.mPottedPlant[0]&&!findPlant(0),"Wheelbarrow failed to remove the live plant while retaining its record");
+            garden.GotoNextGarden();board.ProcessDeleteQueue();
+            Require(garden.mGardenType==GARDEN_MUSHROOM&&board.mBackground==BACKGROUND_MUSHROOM_GARDEN&&
+                findPlant(2)&&!findPlant(2)->mIsAsleep&&!findPlant(1)&&!garden.GetStinky(),"Mushroom garden did not restore the correct awake plant set");
+            garden.GotoNextGarden();board.ProcessDeleteQueue();
+            Require(garden.mGardenType==GARDEN_AQUARIUM&&board.mBackground==BACKGROUND_ZOMBIQUARIUM&&findPlant(3)&&!findPlant(2),
+                "Aquarium garden did not restore its aquatic plant set");
+            garden.MouseDownWithFullWheelBarrow(200,200);
+            Require(garden.GetPottedPlantInWheelbarrow()==&profile.mPottedPlant[0]&&!findPlant(0),"Aquarium accepted a non-aquatic wheelbarrow plant");
+            const int savedSnailX=profile.mStinkyPosX,savedSnailY=profile.mStinkyPosY;
+            garden.GotoNextGarden();board.ProcessDeleteQueue();
+            Require(garden.mGardenType==GARDEN_MAIN&&findPlant(1)&&garden.GetStinky()&&
+                garden.GetStinky()->mPosX==savedSnailX&&garden.GetStinky()->mPosY==savedSnailY,"Returning to the main garden lost plants or the saved snail position");
+            garden.MouseDownWithFullWheelBarrow(garden.GridToPixelX(2,2)+40,garden.GridToPixelY(2,2)+40);
+            Require(!garden.GetPottedPlantInWheelbarrow()&&findPlant(0)&&profile.mPottedPlant[0].mWhichZenGarden==GARDEN_MAIN,
+                "Wheelbarrow could not restore its plant to a free main-garden cell");
+            profile.SaveDetails();PlayerInfo loaded;loaded.mId=45;
+            Require(loaded.LoadDetails()&&loaded.mNumPottedPlants==4&&loaded.mPottedPlant[0].mPlantAge==PLANTAGE_FULL&&
+                loaded.mPottedPlant[0].mX==2&&loaded.mPottedPlant[0].mY==2&&loaded.mPottedPlant[0].mWhichZenGarden==GARDEN_MAIN,
+                "Garden profile roundtrip lost growth, placement or its garden");
+            garden.LeaveGarden();
+            std::cout<<"Garden primary Hz="<<hz<<" growth=3 tools=7 gardens=3 wheelbarrow=1 reload=1\n";
+        }
+        catch(const std::exception& error) {
+            allPassed=false;
+            std::cerr<<"Garden failed Hz="<<hz<<" timeNs="<<board.mLevelTimeNs<<" message="<<error.what()<<'\n';
+        }
+    }
+    for(const int height:{0,1,12,50,99})
+    for(const int hz:{100,30,240,0})
+    {
+        std::cout<<"Tree begin height="<<height<<" Hz="<<hz<<'\n';
+        Sexy::SRand(0x7EE00+height);Sexy::gLegacyTickPhaseNs=0;
+        clocks.mVisualTimeNs=123'456'789'000;clocks.mBattleTimeNs=0;app.mAppCounter=0;
+        PlayerInfo profile;ZenGarden garden;
+        profile.mId=46;profile.mLevel=50;profile.mFinishedAdventure=1;
+        profile.mChallengeRecords[GAMEMODE_TREE_OF_WISDOM]=height;
+        profile.mPurchases[STORE_ITEM_TREE_FOOD]=PURCHASE_COUNT_OFFSET+3;
+        app.mPlayerInfo=&profile;app.mZenGarden=&garden;app.mGameMode=GAMEMODE_TREE_OF_WISDOM;
+        app.mGameScene=SCENE_LEVEL_INTRO;app.mBoardResult=BOARDRESULT_NONE;
+        Board board(&app);
+        try
+        {
+            board.InitLevel();auto& challenge=*board.mChallenge;
+            auto* tree=app.ReanimationGet(challenge.mReanimChallenge);
+            Require(board.mBackground==BACKGROUND_TREEOFWISDOM&&!board.NeedSaveGame()&&
+                tree->SamplePlayback().phaseNs==ReanimClock::SignedMulDiv(990,tree->mPeriodNs,1000),"Tree entry did not show its already-grown pose");
+            int sequence=0;
+            const auto update=[&](unsigned long long step) {
+                Sexy::ApplySimulationStep(step);clocks.mVisualTimeNs+=step;board.Update();app.mAppCounter++;
+                board.ProcessDeleteQueue();app.mEffectSystem->ProcessDeleteQueue();
+            };
+            const auto advance=[&](unsigned long long duration) {
+                unsigned long long elapsed=0;
+                while(elapsed<duration) {
+                    const auto step=std::min<unsigned long long>(hz?1'000'000'000ULL/hz:jitter[sequence++%jitter.size()],duration-elapsed);
+                    update(step);elapsed+=step;
+                }
+            };
+            board.mDrawCount=0;advance(100'000'000);
+            Require(board.mLevelTimeNs==0&&challenge.TreeOfWisdomGetSize()==height,"Tree intro advanced Board time or invented growth");
+            app.mGameScene=SCENE_PLAYING;board.StartLevel();advance(100'000'000);
+            const int inventory=profile.mPurchases[STORE_ITEM_TREE_FOOD];
+            board.mCursorObject->mCursorType=CURSOR_TYPE_TREE_FOOD;
+            challenge.TreeOfWisdomTool(380,340);
+            Require(profile.mPurchases[STORE_ITEM_TREE_FOOD]==inventory-1&&!challenge.TreeOfWisdomCanFeed()&&challenge.TreeOfWisdomGetSize()==height,
+                "Tree food click did not charge once and defer growth to animation completion");
+            for(int frame=0;frame<(hz?hz:100)*30&&challenge.TreeOfWisdomGetSize()==height;++frame)
+                update(hz?1'000'000'000ULL/hz:jitter[sequence++%jitter.size()]);
+            Require(challenge.TreeOfWisdomGetSize()==height+1,"Tree food animation did not cause exactly one growth");
+            advance(3'000'000'000);
+            Require(challenge.TreeOfWisdomGetSize()==height+1&&profile.mPurchases[STORE_ITEM_TREE_FOOD]==inventory-1,
+                "Tree continued growing or charged repeatedly after a single feeding");
+            if(height==99) Require(profile.mEarnedAchievements[ToweringWisdom],"Tree reaching one hundred failed to grant its achievement");
+            const auto pause=board.mLevelTimeNs;board.mPaused=true;advance(100'000'000);board.mPaused=false;
+            Require(board.mLevelTimeNs==pause,"Tree pause advanced Board time");
+            std::cout<<"Tree primary height="<<height<<" Hz="<<hz<<" grown="<<height+1<<" charged=1\n";
+        }
+        catch(const std::exception& error) {
+            allPassed=false;
+            std::cerr<<"Tree failed height="<<height<<" Hz="<<hz<<" timeNs="<<board.mLevelTimeNs<<" message="<<error.what()<<'\n';
+        }
+    }
+    Require(allPassed,"Garden/tree rules have failed cases; inspect scenario output");
+    std::cout<<"PASS actual garden/tree rules: animated tools, growth, needs, movement, three-garden cycle, wheelbarrow, profile reload and one-shot tree feeding at four schedules\n";
+}
+
+void IntroRulesRuntime(TestApp& app, DecodeOnlySoundManager& sounds)
+{
+    auto& clocks=*app.mEffectSystem->mReanimationHolder;
+    struct Restore {
+        TestApp& app;
+        PlayerInfo* player=app.mPlayerInfo;
+        ZenGarden* garden=app.mZenGarden;
+        PoolEffect* pool=app.mPoolEffect;
+        GameMode mode=app.mGameMode;
+        GameScenes scene=app.mGameScene;
+        BoardResult result=app.mBoardResult;
+        bool mute=app.mMuteSoundsForCutscene;
+        Sexy::UnsignedTimeCounter counter=app.mAppCounter;
+        unsigned long long interval=Sexy::gUpdateIntervalNs,phase=Sexy::gLegacyTickPhaseNs;
+        int whole=Sexy::gWholeLegacyTicks;
+        double ticks=Sexy::gUpdateTicks,steps=Sexy::gStepsPerLegacyTick;
+        std::int64_t visual=app.mEffectSystem->mReanimationHolder->mVisualTimeNs;
+        std::int64_t battle=app.mEffectSystem->mReanimationHolder->mBattleTimeNs;
+        ~Restore() {
+            app.KillBoard();app.ProcessSafeDeleteList();
+            app.mPlayerInfo=player;app.mZenGarden=garden;app.mPoolEffect=pool;
+            app.mGameMode=mode;app.mGameScene=scene;app.mBoardResult=result;app.mAppCounter=counter;
+            app.mMuteSoundsForCutscene=mute;
+            Sexy::gUpdateIntervalNs=interval;Sexy::gLegacyTickPhaseNs=phase;Sexy::gWholeLegacyTicks=whole;
+            Sexy::gUpdateTicks=ticks;Sexy::gStepsPerLegacyTick=steps;
+            app.mEffectSystem->mReanimationHolder->mVisualTimeNs=visual;
+            app.mEffectSystem->mReanimationHolder->mBattleTimeNs=battle;
+        }
+    } restore{app};
+    Require(!app.mBoard&&!app.mSeedChooserScreen,"Intro fixture requires no prior live Board/chooser");
+    bool allPassed=true;
+    constexpr std::array<unsigned long long,7> jitter{1'234'567,18'765'433,4'000'003,32'333'333,7'891'011,5'432'109,11'111'111};
+    for(const int hz:{100,30,240,0})
+    {
+        std::cout<<"Intro begin Hz="<<hz<<'\n';
+        PlayerInfo profile;ZenGarden garden;PoolEffect pool;pool.PoolEffectInitialize();
+        profile.mId=47;profile.mLevel=1;profile.mFinishedAdventure=0;
+        app.mPlayerInfo=&profile;app.mZenGarden=&garden;app.mPoolEffect=&pool;
+        clocks.mVisualTimeNs=123'456'789'000;clocks.mBattleTimeNs=0;app.mAppCounter=0;
+        Sexy::SRand(0x1A7E0);Sexy::gLegacyTickPhaseNs=0;
+        try
+        {
+            app.PreNewGame(GAMEMODE_INTRO,false);
+            auto* introBoard=app.mBoard;
+            Require(introBoard&&introBoard->mBackground==BACKGROUND_3_POOL&&!introBoard->NeedSaveGame(),"Intro application entry did not create its pool demonstration");
+            const auto hugeBefore=sounds.playbackRequests[Sexy::SOUND_HUGE_WAVE],sirenBefore=sounds.playbackRequests[Sexy::SOUND_SIREN];
+            int sequence=0;
+            unsigned long long elapsed=0;
+            const auto update=[&](unsigned long long step) {
+                Sexy::ApplySimulationStep(step);Sexy::BeginTimedUpdate();clocks.mVisualTimeNs+=step;
+                auto* active=app.mBoard;
+                {WidgetLifetimeHold hold(*active);active->mDrawCount=1;active->Update();}
+                app.mAppCounter++;
+                if(app.mBoard) app.mBoard->ProcessDeleteQueue();
+                app.mEffectSystem->ProcessDeleteQueue();app.ProcessSafeDeleteList();
+            };
+            auto step=hz?1'000'000'000ULL/hz:jitter[sequence++%jitter.size()];
+            do {
+                update(step);elapsed+=step;
+                if(elapsed>=10'000'000ULL) break;
+                step=hz?1'000'000'000ULL/hz:jitter[sequence++%jitter.size()];
+            } while(true);
+            std::cout<<"Intro warmup Hz="<<hz<<" triggerElapsedNs="<<elapsed<<" boardNs="<<introBoard->mLevelTimeNs<<'\n';
+            Require(introBoard->mLevelTimeNs==elapsed+1'000'000'000ULL,
+                "Intro warmup simulated a target-FPS-dependent duration instead of its authored one second");
+            Require(Sexy::gUpdateIntervalNs==step&&!introBoard->mCutScene->mPreUpdatingBoard&&introBoard->mPlants.mSize>0&&introBoard->mZombies.mSize>0,
+                "Intro warmup lost the caller step, guard or demonstration actors");
+            const auto heldTime=introBoard->mLevelTimeNs;
+            const auto heldCutscene=introBoard->mCutScene->mCutsceneTime.mNanoseconds;
+            introBoard->mPaused=true;update(step);introBoard->mPaused=false;
+            Require(introBoard->mLevelTimeNs==heldTime&&introBoard->mCutScene->mCutsceneTime.mNanoseconds==heldCutscene,
+                "Paused intro advanced its demonstration or movie timeline");
+            while(app.mGameMode==GAMEMODE_INTRO&&elapsed<14'000'000'000ULL) {
+                const auto dt=hz?1'000'000'000ULL/hz:jitter[sequence++%jitter.size()];update(dt);elapsed+=dt;
+            }
+            Require(app.mGameMode==GAMEMODE_ADVENTURE&&app.mBoard&&app.mBoard!=introBoard&&app.mGameScene==SCENE_LEVEL_INTRO&&
+                app.mBoard->mLevel==1&&app.mBoard->mLevelTimeNs==0,"Intro did not hand off to a clean first Adventure Board");
+            Require(elapsed>=13'890'000'000ULL&&elapsed<13'930'000'000ULL,"Intro movie end time changed with its schedule");
+            Require(sounds.playbackRequests[Sexy::SOUND_HUGE_WAVE]==hugeBefore+1&&sounds.playbackRequests[Sexy::SOUND_SIREN]==sirenBefore+1&&
+                !app.mMuteSoundsForCutscene,"Intro audio events repeated, were missed or left Adventure muted");
+            std::cout<<"Intro primary Hz="<<hz<<" warmupNs=1000000000 adventure=1 audio=1 elapsedNs="<<elapsed<<'\n';
+        }
+        catch(const std::exception& error) {
+            allPassed=false;
+            std::cerr<<"Intro failed Hz="<<hz<<" message="<<error.what()<<'\n';
+        }
+        app.KillBoard();app.ProcessSafeDeleteList();
+    }
+    Require(allPassed,"Intro rules have failed cases; inspect per-schedule output");
+    std::cout<<"PASS actual intro: fixed-duration warmup, paused clocks, movie events and application handoff at four schedules\n";
+}
+
+void AlmanacRulesRuntime(TestApp& app, bool clockOnly=false)
+{
+    auto& clocks=*app.mEffectSystem->mReanimationHolder;
+    struct Restore {
+        TestApp& app;
+        PlayerInfo* player=app.mPlayerInfo;
+        ZenGarden* garden=app.mZenGarden;
+        PoolEffect* pool=app.mPoolEffect;
+        GameMode mode=app.mGameMode;
+        GameScenes scene=app.mGameScene;
+        Rect bounds=app.mScreenBounds;
+        Rect mouseBounds=app.mWidgetManager->mMouseDestRect;
+        Sexy::UnsignedTimeCounter counter=app.mAppCounter;
+        unsigned long long interval=Sexy::gUpdateIntervalNs,phase=Sexy::gLegacyTickPhaseNs;
+        int whole=Sexy::gWholeLegacyTicks;
+        double ticks=Sexy::gUpdateTicks,steps=Sexy::gStepsPerLegacyTick;
+        std::int64_t visual=app.mEffectSystem->mReanimationHolder->mVisualTimeNs;
+        std::int64_t battle=app.mEffectSystem->mReanimationHolder->mBattleTimeNs;
+        ~Restore() {
+            app.KillAlmanacDialog();app.KillBoard();app.ProcessSafeDeleteList();
+            app.mPlayerInfo=player;app.mZenGarden=garden;app.mPoolEffect=pool;
+            app.mGameMode=mode;app.mGameScene=scene;app.mScreenBounds=bounds;app.mWidgetManager->mMouseDestRect=mouseBounds;
+            app.mAppCounter=counter;
+            Sexy::gUpdateIntervalNs=interval;Sexy::gLegacyTickPhaseNs=phase;Sexy::gWholeLegacyTicks=whole;
+            Sexy::gUpdateTicks=ticks;Sexy::gStepsPerLegacyTick=steps;
+            app.mEffectSystem->mReanimationHolder->mVisualTimeNs=visual;
+            app.mEffectSystem->mReanimationHolder->mBattleTimeNs=battle;
+        }
+    } restore{app};
+    Require(!app.mBoard&&!app.GetDialog(DIALOG_ALMANAC),"Almanac fixture requires an empty application route");
+    app.mReanimatorCache->PrebuildCacheFrames();
+    bool allPassed=true;
+    constexpr std::array<unsigned long long,7> jitter{1'234'567,18'765'433,4'000'003,32'333'333,7'891'011,5'432'109,11'111'111};
+    for(const bool inLevel:{false,true})
+    for(const int width:{800,1400})
+    for(const int hz:{100,30,240,0})
+    {
+        PlayerInfo profile;ZenGarden garden;PoolEffect pool;pool.PoolEffectInitialize();
+        profile.mId=48;profile.mLevel=31;profile.mFinishedAdventure=2;
+        std::fill(std::begin(profile.mPurchases),std::end(profile.mPurchases),1);
+        app.mPlayerInfo=&profile;app.mZenGarden=&garden;app.mPoolEffect=&pool;
+        app.mGameMode=GAMEMODE_ADVENTURE;app.mGameScene=SCENE_MENU;
+        app.mScreenBounds=Rect((800-width)/2,0,width,600);
+        clocks.mVisualTimeNs=123'456'789'000;clocks.mBattleTimeNs=0;
+        Sexy::SRand(0xA1AA0);Sexy::gLegacyTickPhaseNs=0;
+        auto& render=*app.mDDInterface->mRenderInterface;
+        struct Target {Image* image;~Target(){delete image;}} target{render.CreateRenderImage(width,600)};
+        try
+        {
+            std::cout<<"Almanac begin level="<<inLevel<<" width="<<width<<" Hz="<<hz<<'\n';
+            if(inLevel)
+            {
+                app.PreNewGame(GAMEMODE_ADVENTURE,false);
+                app.mBoard->RemoveCutsceneZombies();app.StartPlaying();
+                app.mBoard->NewPlant(0,0,SEED_PEASHOOTER,SEED_NONE);
+            }
+            auto* dialog=app.DoAlmanacDialog();
+            Require(dialog&&dialog->mPlant&&dialog->mZombie,"Almanac index did not create both previews");
+            Require(!dialog->mPlant->mBoard&&!dialog->mZombie->mBoard,"Almanac previews acquired the live battle Board");
+            const auto battle=app.mBoard?app.mBoard->mLevelTimeNs:0;
+            Reanimation* retained=nullptr;
+            if(inLevel) {
+                Plant* first=nullptr;Require(app.mBoard->IteratePlants(first),"Almanac fixture has no retained battle plant");
+                retained=app.ReanimationGet(first->mBodyReanimID);
+            }
+            const auto retainedPhase=retained?retained->SamplePlayback().phaseNs:0;
+            const auto retainedBirthDomain=retained?clocks.mTimeDomains[clocks.mReanimations.DataArrayIndexOf(retained)]:ReanimTimeDomain::Visual;
+            const auto start=clocks.mVisualTimeNs;
+            const auto indexPhase=app.ReanimationGet(dialog->mPlant->mBodyReanimID)->SamplePlayback().phaseNs;
+            int sequence=0;
+            const auto advance=[&](unsigned long long duration) {
+                unsigned long long elapsed=0;
+                while(elapsed<duration) {
+                    const auto step=std::min<unsigned long long>(hz?1'000'000'000ULL/hz:jitter[sequence++%jitter.size()],duration-elapsed);
+                    Sexy::ApplySimulationStep(step);app.UpdateFrames();
+                    app.mEffectSystem->ProcessDeleteQueue();elapsed+=step;
+                }
+            };
+            const auto capture=[&]() {
+                {GpuImageDrawScope scope(render,target.image);Graphics graphics(target.image);
+                 graphics.mColor=Color::Black;graphics.FillRect(0,0,width,600);
+                 graphics.Translate(dialog->mX-app.mScreenBounds.mX,dialog->mY-app.mScreenBounds.mY);
+                 dialog->Draw(&graphics);}
+                render.Flush();return render.ReadImagePixels(*target.image).pixels;
+            };
+            advance(200'000'000);
+            Require(clocks.mVisualTimeNs==start+200'000'000&&
+                app.ReanimationGet(dialog->mPlant->mBodyReanimID)->SamplePlayback().phaseNs!=indexPhase,
+                "Actual Almanac index did not animate while its owning battle was paused");
+            if(inLevel) Require(app.mBoard->mPaused&&app.mBoard->mLevelTimeNs==battle,"Almanac advanced the paused battle");
+            if(!clockOnly) {
+            dialog->SetPage(ALMANAC_PAGE_PLANTS);
+            for(int seed=0;seed<NUM_ALMANAC_SEEDS;++seed)
+            {
+                int x,y;dialog->GetSeedPosition(static_cast<SeedType>(seed),x,y);
+                Require(dialog->SeedHitTest(x+5,y+5)==seed,"Unlocked Almanac plant icon is not selectable");
+                dialog->MouseDown(x+5,y+5,1);
+                Require(dialog->mSelectedSeed==seed&&dialog->mPlant&&dialog->mPlant->mSeedType==seed&&!dialog->mPlant->mBoard,
+                    "Almanac plant click selected a wrong or Board-owned preview");
+                advance(200'000'000);
+                const auto withPreview=capture();const auto originalX=dialog->mPlant->mX;dialog->mPlant->mX+=10000;
+                const auto withoutPreview=capture();dialog->mPlant->mX=originalX;
+                Require(withPreview!=withoutPreview,"Almanac plant preview produced no visible pixels");
+                std::cout<<"Almanac plant level="<<inLevel<<" width="<<width<<" Hz="<<hz<<" seed="<<seed<<" visible=1\n";
+            }
+            dialog->SetPage(ALMANAC_PAGE_ZOMBIES);
+            for(int type=0;type<NUM_ALMANAC_ZOMBIES;++type)
+            {
+                const auto zombieType=static_cast<ZombieType>(type);
+                int x,y;dialog->GetZombiePosition(zombieType,x,y);
+                Require(dialog->ZombieHitTest(x+5,y+5)==type,"Unlocked Almanac zombie icon is not selectable");
+                dialog->MouseDown(x+5,y+5,1);
+                Require(dialog->mSelectedZombie==type&&dialog->mZombie&&dialog->mZombie->mZombieType==type&&!dialog->mZombie->mBoard,
+                    "Almanac zombie click selected a wrong or Board-owned preview");
+                advance(200'000'000);
+                const auto withPreview=capture();const auto originalX=dialog->mZombie->mX;dialog->mZombie->mX+=10000;
+                const auto withoutPreview=capture();dialog->mZombie->mX=originalX;
+                Require(withPreview!=withoutPreview,"Almanac zombie preview produced no visible pixels");
+                std::cout<<"Almanac zombie level="<<inLevel<<" width="<<width<<" Hz="<<hz<<" type="<<type<<" visible=1\n";
+            }
+            }
+            dialog->SetPage(ALMANAC_PAGE_INDEX);advance(100'000'000);capture();
+            if(inLevel) Require(retained->SamplePlayback().phaseNs==retainedPhase&&app.mBoard->mLevelTimeNs==battle,
+                "Almanac UI time advanced the retained battle plant");
+            app.KillAlmanacDialog();app.ProcessSafeDeleteList();
+            Require(!app.GetDialog(DIALOG_ALMANAC),"Almanac close retained its dialog");
+            if(inLevel) Require(!app.mBoard->mPaused&&app.mBoard->mLevelTimeNs==battle,"Almanac close changed the paused battle time or failed to resume it");
+            if(inLevel) {
+                const auto expected=retained->SamplePlaybackAt(static_cast<std::int64_t>(battle)+7'891'011).phaseNs;
+                Sexy::ApplySimulationStep(7'891'011);app.UpdateFrames();
+                std::cout<<"Almanac resume width="<<width<<" Hz="<<hz<<" birthDomain="<<int(retainedBirthDomain)
+                    <<" domain="<<int(clocks.mTimeDomains[clocks.mReanimations.DataArrayIndexOf(retained)])
+                    <<" battle="<<app.mBoard->mLevelTimeNs<<" expectedPhase="<<expected<<" actualPhase="<<retained->SamplePlayback().phaseNs<<'\n';
+                Require(app.mBoard->mLevelTimeNs==battle+7'891'011&&retained->SamplePlayback().phaseNs==expected,
+                    "Closing Almanac did not resume with exactly one battle animation step");
+            }
+            if(clockOnly) std::cout<<"Almanac clock level="<<inLevel<<" width="<<width<<" Hz="<<hz<<" closed=1\n";
+            else std::cout<<"Almanac primary level="<<inLevel<<" width="<<width<<" Hz="<<hz<<" plants=49 zombies=26 closed=1\n";
+        }
+        catch(const std::exception& error) {
+            allPassed=false;std::cerr<<"Almanac failed level="<<inLevel<<" width="<<width<<" Hz="<<hz<<" message="<<error.what()<<'\n';
+        }
+        app.KillAlmanacDialog();app.KillBoard();app.ProcessSafeDeleteList();
+        app.mEffectSystem->ProcessDeleteQueue();
+    }
+    Require(allPassed,"Almanac rules have failed cases; inspect per-case output");
+    if(clockOnly) std::cout<<"PASS actual Almanac clocks: index animation, paused battle and exact resume at two widths/four schedules\n";
+    else std::cout<<"PASS actual Almanac: all49 plants/all26 zombies, icon input, visible previews, menu/paused-battle clocks and close at two widths/four schedules\n";
+}
+
+void ActorBirthClockRuntime(TestApp& app)
+{
+    auto& holder=*app.mEffectSystem->mReanimationHolder;
+    struct Restore {
+        TestApp& app;
+        Board* board=app.mBoard;PlayerInfo* player=app.mPlayerInfo;ZenGarden* garden=app.mZenGarden;
+        GameMode mode=app.mGameMode;GameScenes scene=app.mGameScene;
+        unsigned long long interval=Sexy::gUpdateIntervalNs;
+        double ticks=Sexy::gUpdateTicks,steps=Sexy::gStepsPerLegacyTick;
+        std::int64_t visual=app.mEffectSystem->mReanimationHolder->mVisualTimeNs;
+        std::int64_t battle=app.mEffectSystem->mReanimationHolder->mBattleTimeNs;
+        ~Restore() {
+            app.mBoard=board;app.mPlayerInfo=player;app.mZenGarden=garden;app.mGameMode=mode;app.mGameScene=scene;
+            Sexy::gUpdateIntervalNs=interval;Sexy::gUpdateTicks=ticks;Sexy::gStepsPerLegacyTick=steps;
+            app.mEffectSystem->mReanimationHolder->mVisualTimeNs=visual;
+            app.mEffectSystem->mReanimationHolder->mBattleTimeNs=battle;
+        }
+    } restore{app};
+    PlayerInfo profile;ZenGarden garden;
+    profile.mId=50;profile.mLevel=31;profile.mFinishedAdventure=2;
+    app.mPlayerInfo=&profile;app.mZenGarden=&garden;app.mGameMode=GAMEMODE_ADVENTURE;
+    bool allPassed=true;int checked=0;
+    for(const auto scene:{SCENE_PLAYING,SCENE_LEVEL_INTRO})
+    for(const unsigned long long born:{0ULL,31'234'567'890ULL})
+    for(int group=0;group<4;++group)
+    for(int type=0;type<(group==0?NUM_SEED_TYPES:NUM_ZOMBIE_TYPES);++type)
+    {
+        app.mGameScene=scene;Sexy::SRand(0xB1700+type);
+        Board board(&app);board.mLevel=31;board.mBackground=BACKGROUND_3_POOL;
+        board.mCurrentWave=5;board.mNumWaves=20;board.mTotalSpawnedWaves=0;board.mSeedBank->mNumPackets=0;
+        board.mLevelTimeNs=born;holder.mBattleTimeNs=born;holder.mVisualTimeNs=123'456'789'000+born;
+        for(int row=0;row<MAX_GRID_SIZE_Y;++row) {
+            board.mPlantRow[row]=(row==2||row==3)?PLANTROW_POOL:PLANTROW_NORMAL;
+            board.mIceMinX[row]=1000;board.mIceTimer[row]=0;board.mIceParticleID[row]=PARTICLESYSTEMID_NULL;
+        }
+        const bool preview=group>=2;
+        const auto domain=preview||scene==SCENE_LEVEL_INTRO?ReanimTimeDomain::Visual:ReanimTimeDomain::Battle;
+        const auto animationNow=domain==ReanimTimeDomain::Visual?holder.mVisualTimeNs:holder.mBattleTimeNs;
+        int animations=0;
+        const auto check=[&](ReanimationID id) {
+            if(auto* animation=app.ReanimationTryToGet(id)) {
+                ++animations;
+                const auto expectedDomain=animation->mIsAttachment?domain:ReanimTimeDomain::Visual;
+                const auto expectedTime=animation->mIsAttachment?animationNow:holder.mVisualTimeNs;
+                Require(holder.mTimeDomains[holder.mReanimations.DataArrayIndexOf(animation)]==expectedDomain&&
+                    animation->mLastUpdateTimeNs==expectedTime,"Actor birth left its animation in a different clock until the first update");
+            }
+        };
+        try
+        {
+            Reanimation* body=nullptr;
+            if(group==0) {
+                auto* plant=board.NewPlant(0,1,static_cast<SeedType>(type),SEED_NONE);
+                for(const auto id:{plant->mBodyReanimID,plant->mHeadReanimID,plant->mHeadReanimID2,plant->mHeadReanimID3,
+                    plant->mBlinkReanimID,plant->mLightReanimID,plant->mSleepingReanimID}) check(id);
+                body=app.ReanimationTryToGet(plant->mBodyReanimID);
+            }
+            else {
+                const int from=group==1?0:group==2?Zombie::ZOMBIE_WAVE_CUTSCENE:Zombie::ZOMBIE_WAVE_UI;
+                auto* zombie=board.AddZombieInRow(static_cast<ZombieType>(type),2,from);
+                body=app.ReanimationTryToGet(zombie->mBodyReanimID);
+                Zombie* member=nullptr;
+                while(board.IterateZombies(member))
+                    for(const auto id:{member->mBodyReanimID,member->mSpecialHeadReanimID,member->mZombatarHeadReanimID,
+                        member->mMoweredReanimID,member->mBossFireBallReanimID}) check(id);
+            }
+            // Use actual manager dispatch as well as birth metadata for the
+            // two ordinary actors; their first update must consume its age.
+            if(body&&((group==0&&type==SEED_PEASHOOTER)||(group==1&&type==ZOMBIE_NORMAL))) {
+                constexpr auto step=7'891'011ULL;
+                const auto expected=body->SamplePlaybackAt(animationNow+step).phaseNs;
+                Sexy::ApplySimulationStep(step);holder.mVisualTimeNs+=step;
+                if(scene==SCENE_PLAYING) board.mLevelTimeNs+=step;
+                holder.mBattleTimeNs=board.mLevelTimeNs;board.UpdateGameObjects(scene==SCENE_PLAYING?step:0);
+                Require(body->SamplePlayback().phaseNs==expected,"The first managed actor update discarded its elapsed animation age");
+            }
+            ++checked;
+            std::cout<<"Actor birth group="<<group<<" type="<<type<<" scene="<<scene<<" born="<<born<<" animations="<<animations<<" ok=1\n";
+        }
+        catch(const std::exception& error) {
+            allPassed=false;std::cerr<<"Actor birth failed group="<<group<<" type="<<type<<" scene="<<scene<<" born="<<born<<" message="<<error.what()<<'\n';
+        }
+    }
+    Require(allPassed&&checked==620,"Actor birth clock cases failed or the catalog is incomplete");
+    std::cout<<"PASS actual actor birth clocks: 620 plant/zombie/preview creation contexts, all animation fields and the first managed update\n";
+}
+
+void AwardRulesRuntime(TestApp& app)
+{
+    auto& clocks=*app.mEffectSystem->mReanimationHolder;
+    struct Restore {
+        TestApp& app;
+        PlayerInfo* player=app.mPlayerInfo;
+        ZenGarden* garden=app.mZenGarden;
+        PoolEffect* pool=app.mPoolEffect;
+        GameMode mode=app.mGameMode;
+        GameScenes scene=app.mGameScene;
+        Rect bounds=app.mScreenBounds;
+        BoardResult result=app.mBoardResult;
+        unsigned long long interval=Sexy::gUpdateIntervalNs,phase=Sexy::gLegacyTickPhaseNs;
+        int whole=Sexy::gWholeLegacyTicks;
+        double ticks=Sexy::gUpdateTicks,steps=Sexy::gStepsPerLegacyTick;
+        std::int64_t visual=app.mEffectSystem->mReanimationHolder->mVisualTimeNs;
+        std::int64_t battle=app.mEffectSystem->mReanimationHolder->mBattleTimeNs;
+        ~Restore() {
+            app.fixtureNestedPump={};app.KillAlmanacDialog();app.KillStoreScreen();
+            app.KillAwardScreen();app.KillCreditScreen();app.KillChallengeScreen();app.KillGameSelector();
+            app.KillBoard();app.ProcessSafeDeleteList();
+            app.mPlayerInfo=player;app.mZenGarden=garden;app.mPoolEffect=pool;
+            app.mGameMode=mode;app.mGameScene=scene;app.mScreenBounds=bounds;app.mBoardResult=result;
+            Sexy::gUpdateIntervalNs=interval;Sexy::gLegacyTickPhaseNs=phase;Sexy::gWholeLegacyTicks=whole;
+            Sexy::gUpdateTicks=ticks;Sexy::gStepsPerLegacyTick=steps;
+            app.mEffectSystem->mReanimationHolder->mVisualTimeNs=visual;
+            app.mEffectSystem->mReanimationHolder->mBattleTimeNs=battle;
+        }
+    } restore{app};
+    Require(!app.mBoard&&!app.mAwardScreen&&!app.mCreditScreen&&!app.mChallengeScreen,"Award fixture requires an empty application route");
+    app.mReanimatorCache->PrebuildCacheFrames();
+    bool allPassed=true;
+    constexpr std::array<unsigned long long,7> jitter{1'234'567,18'765'433,4'000'003,32'333'333,7'891'011,5'432'109,11'111'111};
+    auto& render=*app.mDDInterface->mRenderInterface;
+    struct Target {Image* image;~Target(){delete image;}} target{render.CreateRenderImage(1400,600)};
+    for(const bool replay:{false,true})
+    for(int level=1;level<=50;++level)
+    for(const int hz:{100,30,240,0})
+    {
+        PlayerInfo profile;ZenGarden garden;PoolEffect pool;pool.PoolEffectInitialize();
+        profile.mId=49;profile.mLevel=level;profile.mFinishedAdventure=replay?1:0;
+        profile.mCoins=99999;
+        std::fill(std::begin(profile.mEarnedAchievements),std::end(profile.mEarnedAchievements),true);
+        std::fill(std::begin(profile.mShownAchievements),std::end(profile.mShownAchievements),true);
+        app.mPlayerInfo=&profile;app.mZenGarden=&garden;app.mPoolEffect=&pool;
+        app.mScreenBounds=Rect(-300,0,1400,600);clocks.mVisualTimeNs=123'456'789'000;clocks.mBattleTimeNs=0;
+        Sexy::SRand(0xA7A00+level);Sexy::gLegacyTickPhaseNs=0;
+        int sequence=0,sawAlmanac=0,sawStore=-1,storeClicks=0;
+        unsigned long long nestedElapsed=0;
+        const auto nextStep=[&]() {return hz?1'000'000'000ULL/hz:jitter[sequence++%jitter.size()];};
+        const auto draw=[&](Widget& widget) {
+            GpuImageDrawScope scope(render,target.image);Graphics graphics(target.image);
+            graphics.Translate(widget.mX-app.mScreenBounds.mX,widget.mY-app.mScreenBounds.mY);widget.Draw(&graphics);
+        };
+        app.fixtureNestedPump=[&](bool* updated) {
+            const auto step=nextStep();nestedElapsed+=step;
+            Require(nestedElapsed<20'000'000'000ULL,"Award nested modal failed to finish within twenty simulated seconds");
+            if(auto* almanac=static_cast<AlmanacDialog*>(app.GetDialog(DIALOG_ALMANAC))) {
+                ++sawAlmanac;draw(*almanac);
+                const auto position=almanac->GetAbsPos();
+                const int x=almanac->mCloseButton->mX+almanac->mCloseButton->mWidth/2;
+                const int y=almanac->mCloseButton->mY+almanac->mCloseButton->mHeight/2;
+                app.mWidgetManager->mLastMouseX=position.mX+x;app.mWidgetManager->mLastMouseY=position.mY+y;
+                almanac->MouseUp(x,y,1);
+            }
+            else if(auto* store=static_cast<StoreScreen*>(app.GetDialog(DIALOG_STORE))) {
+                if(sawStore==-1) sawStore=store->mStartDialog;
+                if(!store->mDrawnOnce) draw(*store);
+                Sexy::ApplySimulationStep(step);app.UpdateFrames();
+                if(store->mBubbleClickToContinue) {store->KeyChar(' ');++storeClicks;}
+                else if(store->CanInteractWithButtons()) store->ButtonDepress(store->mBackButton->mId);
+            }
+            else throw std::runtime_error("Award waited on an unexpected modal");
+            if(updated) *updated=true;
+            app.ProcessSafeDeleteList();return true;
+        };
+        try
+        {
+            std::cout<<"Award begin level="<<level<<" replay="<<replay<<" Hz="<<hz<<'\n';
+            app.PreNewGame(GAMEMODE_ADVENTURE,false);
+            app.KillSeedChooserScreen();app.mGameScene=SCENE_PLAYING;
+            app.mBoard->mLevelComplete=true;
+            app.CheckForGameEnd();app.ProcessSafeDeleteList();
+            Require(profile.mLevel==(level==50?1:level+1)&&profile.mFinishedAdventure==(replay?1:0)+(level==50),
+                "Adventure completion did not advance the profile exactly once");
+            const bool expectAward=!replay||level==50||level%10==9;
+            Require(bool(app.mAwardScreen)==expectAward,"Adventure completion chose the wrong award route");
+            const auto continueAward=[&]() {
+                auto* award=app.mAwardScreen;Require(award!=nullptr,"Award route lost its screen");
+                unsigned long long elapsed=0;
+                while(elapsed<1'900'000'000ULL) {
+                    const auto step=std::min<unsigned long long>(nextStep(),1'900'000'000ULL-elapsed);
+                    Sexy::ApplySimulationStep(step);app.UpdateFrames();elapsed+=step;
+                }
+                Require(award->mFadeInCounter==0&&!award->mShowingAchievements,"Controlled award failed to finish its normal fade");
+                draw(*award);
+                {WidgetLifetimeHold hold(*award);award->StartButtonPressed();}
+                app.ProcessSafeDeleteList();
+            };
+            if(expectAward) continueAward();
+            if(level==50)
+            {
+                if(app.mAwardScreen) {
+                    Require(!replay&&app.mAwardScreen->mAwardType==AWARD_CREDITS_ZOMBIENOTE,"First completion did not show its Credits note");
+                    continueAward();
+                }
+                Require(app.mGameScene==SCENE_CREDIT&&app.mCreditScreen&&!app.mBoard,"Final Adventure award did not open Credits");
+                draw(*app.mCreditScreen);
+            }
+            else if(!replay&&level==44)
+                Require(app.mGameMode==GAMEMODE_LIMBO_ZEN_GARDEN&&app.mBoard&&app.mBoard->mBackground==BACKGROUND_GREENHOUSE&&
+                    app.mCrazyDaveMessageIndex==2100,"Watering-can award did not enter the Garden tutorial");
+            else
+                Require(app.mGameMode==GAMEMODE_ADVENTURE&&app.mBoard&&app.mBoard->mLevel==level+1&&
+                    app.mGameScene==SCENE_LEVEL_INTRO,"Adventure award did not enter the next level");
+            const int expectedStore=!replay?(level==24?301:level==34?601:level==41?3100:-1):-1;
+            Require(sawAlmanac==int(!replay&&level==14)&&sawStore==expectedStore,
+                "Adventure award omitted or invented an Almanac/Store introduction");
+            if(expectedStore!=-1) Require(storeClicks>0,"Award Store intro bypassed its real click-through dialogue");
+            std::cout<<"Award primary level="<<level<<" replay="<<replay<<" Hz="<<hz<<" next="<<profile.mLevel
+                <<" scene="<<app.mGameScene<<" almanac="<<sawAlmanac<<" store="<<sawStore<<" clicks="<<storeClicks<<'\n';
+        }
+        catch(const std::exception& error) {
+            allPassed=false;std::cerr<<"Award failed level="<<level<<" replay="<<replay<<" Hz="<<hz<<" message="<<error.what()<<'\n';
+        }
+        app.fixtureNestedPump={};app.KillAlmanacDialog();app.KillStoreScreen();
+        app.KillAwardScreen();app.KillCreditScreen();app.KillChallengeScreen();app.KillGameSelector();
+        app.KillBoard();app.ProcessSafeDeleteList();
+    }
+    Require(allPassed,"Award routes have failed cases; inspect per-case output");
+    std::cout<<"PASS actual Adventure award routes: fifty levels/first/replay/four schedules, nested Almanac/Store inputs, Garden tutorial and Credits\n";
+}
+
+void LateLifecycleRuntime(TestApp& app)
+{
+    auto& clocks=*app.mEffectSystem->mReanimationHolder;
+    struct Restore {
+        TestApp& app;
+        PlayerInfo* player=app.mPlayerInfo;
+        ZenGarden* garden=app.mZenGarden;
+        PoolEffect* pool=app.mPoolEffect;
+        GameMode mode=app.mGameMode;
+        GameScenes scene=app.mGameScene;
+        Rect bounds=app.mScreenBounds;
+        BoardResult result=app.mBoardResult;
+        unsigned long long interval=Sexy::gUpdateIntervalNs,phase=Sexy::gLegacyTickPhaseNs;
+        int whole=Sexy::gWholeLegacyTicks;
+        double ticks=Sexy::gUpdateTicks,steps=Sexy::gStepsPerLegacyTick;
+        std::int64_t visual=app.mEffectSystem->mReanimationHolder->mVisualTimeNs;
+        std::int64_t battle=app.mEffectSystem->mReanimationHolder->mBattleTimeNs;
+        void Close() {
+            app.fixtureNestedPump={};app.KillDialog(DIALOG_ZEN_SELL);
+            app.KillBoard();app.ProcessSafeDeleteList();
+        }
+        ~Restore() {
+            Close();app.mPlayerInfo=player;app.mZenGarden=garden;app.mPoolEffect=pool;
+            app.mGameMode=mode;app.mGameScene=scene;app.mScreenBounds=bounds;app.mBoardResult=result;
+            Sexy::gUpdateIntervalNs=interval;Sexy::gLegacyTickPhaseNs=phase;Sexy::gWholeLegacyTicks=whole;
+            Sexy::gUpdateTicks=ticks;Sexy::gStepsPerLegacyTick=steps;
+            app.mEffectSystem->mReanimationHolder->mVisualTimeNs=visual;
+            app.mEffectSystem->mReanimationHolder->mBattleTimeNs=battle;
+        }
+    } restore{app};
+    Require(!app.mBoard,"Lifecycle fixture requires an empty Board route");
+    constexpr std::array<unsigned long long,7> jitter{1'234'567,18'765'433,4'000'003,32'333'333,7'891'011,5'432'109,11'111'111};
+    bool allPassed=true;
+    for(const auto mode:{GAMEMODE_ADVENTURE,GAMEMODE_MINIGAME_FINAL_BOSS})
+    for(const int hz:{100,30,240,0})
+    {
+        PlayerInfo profile;ZenGarden garden;PoolEffect pool;pool.PoolEffectInitialize();
+        profile.mId=51;profile.mLevel=50;profile.mFinishedAdventure=mode==GAMEMODE_ADVENTURE?0:1;
+        app.mPlayerInfo=&profile;app.mZenGarden=&garden;app.mPoolEffect=&pool;
+        app.mGameMode=mode;app.mGameScene=SCENE_PLAYING;app.mBoardResult=BOARDRESULT_NONE;
+        clocks.mVisualTimeNs=clocks.mBattleTimeNs=0;Sexy::gLegacyTickPhaseNs=0;Sexy::SRand(0xB05517);
+        {
+            Board board(&app);
+            try {
+                board.mLevel=50;board.mBackground=BACKGROUND_5_ROOF;
+                board.mCurrentWave=6;board.mNumWaves=20;board.mTotalSpawnedWaves=0;
+                board.mSeedBank->mNumPackets=0;
+                for(int row=0;row<MAX_GRID_SIZE_Y;++row) {
+                    board.mPlantRow[row]=row==5?PLANTROW_DIRT:PLANTROW_NORMAL;
+                    board.mIceMinX[row]=1000;board.mIceTimer[row]=0;board.mIceParticleID[row]=PARTICLESYSTEMID_NULL;
+                    if(row<5) for(int col=0;col<9;++col) board.NewPlant(col,row,SEED_WALLNUT,SEED_NONE)->mPlantHealth=1'000'000;
+                }
+                auto* boss=board.AddZombieInRow(ZOMBIE_BOSS,0,0);
+                int stage=0;bool firstAttack=false,secondAttack=false,dying=false;
+                for(int sequence=0;board.mLevelTimeNs<90'000'000'000ULL&&!board.HasLevelAwardDropped();++sequence) {
+                    if(boss->mZombiePhase==PHASE_BOSS_IDLE) {
+                        if(stage==0) {
+                            const int desired=boss->mBodyMaxHealth*4/5-1;
+                            boss->TakeDamage(board.mLevelTimeNs,clocks.mVisualTimeNs,board.mLevelTimeNs,boss->mBodyHealth-desired,0U);
+                            Require(boss->GetBodyDamageIndex()==1,"Boss first damage boundary failed");stage=1;
+                        } else if(stage==1&&firstAttack) {
+                            const int desired=boss->mBodyMaxHealth/2-1;
+                            boss->TakeDamage(board.mLevelTimeNs,clocks.mVisualTimeNs,board.mLevelTimeNs,boss->mBodyHealth-desired,0U);
+                            Require(boss->GetBodyDamageIndex()==2,"Boss second damage boundary failed");stage=2;
+                        } else if(stage==2&&secondAttack) {
+                            boss->TakeDamage(board.mLevelTimeNs,clocks.mVisualTimeNs,board.mLevelTimeNs,boss->mBodyHealth+100,0U);
+                            Require(boss->mBodyHealth==1,"Boss lethal damage bypassed its one-health death sentinel");stage=3;
+                        }
+                    }
+                    const auto step=hz?1'000'000'000ULL/hz:jitter[sequence%jitter.size()];
+                    Sexy::ApplySimulationStep(step);board.mLevelTimeNs+=step;
+                    clocks.mVisualTimeNs+=step;clocks.mBattleTimeNs=board.mLevelTimeNs;
+                    app.mEffectSystem->UpdateAt(clocks.mVisualTimeNs,clocks.mBattleTimeNs);
+                    board.UpdateGameObjects(step);
+                    firstAttack|=stage==1&&boss->mBossMode==1&&boss->mZombiePhase==PHASE_BOSS_BUNGEES_ENTER;
+                    secondAttack|=stage==2&&boss->mBossMode==2&&boss->mZombiePhase==PHASE_BOSS_DROP_RV;
+                    dying|=boss->mZombiePhase==PHASE_ZOMBIE_DYING;
+                    app.mEffectSystem->ProcessDeleteQueue();
+                }
+                int awards=0;Coin* award=nullptr;
+                while(board.IterateCoins(award)) if(award->IsLevelAward()) ++awards;
+                Require(stage==3&&firstAttack&&secondAttack&&dying&&board.HasLevelAwardDropped()&&
+                    app.mBoardResult==BOARDRESULT_WON&&awards==1,
+                    "Boss damage stages/death did not produce exactly one real level award");
+                std::cout<<"Lifecycle boss mode="<<int(mode)<<" Hz="<<hz<<" stage="<<stage<<" bungee="<<firstAttack
+                    <<" rv="<<secondAttack<<" dying="<<dying<<" awards="<<awards<<" elapsedNs="<<board.mLevelTimeNs<<" ok=1\n";
+            } catch(const std::exception& error) {
+                allPassed=false;std::cerr<<"Lifecycle boss failed mode="<<int(mode)<<" Hz="<<hz<<" message="<<error.what()<<'\n';
+            }
+        }
+        app.mBoard=nullptr;
+    }
+    for(const int hz:{100,30,240,0})
+    for(const bool accept:{false,true})
+    {
+        PlayerInfo profile;ZenGarden garden;PoolEffect pool;pool.PoolEffectInitialize();
+        profile.mId=52;profile.mLevel=50;profile.mFinishedAdventure=1;profile.mCoins=1000;
+        profile.mNumPottedPlants=3;
+        for(int index=0;index<3;++index) {
+            auto& spec=profile.mPottedPlant[index];spec.InitializePottedPlant(index==1?SEED_SUNFLOWER:SEED_PEASHOOTER);
+            spec.mWhichZenGarden=GARDEN_MAIN;spec.mPlantAge=PLANTAGE_FULL;spec.mX=index+1;spec.mY=1;
+            spec.mLastNeedFulfilledTime=garden.mFrameTime;
+        }
+        app.mPlayerInfo=&profile;app.mZenGarden=&garden;app.mPoolEffect=&pool;
+        clocks.mVisualTimeNs=123'456'789'000;clocks.mBattleTimeNs=0;Sexy::gLegacyTickPhaseNs=0;
+        app.mScreenBounds=Rect(-300,0,1400,600);Sexy::SRand(0x5A1E);
+        int confirmations=0;unsigned long long wait=0;
+        app.fixtureNestedPump=[&](bool* updated) {
+            auto* dialog=static_cast<LawnDialog*>(app.GetDialog(DIALOG_ZEN_SELL));
+            Require(dialog!=nullptr,"Garden sale waited on an unexpected dialog");
+            Require(++confirmations<10,"Garden sale confirmation did not close");
+            dialog->ButtonDepress(accept?Dialog::ID_YES:Dialog::ID_NO);
+            const auto step=hz?1'000'000'000ULL/hz:jitter[confirmations%jitter.size()];
+            wait+=step;Sexy::ApplySimulationStep(step);app.UpdateFrames();
+            if(updated) *updated=true;
+            app.ProcessSafeDeleteList();return true;
+        };
+        try {
+            app.PreNewGame(GAMEMODE_LIMBO_ZEN_GARDEN,false);
+            app.KillSeedChooserScreen();app.StartPlaying();
+            auto& board=*app.mBoard;
+            Plant* sale=nullptr;Plant* item=nullptr;
+            while(board.IteratePlants(item)) if(item->mPottedPlantIndex==1) sale=item;
+            Require(sale!=nullptr,"Garden sale target is not instantiated");
+            const auto id=board.mPlants.DataArrayGetID(sale);
+            const int price=garden.GetPlantSellPrice(sale);
+            garden.MouseDownWithMoneySign(sale);
+            board.ProcessDeleteQueue();
+            Require(confirmations==1&&!app.GetDialog(DIALOG_ZEN_SELL),"Garden sale did not use one real confirmation");
+            Require(profile.mCoins==1000+int(accept)*price&&profile.mNumPottedPlants==3-int(accept),
+                "Garden sale charged the wrong balance or removed the wrong number of records");
+            if(accept) {
+                Require(!board.mPlants.DataArrayTryToGet(id),"Sold Garden plant was not released");
+                Require(profile.mPottedPlant[1].mSeedType==SEED_PEASHOOTER,"Garden sale did not compact the surviving record");
+            } else Require(board.mPlants.DataArrayTryToGet(id)&&profile.mPottedPlant[1].mSeedType==SEED_SUNFLOWER,
+                "Declining the sale changed its target");
+            int live=0,pots=0;item=nullptr;
+            while(board.IteratePlants(item)) {
+                if(item->mPottedPlantIndex==-1) {
+                    Require(item->mSeedType==SEED_FLOWERPOT,"Garden has an unexpected unowned live plant");
+                    ++pots;continue;
+                }
+                Require(item->mPottedPlantIndex>=0&&item->mPottedPlantIndex<profile.mNumPottedPlants,
+                    "Garden sale left a surviving plant with an invalid record index");
+                ++live;
+            }
+            Require(live==profile.mNumPottedPlants&&pots==live,"Garden record, plant and supporting pot counts disagree after sale");
+            std::cout<<"Lifecycle sale Hz="<<hz<<" accept="<<accept<<" price="<<price<<" coins="<<profile.mCoins
+                <<" records="<<profile.mNumPottedPlants<<" live="<<live<<" pots="<<pots<<" waitNs="<<wait<<" ok=1\n";
+        } catch(const std::exception& error) {
+            allPassed=false;std::cerr<<"Lifecycle sale failed Hz="<<hz<<" accept="<<accept<<" message="<<error.what()<<'\n';
+        }
+        restore.Close();
+    }
+    Require(allPassed,"Late lifecycle routes have failed cases; inspect per-case output");
+    std::cout<<"PASS actual late lifecycle: eight Boss damage/death routes and eight real Garden sale confirmations\n";
+}
+
+void GraveSpawnRulesRuntime(TestApp& app)
+{
+    auto& clocks=*app.mEffectSystem->mReanimationHolder;
+    struct Restore {
+        TestApp& app;
+        PlayerInfo* player=app.mPlayerInfo;
+        ZenGarden* garden=app.mZenGarden;
+        PoolEffect* pool=app.mPoolEffect;
+        GameMode mode=app.mGameMode;
+        GameScenes scene=app.mGameScene;
+        Rect bounds=app.mScreenBounds;
+        BoardResult result=app.mBoardResult;
+        unsigned long long interval=Sexy::gUpdateIntervalNs,phase=Sexy::gLegacyTickPhaseNs;
+        int whole=Sexy::gWholeLegacyTicks;
+        double ticks=Sexy::gUpdateTicks,steps=Sexy::gStepsPerLegacyTick;
+        std::int64_t visual=app.mEffectSystem->mReanimationHolder->mVisualTimeNs;
+        std::int64_t battle=app.mEffectSystem->mReanimationHolder->mBattleTimeNs;
+        void Close(){app.KillBoard();app.ProcessSafeDeleteList();}
+        ~Restore(){Close();app.mPlayerInfo=player;app.mZenGarden=garden;app.mPoolEffect=pool;
+            app.mGameMode=mode;app.mGameScene=scene;app.mScreenBounds=bounds;app.mBoardResult=result;
+            Sexy::gUpdateIntervalNs=interval;Sexy::gLegacyTickPhaseNs=phase;Sexy::gWholeLegacyTicks=whole;
+            Sexy::gUpdateTicks=ticks;Sexy::gStepsPerLegacyTick=steps;auto& clocks=*app.mEffectSystem->mReanimationHolder;
+            clocks.mVisualTimeNs=visual;clocks.mBattleTimeNs=battle;}
+    } restore{app};
+    Require(!app.mBoard,"Grave rules fixture requires an empty application Board route");
+    constexpr std::array<unsigned long long,7> jitter{1'234'567,18'765'433,4'000'003,32'333'333,7'891'011,5'432'109,11'111'111};
+    bool passed=true;
+    for(const auto mode:{GAMEMODE_ADVENTURE,GAMEMODE_SURVIVAL_NORMAL_STAGE_2,
+        GAMEMODE_SURVIVAL_HARD_STAGE_2,GAMEMODE_SURVIVAL_ENDLESS_STAGE_2})
+    for(int hz:{100,30,240,0})
+    for(int variant=0;variant<(mode==GAMEMODE_ADVENTURE?4:3);++variant)
+    {
+        PlayerInfo profile;ZenGarden garden;PoolEffect pool;pool.PoolEffectInitialize();
+        profile.mId=53;profile.mLevel=mode==GAMEMODE_ADVENTURE?std::array{11,14,16,20}[variant]:11;
+        profile.mFinishedAdventure=1;
+        app.mPlayerInfo=&profile;app.mZenGarden=&garden;app.mPoolEffect=&pool;
+        clocks.mVisualTimeNs=123'456'789'000;clocks.mBattleTimeNs=0;Sexy::gLegacyTickPhaseNs=0;Sexy::SRand(0x6A8E+variant);
+        try {
+            app.PreNewGame(mode,false);app.KillSeedChooserScreen();app.StartPlaying();
+            auto& board=*app.mBoard;
+            Require(board.mBackground==BACKGROUND_2_NIGHT&&board.mEnableGraveStones,"Grave mode did not enter a live night battle");
+            const int limit=mode==GAMEMODE_SURVIVAL_NORMAL_STAGE_2?8:12;
+            if(mode!=GAMEMODE_ADVENTURE) {
+                board.mGridItems.DataArrayFreeAll();
+                const int requested=variant==0?0:limit-2+variant;
+                for(int col=4;col<9&&board.GetGraveStonesCount()<requested;++col)
+                    for(int row=0;row<5&&board.GetGraveStonesCount()<requested;++row) board.AddAGraveStone(col,row);
+                Require(board.GetGraveStonesCount()==requested,"Grave fixture could not establish its intended limit boundary");
+            }
+            const int initial=board.GetGraveStonesCount();
+            board.mCurrentWave=0;board.SpawnZombieWave();
+            Require(board.GetGraveStonesCount()==initial,"An ordinary early wave unexpectedly grew a grave");
+            board.RemoveAllZombies();board.ProcessDeleteQueue();
+            board.mCurrentWave=board.mNumWaves-1;board.SpawnZombieWave();
+            const int expected=initial+int(mode!=GAMEMODE_ADVENTURE&&initial<limit);
+            Require(board.GetGraveStonesCount()==expected,"Final night wave grave count differs from the retail rule");
+            if(expected>initial) {
+                GridItem* grave=nullptr;std::int64_t earliest=INT64_MAX;
+                while(board.IterateGridItems(grave)) if(grave->mGridItemType==GRIDITEM_GRAVESTONE)
+                    earliest=std::min(earliest,grave->mStateStartTimeNs);
+                Require(earliest>=static_cast<std::int64_t>(board.mLevelTimeNs),"Battle grave was initialized as already risen");
+            }
+            std::cout<<"Grave wave mode="<<int(mode)<<" level="<<profile.mLevel<<" Hz="<<hz<<" initial="<<initial
+                <<" final="<<board.GetGraveStonesCount()<<" limit="<<(mode==GAMEMODE_ADVENTURE?0:limit)<<" ok=1\n";
+        } catch(const std::exception& error){passed=false;std::cerr<<"Grave wave failed mode="<<int(mode)<<" Hz="<<hz<<" message="<<error.what()<<'\n';}
+        restore.Close();
+    }
+    for(const auto mode:{GAMEMODE_ADVENTURE,GAMEMODE_MINIGAME_WHACK_A_ZOMBIE})
+    for(int hz:{100,30,240,0})
+    for(bool depleted:{false,true})
+    {
+        PlayerInfo profile;ZenGarden garden;PoolEffect pool;pool.PoolEffectInitialize();
+        profile.mId=54;profile.mLevel=15;profile.mFinishedAdventure=1;
+        app.mPlayerInfo=&profile;app.mZenGarden=&garden;app.mPoolEffect=&pool;
+        clocks.mVisualTimeNs=123'456'789'000;clocks.mBattleTimeNs=0;Sexy::gLegacyTickPhaseNs=0;Sexy::SRand(0x6A8E5);
+        try {
+            app.PreNewGame(mode,false);app.KillSeedChooserScreen();app.StartPlaying();
+            auto& board=*app.mBoard;
+            Require(board.GetGraveStonesCount()==9,"Whack initial grave count differs from retail");
+            if(depleted) {
+                int keep=0;GridItem* grave=nullptr;
+                while(board.IterateGridItems(grave)) if(grave->mGridItemType==GRIDITEM_GRAVESTONE&&++keep>2) grave->mDead=true;
+                board.ProcessDeleteQueue();
+            }
+            const int initial=board.GetGraveStonesCount();
+            Require(initial==(depleted?2:9),"Whack grave-removal fixture failed");
+            std::vector<unsigned long long> events;std::vector<int> counts;
+            int previous=initial,sequence=0;
+            while(board.mLevelTimeNs<62'000'000'000ULL) {
+                const auto step=std::min<unsigned long long>(hz?1'000'000'000ULL/hz:jitter[sequence++%jitter.size()],62'000'000'000ULL-board.mLevelTimeNs);
+                Sexy::ApplySimulationStep(step);clocks.mVisualTimeNs+=step;board.Update();
+                board.RemoveAllZombies();board.ProcessDeleteQueue();app.mEffectSystem->ProcessDeleteQueue();
+                const int count=board.GetGraveStonesCount();
+                if(count!=previous) {events.push_back(board.mLevelTimeNs);counts.push_back(count);previous=count;}
+                Require(app.mGameScene==SCENE_PLAYING,"Whack timing fixture unexpectedly left battle");
+            }
+            Require(events.size()==3,"Whack did not grow graves three times during its first 62 seconds");
+            const unsigned long long tolerance=(hz?1'000'000'000ULL/hz:32'333'333)*4;
+            for(int event=0;event<3;++event) {
+                const unsigned long long expected=21'000'000'000ULL+event*20'000'000'000ULL;
+                Require(events[event]>=expected&&events[event]-expected<=tolerance,"Whack grave growth does not follow the retail 21/41/61-second schedule");
+                Require(counts[event]==(depleted?5:10)+event,"Whack did not refill to five, then add one per growth event");
+                std::cout<<"Grave whack mode="<<int(mode)<<" Hz="<<hz<<" depleted="<<depleted<<" event="<<event
+                    <<" timeNs="<<events[event]<<" count="<<counts[event]<<" ok=1\n";
+            }
+        } catch(const std::exception& error){passed=false;std::cerr<<"Grave whack failed mode="<<int(mode)<<" Hz="<<hz<<" depleted="<<depleted<<" message="<<error.what()<<'\n';}
+        restore.Close();
+    }
+    Require(passed,"Grave generation rules have failed scenarios; inspect per-case output");
+    std::cout<<"PASS actual grave generation: 52 night wave boundaries and 16 Whack 62-second timelines at four schedules\n";
+}
+
+void AtlasTransparentEdges(TestApp& app)
+{
+    auto& render=*app.mDDInterface->mRenderInterface;
+    auto* decoded=ImageLib::GetImage("compiled/reanim/gravebuster.atlas.png",false);
+    Require(decoded && decoded->mBits && !decoded->HasComposition(),"Cannot decode Gravebuster atlas");
+    Image reference,raw;
+    reference.SetBits(decoded->mBits,decoded->mWidth,decoded->mHeight);
+    raw.SetBits(decoded->mBits,decoded->mWidth,decoded->mHeight);
+    reference.mGpuSamplingFlags|=GpuVertex::kAlphaEdgeFilter;
+    const TextureRegion region{0,0,1,1,decoded->mWidth,decoded->mHeight};
+    const TextureSource uploaded{render.UploadAtlasTexture(decoded),0};
+    Require(!decoded,"Atlas retained decoded pixels after upload");
+    struct Target{Image* image;~Target(){delete image;}} target{render.CreateRenderImage(769,677)};
+    bool passed=true;unsigned changed=0;
+    for(bool linear:{false,true})
+    for(float offset:{0.f,.375f})
+    {
+        SexyMatrix3 transform;transform.LoadIdentity();
+        transform.m00=6.125f;transform.m01=0;transform.m02=7.f+offset;
+        transform.m10=0;transform.m11=5.375f;transform.m12=8.f+offset;
+        const auto capture=[&](const TextureSource& source) {
+            {
+                GpuImageDrawScope destination(render,target.image);
+                // The scene uses independent straight-RGB/alpha sampling.
+                // A generated render target normally premultiplies each tap;
+                // request scene semantics explicitly for this readback fixture.
+                GpuImageSamplingScope sampling(render,GpuVertex::kIndependentColorFilter);
+                Graphics graphics(target.image);
+                graphics.mColor=Color(35,71,109);graphics.FillRect(0,0,769,677);
+                render.BltTransformed(source,nullptr,Color::White,Graphics::DRAWMODE_NORMAL,region,transform,linear);
+            }
+            return render.ReadImagePixels(*target.image).pixels;
+        };
+        const auto original=capture({render.CreateImageTexture(&raw),0});
+        const auto expected=linear ? capture({render.CreateImageTexture(&reference),reference.mGpuSamplingFlags}) : original;
+        const auto actual=capture(uploaded);
+        int maximum=0;
+        for(std::size_t i=0;i<actual.size();++i) {
+            changed+=actual[i]!=original[i];
+            for(unsigned shift:{0u,8u,16u,24u})
+                maximum=std::max(maximum,std::abs(int((actual[i]>>shift)&255)-int((expected[i]>>shift)&255)));
+        }
+        passed&=maximum<=2;
+        std::cout<<"Atlas transparent edges linear="<<linear<<" offset="<<offset<<" maxError="<<maximum<<'\n';
+        if(linear && offset!=0) {
+            Require(ImageLib::WritePNGImage("gravebuster-atlas-raw.png",769,677,original) &&
+                ImageLib::WritePNGImage("gravebuster-atlas-repaired.png",769,677,actual),"Cannot write atlas edge comparison");
+        }
+    }
+    Require(passed,"Atlas upload leaked transparent RGB instead of matching the legacy edge repair");
+    Require(changed>0,"Atlas edge fixture did not exercise transparent RGB interpolation");
+    std::cout<<"PASS atlas edge repair: actual Gravebuster PNG, nearest/linear, integral/fractional, legacy shader oracle, upload-discard\n";
+}
+
+void HudAndGraveSeamsRuntime(TestApp& app)
+{
+    auto& clocks=*app.mEffectSystem->mReanimationHolder;
+    struct Restore {
+        TestApp& app;PlayerInfo* player=app.mPlayerInfo;ZenGarden* garden=app.mZenGarden;PoolEffect* pool=app.mPoolEffect;
+        GameMode mode=app.mGameMode;GameScenes scene=app.mGameScene;Rect bounds=app.mScreenBounds;BoardResult result=app.mBoardResult;
+        unsigned long long interval=Sexy::gUpdateIntervalNs,phase=Sexy::gLegacyTickPhaseNs;
+        int whole=Sexy::gWholeLegacyTicks;double ticks=Sexy::gUpdateTicks,steps=Sexy::gStepsPerLegacyTick;
+        std::int64_t visual=app.mEffectSystem->mReanimationHolder->mVisualTimeNs,battle=app.mEffectSystem->mReanimationHolder->mBattleTimeNs;
+        void Close(){app.KillBoard();app.ProcessSafeDeleteList();}
+        ~Restore(){Close();app.mPlayerInfo=player;app.mZenGarden=garden;app.mPoolEffect=pool;app.mGameMode=mode;app.mGameScene=scene;
+            app.mScreenBounds=bounds;app.mBoardResult=result;Sexy::gUpdateIntervalNs=interval;Sexy::gLegacyTickPhaseNs=phase;
+            Sexy::gWholeLegacyTicks=whole;Sexy::gUpdateTicks=ticks;Sexy::gStepsPerLegacyTick=steps;
+            auto& c=*app.mEffectSystem->mReanimationHolder;c.mVisualTimeNs=visual;c.mBattleTimeNs=battle;}
+    } restore{app};
+    Require(!app.mBoard,"HUD seam fixture requires an empty Board route");
+    PlayerInfo profile;ZenGarden garden;PoolEffect pool;pool.PoolEffectInitialize();
+    profile.mId=56;profile.mLevel=11;profile.mFinishedAdventure=1;
+    app.mPlayerInfo=&profile;app.mZenGarden=&garden;app.mPoolEffect=&pool;
+    auto& render=*app.mDDInterface->mRenderInterface;
+    struct Target{Image* image;~Target(){delete image;}} slotTarget{render.CreateRenderImage(1400,600)},gallery{render.CreateRenderImage(1280,480)};
+    bool passed=true;std::array<std::vector<unsigned int>,2> references;
+    for(const Rect bounds:{Rect(0,0,800,600),Rect(0,0,1400,600),Rect(-300,0,1400,600)})
+    for(int bankY:{0,-40})
+    for(int boardX:{0,-160,120})
+    {
+        app.mScreenBounds=Rect(0,0,800,600);clocks.mVisualTimeNs=123'456'789'000;clocks.mBattleTimeNs=0;
+        app.PreNewGame(GAMEMODE_MINIGAME_SLOT_MACHINE,false);app.KillSeedChooserScreen();app.StartPlaying();
+        app.mScreenBounds=bounds;auto& board=*app.mBoard;board.mX=boardX;board.mY=17;
+        board.mSeedBank->mY=bankY;board.mChallenge->mSlotMachineRollCount=3;
+        // Playing normally has camera X=0. For synthetic camera positions,
+        // isolate the handle from unrelated seed-card hit regions.
+        if(boardX!=0) board.mSeedBank->mNumPackets=0;
+        {
+            GpuImageDrawScope scope(render,slotTarget.image);Graphics graphics(slotTarget.image);
+            graphics.mColor=Color(20,45,30);graphics.FillRect(0,0,1400,600);
+            graphics.Translate(board.mX-bounds.mX,board.mY-bounds.mY);
+            board.mChallenge->DrawSlotMachine(&graphics);
+        }
+        const auto pixels=render.ReadImagePixels(*slotTarget.image);
+        auto& reference=references[bankY==0?0:1];
+        if(reference.empty()) reference=pixels.pixels;
+        const bool same=reference==pixels.pixels;
+        const int x=500+bounds.mX-board.mX,y=std::max(5,bankY+40)+bounds.mY-board.mY;
+        HitResult hit;board.MouseHitTest(x,y,&hit);
+        const bool hits=hit.mObjectType==OBJECT_TYPE_SLOT_MACHINE_HANDLE;
+        const bool tooltip=board.mChallenge->UpdateToolTip(x,y);
+        const auto rect=board.mChallenge->SlotMachineGetHandleRect();
+        passed&=same&&hits&&tooltip;
+        std::cout<<"Slot HUD width="<<bounds.mWidth<<" left="<<bounds.mX<<" boardX="<<boardX<<" bankY="<<bankY
+            <<" same="<<same<<" hit="<<hits<<" tooltip="<<tooltip<<" rectX="<<rect.mX<<'\n';
+        if(hits) {
+            board.mSunMoney=50;board.MouseDown(x,y,1);
+            passed&=board.mSunMoney==25&&board.mChallenge->mChallengeState==STATECHALLENGE_SLOT_MACHINE_ROLLING;
+        }
+        restore.Close();
+    }
+    app.mScreenBounds=Rect(0,0,800,600);clocks.mVisualTimeNs=123'456'789'000;clocks.mBattleTimeNs=0;
+    app.PreNewGame(GAMEMODE_ADVENTURE,false);app.KillSeedChooserScreen();app.StartPlaying();
+    auto& board=*app.mBoard;board.mGridItems.DataArrayFreeAll();board.mZombieCountDown=100000;board.mSunCountDown=100000;
+    auto* grave=board.AddAGraveStone(3,1);grave->mStateStartTimeNs=-1'000'000'000;
+    auto* plant=board.NewPlant(3,1,SEED_GRAVEBUSTER,SEED_NONE);
+    constexpr std::array<unsigned long long,24> samples{0,100'000'000,200'000'000,300'000'000,500'000'000,660'000'000,750'000'000,1'000'000'000,
+        1'250'000'000,1'500'000'000,1'750'000'000,2'000'000'000,2'250'000'000,2'500'000'000,2'750'000'000,3'000'000'000,
+        3'250'000'000,3'500'000'000,3'750'000'000,4'000'000'000,4'100'000'000,4'200'000'000,4'300'000'000,4'400'000'000};
+    {
+        GpuImageDrawScope scope(render,gallery.image);Graphics graphics(gallery.image);
+        graphics.mColor=Color(45,90,45);graphics.FillRect(0,0,1280,480);
+    }
+    for(std::size_t index=0;index<samples.size();++index) {
+        while(board.mLevelTimeNs<samples[index]) {
+            const auto step=std::min<unsigned long long>(16'666'666,samples[index]-board.mLevelTimeNs);
+            Sexy::ApplySimulationStep(step);clocks.mVisualTimeNs+=step;board.Update();board.ProcessDeleteQueue();app.mEffectSystem->ProcessDeleteQueue();
+        }
+        std::cout<<"Gravebuster seam frame="<<index<<" timeNs="<<board.mLevelTimeNs<<" state="<<int(plant->mState)
+            <<" remainingNs="<<plant->mStateCountdown.mNanoseconds<<" frame="<<app.ReanimationGet(plant->mBodyReanimID)->mCurrentFrame<<'\n';
+        GpuImageDrawScope scope(render,gallery.image);Graphics graphics(gallery.image);graphics.mLinearBlend=true;
+        graphics.Translate(int(index%8)*160+40-board.GridToPixelX(3,1),int(index/8)*160+50-board.GridToPixelY(3,1));
+        grave->DrawGraveStone(&graphics);
+        const float x=graphics.mTransX,y=graphics.mTransY;
+        if(plant->BeginDraw(&graphics)){plant->Draw(board.mLevelTimeNs,&graphics);plant->EndDraw(&graphics,x,y);}
+    }
+    const auto pixels=render.ReadImagePixels(*gallery.image);
+    Require(ImageLib::WritePNGImage("gravebuster-seam-gallery.png",1280,480,pixels.pixels),"Cannot write Gravebuster seam gallery");
+    restore.Close();
+    Require(passed,"Slot HUD coordinates or image follow Board movement; inspect focused output");
+    std::cout<<"PASS Slot HUD: eighteen camera/viewport/bank positions, fixed draw pixels, hit, tooltip and actual pull\n";
+}
+
+void LossRulesRuntime(TestApp& app)
+{
+    auto& clocks=*app.mEffectSystem->mReanimationHolder;
+    struct Restore {
+        TestApp& app;
+        PlayerInfo* player=app.mPlayerInfo;ZenGarden* garden=app.mZenGarden;PoolEffect* pool=app.mPoolEffect;
+        GameMode mode=app.mGameMode;GameScenes scene=app.mGameScene;BoardResult result=app.mBoardResult;
+        Rect bounds=app.mScreenBounds;
+        unsigned long long interval=Sexy::gUpdateIntervalNs,phase=Sexy::gLegacyTickPhaseNs;
+        int whole=Sexy::gWholeLegacyTicks;
+        double ticks=Sexy::gUpdateTicks,steps=Sexy::gStepsPerLegacyTick;
+        std::int64_t visual=app.mEffectSystem->mReanimationHolder->mVisualTimeNs;
+        std::int64_t battle=app.mEffectSystem->mReanimationHolder->mBattleTimeNs;
+        ~Restore() {
+            app.KillDialog(DIALOG_GAME_OVER);app.KillBoard();app.KillGameSelector();app.KillChallengeScreen();
+            app.ProcessSafeDeleteList();
+            app.mPlayerInfo=player;app.mZenGarden=garden;app.mPoolEffect=pool;
+            app.mGameMode=mode;app.mGameScene=scene;app.mBoardResult=result;app.mScreenBounds=bounds;
+            Sexy::gUpdateIntervalNs=interval;Sexy::gLegacyTickPhaseNs=phase;Sexy::gWholeLegacyTicks=whole;
+            Sexy::gUpdateTicks=ticks;Sexy::gStepsPerLegacyTick=steps;
+            app.mEffectSystem->mReanimationHolder->mVisualTimeNs=visual;
+            app.mEffectSystem->mReanimationHolder->mBattleTimeNs=battle;
+        }
+    } restore{app};
+    Require(!app.mBoard&&!app.mGameSelector&&!app.mChallengeScreen,"Loss fixture requires an empty application route");
+    app.mReanimatorCache->PrebuildCacheFrames();
+    struct Entry {GameMode mode;int level;bool cutscene;};
+    constexpr Entry entries[]{
+        {GAMEMODE_ADVENTURE,1,true},{GAMEMODE_ADVENTURE,11,true},{GAMEMODE_ADVENTURE,21,true},
+        {GAMEMODE_ADVENTURE,31,true},{GAMEMODE_ADVENTURE,41,true},{GAMEMODE_ADVENTURE,50,true},
+        {GAMEMODE_MINIGAME_POGO_PARTY,50,true},{GAMEMODE_SURVIVAL_NORMAL_STAGE_1,50,true},
+        {GAMEMODE_SURVIVAL_ENDLESS_STAGE_3,50,true},
+        {GAMEMODE_MINIGAME_ZOMBIQUARIUM,50,false},{GAMEMODE_MINIGAME_LAST_STAND,50,false},
+        {GAMEMODE_PUZZLE_I_ZOMBIE_1,50,false},{GAMEMODE_PUZZLE_I_ZOMBIE_ENDLESS,50,false},
+        {GAMEMODE_SCARY_POTTER_ENDLESS,50,false}};
+    constexpr std::array<unsigned long long,7> jitter{1'234'567,18'765'433,4'000'003,32'333'333,7'891'011,5'432'109,11'111'111};
+    auto& render=*app.mDDInterface->mRenderInterface;
+    struct Target {Image* image;~Target(){delete image;}} target{render.CreateRenderImage(1400,600)};
+    bool allPassed=true;int checked=0;
+    for(const auto& entry:entries)
+    for(const int width:{800,1400})
+    for(const int hz:{100,30,240,0})
+    for(const bool retry:{false,true})
+    {
+        PlayerInfo profile;ZenGarden garden;PoolEffect pool;pool.PoolEffectInitialize();
+        profile.mId=51;profile.mLevel=entry.level;profile.mFinishedAdventure=1;
+        app.mPlayerInfo=&profile;app.mZenGarden=&garden;app.mPoolEffect=&pool;
+        app.mBoardResult=BOARDRESULT_NONE;app.mScreenBounds=Rect((800-width)/2,0,width,600);
+        clocks.mVisualTimeNs=123'456'789'000;clocks.mBattleTimeNs=0;
+        Sexy::gLegacyTickPhaseNs=0;Sexy::SRand(0x10550+entry.level);
+        unsigned long long elapsed=0;int sequence=0;
+        try
+        {
+            std::cout<<"Loss begin mode="<<int(entry.mode)<<" level="<<entry.level<<" width="<<width<<" Hz="<<hz<<" retry="<<retry<<'\n';
+            app.PreNewGame(entry.mode,false);app.mBoard->RemoveCutsceneZombies();app.StartPlaying();
+            auto* board=app.mBoard;board->mDrawCount=1;board->mLevelTimeNs=31'234'567'890ULL;clocks.mBattleTimeNs=board->mLevelTimeNs;
+            Zombie* intruder=nullptr;
+            if(entry.cutscene) {
+                intruder=board->AddZombieInRow(ZOMBIE_NORMAL,1,0);intruder->mX=-120;intruder->mRootBindingGeneration=0;
+            }
+            board->ZombiesWon(intruder);
+            const auto heldBattle=board->mLevelTimeNs;
+            Require(app.mBoardResult==BOARDRESULT_LOST,"ZombiesWon did not record a loss");
+            if(entry.cutscene) Require(app.mGameScene==SCENE_ZOMBIES_WON&&!app.GetDialog(DIALOG_GAME_OVER),"Loss cutscene was skipped or showed its dialog immediately");
+            else Require(app.GetDialog(DIALOG_GAME_OVER)&&board->mPaused,"Direct loss did not show its immediate modal");
+            ReanimationID lossAnimation=ReanimationID::REANIMATIONID_NULL;
+            bool animated=false;std::int64_t firstPhase=0;
+            while(!app.GetDialog(DIALOG_GAME_OVER)&&elapsed<12'000'000'000ULL)
+            {
+                const auto step=hz?1'000'000'000ULL/hz:jitter[sequence++%jitter.size()];
+                Sexy::ApplySimulationStep(step);app.UpdateFrames();elapsed+=step;
+                Require(board->mLevelTimeNs==heldBattle&&clocks.mBattleTimeNs==static_cast<std::int64_t>(heldBattle),"Loss movie advanced Board/Battle time");
+                if(auto* movie=app.ReanimationTryToGet(board->mCutScene->mZombiesWonReanimID)) {
+                    if(lossAnimation==ReanimationID::REANIMATIONID_NULL) {
+                        lossAnimation=board->mCutScene->mZombiesWonReanimID;firstPhase=movie->SamplePlayback().phaseNs;
+                    }
+                    else {Require(lossAnimation==board->mCutScene->mZombiesWonReanimID,"Loss movie was created more than once");animated|=movie->SamplePlayback().phaseNs!=firstPhase;}
+                }
+                app.mEffectSystem->ProcessDeleteQueue();
+            }
+            auto* dialog=static_cast<GameOverDialog*>(app.GetDialog(DIALOG_GAME_OVER));
+            Require(dialog&&board->mPaused,"Loss movie never reached the Game Over dialog");
+            if(entry.cutscene) Require(elapsed>=11'000'000'000ULL&&elapsed<11'040'000'000ULL&&animated&&board->mCutScene->IsCutSceneOver(),
+                "Loss movie timing or its visible animation did not complete");
+            const auto heldVisual=clocks.mVisualTimeNs;
+            for(int i=0;i<3;++i) {Sexy::ApplySimulationStep(33'345'678);app.UpdateFrames();}
+            Require(app.GetDialog(DIALOG_GAME_OVER)==dialog&&board->mLevelTimeNs==heldBattle&&clocks.mVisualTimeNs==heldVisual,
+                "Game Over duplicated its modal or advanced the frozen scene");
+            {GpuImageDrawScope scope(render,target.image);Graphics graphics(target.image);
+             graphics.Translate(-app.mScreenBounds.mX,0);board->Draw(&graphics);
+             Graphics overlay(target.image);const auto point=dialog->GetAbsPos();overlay.Translate(point.mX-app.mScreenBounds.mX,point.mY);dialog->Draw(&overlay);}
+            {WidgetLifetimeHold hold(*dialog);dialog->ButtonDepress(retry?Dialog::ID_FOOTER:1);}
+            app.ProcessSafeDeleteList();
+            Require(!app.GetDialog(DIALOG_GAME_OVER)&&profile.mLevel==entry.level,"Loss action retained its dialog or advanced Adventure progress");
+            if(retry) Require(app.mBoard&&app.mBoard!=board&&app.mGameMode==entry.mode&&app.mGameScene==SCENE_LEVEL_INTRO&&
+                app.mBoard->mLevelTimeNs==0&&app.mBoardResult==BOARDRESULT_NONE,"Retry did not create a clean replacement level");
+            else if(entry.mode==GAMEMODE_ADVENTURE)
+                Require(!app.mBoard&&app.mGameSelector&&app.mGameScene==SCENE_MENU,"Adventure loss did not return to the selector");
+            else {
+                const auto page=app.IsSurvivalMode()?CHALLENGE_PAGE_SURVIVAL:app.IsPuzzleMode()?CHALLENGE_PAGE_PUZZLE:CHALLENGE_PAGE_CHALLENGE;
+                Require(!app.mBoard&&app.mChallengeScreen&&app.mChallengeScreen->mPageIndex==page,"Loss returned to a wrong challenge page");
+            }
+            ++checked;std::cout<<"Loss primary mode="<<int(entry.mode)<<" level="<<entry.level<<" width="<<width<<" Hz="<<hz
+                <<" retry="<<retry<<" cutscene="<<entry.cutscene<<" movieNs="<<elapsed<<" ok=1\n";
+        }
+        catch(const std::exception& error) {
+            allPassed=false;std::cerr<<"Loss failed mode="<<int(entry.mode)<<" level="<<entry.level<<" width="<<width<<" Hz="<<hz
+                <<" retry="<<retry<<" elapsedNs="<<elapsed<<" message="<<error.what()<<'\n';
+        }
+        app.KillDialog(DIALOG_GAME_OVER);app.KillBoard();app.KillGameSelector();app.KillChallengeScreen();app.ProcessSafeDeleteList();
+    }
+    Require(allPassed&&checked==224,"Loss rules have failed cases or an incomplete catalog");
+    std::cout<<"PASS actual loss routes: 224 cutscene/direct-modal, frozen clocks, visible movie, retry and menu contexts\n";
+}
+
 void StorePauseClockRuntime(TestApp& app, DecodeOnlySoundManager& sounds)
 {
     std::cerr<<"Store clock fixture: initialize\n";
@@ -2100,15 +5719,53 @@ void StorePauseClockRuntime(TestApp& app, DecodeOnlySoundManager& sounds)
     app.mMusicInterface=&silentMusicInterface;
     app.mReanimatorCache=&cache;
     sounds.allowSilentPlayback=true;
+    if(gPlantCatalogOnly) {PlantAttackCatalogRuntime(app);return;}
+    if(gZombieCatalogOnly) {ZombieBehaviorCatalogRuntime(app);return;}
+    if(gMinigameRulesOnly) {MinigameBehaviorRuntime(app);MinigameRulesRuntime(app);return;}
+    if(gPuzzleRulesOnly) {PuzzleRulesRuntime(app);return;}
+    if(gSurvivalRulesOnly) {SurvivalRulesRuntime(app);return;}
+    if(gAdventureRulesOnly) {AdventureRulesRuntime(app);return;}
+    if(gHiddenRulesOnly) {HiddenRulesRuntime(app,sounds);return;}
+    if(gGardenRulesOnly) {GardenRulesRuntime(app);return;}
+    if(gIntroRulesOnly) {IntroRulesRuntime(app,sounds);return;}
+    if(gUiRulesOnly) {AlmanacRulesRuntime(app);AwardRulesRuntime(app);return;}
+    if(gAwardRulesOnly) {AwardRulesRuntime(app);return;}
+    if(gAlmanacClockOnly) {AlmanacRulesRuntime(app,true);return;}
+    if(gActorBirthOnly) {ActorBirthClockRuntime(app);return;}
+    if(gLossRulesOnly) {LossRulesRuntime(app);return;}
+    if(gOpeningRulesOnly) {CheckOpeningFlows(app,app.fixtureNestedPump,[](LawnApp& a){static_cast<TestApp&>(a).ProcessSafeDeleteList();});return;}
+    if(gLifecycleRulesOnly) {LateLifecycleRuntime(app);return;}
+    if(gGraveRulesOnly) {GraveSpawnRulesRuntime(app);return;}
+    if(gHudSeamsOnly) {HudAndGraveSeamsRuntime(app);AtlasTransparentEdges(app);return;}
+    AtlasTransparentEdges(app);
     FrameDivisionSampleRuntime();
     ExplicitReanimationOwnerTime(app);
     BoardlessPlantPreviewRuntime(app);
     CreditsMovieOwnerClockRuntime(app);
     for (const int hz:{100,240,480,1000}) SurvivalOwnerClockRuntime(app,hz);
     for (const int hz:{100,240,480,1000}) PoolSparkleOwnerClockRuntime(app,hz);
+    MinigameBehaviorRuntime(app);
+    PlantAttackCatalogRuntime(app);
+    ZombieBehaviorCatalogRuntime(app);
+    MinigameRulesRuntime(app);
+    PuzzleRulesRuntime(app);
+    SurvivalRulesRuntime(app);
+    AdventureRulesRuntime(app);
+    HiddenRulesRuntime(app,sounds);
+    GardenRulesRuntime(app);
+    IntroRulesRuntime(app,sounds);
+    LossRulesRuntime(app);
+    AlmanacRulesRuntime(app);
+    ActorBirthClockRuntime(app);
+    AwardRulesRuntime(app);
+    CheckOpeningFlows(app,app.fixtureNestedPump,[](LawnApp& a){static_cast<TestApp&>(a).ProcessSafeDeleteList();});
+    LateLifecycleRuntime(app);
+    GraveSpawnRulesRuntime(app);
     Board board(&app);
     std::cerr<<"Store clock fixture: board initialized\n";
     app.mGameScene=GameScenes::SCENE_PLAYING;
+    PauseDialogWallClockRuntime(app,board);
+    InitialGraveAppearanceRuntime(app,board);
     // The opening title owns a Visual deadline from creation, even while
     // Board time is zero; switching to battle must not rebase that deadline.
     for (const int hz:{30,100,240,1000})
@@ -2762,6 +6419,12 @@ void AllResourceGroups(SexyAppBase& app)
         }
     }
     Require(loadedImages==RESOURCE_LOAD_IMAGE_COUNT,"Full loading skipped an image recipe");
+    if(gPlantCatalogOnly||gZombieCatalogOnly||gMinigameRulesOnly||gPuzzleRulesOnly||gSurvivalRulesOnly||gAdventureRulesOnly||gHiddenRulesOnly||gGardenRulesOnly||gIntroRulesOnly||gUiRulesOnly||gAwardRulesOnly||gAlmanacClockOnly||gActorBirthOnly||gLossRulesOnly||gOpeningRulesOnly||gLifecycleRulesOnly||gGraveRulesOnly||gHudSeamsOnly)
+    {
+        StorePauseClockRuntime(static_cast<TestApp&>(app),sounds);
+        DefinitionFreeAtlasImages();
+        return;
+    }
     SeedPacketCooldownPixels(app);
     ProjectileAtlasPixels(static_cast<LawnApp&>(app));
     PoolScenePixels(app);
@@ -2871,6 +6534,7 @@ void ParticleDefinitionsAndFrames(SexyAppBase& app, const char* pakPath)
     Require(gPakInterface && gPakInterface->AddPakFile(pakPath),
         "Cannot mount the production particle package");
     AllResourceGroups(app);
+    if(gPlantCatalogOnly||gZombieCatalogOnly||gMinigameRulesOnly||gPuzzleRulesOnly||gSurvivalRulesOnly||gAdventureRulesOnly||gHiddenRulesOnly||gGardenRulesOnly||gIntroRulesOnly||gUiRulesOnly||gAwardRulesOnly||gAlmanacClockOnly||gActorBirthOnly||gLossRulesOnly||gOpeningRulesOnly||gLifecycleRulesOnly||gGraveRulesOnly||gHudSeamsOnly) return;
     ResourceLoadingOwnership(app);
     ReanimationAppearanceDefinitions(app);
     constexpr ParticleEffect fireEffect=ParticleEffect::PARTICLE_ZOMBIE_BOSS_FIREBALL;
@@ -3353,12 +7017,35 @@ void PrecomputedTransparentEdges(TestApp& app)
 
 int main(int argc, char** argv)
 {
+    gPlantCatalogOnly=argc==3 && std::string_view(argv[2])=="plant-attacks";
+    gZombieCatalogOnly=argc==3 && std::string_view(argv[2])=="zombie-behavior";
+    gMinigameRulesOnly=argc==3 && std::string_view(argv[2])=="minigame-rules";
+    gPuzzleRulesOnly=argc==3 && std::string_view(argv[2])=="puzzle-rules";
+    gSurvivalRulesOnly=argc==3 && std::string_view(argv[2])=="survival-rules";
+    gAdventureRulesOnly=argc==3 && std::string_view(argv[2])=="adventure-rules";
+    gHiddenRulesOnly=argc==3 && std::string_view(argv[2])=="hidden-rules";
+    gGardenRulesOnly=argc==3 && std::string_view(argv[2])=="garden-rules";
+    gIntroRulesOnly=argc==3 && std::string_view(argv[2])=="intro-rules";
+    gUiRulesOnly=argc==3 && std::string_view(argv[2])=="ui-rules";
+    gAwardRulesOnly=argc==3 && std::string_view(argv[2])=="award-rules";
+    gAlmanacClockOnly=argc==3 && std::string_view(argv[2])=="almanac-clock";
+    gActorBirthOnly=argc==3 && std::string_view(argv[2])=="actor-birth";
+    gLossRulesOnly=argc==3 && std::string_view(argv[2])=="loss-rules";
+    gOpeningRulesOnly=argc==3 && std::string_view(argv[2])=="opening-rules";
+    gLifecycleRulesOnly=argc==3 && std::string_view(argv[2])=="lifecycle-rules";
+    gGraveRulesOnly=argc==3 && std::string_view(argv[2])=="grave-rules";
+    gHudSeamsOnly=argc==3 && std::string_view(argv[2])=="hud-seams";
     std::cout<<std::unitbuf;
     SetErrorMode(SEM_FAILCRITICALERRORS | SEM_NOGPFAULTERRORBOX | SEM_NOOPENFILEERRORBOX);
     AddVectoredExceptionHandler(1,SuppressFixtureCrashDialogs);
     try
     {
         HiddenWindow window;
+        // Puzzle records can save from real production callbacks. Keep all
+        // such writes under this fixture process, never in a player directory.
+        const auto userData=std::filesystem::absolute("fixture-user-data")/std::to_string(GetCurrentProcessId());
+        std::filesystem::create_directories(userData);
+        Sexy::SetAppDataFolder(userData.string());
         TestApp app;
         gLawnApp=&app;
         app.mPrimaryThreadId=CurrentNativeThreadIdentity();
@@ -3401,7 +7088,7 @@ int main(int argc, char** argv)
         SharedReferences(app);
         ReanimationAppearancePixels(app);
         ReanimationFullscreenPixels(app);
-        Require(argc==2,"Pass the production main.pak64 path to the image runtime test");
+        Require(argc==2||gPlantCatalogOnly||gZombieCatalogOnly||gMinigameRulesOnly||gPuzzleRulesOnly||gSurvivalRulesOnly||gAdventureRulesOnly||gHiddenRulesOnly||gGardenRulesOnly||gIntroRulesOnly||gUiRulesOnly||gAwardRulesOnly||gAlmanacClockOnly||gActorBirthOnly||gLossRulesOnly||gOpeningRulesOnly||gLifecycleRulesOnly||gGraveRulesOnly||gHudSeamsOnly,"Pass the production main.pak64 path and optional focused case");
         ParticleDefinitionsAndFrames(app,argv[1]);
     }
     catch (const ResourceManagerException& error)

@@ -1,0 +1,45 @@
+ImageRuntimeTests.cpp
+正在生成代码
+已完成代码的生成
+PASS pure wrapped text measurement: wrapping, newlines, color tags, no glyph draws and empty fill
+pool GPU day-normal-nearest: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU night-normal-linear: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU day-additive-partial-fractional: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU night-additive-phase-wrap: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU day-opaque-partial-fractional: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU night-opaque-large-counter: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU feedback-float-source-pending-batch: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+PASS production GPU pool vs independent legacy CPU mesh: day/night, normal/additive/opaque, nearest/linear/repeat, phase wrap, destination scissor, fractional translation, ordinary painter order and float target feedback
+PASS precomputed transparent edges: alpha, visible RGB, idempotency, nearest/linear, upload-discard
+PASS public font upload: deferred alpha, upload-and-discard, texture reuse, independent copies
+PASS nonzero source rectangles and repacked whole-sheet atlas views: translation, scale origins, clipping, tint, additive, local-source views and floating scales
+PASS necessary local-clip contract: independent full-pixel rect/image/source/mirror/matrix/particle/convex oracles, disjoint/partial/empty clips and negative framebuffer crossings
+PASS actual TitleScreen grass reveal: widths 0/1/157/313/314/400, translated draw and unrevealed black pixels
+PASS actual GameButton atlas states: normal, hover, press/fallbacks, disabled, overAlpha, additive glow, translation/offsets and hidden state match independent images
+PASS direct shared-image snapshots and reference lifetime
+PASS actual boss back-arm drawing: four attack offsets, reference pixels, 1024 exact shared-animation translation restorations
+PASS reanimation appearances: independent options, image slots, atlas dimensions, original centers and actual AttachmentDraw visibility pixels
+PASS fullscreen reanimation: destination fill pixels, hidden/zero alpha, color modulation, both blend modes, translation and effective clip without track matrices
+Store clock fixture: initialize
+Catapult Hz=100 launch=1 ammoNs=190000000 shots=1
+Catapult Hz=100 launch=2 ammoNs=180000000 shots=2
+Catapult Hz=100 launch=3 ammoNs=170000000 shots=3
+Catapult Hz=100 launch=4 ammoNs=160000000 shots=4
+Catapult Hz=100 launch=5 ammoNs=150000000 shots=5
+Catapult Hz=100 launch=6 ammoNs=140000000 shots=6
+Catapult Hz=100 launch=7 ammoNs=130000000 shots=7
+Catapult Hz=100 launch=8 ammoNs=120000000 shots=8
+Catapult Hz=100 launch=9 ammoNs=110000000 shots=9
+Catapult Hz=100 launch=10 ammoNs=100000000 shots=10
+Catapult Hz=100 launch=11 ammoNs=90000000 shots=11
+Catapult Hz=100 launch=12 ammoNs=80000000 shots=12
+Catapult Hz=100 launch=13 ammoNs=70000000 shots=13
+Catapult Hz=100 launch=14 ammoNs=60000000 shots=14
+Catapult Hz=100 launch=15 ammoNs=50000000 shots=15
+Catapult Hz=100 launch=16 ammoNs=40000000 shots=16
+Catapult Hz=100 launch=17 ammoNs=30000000 shots=17
+Catapult Hz=100 launch=18 ammoNs=20000000 shots=18
+Catapult Hz=100 launch=19 ammoNs=10000000 shots=19
+Catapult Hz=100 launch=20 ammoNs=0 shots=20
+Catapult end Hz=100 launches=20 shots=20 ammoNs=0 x=-784.362 scene=4
+FAIL image runtime: Catapult resumed its walking segment by catching up the stationary shooting time

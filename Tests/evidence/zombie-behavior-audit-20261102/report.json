@@ -1,0 +1,2137 @@
+{
+  "scope": "Primary behavior workflows for every ZombieType; not exhaustive interactions, states, saves or modes",
+  "schedules": {
+    "100": "100 Hz",
+    "30": "30 Hz",
+    "240": "240 Hz",
+    "0": "irregular 1.23-32.33 ms"
+  },
+  "cases": [
+    {
+      "type": 22,
+      "schedule": 100,
+      "group": "twenty launches and walking resume",
+      "observations": {
+        "x": 649.676
+      }
+    },
+    {
+      "type": 22,
+      "schedule": 30,
+      "group": "twenty launches and walking resume",
+      "observations": {
+        "x": 648.529
+      }
+    },
+    {
+      "type": 22,
+      "schedule": 240,
+      "group": "twenty launches and walking resume",
+      "observations": {
+        "x": 649.86
+      }
+    },
+    {
+      "type": 22,
+      "schedule": 0,
+      "group": "twenty launches and walking resume",
+      "observations": {
+        "x": 648.787
+      }
+    },
+    {
+      "type": 0,
+      "schedule": 100,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "310.385",
+        "timeNs": "8920000000",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 0,
+      "schedule": 30,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "310.471",
+        "timeNs": "8933333244",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 0,
+      "schedule": 240,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "310.262",
+        "timeNs": "8920831906",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 0,
+      "schedule": 0,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "309.722",
+        "timeNs": "8940765706",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 1,
+      "schedule": 100,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "310.393",
+        "timeNs": "6080000000",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 1,
+      "schedule": 30,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "310.28",
+        "timeNs": "6099999939",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 1,
+      "schedule": 240,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "310.122",
+        "timeNs": "6083332360",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 1,
+      "schedule": 0,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "310.109",
+        "timeNs": "6081567528",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 2,
+      "schedule": 100,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "310.574",
+        "timeNs": "11080000000",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 2,
+      "schedule": 30,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "310.428",
+        "timeNs": "11099999889",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 2,
+      "schedule": 240,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "310.401",
+        "timeNs": "11083331560",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 2,
+      "schedule": 0,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "310.31",
+        "timeNs": "11085156679",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 3,
+      "schedule": 100,
+      "group": "primary action",
+      "observations": {
+        "phase": "13",
+        "x": "209.969",
+        "timeNs": "4280000000",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "0",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 3,
+      "schedule": 30,
+      "group": "primary action",
+      "observations": {
+        "phase": "13",
+        "x": "209.76",
+        "timeNs": "4333333290",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "0",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 3,
+      "schedule": 240,
+      "group": "primary action",
+      "observations": {
+        "phase": "13",
+        "x": "209.89",
+        "timeNs": "4266665984",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "0",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 3,
+      "schedule": 0,
+      "group": "primary action",
+      "observations": {
+        "phase": "13",
+        "x": "209.402",
+        "timeNs": "4280681051",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "0",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 4,
+      "schedule": 100,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "310.059",
+        "timeNs": "9520000000",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 4,
+      "schedule": 30,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "310.074",
+        "timeNs": "9533333238",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 4,
+      "schedule": 240,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "309.931",
+        "timeNs": "9520831810",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 4,
+      "schedule": 0,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "310.31",
+        "timeNs": "9506138675",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 5,
+      "schedule": 100,
+      "group": "primary action",
+      "observations": {
+        "phase": "31",
+        "x": "310.29",
+        "timeNs": "9150000000",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 5,
+      "schedule": 30,
+      "group": "primary action",
+      "observations": {
+        "phase": "31",
+        "x": "309.908",
+        "timeNs": "9166666575",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 5,
+      "schedule": 240,
+      "group": "primary action",
+      "observations": {
+        "phase": "31",
+        "x": "310.217",
+        "timeNs": "9149998536",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 5,
+      "schedule": 0,
+      "group": "primary action",
+      "observations": {
+        "phase": "31",
+        "x": "309.771",
+        "timeNs": "9183068407",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 6,
+      "schedule": 100,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "310.01",
+        "timeNs": "7680000000",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 6,
+      "schedule": 30,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "310.87",
+        "timeNs": "7666666590",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 6,
+      "schedule": 240,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "310.983",
+        "timeNs": "7641665444",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 6,
+      "schedule": 0,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "310.728",
+        "timeNs": "7648484634",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 7,
+      "schedule": 100,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "280.427",
+        "timeNs": "4880000000",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 7,
+      "schedule": 30,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "280.676",
+        "timeNs": "4899999951",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 7,
+      "schedule": 240,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "279.741",
+        "timeNs": "4883332552",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 7,
+      "schedule": 0,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "278.096",
+        "timeNs": "4902387356",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 8,
+      "schedule": 100,
+      "group": "primary action",
+      "observations": {
+        "phase": "44",
+        "x": "566.746",
+        "timeNs": "5420000000",
+        "dead": "0",
+        "plantDead": "1",
+        "ate": "0",
+        "shots": "0",
+        "followers": "4"
+      }
+    },
+    {
+      "type": 8,
+      "schedule": 30,
+      "group": "primary action",
+      "observations": {
+        "phase": "44",
+        "x": "566.574",
+        "timeNs": "5499999945",
+        "dead": "0",
+        "plantDead": "1",
+        "ate": "0",
+        "shots": "0",
+        "followers": "4"
+      }
+    },
+    {
+      "type": 8,
+      "schedule": 240,
+      "group": "primary action",
+      "observations": {
+        "phase": "44",
+        "x": "566.358",
+        "timeNs": "5424999132",
+        "dead": "0",
+        "plantDead": "1",
+        "ate": "0",
+        "shots": "0",
+        "followers": "4"
+      }
+    },
+    {
+      "type": 8,
+      "schedule": 0,
+      "group": "primary action",
+      "observations": {
+        "phase": "44",
+        "x": "567.69",
+        "timeNs": "5467760325",
+        "dead": "0",
+        "plantDead": "1",
+        "ate": "0",
+        "shots": "0",
+        "followers": "4"
+      }
+    },
+    {
+      "type": 9,
+      "schedule": 100,
+      "group": "primary action",
+      "observations": {
+        "phase": "44",
+        "x": "279.399",
+        "timeNs": "11000000000",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 9,
+      "schedule": 30,
+      "group": "primary action",
+      "observations": {
+        "phase": "44",
+        "x": "280.767",
+        "timeNs": "11233333221",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 9,
+      "schedule": 240,
+      "group": "primary action",
+      "observations": {
+        "phase": "44",
+        "x": "278.865",
+        "timeNs": "11004164906",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 9,
+      "schedule": 0,
+      "group": "primary action",
+      "observations": {
+        "phase": "44",
+        "x": "280.899",
+        "timeNs": "10967845892",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 10,
+      "schedule": 100,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "310.359",
+        "timeNs": "11200000000",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 10,
+      "schedule": 30,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "310.038",
+        "timeNs": "11233333221",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 10,
+      "schedule": 240,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "310.196",
+        "timeNs": "11204164874",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 10,
+      "schedule": 0,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "310.9",
+        "timeNs": "11165924246",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 11,
+      "schedule": 100,
+      "group": "primary action",
+      "observations": {
+        "phase": "61",
+        "x": "335.989",
+        "timeNs": "19870000000",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 11,
+      "schedule": 30,
+      "group": "primary action",
+      "observations": {
+        "phase": "61",
+        "x": "334.914",
+        "timeNs": "19966666467",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 11,
+      "schedule": 240,
+      "group": "primary action",
+      "observations": {
+        "phase": "61",
+        "x": "335.888",
+        "timeNs": "19870830154",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 11,
+      "schedule": 0,
+      "group": "primary action",
+      "observations": {
+        "phase": "61",
+        "x": "335.657",
+        "timeNs": "19888821482",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 12,
+      "schedule": 100,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "270.83",
+        "timeNs": "16570000000",
+        "dead": "0",
+        "plantDead": "1",
+        "ate": "0",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 12,
+      "schedule": 30,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "270.513",
+        "timeNs": "16599999834",
+        "dead": "0",
+        "plantDead": "1",
+        "ate": "0",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 12,
+      "schedule": 240,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "270.95",
+        "timeNs": "16562497350",
+        "dead": "0",
+        "plantDead": "1",
+        "ate": "0",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 12,
+      "schedule": 0,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "270.75",
+        "timeNs": "16577351235",
+        "dead": "0",
+        "plantDead": "1",
+        "ate": "0",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 13,
+      "schedule": 100,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "155.939",
+        "timeNs": "9000000000",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "0",
+        "shots": "0",
+        "followers": "3"
+      }
+    },
+    {
+      "type": 13,
+      "schedule": 30,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "84.1243",
+        "timeNs": "10233333231",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "0",
+        "shots": "0",
+        "followers": "3"
+      }
+    },
+    {
+      "type": 13,
+      "schedule": 240,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "172.687",
+        "timeNs": "8716665272",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "0",
+        "shots": "0",
+        "followers": "3"
+      }
+    },
+    {
+      "type": 13,
+      "schedule": 0,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "151.194",
+        "timeNs": "9102300840",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "0",
+        "shots": "0",
+        "followers": "3"
+      }
+    },
+    {
+      "type": 14,
+      "schedule": 100,
+      "group": "primary action",
+      "observations": {
+        "phase": "55",
+        "x": "209.497",
+        "timeNs": "8490000000",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "0",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 14,
+      "schedule": 30,
+      "group": "primary action",
+      "observations": {
+        "phase": "55",
+        "x": "206.84",
+        "timeNs": "8599999914",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "0",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 14,
+      "schedule": 240,
+      "group": "primary action",
+      "observations": {
+        "phase": "55",
+        "x": "209.405",
+        "timeNs": "8483331976",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "0",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 14,
+      "schedule": 0,
+      "group": "primary action",
+      "observations": {
+        "phase": "55",
+        "x": "206.863",
+        "timeNs": "8504594538",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "0",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 15,
+      "schedule": 100,
+      "group": "primary action",
+      "observations": {
+        "phase": "16",
+        "x": "310.267",
+        "timeNs": "20400000000",
+        "dead": "1",
+        "plantDead": "1",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 15,
+      "schedule": 30,
+      "group": "primary action",
+      "observations": {
+        "phase": "16",
+        "x": "309.964",
+        "timeNs": "20466666462",
+        "dead": "1",
+        "plantDead": "1",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 15,
+      "schedule": 240,
+      "group": "primary action",
+      "observations": {
+        "phase": "16",
+        "x": "310.154",
+        "timeNs": "20408330068",
+        "dead": "1",
+        "plantDead": "1",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 15,
+      "schedule": 0,
+      "group": "primary action",
+      "observations": {
+        "phase": "16",
+        "x": "309.468",
+        "timeNs": "20409760220",
+        "dead": "1",
+        "plantDead": "1",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 16,
+      "schedule": 100,
+      "group": "primary action",
+      "observations": {
+        "phase": "73",
+        "x": "179.727",
+        "timeNs": "7210000000",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "0",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 16,
+      "schedule": 30,
+      "group": "primary action",
+      "observations": {
+        "phase": "73",
+        "x": "178.884",
+        "timeNs": "7233333261",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "0",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 16,
+      "schedule": 240,
+      "group": "primary action",
+      "observations": {
+        "phase": "73",
+        "x": "179.937",
+        "timeNs": "7204165514",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "0",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 16,
+      "schedule": 0,
+      "group": "primary action",
+      "observations": {
+        "phase": "73",
+        "x": "179.788",
+        "timeNs": "7208313463",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "0",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 17,
+      "schedule": 100,
+      "group": "primary action",
+      "observations": {
+        "phase": "37",
+        "x": "30.01",
+        "timeNs": "10780000000",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "0",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 17,
+      "schedule": 30,
+      "group": "primary action",
+      "observations": {
+        "phase": "37",
+        "x": "30.0459",
+        "timeNs": "11099999889",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "0",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 17,
+      "schedule": 240,
+      "group": "primary action",
+      "observations": {
+        "phase": "37",
+        "x": "30.0011",
+        "timeNs": "10724998284",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "0",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 17,
+      "schedule": 0,
+      "group": "primary action",
+      "observations": {
+        "phase": "37",
+        "x": "30.0008",
+        "timeNs": "10903621545",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "0",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 18,
+      "schedule": 100,
+      "group": "primary action",
+      "observations": {
+        "phase": "20",
+        "x": "179.95",
+        "timeNs": "5630000000",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "0",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 18,
+      "schedule": 30,
+      "group": "primary action",
+      "observations": {
+        "phase": "20",
+        "x": "179.458",
+        "timeNs": "5766666609",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "0",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 18,
+      "schedule": 240,
+      "group": "primary action",
+      "observations": {
+        "phase": "20",
+        "x": "179.843",
+        "timeNs": "5645832430",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "0",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 18,
+      "schedule": 0,
+      "group": "primary action",
+      "observations": {
+        "phase": "20",
+        "x": "179.278",
+        "timeNs": "5673729690",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "0",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 19,
+      "schedule": 100,
+      "group": "primary action",
+      "observations": {
+        "phase": "91",
+        "x": "410.321",
+        "timeNs": "20130000000",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "0",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 19,
+      "schedule": 30,
+      "group": "primary action",
+      "observations": {
+        "phase": "91",
+        "x": "411.678",
+        "timeNs": "20166666465",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "0",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 19,
+      "schedule": 240,
+      "group": "primary action",
+      "observations": {
+        "phase": "91",
+        "x": "409.992",
+        "timeNs": "20133330112",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "0",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 19,
+      "schedule": 0,
+      "group": "primary action",
+      "observations": {
+        "phase": "91",
+        "x": "409.815",
+        "timeNs": "20135124186",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "0",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 20,
+      "schedule": 100,
+      "group": "primary action",
+      "observations": {
+        "phase": "8",
+        "x": "280",
+        "timeNs": "8210000000",
+        "dead": "1",
+        "plantDead": "1",
+        "ate": "0",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 20,
+      "schedule": 30,
+      "group": "primary action",
+      "observations": {
+        "phase": "8",
+        "x": "280",
+        "timeNs": "8266666584",
+        "dead": "1",
+        "plantDead": "1",
+        "ate": "0",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 20,
+      "schedule": 240,
+      "group": "primary action",
+      "observations": {
+        "phase": "8",
+        "x": "280",
+        "timeNs": "8216665352",
+        "dead": "1",
+        "plantDead": "1",
+        "ate": "0",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 20,
+      "schedule": 0,
+      "group": "primary action",
+      "observations": {
+        "phase": "8",
+        "x": "280",
+        "timeNs": "8238291834",
+        "dead": "1",
+        "plantDead": "1",
+        "ate": "0",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 21,
+      "schedule": 100,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "340.393",
+        "timeNs": "2760000000",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "0",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 21,
+      "schedule": 30,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "339.166",
+        "timeNs": "2799999972",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "0",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 21,
+      "schedule": 240,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "340.7",
+        "timeNs": "2754166226",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "0",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 21,
+      "schedule": 0,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "340.729",
+        "timeNs": "2766097278",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "0",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 23,
+      "schedule": 100,
+      "group": "primary action",
+      "observations": {
+        "phase": "69",
+        "x": "462.595",
+        "timeNs": "12880000000",
+        "dead": "0",
+        "plantDead": "1",
+        "ate": "0",
+        "shots": "0",
+        "followers": "1"
+      }
+    },
+    {
+      "type": 23,
+      "schedule": 30,
+      "group": "primary action",
+      "observations": {
+        "phase": "69",
+        "x": "462.204",
+        "timeNs": "12999999870",
+        "dead": "0",
+        "plantDead": "1",
+        "ate": "0",
+        "shots": "0",
+        "followers": "1"
+      }
+    },
+    {
+      "type": 23,
+      "schedule": 240,
+      "group": "primary action",
+      "observations": {
+        "phase": "69",
+        "x": "462.809",
+        "timeNs": "12841664612",
+        "dead": "0",
+        "plantDead": "1",
+        "ate": "0",
+        "shots": "0",
+        "followers": "1"
+      }
+    },
+    {
+      "type": 23,
+      "schedule": 0,
+      "group": "primary action",
+      "observations": {
+        "phase": "69",
+        "x": "462.491",
+        "timeNs": "12866043156",
+        "dead": "0",
+        "plantDead": "1",
+        "ate": "0",
+        "shots": "0",
+        "followers": "1"
+      }
+    },
+    {
+      "type": 24,
+      "schedule": 100,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "280.747",
+        "timeNs": "10640000000",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 24,
+      "schedule": 30,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "280.918",
+        "timeNs": "10699999893",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 24,
+      "schedule": 240,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "280.844",
+        "timeNs": "10604164970",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 24,
+      "schedule": 0,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "280.796",
+        "timeNs": "10600551277",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 26,
+      "schedule": 100,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "419.233",
+        "timeNs": "1500000000",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "0",
+        "shots": "1",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 26,
+      "schedule": 30,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "419.579",
+        "timeNs": "1533333318",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "0",
+        "shots": "1",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 26,
+      "schedule": 240,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "419.137",
+        "timeNs": "1504166426",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "0",
+        "shots": "1",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 26,
+      "schedule": 0,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "419.083",
+        "timeNs": "1510149542",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "0",
+        "shots": "1",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 27,
+      "schedule": 100,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "309.893",
+        "timeNs": "8960000000",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 27,
+      "schedule": 30,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "310.119",
+        "timeNs": "8966666577",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 27,
+      "schedule": 240,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "309.7",
+        "timeNs": "8962498566",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 27,
+      "schedule": 0,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "310.328",
+        "timeNs": "8940765706",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 28,
+      "schedule": 100,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "310.492",
+        "timeNs": "23320000000",
+        "dead": "1",
+        "plantDead": "1",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 28,
+      "schedule": 30,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "310.043",
+        "timeNs": "23333333100",
+        "dead": "1",
+        "plantDead": "1",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 28,
+      "schedule": 240,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "310.311",
+        "timeNs": "23320829602",
+        "dead": "1",
+        "plantDead": "1",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 28,
+      "schedule": 0,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "309.879",
+        "timeNs": "23325283643",
+        "dead": "1",
+        "plantDead": "1",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 29,
+      "schedule": 100,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "419.405",
+        "timeNs": "1320000000",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "0",
+        "shots": "4",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 29,
+      "schedule": 30,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "419.768",
+        "timeNs": "1333333320",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "0",
+        "shots": "4",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 29,
+      "schedule": 240,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "419.309",
+        "timeNs": "1320833122",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "0",
+        "shots": "4",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 29,
+      "schedule": 0,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "419.227",
+        "timeNs": "1348614408",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "0",
+        "shots": "4",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 30,
+      "schedule": 100,
+      "group": "primary action",
+      "observations": {
+        "phase": "95",
+        "x": "310.013",
+        "timeNs": "4500000000",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 30,
+      "schedule": 30,
+      "group": "primary action",
+      "observations": {
+        "phase": "95",
+        "x": "309.374",
+        "timeNs": "4599999954",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 30,
+      "schedule": 240,
+      "group": "primary action",
+      "observations": {
+        "phase": "95",
+        "x": "309.638",
+        "timeNs": "4504165946",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 30,
+      "schedule": 0,
+      "group": "primary action",
+      "observations": {
+        "phase": "95",
+        "x": "309.064",
+        "timeNs": "4522983752",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 31,
+      "schedule": 100,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "310.509",
+        "timeNs": "8840000000",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 31,
+      "schedule": 30,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "310.266",
+        "timeNs": "8866666578",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 31,
+      "schedule": 240,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "310.364",
+        "timeNs": "8841665252",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 31,
+      "schedule": 0,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "309.859",
+        "timeNs": "8859998139",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 32,
+      "schedule": 100,
+      "group": "primary action",
+      "observations": {
+        "phase": "69",
+        "x": "463.125",
+        "timeNs": "12400000000",
+        "dead": "0",
+        "plantDead": "1",
+        "ate": "0",
+        "shots": "0",
+        "followers": "1"
+      }
+    },
+    {
+      "type": 32,
+      "schedule": 30,
+      "group": "primary action",
+      "observations": {
+        "phase": "69",
+        "x": "462.333",
+        "timeNs": "12533333208",
+        "dead": "0",
+        "plantDead": "1",
+        "ate": "0",
+        "shots": "0",
+        "followers": "1"
+      }
+    },
+    {
+      "type": 32,
+      "schedule": 240,
+      "group": "primary action",
+      "observations": {
+        "phase": "69",
+        "x": "463.068",
+        "timeNs": "12370831354",
+        "dead": "0",
+        "plantDead": "1",
+        "ate": "0",
+        "shots": "0",
+        "followers": "1"
+      }
+    },
+    {
+      "type": 32,
+      "schedule": 0,
+      "group": "primary action",
+      "observations": {
+        "phase": "69",
+        "x": "463.138",
+        "timeNs": "12381437754",
+        "dead": "0",
+        "plantDead": "1",
+        "ate": "0",
+        "shots": "0",
+        "followers": "1"
+      }
+    },
+    {
+      "type": 33,
+      "schedule": 100,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "310.393",
+        "timeNs": "6080000000",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 33,
+      "schedule": 30,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "310.28",
+        "timeNs": "6099999939",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 33,
+      "schedule": 240,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "310.122",
+        "timeNs": "6083332360",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 33,
+      "schedule": 0,
+      "group": "primary action",
+      "observations": {
+        "phase": "0",
+        "x": "310.109",
+        "timeNs": "6081567528",
+        "dead": "0",
+        "plantDead": "0",
+        "ate": "1",
+        "shots": "0",
+        "followers": "0"
+      }
+    },
+    {
+      "type": 25,
+      "schedule": 100,
+      "group": "entry and five attacks"
+    },
+    {
+      "type": 25,
+      "schedule": 30,
+      "group": "entry and five attacks"
+    },
+    {
+      "type": 25,
+      "schedule": 240,
+      "group": "entry and five attacks"
+    },
+    {
+      "type": 25,
+      "schedule": 0,
+      "group": "entry and five attacks"
+    }
+  ],
+  "butter_cases": [
+    {
+      "type": 22,
+      "schedule": 100,
+      "maximum_resume_jump": 0.245117,
+      "final_x": 635.248
+    },
+    {
+      "type": 22,
+      "schedule": 30,
+      "maximum_resume_jump": 0.816895,
+      "final_x": 635.493
+    },
+    {
+      "type": 22,
+      "schedule": 240,
+      "maximum_resume_jump": 0.102112,
+      "final_x": 635.493
+    },
+    {
+      "type": 22,
+      "schedule": 0,
+      "maximum_resume_jump": 0.792419,
+      "final_x": 635.345
+    },
+    {
+      "type": 11,
+      "schedule": 100,
+      "maximum_resume_jump": 0.66217,
+      "final_x": 593.123
+    },
+    {
+      "type": 11,
+      "schedule": 30,
+      "maximum_resume_jump": 2.20721,
+      "final_x": 593.785
+    },
+    {
+      "type": 11,
+      "schedule": 240,
+      "maximum_resume_jump": 0.27594,
+      "final_x": 593.785
+    },
+    {
+      "type": 11,
+      "schedule": 0,
+      "maximum_resume_jump": 2.14099,
+      "final_x": 593.384
+    },
+    {
+      "type": 14,
+      "schedule": 100,
+      "maximum_resume_jump": 0.890747,
+      "final_x": 570.04
+    },
+    {
+      "type": 14,
+      "schedule": 30,
+      "maximum_resume_jump": 2.96899,
+      "final_x": 570.931
+    },
+    {
+      "type": 14,
+      "schedule": 240,
+      "maximum_resume_jump": 0.371155,
+      "final_x": 570.931
+    },
+    {
+      "type": 14,
+      "schedule": 0,
+      "maximum_resume_jump": 2.87994,
+      "final_x": 570.391
+    },
+    {
+      "type": 0,
+      "schedule": 100,
+      "maximum_resume_jump": 0.141357,
+      "final_x": 596.418
+    },
+    {
+      "type": 0,
+      "schedule": 30,
+      "maximum_resume_jump": 0.471069,
+      "final_x": 593.886
+    },
+    {
+      "type": 0,
+      "schedule": 240,
+      "maximum_resume_jump": 0.0588989,
+      "final_x": 595.978
+    },
+    {
+      "type": 0,
+      "schedule": 0,
+      "maximum_resume_jump": 0.456909,
+      "final_x": 595.86
+    },
+    {
+      "type": 10,
+      "schedule": 100,
+      "maximum_resume_jump": 0.158142,
+      "final_x": 645.82
+    },
+    {
+      "type": 10,
+      "schedule": 30,
+      "maximum_resume_jump": 0.526978,
+      "final_x": 646.939
+    },
+    {
+      "type": 10,
+      "schedule": 240,
+      "maximum_resume_jump": 0.065918,
+      "final_x": 645.707
+    },
+    {
+      "type": 10,
+      "schedule": 0,
+      "maximum_resume_jump": 0.510315,
+      "final_x": 646.042
+    }
+  ],
+  "dolphin_mount_cases": [
+    {
+      "schedule": 100,
+      "mount_delta": -70.9074,
+      "next_delta": -0.90741
+    },
+    {
+      "schedule": 30,
+      "mount_delta": -73.0247,
+      "next_delta": -3.02478
+    },
+    {
+      "schedule": 240,
+      "mount_delta": -70.3781,
+      "next_delta": -0.378052
+    },
+    {
+      "schedule": 0,
+      "mount_delta": -70.4929,
+      "next_delta": -1.00824
+    }
+  ],
+  "sources": {
+    "Tests/native/ImageRuntimeTests.cpp": "e36386fbab68682c4944b36e5cfa655c3b2700f03243ddd79ff6fbc613cfa6b0",
+    "pvzPerf/Lawn/Zombie.cpp": "b33f98427234ebb2153c72d4fdfc4e08870cd8a5d59af7116fb0fd569771a1cf",
+    "pvzPerf/Lawn/Zombie.h": "8f0e46eaefa6e1f1260e8d118e0eb767285273362b59a29536996e026b1f0280",
+    "pvzPerf/Lawn/Motion.cpp": "5af7abcd32b9d5987b5310dbf94953611b5980f36b27b4b01b1ab8cb91e591b6"
+  },
+  "executable_sha256": "85f32d7db4264ee387740b5a8badda2684c5b11ba800af48cc474b62e243228b",
+  "pak_sha256": "5bdd71c632d945304ae3752bfed61941bb8c7e4351e616e1ff6fbceab1431545",
+  "git_head": "68d61123de7b073f5479f32bec1772106b6141b9",
+  "working_tree_modified": true
+}

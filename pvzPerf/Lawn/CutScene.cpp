@@ -28,6 +28,7 @@
 #include "Sexy.TodLib/TodStringFile.h"
 #include "widget/WidgetManager.h"
 #include "widget/WidgetLifetimeHold.h"
+#include "misc/FrameTiming.h"
 #include <algorithm>
 
 namespace
@@ -100,8 +101,6 @@ static const int	TimeSeedBankRightStart			= 4750;		//[0x6AA24C]
 static const int	TimeSeedBankRightEnd			= 6000;		//[0x6AA250]
 static const int	TimeRollSodStart				= 6000;		//[0x6AA254]
 static const int	TimeRollSodEnd					= 8000;		//[0x6AA258]
-static const int	TimeGraveStoneStart				= 6000;		//[0x6AA25C]
-static const int	TimeGraveStoneEnd				= 7000;		//[0x6AA260]
 static const int	TimeReadySetPlantStart			= 6000;		//[0x6AA264]
 static const int	TimeReadySetPlantEnd			= 7830;		//[0x6AA268]
 static const int	TimeFogRollIn					= 5950;		//[0x6AA26C]
@@ -138,7 +137,6 @@ CutScene::CutScene()
 	mFogTime = 0;
 	mBossTime = 0;
 	mCrazyDaveTime = 0;
-	mGraveStoneTime = 0;
 	mReadySetPlantTime = 0;
 	mLawnMowerTime = 0;
 	mCrazyDaveDialogStart = -1;
@@ -877,19 +875,8 @@ void CutScene::StartLevelIntro()
 		mBoard->mSodPosition = 1000;
 	}
 
-	mGraveStoneTime = 0;
-	mBoard->mEnableGraveStones = false;
-	if (mBoard->StageHasGraveStones())
-	{
-		if (mApp->IsAdventureMode() && mApp->IsWhackAZombieLevel())
-		{
-			mGraveStoneTime = 0;
-		}
-		else if (!IsSurvivalRepick())
-		{
-			mGraveStoneTime = TimeGraveStoneEnd - TimeGraveStoneStart;
-		}
-	}
+	// Initial graves are already standing; there is no reveal phase to wait for.
+	mBoard->mEnableGraveStones = true;
 
 	if (mApp->IsFirstTimeAdventureMode() && aLevel <= 2)
 	{
@@ -1112,7 +1099,7 @@ void CutScene::CancelIntro()
 	if (mCutsceneTime > mCrazyDaveTime + TimePanLeftStart || !mBoard->ChooseSeedsOnCurrentLevel())
 	{
 		// 将过场时间快进至关卡引入结束时
-		mCutsceneTime = TimeIntroEnd + mLawnMowerTime + mSodTime + mGraveStoneTime + mCrazyDaveTime + mFogTime + mBossTime + mReadySetPlantTime - 20;
+		mCutsceneTime = TimeIntroEnd + mLawnMowerTime + mSodTime + mCrazyDaveTime + mFogTime + mBossTime + mReadySetPlantTime - 20;
 
 		PlaceLawnItems();
 		if (mApp->IsStormyNightLevel())
@@ -1150,19 +1137,6 @@ void CutScene::CancelIntro()
 		mApp->mSoundSystem->StopFoley(FoleyType::FOLEY_DIGGER);
 	}
 	UpdateSeedChooserCamera();
-}
-
-//0x43B6A0
-void CutScene::AddGraveStoneParticles()
-{
-	GridItem* aGridItem = nullptr;
-	while (mBoard->IterateGridItems(aGridItem))
-	{
-		if (aGridItem->mGridItemType == GridItemType::GRIDITEM_GRAVESTONE)
-		{
-			aGridItem->AddGraveStoneParticles();
-		}
-	}
 }
 
 namespace
@@ -1344,7 +1318,7 @@ void CutScene::AnimateBoard()
 	int aTimePrepareEnd = 0;
 	if (!mBoard->ChooseSeedsOnCurrentLevel())
 	{
-		aTimePrepareEnd = mBossTime + mFogTime + mGraveStoneTime + mSodTime - TimeSeedChoserSlideOnStart + TimePanLeftEnd;
+		aTimePrepareEnd = mBossTime + mFogTime + mSodTime - TimeSeedChoserSlideOnStart + TimePanLeftEnd;
 	}
 	int aTimeSeedBankOnStart = TimeSeedBankOnStart + aTimePrepareEnd + mCrazyDaveTime;
 	int aTimeSeedBankOnEnd = TimeSeedBankOnEnd + aTimePrepareEnd + mCrazyDaveTime;
@@ -1404,19 +1378,6 @@ void CutScene::AnimateBoard()
 	}
 
 	// ====================================================================================================
-	// ▲ 黑夜关卡出现墓碑的特效的更新
-	// ====================================================================================================
-	if (mGraveStoneTime > 0)
-	{
-		int aTimeGraveStoneStart = mSodTime + TimeGraveStoneStart + mCrazyDaveTime;
-		if (mCutsceneTime == aTimeGraveStoneStart)
-		{
-			mBoard->mEnableGraveStones = true;
-			AddGraveStoneParticles();
-		}
-	}
-
-	// ====================================================================================================
 	// ▲ 画面开始向左滚动时，创建战场物品
 	// ====================================================================================================
 	if (mCutsceneTime == aTimePanLeftStart)
@@ -1431,7 +1392,7 @@ void CutScene::AnimateBoard()
 	{
 		for (int aGridY = 0; aGridY < MAX_GRID_SIZE_Y; aGridY++)
 		{
-			int aTimeLawnMowerStart = TimeLawnMowerStart[aGridY] + mSodTime + mGraveStoneTime + mCrazyDaveTime;
+			int aTimeLawnMowerStart = TimeLawnMowerStart[aGridY] + mSodTime + mCrazyDaveTime;
 			if (mCutsceneTime > aTimeLawnMowerStart)
 			{
 				LawnMower* aLawnMower = mBoard->FindLawnMowerInRow(aGridY);
@@ -1449,7 +1410,7 @@ void CutScene::AnimateBoard()
 	// ====================================================================================================
 	if (mBoard->mFogBlownCountDown > 0)
 	{
-		int aTimeFogRollIn = TimeFogRollIn + mSodTime + mGraveStoneTime + mCrazyDaveTime;
+		int aTimeFogRollIn = TimeFogRollIn + mSodTime + mCrazyDaveTime;
 		if (mCutsceneTime > aTimeFogRollIn)
 		{
 			if (mBoard->mFogBlownCountDown > 200)
@@ -1492,7 +1453,7 @@ void CutScene::AnimateBoard()
 	// ====================================================================================================
 	// ▲ Ready Set Plant 动画的播放
 	// ====================================================================================================
-	int aTimeReadySetPlant = TimeReadySetPlantStart + mLawnMowerTime + mSodTime + mGraveStoneTime + mCrazyDaveTime + mFogTime + mBossTime;
+	int aTimeReadySetPlant = TimeReadySetPlantStart + mLawnMowerTime + mSodTime + mCrazyDaveTime + mFogTime + mBossTime;
 	if (mReadySetPlantTime > 0 && mCutsceneTime == aTimeReadySetPlant)
 	{
 		mApp->AddReanimation(400, 324, Board::MakeRenderOrder(RenderLayer::RENDER_LAYER_SCREEN_FADE, 0, 0), ReanimationType::REANIM_READYSETPLANT, (mBoard && mBoard->AnimationTimeDomain() == ReanimTimeDomain::Battle ? static_cast<std::int64_t>(mBoard->mLevelTimeNs) : mApp->mEffectSystem->mReanimationHolder->mVisualTimeNs), (mBoard ? mBoard->AnimationTimeDomain() : ReanimTimeDomain::Visual));
@@ -1653,7 +1614,7 @@ void CutScene::Update()
 	}
 
 	// 过场结束的判定
-	int aTimeStart = TimeIntroEnd + mLawnMowerTime + mSodTime + mGraveStoneTime + mCrazyDaveTime + mFogTime + mBossTime + mReadySetPlantTime;
+	int aTimeStart = TimeIntroEnd + mLawnMowerTime + mSodTime + mCrazyDaveTime + mFogTime + mBossTime + mReadySetPlantTime;
 	if (mCutsceneTime >= aTimeStart)
 	{
 		mBoard->RemoveCutsceneZombies();
@@ -1891,12 +1852,6 @@ void CutScene::AdvanceCrazyDaveDialog(bool theJustSkipping)
 			}
 		}
 	}
-	// “当然不是我，是你！”
-	if (aMessageIndex == 406)
-	{
-		mBoard->mEnableGraveStones = true;
-		AddGraveStoneParticles();
-	}
 }
 
 //0x43CE00
@@ -2095,12 +2050,40 @@ void CutScene::LoadIntroBoard()
 	AddUpsellZombie(ZombieType::ZOMBIE_CATAPULT, 730, 5);
 	AddUpsellZombie(ZombieType::ZOMBIE_NORMAL, 590, 5);
 
+	// Settle the demonstration for one authored second, independent of the
+	// caller's frame rate. Only the nested simulation advances; the movie and
+	// application clocks remain owned by the outer update.
+	const auto aIntervalNs = Sexy::gUpdateIntervalNs;
+	const auto aTickPhaseNs = Sexy::gLegacyTickPhaseNs;
+	const auto aWholeTicks = Sexy::gWholeLegacyTicks;
+	const auto aUpdateTicks = Sexy::gUpdateTicks;
+	const auto aStepsPerTick = Sexy::gStepsPerLegacyTick;
+	const auto aRestoreStep = [&]() {
+		Sexy::gUpdateIntervalNs = aIntervalNs;
+		Sexy::gLegacyTickPhaseNs = aTickPhaseNs;
+		Sexy::gWholeLegacyTicks = aWholeTicks;
+		Sexy::gUpdateTicks = aUpdateTicks;
+		Sexy::gStepsPerLegacyTick = aStepsPerTick;
+		mPreUpdatingBoard = false;
+	};
 	mPreUpdatingBoard = true;
-	for (int i = 0; i < 100; i++)
+	try
 	{
-		mBoard->Update();
+		for (unsigned long long aRemainingNs = 1'000'000'000ULL; aRemainingNs;)
+		{
+			const auto aStepNs = std::min(aRemainingNs, aIntervalNs ? aIntervalNs : aRemainingNs);
+			Sexy::ApplySimulationStep(aStepNs);
+			Sexy::BeginTimedUpdate();
+			mBoard->Update();
+			aRemainingNs -= aStepNs;
+		}
 	}
-	mPreUpdatingBoard = false;
+	catch (...)
+	{
+		aRestoreStep();
+		throw;
+	}
+	aRestoreStep();
 }
 
 //0x43E890

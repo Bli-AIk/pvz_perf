@@ -1,0 +1,7 @@
+{
+  "stop_reason": "game-exited",
+  "duration_s": 319.9195785000011,
+  "cpu_samples": 318,
+  "presentation_windows": 315,
+  "note": "Raw data retained. Exclude preroll, background, menus and overlapping RTSS windows before reporting."
+}

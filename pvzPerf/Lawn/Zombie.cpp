@@ -1786,7 +1786,9 @@ void Zombie::UpdateZombieCatapult(std::int64_t ownerNowNs)
         }
         if (aBodyReanim->mLoopCount > 0)
         {
-            mSummonCounter--;
+            // Catapult reuses this timer slot as an ammunition count. One
+            // completed launch consumes one ball, independent of step length.
+            mSummonCounter -= 1;
             if (mSummonCounter == 4)
             {
                 ReanimShowTrack(ReanimTrackId::Zombie_catapult_basketball, RENDER_GROUP_HIDDEN);
@@ -3497,7 +3499,8 @@ bool Zombie::ZombiquariumFindClosestBrain(std::int64_t ownerNowNs)
     GridItem* aGridItem = nullptr;
     while (mBoard->IterateGridItems(aGridItem))
     {
-        if (aGridItem->mGridItemType == GridItemType::GRIDITEM_BRAIN && aGridItem->mBrainHealth >= 15)
+        if (aGridItem->mGridItemType == GridItemType::GRIDITEM_BRAIN &&
+            ownerNowNs - aGridItem->mStateStartTimeNs >= 150'000'000)
         {
             float aDistance = Distance2D(aGridItem->mPosX + 15.0f, aGridItem->mPosY + 15.0f, (mX) + 50.0f, (mY) + 40.0f);
             if (aBrainClosest == nullptr || aDistance < aDistanceClosest)
@@ -4605,6 +4608,11 @@ void Zombie::UpdateZombieWalking(std::int64_t ownerNowNs)
     }
     if (aNotWalking)
     {
+        // A held linear segment must not catch up the time spent stationary
+        // when it resumes. Root motion uses this slot as an additional offset,
+        // so switching that slot back to world-position motion also rebinds it.
+        if (mRootBindingGeneration || aAdditionalSpeed == 0)
+            mVelocityX.bound = false;
         mRootBindingGeneration = 0;
         if (aAdditionalSpeed != 0)
             AdvanceVelocity(mX, aAdditionalSpeed, Sexy::gUpdateIntervalNs, ownerNowNs, mVelocityX);
@@ -5191,6 +5199,17 @@ void Zombie::UpdatePlaying(std::int64_t ownerNowNs, std::int64_t visualNowNs, st
         CheckForPool(ownerNowNs, visualNowNs, animationNowNs);
         CheckForHighGround();
         CheckForBoardEdge(ownerNowNs, visualNowNs, animationNowNs);
+    }
+    else
+    {
+        // These linear segments do not run while immobilized. Rebind them
+        // at the held position on resume instead of catching up frozen time.
+        mVelocityX.bound = false;
+        mVelocityY.bound = false;
+        mAltitudeMotion.bound = false;
+        // A root walker may have accumulated an additional linear offset
+        // (for example on a ladder). Absorb it when binding the resumed root.
+        mRootBindingGeneration = 0;
     }
 
     if (((ZombieFlagsOf(mZombieType) & ZombieFlags::Boss) != 0))

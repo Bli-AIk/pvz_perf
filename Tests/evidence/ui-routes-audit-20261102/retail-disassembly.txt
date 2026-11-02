@@ -1,0 +1,130 @@
+SHA256: 5f650f52d12751e08b63e590edb0d9b9f09d087cea900baa0eb39e4af8eda251
+
+Almanac Update: buttons, preview Plant::Update and Zombie::Update without a Board pause test
+00402F50: push ecx
+00402F51: push ebx
+00402F52: push ebp
+00402F53: push esi
+00402F54: push edi
+00402F55: mov edi, ecx
+00402F57: mov esi, dword ptr [edi + 0x188]
+00402F5D: call 0x44af50
+00402F62: mov esi, dword ptr [edi + 0x18c]
+00402F68: call 0x44af50
+00402F6D: mov esi, dword ptr [edi + 0x190]
+00402F73: call 0x44af50
+00402F78: mov esi, dword ptr [edi + 0x194]
+00402F7E: call 0x44af50
+00402F83: mov eax, dword ptr [edi + 0x1b4]
+00402F89: test eax, eax
+00402F8B: je 0x402f92
+00402F8D: call 0x467880
+00402F92: mov eax, dword ptr [edi + 0x1b8]
+00402F98: test eax, eax
+00402F9A: je 0x402fa1
+00402F9C: call 0x53b750
+
+Almanac Update: its own pool counter
+0040307D: mov ecx, dword ptr [edi + 0x184]
+00403083: mov eax, dword ptr [ecx + 0x938]
+00403089: inc dword ptr [eax + 0xc]
+0040308C: mov edx, dword ptr [edi]
+0040308E: mov eax, dword ptr [edx + 0x44]
+00403091: mov ecx, edi
+00403093: pop edi
+00403094: pop esi
+00403095: pop ebp
+00403096: pop ebx
+00403097: add esp, 4
+0040309A: jmp eax
+
+Adventure award: Almanac and first Store introduction
+0040963A: cmp eax, 0xf
+0040963D: jne 0x409654
+0040963F: or ebx, 0xffffffff
+00409642: mov edi, esi
+00409644: call 0x453410
+00409649: mov edx, dword ptr [eax]
+0040964B: push 1
+0040964D: mov ecx, eax
+0040964F: jmp 0x40973c
+00409654: cmp eax, 0x19
+00409657: jne 0x40970c
+0040965D: mov edi, esi
+0040965F: call 0x452fd0
+00409664: mov edi, eax
+00409666: push 0x12d
+0040966B: call 0x498110
+00409670: mov edx, dword ptr [edi]
+00409672: mov eax, dword ptr [edx + 0x12c]
+00409678: push ebx
+00409679: mov ecx, edi
+0040967B: call eax
+
+Adventure award: later Store introductions and next Adventure
+0040970C: cmp eax, 0x23
+0040970F: jne 0x40971f
+00409711: mov edi, esi
+00409713: call 0x452fd0
+00409718: push 0x259
+0040971D: jmp 0x409730
+0040971F: cmp eax, 0x2a
+00409722: jne 0x409765
+00409724: mov edi, esi
+00409726: call 0x452fd0
+0040972B: push 0xc1c
+00409730: mov edi, eax
+00409732: call 0x498110
+00409737: mov edx, dword ptr [edi]
+00409739: push ebx
+0040973A: mov ecx, edi
+0040973C: mov eax, dword ptr [edx + 0x12c]
+00409742: call eax
+00409744: mov esi, dword ptr [ebp + 0xb0]
+0040974A: call 0x452d80
+0040974F: mov esi, dword ptr [ebp + 0xb0]
+00409755: push 0
+00409757: push 0
+00409759: call 0x452820
+0040975E: pop edi
+0040975F: pop esi
+00409760: pop ebx
+00409761: pop ebp
+00409762: ret 4
+
+Adventure award: Garden tutorial
+00409765: cmp eax, 0x2d
+00409768: jne 0x409744
+0040976A: call 0x452d80
+0040976F: mov esi, dword ptr [ebp + 0xb0]
+00409775: push 0
+00409777: push 0x2b
+00409779: call 0x452820
+0040977E: mov ecx, dword ptr [ebp + 0xb0]
+00409784: mov ecx, dword ptr [ecx + 0x93c]
+0040978A: call 0x52cc50
+0040978F: pop edi
+00409790: pop esi
+00409791: pop ebx
+00409792: pop ebp
+00409793: ret 4
+
+Retail ZombieWonClick: cleanup, Adventure NewGame and unconditional NewGame tail call
+0043FB50: mov ecx, dword ptr [eax + 8]
+0043FB53: cmp ecx, dword ptr [0x729a48]
+0043FB59: push edi
+0043FB5A: jge 0x43fb67
+0043FB5C: mov edx, dword ptr [eax]
+0043FB5E: cmp byte ptr [edx + 0x915], 0
+0043FB65: je 0x43fb86
+0043FB67: mov edi, dword ptr [eax]
+0043FB69: call 0x452640
+0043FB6E: cmp dword ptr [edi + 0x918], 0
+0043FB75: jne 0x43fb7e
+0043FB77: mov eax, edi
+0043FB79: call 0x452b30
+0043FB7E: mov eax, edi
+0043FB80: pop edi
+0043FB81: jmp 0x452b30
+0043FB86: pop edi
+0043FB87: ret 

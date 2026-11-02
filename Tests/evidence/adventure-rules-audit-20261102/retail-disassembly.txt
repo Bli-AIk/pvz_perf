@@ -1,0 +1,109 @@
+SHA256: 5f650f52d12751e08b63e590edb0d9b9f09d087cea900baa0eb39e4af8eda251
+Wave table 00722CD0: [4, 6, 8, 10, 8, 10, 20, 10, 20, 20, 10, 20, 10, 20, 10, 10, 20, 10, 20, 20, 10, 20, 20, 30, 20, 20, 30, 20, 30, 30, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 20, 30, 20, 20, 30, 20, 30, 30]
+
+Wave table lookup and replay increase, excluding miniboss; Whack override precedes this block
+0040BC79: mov eax, dword ptr [edi + 0x5568]
+0040BC7F: dec eax
+0040BC80: test eax, eax
+0040BC82: jg 0x40bc88
+0040BC84: xor eax, eax
+0040BC86: jmp 0x40bc92
+0040BC88: cmp eax, 0x31
+0040BC8B: jl 0x40bc92
+0040BC8D: mov eax, 0x31
+0040BC92: mov esi, dword ptr [eax*4 + 0x722cd0]
+0040BC99: mov dword ptr [edi + 0x557c], esi
+0040BC9F: cmp dword ptr [ecx + 0x918], 0
+0040BCA6: jne 0x40bcc0
+0040BCA8: mov eax, dword ptr [ecx + 0x94c]
+0040BCAE: test eax, eax
+0040BCB0: je 0x40bdf9
+0040BCB6: cmp dword ptr [eax + 0x54], 0
+0040BCBA: jle 0x40bdf9
+0040BCC0: call 0x456e50
+0040BCC5: test al, al
+0040BCC7: jne 0x40bdf9
+0040BCCD: cmp esi, 0xa
+0040BCD0: jge 0x40bcdd
+0040BCD2: mov dword ptr [edi + 0x557c], ebx
+0040BCD8: jmp 0x40bdf9
+0040BCDD: add esi, 0xa
+0040BCE0: mov dword ptr [edi + 0x557c], esi
+0040BCE6: jmp 0x40bdf9
+
+New plant progression index by area/sublevel, excluding two reward gaps per ten levels
+00456F60: dec eax
+00456F61: cdq 
+00456F62: mov ecx, 0xa
+00456F67: idiv ecx
+00456F69: lea ecx, [edx + 1]
+00456F6C: cmp ecx, 0xa
+00456F6F: lea eax, [ecx + eax*8]
+00456F72: jl 0x456f79
+00456F74: sub eax, 2
+00456F77: jmp 0x456f7f
+00456F79: cmp ecx, 5
+00456F7C: jl 0x456f7f
+00456F7E: dec eax
+00456F7F: cmp eax, 0x28
+00456F82: jle 0x456f89
+00456F84: mov eax, 0x28
+00456F89: ret 
+
+Final death reward: note exceptions, replay money bag, first-play special items and silver sunflower
+00540950: mov eax, dword ptr [edi + 0x918]
+00540956: test eax, eax
+00540958: jne 0x540a0f
+0054095E: mov eax, dword ptr [esi + 4]
+00540961: mov edi, dword ptr [eax + 0x5568]
+00540967: cmp edi, 0x32
+0054096A: jg 0x540a0f
+00540970: cmp edi, 9
+00540973: je 0x540a05
+00540979: cmp edi, 0x13
+0054097C: je 0x540a05
+00540982: cmp edi, 0x1d
+00540985: je 0x540a05
+00540987: cmp edi, 0x27
+0054098A: je 0x540a05
+0054098C: cmp edi, 0x31
+0054098F: je 0x540a05
+00540991: mov eax, dword ptr [esi]
+00540993: call 0x457610
+00540998: cmp edi, 0x32
+0054099B: jne 0x5409af
+0054099D: movzx edi, al
+005409A0: neg edi
+005409A2: sbb edi, edi
+005409A4: and edi, 0xfffffffd
+005409A7: add edi, 0x15
+005409AA: jmp 0x540aa6
+005409AF: test al, al
+005409B1: jne 0x540aa1
+005409B7: cmp edi, 4
+005409BA: jne 0x5409c6
+005409BC: mov edi, 9
+005409C1: jmp 0x540aa6
+005409C6: cmp edi, 0xe
+005409C9: jne 0x5409d5
+005409CB: mov edi, 0xa
+005409D0: jmp 0x540aa6
+005409D5: cmp edi, 0x18
+005409D8: jne 0x5409e4
+005409DA: mov edi, 0xb
+005409DF: jmp 0x540aa6
+005409E4: cmp edi, 0x22
+005409E7: jne 0x5409f3
+005409E9: mov edi, 0xe
+005409EE: jmp 0x540aa6
+005409F3: sub edi, 0x2c
+005409F6: neg edi
+005409F8: sbb edi, edi
+005409FA: and edi, 0xfffffffa
+005409FD: add edi, 0xd
+00540A00: jmp 0x540aa6
+00540A05: mov edi, 0xf
+00540A0A: jmp 0x540aa6
+
+Shared replay/default money-bag choice
+00540AA1: mov edi, 0x12

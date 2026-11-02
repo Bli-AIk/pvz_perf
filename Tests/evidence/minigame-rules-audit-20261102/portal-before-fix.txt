@@ -1,0 +1,194 @@
+ImageRuntimeTests.cpp
+正在生成代码
+已完成代码的生成
+PASS pure wrapped text measurement: wrapping, newlines, color tags, no glyph draws and empty fill
+pool GPU day-normal-nearest: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU night-normal-linear: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU day-additive-partial-fractional: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU night-additive-phase-wrap: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU day-opaque-partial-fractional: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU night-opaque-large-counter: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU feedback-float-source-pending-batch: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+PASS production GPU pool vs independent legacy CPU mesh: day/night, normal/additive/opaque, nearest/linear/repeat, phase wrap, destination scissor, fractional translation, ordinary painter order and float target feedback
+PASS precomputed transparent edges: alpha, visible RGB, idempotency, nearest/linear, upload-discard
+PASS public font upload: deferred alpha, upload-and-discard, texture reuse, independent copies
+PASS nonzero source rectangles and repacked whole-sheet atlas views: translation, scale origins, clipping, tint, additive, local-source views and floating scales
+PASS necessary local-clip contract: independent full-pixel rect/image/source/mirror/matrix/particle/convex oracles, disjoint/partial/empty clips and negative framebuffer crossings
+PASS actual TitleScreen grass reveal: widths 0/1/157/313/314/400, translated draw and unrevealed black pixels
+PASS actual GameButton atlas states: normal, hover, press/fallbacks, disabled, overAlpha, additive glow, translation/offsets and hidden state match independent images
+PASS direct shared-image snapshots and reference lifetime
+PASS actual boss back-arm drawing: four attack offsets, reference pixels, 1024 exact shared-animation translation restorations
+PASS reanimation appearances: independent options, image slots, atlas dimensions, original centers and actual AttachmentDraw visibility pixels
+PASS fullscreen reanimation: destination fill pixels, hidden/zero alpha, color modulation, both blend modes, translation and effective clip without track matrices
+Store clock fixture: initialize
+Minigame begin mode=1 Hz=100
+Minigame primary mode=1 Hz=100 wave=0 sun=0 plants=40 zombies=0 score=75 award=1
+Minigame begin mode=1 Hz=30
+Minigame primary mode=1 Hz=30 wave=0 sun=0 plants=40 zombies=0 score=75 award=1
+Minigame begin mode=1 Hz=240
+Minigame primary mode=1 Hz=240 wave=0 sun=0 plants=40 zombies=0 score=75 award=1
+Minigame begin mode=1 Hz=0
+Minigame primary mode=1 Hz=0 wave=0 sun=0 plants=40 zombies=0 score=75 award=1
+Minigame begin mode=2 Hz=100
+Minigame primary mode=2 Hz=100 wave=0 sun=0 plants=40 zombies=0 score=75 award=1
+Minigame begin mode=2 Hz=30
+Minigame primary mode=2 Hz=30 wave=0 sun=0 plants=40 zombies=0 score=75 award=1
+Minigame begin mode=2 Hz=240
+Minigame primary mode=2 Hz=240 wave=0 sun=0 plants=40 zombies=0 score=75 award=1
+Minigame begin mode=2 Hz=0
+Minigame primary mode=2 Hz=0 wave=0 sun=0 plants=40 zombies=0 score=75 award=1
+Minigame begin mode=3 Hz=100
+Minigame primary mode=3 Hz=100 wave=1 sun=50 plants=0 zombies=4 score=0 award=0
+Minigame begin mode=3 Hz=30
+Minigame primary mode=3 Hz=30 wave=1 sun=50 plants=0 zombies=4 score=0 award=0
+Minigame begin mode=3 Hz=240
+Minigame primary mode=3 Hz=240 wave=1 sun=50 plants=0 zombies=4 score=0 award=0
+Minigame begin mode=3 Hz=0
+Minigame primary mode=3 Hz=0 wave=1 sun=50 plants=0 zombies=4 score=0 award=0
+Minigame begin mode=4 Hz=100
+Minigame primary mode=4 Hz=100 wave=9 sun=50 plants=10 zombies=0 score=0 award=0
+Minigame begin mode=4 Hz=30
+Minigame primary mode=4 Hz=30 wave=9 sun=50 plants=10 zombies=0 score=0 award=0
+Minigame begin mode=4 Hz=240
+Minigame primary mode=4 Hz=240 wave=9 sun=50 plants=10 zombies=0 score=0 award=0
+Minigame begin mode=4 Hz=0
+Minigame primary mode=4 Hz=0 wave=9 sun=50 plants=10 zombies=0 score=0 award=0
+Minigame begin mode=5 Hz=100
+Minigame primary mode=5 Hz=100 wave=0 sun=50 plants=0 zombies=1 score=0 award=0
+Minigame begin mode=5 Hz=30
+Minigame primary mode=5 Hz=30 wave=0 sun=50 plants=0 zombies=1 score=0 award=0
+Minigame begin mode=5 Hz=240
+Minigame primary mode=5 Hz=240 wave=0 sun=50 plants=0 zombies=1 score=0 award=0
+Minigame begin mode=5 Hz=0
+Minigame primary mode=5 Hz=0 wave=0 sun=50 plants=0 zombies=1 score=0 award=0
+Minigame begin mode=6 Hz=100
+Minigame primary mode=6 Hz=100 wave=0 sun=50 plants=0 zombies=1 score=0 award=0
+Minigame begin mode=6 Hz=30
+Minigame primary mode=6 Hz=30 wave=0 sun=50 plants=0 zombies=1 score=0 award=0
+Minigame begin mode=6 Hz=240
+Minigame primary mode=6 Hz=240 wave=0 sun=50 plants=0 zombies=1 score=0 award=0
+Minigame begin mode=6 Hz=0
+Minigame primary mode=6 Hz=0 wave=0 sun=50 plants=0 zombies=1 score=0 award=0
+Minigame begin mode=7 Hz=100
+Minigame primary mode=7 Hz=100 wave=1 sun=5000 plants=0 zombies=3 score=0 award=0
+Minigame begin mode=7 Hz=30
+Minigame primary mode=7 Hz=30 wave=1 sun=5000 plants=0 zombies=3 score=0 award=0
+Minigame begin mode=7 Hz=240
+Minigame primary mode=7 Hz=240 wave=1 sun=5000 plants=0 zombies=3 score=0 award=0
+Minigame begin mode=7 Hz=0
+Minigame primary mode=7 Hz=0 wave=1 sun=5000 plants=0 zombies=3 score=0 award=0
+Minigame begin mode=8 Hz=100
+Minigame primary mode=8 Hz=100 wave=0 sun=50 plants=0 zombies=1 score=0 award=0
+Minigame begin mode=8 Hz=30
+Minigame primary mode=8 Hz=30 wave=0 sun=50 plants=0 zombies=1 score=0 award=0
+Minigame begin mode=8 Hz=240
+Minigame primary mode=8 Hz=240 wave=0 sun=50 plants=0 zombies=1 score=0 award=0
+Minigame begin mode=8 Hz=0
+Minigame primary mode=8 Hz=0 wave=0 sun=50 plants=0 zombies=1 score=0 award=0
+Minigame begin mode=9 Hz=100
+Minigame primary mode=9 Hz=100 wave=1 sun=50 plants=0 zombies=1 score=0 award=0
+Minigame begin mode=9 Hz=30
+Minigame primary mode=9 Hz=30 wave=1 sun=50 plants=0 zombies=1 score=0 award=0
+Minigame begin mode=9 Hz=240
+Minigame primary mode=9 Hz=240 wave=1 sun=50 plants=0 zombies=1 score=0 award=0
+Minigame begin mode=9 Hz=0
+Minigame primary mode=9 Hz=0 wave=1 sun=50 plants=0 zombies=1 score=0 award=0
+Minigame begin mode=10 Hz=100
+Portal zombie type=0 Hz=100 arrivalX=664 nextX=662.377 row=1
+Minigame failed mode=10 Hz=100 timeNs=920000000 wave=0 message=Zombie sampled its old movement origin after teleporting
+Portal zombie type=16 Hz=100 arrivalX=664 nextX=125.27 row=1
+Minigame begin mode=10 Hz=30
+Portal zombie type=0 Hz=30 arrivalX=664 nextX=662.81 row=1
+Portal zombie type=16 Hz=30 arrivalX=664 nextX=125.27 row=1
+Minigame begin mode=10 Hz=240
+Minigame failed mode=10 Hz=30 timeNs=920000000 wave=0 message=Zombie sampled its old movement origin after teleporting
+Portal zombie type=0 Hz=240 arrivalX=663.971 nextX=662.169 row=1
+Portal zombie type=16 Hz=240 arrivalX=128.475 nextX=125.27 row=1
+Portal zombie type=22 Hz=240 arrivalX=109.516 nextX=106.35 row=1
+Minigame primary mode=10 Hz=240 wave=0 sun=50 plants=0 zombies=1 score=0 award=0
+Minigame begin mode=10 Hz=0
+Portal zombie type=0 Hz=0 arrivalX=664 nextX=662.198 row=1
+Portal zombie type=16 Hz=0 arrivalX=128.475 nextX=125.27 row=1
+Portal zombie type=22 Hz=0 arrivalX=109.516 nextX=106.35 row=1
+Minigame primary mode=10 Hz=0 wave=0 sun=50 plants=0 zombies=1 score=0 award=0
+Minigame begin mode=11 Hz=100
+Minigame primary mode=11 Hz=100 wave=0 sun=50 plants=0 zombies=0 score=0 award=0
+Minigame begin mode=11 Hz=30
+Minigame primary mode=11 Hz=30 wave=0 sun=50 plants=0 zombies=0 score=0 award=0
+Minigame begin mode=11 Hz=240
+Minigame primary mode=11 Hz=240 wave=0 sun=50 plants=0 zombies=0 score=0 award=0
+Minigame begin mode=11 Hz=0
+Minigame primary mode=11 Hz=0 wave=0 sun=50 plants=0 zombies=0 score=0 award=0
+Minigame begin mode=12 Hz=100
+Minigame primary mode=12 Hz=100 wave=0 sun=50 plants=14 zombies=0 score=0 award=1
+Minigame begin mode=12 Hz=30
+Minigame primary mode=12 Hz=30 wave=0 sun=50 plants=14 zombies=0 score=0 award=1
+Minigame begin mode=12 Hz=240
+Minigame primary mode=12 Hz=240 wave=0 sun=50 plants=14 zombies=0 score=0 award=1
+Minigame begin mode=12 Hz=0
+Minigame primary mode=12 Hz=0 wave=0 sun=50 plants=14 zombies=0 score=0 award=1
+Minigame begin mode=13 Hz=100
+Minigame primary mode=13 Hz=100 wave=0 sun=2000 plants=0 zombies=0 score=0 award=1
+Minigame begin mode=13 Hz=30
+Minigame primary mode=13 Hz=30 wave=0 sun=2000 plants=0 zombies=0 score=0 award=1
+Minigame begin mode=13 Hz=240
+Minigame primary mode=13 Hz=240 wave=0 sun=2000 plants=0 zombies=0 score=0 award=1
+Minigame begin mode=13 Hz=0
+Minigame primary mode=13 Hz=0 wave=0 sun=2000 plants=0 zombies=0 score=0 award=1
+Minigame begin mode=14 Hz=100
+Minigame primary mode=14 Hz=100 wave=0 sun=50 plants=0 zombies=0 score=0 award=0
+Minigame begin mode=14 Hz=30
+Minigame primary mode=14 Hz=30 wave=0 sun=50 plants=0 zombies=0 score=0 award=0
+Minigame begin mode=14 Hz=240
+Minigame primary mode=14 Hz=240 wave=0 sun=50 plants=0 zombies=0 score=0 award=0
+Minigame begin mode=14 Hz=0
+Minigame primary mode=14 Hz=0 wave=0 sun=50 plants=0 zombies=0 score=0 award=0
+Minigame begin mode=15 Hz=100
+Minigame primary mode=15 Hz=100 wave=0 sun=50 plants=1 zombies=0 score=0 award=0
+Minigame begin mode=15 Hz=30
+Minigame primary mode=15 Hz=30 wave=0 sun=50 plants=1 zombies=0 score=0 award=0
+Minigame begin mode=15 Hz=240
+Minigame primary mode=15 Hz=240 wave=0 sun=50 plants=1 zombies=0 score=0 award=0
+Minigame begin mode=15 Hz=0
+Minigame primary mode=15 Hz=0 wave=0 sun=50 plants=1 zombies=0 score=0 award=0
+Minigame begin mode=16 Hz=100
+Minigame primary mode=16 Hz=100 wave=0 sun=50 plants=1 zombies=0 score=0 award=0
+Minigame begin mode=16 Hz=30
+Minigame primary mode=16 Hz=30 wave=0 sun=50 plants=1 zombies=0 score=0 award=0
+Minigame begin mode=16 Hz=240
+Minigame primary mode=16 Hz=240 wave=0 sun=50 plants=1 zombies=0 score=0 award=0
+Minigame begin mode=16 Hz=0
+Minigame primary mode=16 Hz=0 wave=0 sun=50 plants=1 zombies=0 score=0 award=0
+Minigame begin mode=17 Hz=100
+Minigame primary mode=17 Hz=100 wave=1 sun=50 plants=0 zombies=1 score=0 award=0
+Minigame begin mode=17 Hz=30
+Minigame primary mode=17 Hz=30 wave=1 sun=50 plants=0 zombies=1 score=0 award=0
+Minigame begin mode=17 Hz=240
+Minigame primary mode=17 Hz=240 wave=1 sun=50 plants=0 zombies=1 score=0 award=0
+Minigame begin mode=17 Hz=0
+Minigame primary mode=17 Hz=0 wave=1 sun=50 plants=0 zombies=1 score=0 award=0
+Minigame begin mode=18 Hz=100
+Minigame primary mode=18 Hz=100 wave=1 sun=50 plants=0 zombies=1 score=0 award=0
+Minigame begin mode=18 Hz=30
+Minigame primary mode=18 Hz=30 wave=1 sun=50 plants=0 zombies=1 score=0 award=0
+Minigame begin mode=18 Hz=240
+Minigame primary mode=18 Hz=240 wave=1 sun=50 plants=0 zombies=1 score=0 award=0
+Minigame begin mode=18 Hz=0
+Minigame primary mode=18 Hz=0 wave=1 sun=50 plants=0 zombies=1 score=0 award=0
+Minigame begin mode=19 Hz=100
+Minigame primary mode=19 Hz=100 wave=1 sun=0 plants=0 zombies=1 score=0 award=0
+Minigame begin mode=19 Hz=30
+Minigame primary mode=19 Hz=30 wave=1 sun=0 plants=0 zombies=1 score=0 award=0
+Minigame begin mode=19 Hz=240
+Minigame primary mode=19 Hz=240 wave=1 sun=0 plants=0 zombies=1 score=0 award=0
+Minigame begin mode=19 Hz=0
+Minigame primary mode=19 Hz=0 wave=1 sun=0 plants=0 zombies=1 score=0 award=0
+Minigame begin mode=20 Hz=100
+Minigame primary mode=20 Hz=100 wave=0 sun=50 plants=0 zombies=3 score=0 award=0
+Minigame begin mode=20 Hz=30
+Minigame primary mode=20 Hz=30 wave=0 sun=50 plants=0 zombies=3 score=0 award=0
+Minigame begin mode=20 Hz=240
+Minigame primary mode=20 Hz=240 wave=0 sun=50 plants=0 zombies=3 score=0 award=0
+Minigame begin mode=20 Hz=0
+Minigame primary mode=20 Hz=0 wave=0 sun=50 plants=0 zombies=3 score=0 award=0
+FAIL image runtime: Minigame rules catalog has failed cases; inspect per-mode results

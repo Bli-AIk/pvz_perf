@@ -26,6 +26,12 @@ def main():
         return next(r['min_ns']for r in production if r['kind']==kind and r['kernel']==kernel and r['process']==run)
 
     tables={}
+    derived=json.loads((base/'derived-summary.json').read_text())
+    selection=next(row for row in derived['table_models'] if row['table']=='kFireProjectiles')
+    tables['selection']=dict(columns=['子弹类型选择','原 switch 模型','二维数据表模型'],widths=[880,420,420],rows=[
+        [f'独立进程 {i+1}（ns/次）',f'{old:.2f}',f'{new:.2f}']
+        for i,(old,new) in enumerate(selection['processes'])],
+        note='kFireProjectiles · MSVC /O2 · LP14 · 用户11x · min-of-5。\n17 种合法射手、两种武器共用同一输入与校验桩；耗时降低约 84%，只衡量子弹类型选择，不是完整 Fire 或原版 EXE。')
     tables['tables']=dict(columns=['查询','原版EXE','v3.2.4生产函数'],widths=[880,420,420],rows=[
         [name,f'{query("retail",key):.3f}',f'{query("current",key):.3f}']for name,key in [
             ('植物伤害范围','damage_range'),('花盆高度','flower_pot_height'),

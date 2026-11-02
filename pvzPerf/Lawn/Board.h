@@ -148,7 +148,7 @@ public:
 	int								mGridCelLook[MAX_GRID_SIZE_X][MAX_GRID_SIZE_Y];			//+0x240
 	int								mGridCelOffset[MAX_GRID_SIZE_X][MAX_GRID_SIZE_Y][2];	//+0x318
 	int								mGridCelFog[MAX_GRID_SIZE_X][MAX_GRID_SIZE_Y + 1];		//+0x4C8
-	bool							mEnableGraveStones;										//+0x5C4
+	bool							mEnableGraveStones;										//+0x5C4; false: initial graves fully risen, true: runtime graves rise
 	int								mSpecialGraveStoneX;									//+0x5C8
 	int								mSpecialGraveStoneY;									//+0x5CC
 	float							mFogOffset;												//+0x5D0

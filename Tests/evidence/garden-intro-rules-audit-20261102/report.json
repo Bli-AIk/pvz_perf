@@ -1,0 +1,152 @@
+{
+  "scope": "Four real Garden tool/growth/transfer/profile scenarios, twenty Tree feeding scenarios and four Intro application handoffs",
+  "limits": "Controlled plant needs and purchased tools; no sale modal, all calendar boundaries or complete garden economy; silent audio request counts are not listening tests",
+  "garden": [
+    {
+      "schedule": 100
+    },
+    {
+      "schedule": 30
+    },
+    {
+      "schedule": 240
+    },
+    {
+      "schedule": 0
+    }
+  ],
+  "tree": [
+    {
+      "height": 0,
+      "schedule": 100,
+      "grown": 1
+    },
+    {
+      "height": 0,
+      "schedule": 30,
+      "grown": 1
+    },
+    {
+      "height": 0,
+      "schedule": 240,
+      "grown": 1
+    },
+    {
+      "height": 0,
+      "schedule": 0,
+      "grown": 1
+    },
+    {
+      "height": 1,
+      "schedule": 100,
+      "grown": 2
+    },
+    {
+      "height": 1,
+      "schedule": 30,
+      "grown": 2
+    },
+    {
+      "height": 1,
+      "schedule": 240,
+      "grown": 2
+    },
+    {
+      "height": 1,
+      "schedule": 0,
+      "grown": 2
+    },
+    {
+      "height": 12,
+      "schedule": 100,
+      "grown": 13
+    },
+    {
+      "height": 12,
+      "schedule": 30,
+      "grown": 13
+    },
+    {
+      "height": 12,
+      "schedule": 240,
+      "grown": 13
+    },
+    {
+      "height": 12,
+      "schedule": 0,
+      "grown": 13
+    },
+    {
+      "height": 50,
+      "schedule": 100,
+      "grown": 51
+    },
+    {
+      "height": 50,
+      "schedule": 30,
+      "grown": 51
+    },
+    {
+      "height": 50,
+      "schedule": 240,
+      "grown": 51
+    },
+    {
+      "height": 50,
+      "schedule": 0,
+      "grown": 51
+    },
+    {
+      "height": 99,
+      "schedule": 100,
+      "grown": 100
+    },
+    {
+      "height": 99,
+      "schedule": 30,
+      "grown": 100
+    },
+    {
+      "height": 99,
+      "schedule": 240,
+      "grown": 100
+    },
+    {
+      "height": 99,
+      "schedule": 0,
+      "grown": 100
+    }
+  ],
+  "intro": [
+    {
+      "schedule": 100,
+      "elapsed_ns": 13890000000
+    },
+    {
+      "schedule": 30,
+      "elapsed_ns": 13899999861
+    },
+    {
+      "schedule": 240,
+      "elapsed_ns": 13891664444
+    },
+    {
+      "schedule": 0,
+      "elapsed_ns": 13892021524
+    }
+  ],
+  "sources": {
+    "Tests/native/ImageRuntimeTests.cpp": "e36386fbab68682c4944b36e5cfa655c3b2700f03243ddd79ff6fbc613cfa6b0",
+    "tools/test-image-runtime.ps1": "1c8c1837d27db283b6266a4ae579f2f3da3780f3d1e836d67423f55a65acd379",
+    "pvzPerf/Lawn/CutScene.cpp": "7620445871b799f8fd8222cc95c3c52f908c4214dbc170b22fadccc45a5fd749",
+    "pvzPerf/Lawn/Cutscene.h": "7db9262f65ce98e34be44d1819c5c50100d441535f9f304f703b335a0c3c1a0f",
+    "pvzPerf/Lawn/ZenGarden.cpp": "32a17a414815087eb8d4cbc61f2195fca4dc93a051c3a58fa95d3013f7c3049e",
+    "pvzPerf/Lawn/Challenge.cpp": "879162e40f591fc1e55e58d2e1d8cc8ec0c056086148109300dafda7bcdfa06b",
+    "pvzPerf/Lawn/Board.cpp": "aaeba6b3444a494b2be3e312be677fde3b0d7b8e47bdf52707f385992b86d668",
+    "pvzPerf/LawnApp.cpp": "9876be2ca0f5ec3efb582f94b2258ab4a341e80b724e95329b1a33544cc45d9d"
+  },
+  "executable_sha256": "85f32d7db4264ee387740b5a8badda2684c5b11ba800af48cc474b62e243228b",
+  "pak_sha256": "5bdd71c632d945304ae3752bfed61941bb8c7e4351e616e1ff6fbceab1431545",
+  "git_head": "68d61123de7b073f5479f32bec1772106b6141b9",
+  "working_tree_modified": true
+}

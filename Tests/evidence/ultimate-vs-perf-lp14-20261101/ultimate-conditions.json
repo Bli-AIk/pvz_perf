@@ -1,0 +1,20 @@
+{
+  "pid": 26260,
+  "affinity_mask": "0x4000",
+  "source": "RTSS shared memory presentation windows",
+  "logic_hz": 100,
+  "render_limit": "uncapped",
+  "preroll_seconds": 3,
+  "note": "No scene/wave introspection. Foreground is not a battle-state test.",
+  "rtss": {
+    "start_ms": 27972312,
+    "end_ms": 27973328,
+    "frames": 176,
+    "duration_ms": 1016,
+    "fps": 173.22834645669292,
+    "last_frame_us": 5440,
+    "api_flags": 65546,
+    "executable": "C:\\UserProgram\\pvz Ultimate\\Lawn.Windows.Uncapped.exe"
+  },
+  "affinity_recorded_at": "Enter/start"
+}

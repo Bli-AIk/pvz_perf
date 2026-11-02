@@ -159,7 +159,7 @@ LawnApp::LawnApp()
 	mDebugKeysEnabled = false;
 	mFullCompanyName = "PopCap Games";
 	mProdName = "PopCap\\PlantsVsZombies";
-	mProductVersion = "3.2.4";
+	mProductVersion = "3.2.5beta";
 	std::string aTitleName = "pvz_perf";
 #ifdef _DEBUG
 	aTitleName += " BETA ";
@@ -1713,10 +1713,10 @@ void LawnApp::UpdateFrames()
 	for (int i = 0; i < aUpdateCount; i++)
 	{
 		Sexy::BeginTimedUpdate();
-		// The full-screen Store pauses the board, but its Dave animation must
-		// still consume visual time. Other board pauses keep their frozen clock.
+		// Store dialogue and Almanac previews keep their UI clock while the
+		// modal pauses the battle. Ordinary board pauses still freeze Visual.
 		if (mEffectSystem && !mCreditScreen &&
-            (!mBoard || !mBoard->mPaused || GetDialog(Dialogs::DIALOG_STORE)))
+            (!mBoard || !mBoard->mPaused || GetDialog(Dialogs::DIALOG_STORE) || GetDialog(Dialogs::DIALOG_ALMANAC)))
 		{
 			if (Sexy::gUpdateIntervalNs > INT64_MAX)
 				throw std::overflow_error("visual animation update exceeds clock range");
@@ -1919,12 +1919,6 @@ void LawnApp::LoadingThreadCompleted()
 		mPoolEffect = new PoolEffect();
 		mPoolEffect->PoolEffectInitialize();
 	}
-#if defined(__ANDROID__)
-	// The FPS overlay needs the loaded debug font. Use the same timer/reset path
-	// as the desktop shortcut, without enabling unrelated debug keys.
-	if (std::getenv("PVZ_ANDROID_TEST_FPS") && !mShowFPS)
-		DebugKeyDown(KEYCODE_F3);
-#endif
 }
 
 //0x452CB0

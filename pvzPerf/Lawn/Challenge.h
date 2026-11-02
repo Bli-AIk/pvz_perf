@@ -4,6 +4,7 @@
 #include "GameConstants.h"
 #include "Sexy.TodLib/FilterEffect.h"
 #include "graphics/Graphics.h"
+#include <array>
 
 #define BEGHOULED_MAX_GRIDSIZEX 8
 #define BEGHOULED_MAX_GRIDSIZEY 5
@@ -52,6 +53,11 @@ struct BeghouledBoardState
 class Challenge
 {
 public:
+	using UpdateFn = void (*)(Challenge&, std::uint64_t);
+	// Static storage only; constexpr definitions and all handlers live in .cpp.
+	static const std::array<UpdateFn, NUM_GAME_MODES> kChallengeUpdates;
+	static const std::array<UpdateFn, NUM_LEVELS> kAdventureChallengeUpdates;
+
 	LawnApp*				mApp;                                               //+0x0
 	Board*					mBoard;                                             //+0x4
 	int					mBeghouledMouseCapture;                             //+0x8

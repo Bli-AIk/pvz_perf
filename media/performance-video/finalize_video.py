@@ -46,8 +46,8 @@ def main():
     (out/'segments-video.txt').write_text('\n'.join(concat),encoding='utf-8')
     with wave.open(str(out/'narration-full.wav'),'wb')as audio:
         audio.setparams(params);audio.writeframes(b''.join(audio_parts))
-    silent=out/'pvz_perf-v3.2.4-performance-silent.mp4'
-    voiced=out/'pvz_perf-v3.2.4-performance-narrated.mp4'
+    silent=out/'pvz_perf-v3.2.5-performance-silent.mp4'
+    voiced=out/'pvz_perf-v3.2.5-performance-narrated.mp4'
     subprocess.run(['ffmpeg','-y','-hide_banner','-loglevel','warning','-f','concat','-safe','0',
         '-i',str(out/'segments-video.txt'),'-map','0:v:0','-c:v','copy','-an','-movflags','+faststart',str(silent)],check=True)
     subprocess.run(['ffmpeg','-y','-hide_banner','-loglevel','warning','-i',str(silent),'-i',str(out/'narration-full.wav'),

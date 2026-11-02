@@ -138,11 +138,10 @@ void CheckActualScheduler(TestApp& app)
         Require(app.probeTimeNs + app.mPendingUpdatesAccNs >= elapsed &&
             app.probeTimeNs + app.mPendingUpdatesAccNs <= elapsedUpperBound,
             "Actual Process discarded elapsed time or used the target interval");
-        Require(app.probeMaxStepNs <= 10'000'000 && app.probeDraws == 1,
-            "Actual Process skipped collision steps or starved drawing");
-        if (app.probeTimeNs <= 10'000'000)
-            Require(app.probeUpdates == 1, "Actual high-FPS scheduler unnecessarily caught up");
-        const auto quantum = std::min(app.mFrameTiming.mIntervalNs, 10'000'000ULL);
+        Require(app.probeUpdates == 1 && app.probeMaxStepNs == app.probeTimeNs &&
+            app.probeDraws == 1,
+            "Actual Process split elapsed time into fixed updates or starved drawing");
+        const auto quantum = app.mFrameTiming.mIntervalNs;
         Require(app.mPendingUpdatesAccNs < quantum - app.mSimulationPhaseNs,
             "Actual Process left a due logical interval unprocessed");
         if (fps == 250 && app.probeTimeNs < 8'000'000 && app.mSimulationPhaseNs > 0)
@@ -198,7 +197,7 @@ void CheckActualScheduler(TestApp& app)
     app.mHasPendingDraw = false;
     app.ClearUpdateBacklog(false);
     Sexy::ApplySimulationStep(oldStep);
-    std::cout << "PASS actual Process: 30/60/100/240/10000 FPS, elapsed-time conservation, <=10ms steps and per-batch drawing\n";
+    std::cout << "PASS actual Process: elapsed-time conservation, uncapped actual steps and per-update drawing\n";
 }
 
 class HiddenWindow

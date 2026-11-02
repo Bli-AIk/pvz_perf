@@ -1,0 +1,147 @@
+SHA256: 5f650f52d12751e08b63e590edb0d9b9f09d087cea900baa0eb39e4af8eda251
+
+Whack standalone mode 30 / Adventure level 15: initial countdown 200
+00422262: mov ecx, dword ptr [eax + 0x918]
+00422268: cmp ecx, 0x1e
+0042226B: je 0x42227d
+0042226D: test ecx, ecx
+0042226F: jne 0x4222a9
+00422271: mov eax, dword ptr [eax + 0x94c]
+00422277: cmp dword ptr [eax + 0x4c], 0xf
+0042227B: jne 0x4222a9
+0042227D: mov ecx, dword ptr [ebx + 4]
+00422280: mov edx, dword ptr [ecx + 0x150]
+00422286: mov dword ptr [edx + 0x30], 7
+0042228D: mov eax, dword ptr [ebx + 4]
+00422290: mov dword ptr [eax + 0x55b4], 0xc8
+0042229A: mov eax, dword ptr [ebx + 4]
+0042229D: mov ecx, dword ptr [eax + 0x55b4]
+004222A3: mov dword ptr [eax + 0x55b8], ecx
+
+Whack: decrement, at 100 remaining and wave > 0 refill max(1,5-count)
+00428B31: or esi, 0xffffffff
+00428B34: add dword ptr [eax + 0x55b4], esi
+00428B3A: mov edx, dword ptr [ebx + 4]
+00428B3D: cmp dword ptr [edx + 0x55b4], 0x64
+00428B44: jne 0x428b6b
+00428B46: cmp dword ptr [edx + 0x5594], edi
+00428B4C: jle 0x428b6b
+00428B4E: call 0x415200
+00428B53: mov ecx, 5
+00428B58: sub ecx, eax
+00428B5A: cmp ecx, 1
+00428B5D: jge 0x428b64
+00428B5F: mov ecx, 1
+00428B64: push ecx
+00428B65: push ebx
+00428B66: call 0x4288d0
+
+Whack: at zero reset 2000, increment wave, reset spawn countdown
+00428B7C: mov eax, dword ptr [ebx + 4]
+00428B7F: mov ecx, dword ptr [eax + 0x55b4]
+00428B85: cmp ecx, edi
+00428B87: jne 0x428bcf
+00428B89: mov dword ptr [eax + 0x55b4], 0x7d0
+00428B93: mov eax, dword ptr [ebx + 4]
+00428B96: mov edx, dword ptr [eax + 0x55b4]
+00428B9C: mov dword ptr [eax + 0x55b8], edx
+00428BA2: mov eax, dword ptr [ebx + 4]
+00428BA5: inc dword ptr [eax + 0x5594]
+00428BAB: mov eax, dword ptr [ebx + 4]
+00428BAE: mov ecx, dword ptr [eax + 0x5594]
+00428BB4: sub ecx, dword ptr [eax + 0x557c]
+00428BBA: neg ecx
+00428BBC: sbb ecx, ecx
+00428BBE: and ecx, 0xfffffed5
+00428BC4: add ecx, 0x12c
+00428BCA: mov dword ptr [ebx + 0x58], ecx
+00428BCD: jmp 0x428bdb
+
+Whack grave: randomized delay 0..49 updates, store negative age
+00428A89: mov eax, dword ptr [edi]
+00428A8B: mov ecx, dword ptr [ebp + 8]
+00428A8E: mov ebx, dword ptr [edi + 4]
+00428A91: mov dword ptr [esp + 0xc], eax
+00428A95: mov eax, dword ptr [ecx + 4]
+00428A98: lea esi, [eax + 0x134]
+00428A9E: call 0x420f10
+00428AA3: mov esi, eax
+00428AA5: push 0x32
+00428AA7: mov dword ptr [esi + 8], 1
+00428AAE: call 0x5ff2a0
+00428AB3: mov edx, ebx
+00428AB5: imul edx, edx, 0x2710
+00428ABB: neg eax
+00428ABD: mov dword ptr [esi + 0x18], eax
+00428AC0: mov eax, dword ptr [esp + 0x10]
+00428AC4: add edx, 0x497cb
+00428ACA: add esp, 4
+00428ACD: sub dword ptr [esp + 0x10], 1
+00428AD2: mov dword ptr [esi + 0x1c], edx
+00428AD5: mov dword ptr [esi + 0x10], eax
+00428AD8: mov dword ptr [esi + 0x14], ebx
+
+Grave Danger mode 45: nonfinal flags spawn zombies; nonflags after index 5 add grave
+004293A2: mov ecx, dword ptr [esi]
+004293A4: cmp dword ptr [ecx + 0x918], 0x2d
+004293AB: mov bl, al
+004293AD: jne 0x4293df
+004293AF: mov eax, dword ptr [esi + 4]
+004293B2: mov edx, dword ptr [eax + 0x557c]
+004293B8: dec edx
+004293B9: cmp dword ptr [eax + 0x5594], edx
+004293BF: je 0x4293df
+004293C1: test bl, bl
+004293C3: je 0x4293d0
+004293C5: mov edi, eax
+004293C7: call 0x415660
+004293CC: xor edi, edi
+004293CE: jmp 0x4293df
+004293D0: cmp dword ptr [eax + 0x5594], 5
+004293D7: jle 0x4293df
+004293D9: push esi
+004293DA: call 0x4291c0
+
+Night survival only: final wave, normal limit 8 / hard-endless limit 12
+004293DF: mov eax, dword ptr [esi]
+004293E1: mov eax, dword ptr [eax + 0x918]
+004293E7: cmp eax, 1
+004293EA: jl 0x429431
+004293EC: cmp eax, 0xf
+004293EF: jg 0x429431
+004293F1: mov edx, dword ptr [esi + 4]
+004293F4: cmp dword ptr [edx + 0x5564], 1
+004293FB: jne 0x429431
+004293FD: mov eax, edx
+004293FF: mov ecx, dword ptr [eax + 0x557c]
+00429405: dec ecx
+00429406: cmp dword ptr [eax + 0x5594], ecx
+0042940C: jne 0x429431
+0042940E: call 0x415200
+00429413: mov edx, dword ptr [esi]
+00429415: mov ecx, dword ptr [edx + 0x918]
+0042941B: dec ecx
+0042941C: cmp ecx, 4
+0042941F: ja 0x429426
+00429421: cmp eax, 8
+00429424: jmp 0x429429
+00429426: cmp eax, 0xc
+00429429: jge 0x429431
+0042942B: push esi
+0042942C: call 0x4291c0
+
+Grave rise uses positive age and 100-update curve
+00450673: push ebx
+00450674: push ebp
+00450675: mov ebp, dword ptr [esp + 0x68]
+00450679: mov eax, dword ptr [ebp + 0x18]
+0045067C: push esi
+0045067D: push edi
+0045067E: test eax, eax
+00450680: jle 0x45094b
+00450686: push 4
+00450688: push 0
+0045068A: push 0x3e8
+0045068F: mov ecx, 0x64
+00450694: xor edx, edx
+00450696: call 0x51bea0

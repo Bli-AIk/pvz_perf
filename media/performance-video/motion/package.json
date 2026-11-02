@@ -1,0 +1,16 @@
+{
+  "name": "pvz-perf-motion-film",
+  "version": "3.2.5",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "prepare-inputs": "python prepare_inputs.py",
+    "build-page": "node build_page.mjs",
+    "render": "node render.mjs",
+    "preview": "node preview.mjs",
+    "check-frames": "node render.mjs --preview"
+  },
+  "dependencies": {
+    "playwright-core": "1.64.1"
+  }
+}
