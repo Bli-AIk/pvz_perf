@@ -1,0 +1,135 @@
+Test project C:/Users/Administrator/CLionProjects/codex/PlantsVsZombiesModern/out/x64-win32-vulkan
+      Start 24: scene_atlas_corpus
+      Start  7: particle_variant_sources
+ 1/65 Test #24: scene_atlas_corpus ...............   Passed   14.44 sec
+      Start 21: projectile_records
+ 2/65 Test  #7: particle_variant_sources .........   Passed   18.03 sec
+      Start 65: modern_message_readiness_asan
+ 3/65 Test #21: projectile_records ...............   Passed    5.55 sec
+      Start 10: music_burst
+ 4/65 Test #65: modern_message_readiness_asan ....   Passed    6.31 sec
+      Start 64: modern_message_readiness
+ 5/65 Test #10: music_burst ......................   Passed    8.44 sec
+      Start  6: reanim_variants
+ 6/65 Test #64: modern_message_readiness .........   Passed    6.26 sec
+      Start 61: sexy_vulkan_hdr
+ 7/65 Test  #6: reanim_variants ..................   Passed    5.57 sec
+      Start 60: sexy_vulkan_initialization
+ 8/65 Test #61: sexy_vulkan_hdr ..................   Passed    4.17 sec
+      Start 62: sexy_vulkan_scale_pipeline
+ 9/65 Test #60: sexy_vulkan_initialization .......   Passed    2.41 sec
+      Start 12: runtime_asset_sources
+10/65 Test #62: sexy_vulkan_scale_pipeline .......   Passed    2.79 sec
+      Start 28: v7_definition_numbers
+11/65 Test #28: v7_definition_numbers ............   Passed    1.33 sec
+      Start 53: modern_numeric_buffer_asan
+12/65 Test #12: runtime_asset_sources ............   Passed    3.33 sec
+      Start  8: particle_frame_images
+13/65 Test #53: modern_numeric_buffer_asan .......   Passed    1.39 sec
+      Start 55: pvz_v4_conversion
+14/65 Test #55: pvz_v4_conversion ................   Passed    1.03 sec
+      Start 19: projectile_compiler
+15/65 Test #19: projectile_compiler ..............   Passed    1.09 sec
+      Start 22: zombatar_atlas
+16/65 Test #22: zombatar_atlas ...................   Passed    0.93 sec
+      Start 13: runtime_image_retention
+17/65 Test  #8: particle_frame_images ............   Passed    3.75 sec
+      Start 59: sexy_vulkan_hdr_observer
+18/65 Test #59: sexy_vulkan_hdr_observer .........   Passed    0.88 sec
+      Start 29: program_images
+19/65 Test #29: program_images ...................   Passed    0.80 sec
+      Start  5: particle_variants
+20/65 Test #13: runtime_image_retention ..........   Passed    2.97 sec
+      Start 30: exact_atlas
+21/65 Test  #5: particle_variants ................   Passed    1.59 sec
+      Start 23: scene_atlas
+22/65 Test #23: scene_atlas ......................   Passed    0.35 sec
+      Start 34: particle_image_variants
+23/65 Test #30: exact_atlas ......................   Passed    2.14 sec
+      Start 27: particle_native_track_names
+24/65 Test #27: particle_native_track_names ......   Passed    0.52 sec
+      Start  1: release_draft_resume
+25/65 Test  #1: release_draft_resume .............   Passed    0.22 sec
+      Start 32: definition_atlas_metadata
+26/65 Test #34: particle_image_variants ..........   Passed    4.96 sec
+      Start 18: resource_load_plan
+27/65 Test #18: resource_load_plan ...............   Passed    0.54 sec
+      Start 11: program_image_rectangles
+28/65 Test #11: program_image_rectangles .........   Passed    0.66 sec
+      Start 20: projectile_atlas
+29/65 Test #20: projectile_atlas .................   Passed    0.29 sec
+      Start  4: definition_compiler_sources
+30/65 Test  #4: definition_compiler_sources ......   Passed    0.92 sec
+      Start  9: atlas_overlap_sources
+31/65 Test  #9: atlas_overlap_sources ............   Passed    0.23 sec
+      Start 33: definition_atlas_corpus
+32/65 Test #33: definition_atlas_corpus ..........   Passed    6.98 sec
+      Start 63: sexy_vulkan_scale_gpu
+33/65 Test #63: sexy_vulkan_scale_gpu ............   Passed    0.93 sec
+      Start 56: pvz_particle_image_variants
+34/65 Test #56: pvz_particle_image_variants ......   Passed    0.88 sec
+      Start 25: static_reanim_codegen
+35/65 Test #32: definition_atlas_metadata ........   Passed   14.39 sec
+      Start 17: resource_build_config
+36/65 Test #25: static_reanim_codegen ............   Passed    0.33 sec
+      Start 16: portal_relocation
+37/65 Test #17: resource_build_config ............   Passed    0.62 sec
+      Start 42: pvz_particle_compiled
+38/65 Test #16: portal_relocation ................   Passed    0.41 sec
+      Start  3: definition_atlas_pixels
+39/65 Test #42: pvz_particle_compiled ............   Passed    0.24 sec
+      Start 31: atlas_proof_publication
+40/65 Test #31: atlas_proof_publication ..........   Passed    0.44 sec
+      Start 54: modern_crash_dump
+41/65 Test  #3: definition_atlas_pixels ..........   Passed    0.73 sec
+      Start 15: zombie_particle_variants
+42/65 Test #54: modern_crash_dump ................   Passed    0.12 sec
+      Start 26: static_particle_codegen
+43/65 Test #26: static_particle_codegen ..........   Passed    0.21 sec
+      Start 14: particle_catalog
+44/65 Test #14: particle_catalog .................   Passed    0.19 sec
+      Start 57: pvz_reanimation_appearances
+45/65 Test #57: pvz_reanimation_appearances ......   Passed    0.07 sec
+      Start  2: completed_test_profile
+46/65 Test #15: zombie_particle_variants .........   Passed    0.62 sec
+      Start 49: pvz_audio_voice_lifetime
+47/65 Test #49: pvz_audio_voice_lifetime .........   Passed    0.06 sec
+      Start 50: modern_rng_wire
+48/65 Test  #2: completed_test_profile ...........   Passed    0.20 sec
+      Start 51: modern_array_pick
+49/65 Test #50: modern_rng_wire ..................   Passed    0.03 sec
+      Start 52: modern_typing_check
+50/65 Test #51: modern_array_pick ................   Passed    0.02 sec
+      Start 48: pvz_windows_platform
+51/65 Test #52: modern_typing_check ..............   Passed    0.02 sec
+      Start 58: sexy_vulkan_enumeration
+52/65 Test #48: pvz_windows_platform .............   Passed    0.02 sec
+      Start 39: pvz_reanim_clock
+53/65 Test #58: sexy_vulkan_enumeration ..........   Passed    0.02 sec
+      Start 38: pvz_slot_machine_clock
+54/65 Test #38: pvz_slot_machine_clock ...........   Passed    0.01 sec
+      Start 43: pvz_particle_v7
+55/65 Test #39: pvz_reanim_clock .................   Passed    0.10 sec
+      Start 47: pvz_android_touch_input
+56/65 Test #47: pvz_android_touch_input ..........   Passed    0.01 sec
+      Start 41: pvz_magnet_motion
+57/65 Test #41: pvz_magnet_motion ................   Passed    0.01 sec
+      Start 40: pvz_plant_launch_clock
+58/65 Test #43: pvz_particle_v7 ..................   Passed    0.11 sec
+      Start 36: pvz_game_viewport
+59/65 Test #40: pvz_plant_launch_clock ...........   Passed    0.02 sec
+      Start 35: pvz_atlas_image_region
+60/65 Test #35: pvz_atlas_image_region ...........   Passed    0.02 sec
+      Start 37: pvz_frame_timing
+61/65 Test #36: pvz_game_viewport ................   Passed    0.06 sec
+      Start 45: pvz_dat64_nanosecond
+62/65 Test #37: pvz_frame_timing .................   Passed    0.03 sec
+      Start 46: pvz_v7_save_schema
+63/65 Test #45: pvz_dat64_nanosecond .............   Passed    0.01 sec
+      Start 44: pvz_time_counter_save
+64/65 Test #46: pvz_v7_save_schema ...............   Passed    0.01 sec
+65/65 Test #44: pvz_time_counter_save ............   Passed    0.02 sec
+
+100% tests passed out of 65
+
+Total Test time (real) =  66.03 sec

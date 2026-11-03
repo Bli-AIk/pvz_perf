@@ -1,0 +1,663 @@
+
+..\tv_assets\FREE_3.18.0_Phone\apk_contents\split_config.arm64_v8a\lib\arm64-v8a\libpvz.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+00000000019fe3ac <Board::TouchBegan(Sexy::Touch*)>:
+ 19fe3ac:      	sub	sp, sp, #0xb0
+ 19fe3b0:      	stp	x29, x30, [sp, #0xa0]
+ 19fe3b4:      	add	x29, sp, #0xa0
+ 19fe3b8:      	mrs	x8, TPIDR_EL0
+ 19fe3bc:      	ldr	x8, [x8, #0x28]
+ 19fe3c0:      	stur	x8, [x29, #-0x8]
+ 19fe3c4:      	stur	x0, [x29, #-0x38]
+ 19fe3c8:      	stur	x1, [x29, #-0x40]
+ 19fe3cc:      	ldur	x8, [x29, #-0x38]
+ 19fe3d0:      	mov	x9, x8
+ 19fe3d4:      	str	x9, [sp, #0x28]
+ 19fe3d8:      	ldur	x9, [x29, #-0x40]
+ 19fe3dc:      	ldr	w9, [x9, #0x8]
+ 19fe3e0:      	stur	w9, [x29, #-0x44]
+ 19fe3e4:      	ldur	x9, [x29, #-0x40]
+ 19fe3e8:      	ldr	w9, [x9, #0xc]
+ 19fe3ec:      	stur	w9, [x29, #-0x48]
+ 19fe3f0:      	ldr	x8, [x8, #0x110]
+ 19fe3f4:      	ldr	w8, [x8, #0xbdc]
+ 19fe3f8:      	subs	w8, w8, #0x2b
+ 19fe3fc:      	b.ne	0x19fe4e8 <Board::TouchBegan(Sexy::Touch*)+0x13c>
+ 19fe400:      	b	0x19fe404 <Board::TouchBegan(Sexy::Touch*)+0x58>
+ 19fe404:      	mov	w8, wzr
+ 19fe408:      	stur	w8, [x29, #-0x4c]
+ 19fe40c:      	b	0x19fe410 <Board::TouchBegan(Sexy::Touch*)+0x64>
+ 19fe410:      	ldur	w8, [x29, #-0x4c]
+ 19fe414:      	subs	w8, w8, #0xb
+ 19fe418:      	b.eq	0x19fe4e4 <Board::TouchBegan(Sexy::Touch*)+0x138>
+ 19fe41c:      	b	0x19fe420 <Board::TouchBegan(Sexy::Touch*)+0x74>
+ 19fe420:      	ldr	x10, [sp, #0x28]
+ 19fe424:      	ldursw	x8, [x29, #-0x4c]
+ 19fe428:      	mov	w9, #0x28               // =40
+ 19fe42c:      	mov	w0, w9
+ 19fe430:      	mov	w9, w0
+ 19fe434:      	smaddl	x8, w8, w9, x10
+ 19fe438:      	ldr	x8, [x8, #0x2c0]
+ 19fe43c:      	cbz	x8, 0x19fe4d0 <Board::TouchBegan(Sexy::Touch*)+0x124>
+ 19fe440:      	b	0x19fe444 <Board::TouchBegan(Sexy::Touch*)+0x98>
+ 19fe444:      	ldr	x0, [sp, #0x28]
+ 19fe448:      	ldursw	x8, [x29, #-0x4c]
+ 19fe44c:      	mov	w9, #0x28               // =40
+ 19fe450:      	mov	w1, w9
+ 19fe454:      	mov	w9, w1
+ 19fe458:      	smaddl	x8, w8, w9, x0
+ 19fe45c:      	ldr	x8, [x8, #0x2c0]
+ 19fe460:      	ldr	w1, [x8, #0x44]
+ 19fe464:      	bl	0x2d976c0 <_ZN5Board23GetGameObjectFromCursorE10CursorType@plt>
+ 19fe468:      	str	w0, [sp, #0x50]
+ 19fe46c:      	ldr	w8, [sp, #0x50]
+ 19fe470:      	mov	w9, wzr
+ 19fe474:      	str	w9, [sp, #0x24]
+ 19fe478:      	cbz	w8, 0x19fe4b0 <Board::TouchBegan(Sexy::Touch*)+0x104>
+ 19fe47c:      	b	0x19fe480 <Board::TouchBegan(Sexy::Touch*)+0xd4>
+ 19fe480:      	ldr	x0, [sp, #0x28]
+ 19fe484:      	ldr	w1, [sp, #0x50]
+ 19fe488:      	sub	x8, x29, #0x18
+ 19fe48c:      	str	x8, [sp, #0x18]
+ 19fe490:      	bl	0x2d96dc0 <_ZN5Board16GetZenButtonRectE14GameObjectType@plt>
+ 19fe494:      	ldr	x0, [sp, #0x18]
+ 19fe498:      	ldur	x8, [x29, #-0x40]
+ 19fe49c:      	ldr	w1, [x8, #0x8]
+ 19fe4a0:      	ldr	w2, [x8, #0xc]
+ 19fe4a4:      	bl	0x2d95ee0 <_ZNK4Sexy5TRectIiE8ContainsEii@plt>
+ 19fe4a8:      	str	w0, [sp, #0x24]
+ 19fe4ac:      	b	0x19fe4b0 <Board::TouchBegan(Sexy::Touch*)+0x104>
+ 19fe4b0:      	ldr	w8, [sp, #0x24]
+ 19fe4b4:      	tbz	w8, #0x0, 0x19fe4cc <Board::TouchBegan(Sexy::Touch*)+0x120>
+ 19fe4b8:      	b	0x19fe4bc <Board::TouchBegan(Sexy::Touch*)+0x110>
+ 19fe4bc:      	ldr	x0, [sp, #0x28]
+ 19fe4c0:      	mov	w1, wzr
+ 19fe4c4:      	bl	0x2d97690 <_ZN5Board11ClearCursorEb@plt>
+ 19fe4c8:      	b	0x19fedc8 <Board::TouchBegan(Sexy::Touch*)+0xa1c>
+ 19fe4cc:      	b	0x19fe4d0 <Board::TouchBegan(Sexy::Touch*)+0x124>
+ 19fe4d0:      	b	0x19fe4d4 <Board::TouchBegan(Sexy::Touch*)+0x128>
+ 19fe4d4:      	ldur	w8, [x29, #-0x4c]
+ 19fe4d8:      	add	w8, w8, #0x1
+ 19fe4dc:      	stur	w8, [x29, #-0x4c]
+ 19fe4e0:      	b	0x19fe410 <Board::TouchBegan(Sexy::Touch*)+0x64>
+ 19fe4e4:      	b	0x19fe4e8 <Board::TouchBegan(Sexy::Touch*)+0x13c>
+ 19fe4e8:      	ldr	x0, [sp, #0x28]
+ 19fe4ec:      	ldur	x1, [x29, #-0x40]
+ 19fe4f0:      	bl	0x2d98480 <_ZN5Board12NewTouchInfoEPN4Sexy5TouchE@plt>
+ 19fe4f4:      	ldr	x8, [sp, #0x28]
+ 19fe4f8:      	str	x0, [x8, #0x470]
+ 19fe4fc:      	ldr	x0, [x8, #0x110]
+ 19fe500:      	bl	0x2d97400 <_ZN7LawnApp19IsWhackAZombieLevelEv@plt>
+ 19fe504:      	tbz	w0, #0x0, 0x19fe554 <Board::TouchBegan(Sexy::Touch*)+0x1a8>
+ 19fe508:      	b	0x19fe50c <Board::TouchBegan(Sexy::Touch*)+0x160>
+ 19fe50c:      	ldr	x8, [sp, #0x28]
+ 19fe510:      	ldr	x8, [x8, #0x470]
+ 19fe514:      	ldr	x8, [x8, #0x10]
+ 19fe518:      	ldr	w8, [x8, #0x44]
+ 19fe51c:      	cbnz	w8, 0x19fe554 <Board::TouchBegan(Sexy::Touch*)+0x1a8>
+ 19fe520:      	b	0x19fe524 <Board::TouchBegan(Sexy::Touch*)+0x178>
+ 19fe524:      	ldr	x8, [sp, #0x28]
+ 19fe528:      	ldr	x8, [x8, #0x110]
+ 19fe52c:      	ldr	w8, [x8, #0xbe0]
+ 19fe530:      	subs	w8, w8, #0x3
+ 19fe534:      	b.ne	0x19fe554 <Board::TouchBegan(Sexy::Touch*)+0x1a8>
+ 19fe538:      	b	0x19fe53c <Board::TouchBegan(Sexy::Touch*)+0x190>
+ 19fe53c:      	ldr	x8, [sp, #0x28]
+ 19fe540:      	ldr	x8, [x8, #0x470]
+ 19fe544:      	ldr	x9, [x8, #0x10]
+ 19fe548:      	mov	w8, #0x7                // =7
+ 19fe54c:      	str	w8, [x9, #0x44]
+ 19fe550:      	b	0x19fe554 <Board::TouchBegan(Sexy::Touch*)+0x1a8>
+ 19fe554:      	ldr	x8, [sp, #0x28]
+ 19fe558:      	ldr	x8, [x8, #0x470]
+ 19fe55c:      	cbz	x8, 0x19fe584 <Board::TouchBegan(Sexy::Touch*)+0x1d8>
+ 19fe560:      	b	0x19fe564 <Board::TouchBegan(Sexy::Touch*)+0x1b8>
+ 19fe564:      	ldr	x9, [sp, #0x28]
+ 19fe568:      	ldur	w8, [x29, #-0x44]
+ 19fe56c:      	ldr	x10, [x9, #0x470]
+ 19fe570:      	str	w8, [x10, #0x4]
+ 19fe574:      	ldur	w8, [x29, #-0x48]
+ 19fe578:      	ldr	x9, [x9, #0x470]
+ 19fe57c:      	str	w8, [x9, #0x8]
+ 19fe580:      	b	0x19fe584 <Board::TouchBegan(Sexy::Touch*)+0x1d8>
+ 19fe584:      	ldr	x0, [sp, #0x28]
+ 19fe588:      	bl	0x2d98300 <_ZN5Board27CanInteractWithBoardButtonsEv@plt>
+ 19fe58c:      	ldr	x8, [sp, #0x28]
+ 19fe590:      	ldr	x10, [x8, #0x470]
+ 19fe594:      	mov	w9, #0x1                // =1
+ 19fe598:      	bic	w9, w9, w0
+ 19fe59c:      	strb	w9, [x10]
+ 19fe5a0:      	mov	w9, #0x5acc             // =23244
+ 19fe5a4:      	ldr	w8, [x8, x9]
+ 19fe5a8:      	subs	w8, w8, #0x1
+ 19fe5ac:      	b.lt	0x19fe5b8 <Board::TouchBegan(Sexy::Touch*)+0x20c>
+ 19fe5b0:      	b	0x19fe5b4 <Board::TouchBegan(Sexy::Touch*)+0x208>
+ 19fe5b4:      	b	0x19fedc8 <Board::TouchBegan(Sexy::Touch*)+0xa1c>
+ 19fe5b8:      	ldr	x0, [sp, #0x28]
+ 19fe5bc:      	ldur	w1, [x29, #-0x44]
+ 19fe5c0:      	ldur	w2, [x29, #-0x48]
+ 19fe5c4:      	sub	x3, x29, #0x28
+ 19fe5c8:      	str	x3, [sp, #0x10]
+ 19fe5cc:      	bl	0x2d98110 <_ZN5Board12MouseHitTestEiiP9HitResult@plt>
+ 19fe5d0:      	ldr	x8, [sp, #0x28]
+ 19fe5d4:      	ldr	x4, [sp, #0x10]
+ 19fe5d8:      	ldr	x0, [x8, #0x490]
+ 19fe5dc:      	ldur	w1, [x29, #-0x44]
+ 19fe5e0:      	ldur	w2, [x29, #-0x48]
+ 19fe5e4:      	mov	w3, #0x1                // =1
+ 19fe5e8:      	bl	0x2d984c0 <_ZN9Challenge9MouseDownEiiiP9HitResult@plt>
+ 19fe5ec:      	tbz	w0, #0x0, 0x19fe5f8 <Board::TouchBegan(Sexy::Touch*)+0x24c>
+ 19fe5f0:      	b	0x19fe5f4 <Board::TouchBegan(Sexy::Touch*)+0x248>
+ 19fe5f4:      	b	0x19fedc8 <Board::TouchBegan(Sexy::Touch*)+0xa1c>
+ 19fe5f8:      	ldr	x8, [sp, #0x28]
+ 19fe5fc:      	ldr	x0, [x8, #0x228]
+ 19fe600:      	bl	0x2d96460 <_ZN10GameButton11IsMouseOverEv@plt>
+ 19fe604:      	tbz	w0, #0x0, 0x19fe640 <Board::TouchBegan(Sexy::Touch*)+0x294>
+ 19fe608:      	b	0x19fe60c <Board::TouchBegan(Sexy::Touch*)+0x260>
+ 19fe60c:      	ldr	x0, [sp, #0x28]
+ 19fe610:      	bl	0x2d98300 <_ZN5Board27CanInteractWithBoardButtonsEv@plt>
+ 19fe614:      	tbz	w0, #0x0, 0x19fe640 <Board::TouchBegan(Sexy::Touch*)+0x294>
+ 19fe618:      	b	0x19fe61c <Board::TouchBegan(Sexy::Touch*)+0x270>
+ 19fe61c:      	ldr	x8, [sp, #0x28]
+ 19fe620:      	ldr	x0, [x8, #0x110]
+ 19fe624:      	adrp	x8, 0x2f24000
+ 19fe628:      	ldr	x8, [x8, #0x2c0]
+ 19fe62c:      	ldr	w1, [x8]
+ 19fe630:      	ldr	x8, [x0]
+ 19fe634:      	ldr	x8, [x8, #0x1c0]
+ 19fe638:      	blr	x8
+ 19fe63c:      	b	0x19fe6b4 <Board::TouchBegan(Sexy::Touch*)+0x308>
+ 19fe640:      	ldr	x8, [sp, #0x28]
+ 19fe644:      	ldr	x8, [x8, #0x110]
+ 19fe648:      	ldr	w8, [x8, #0xbdc]
+ 19fe64c:      	subs	w8, w8, #0x2b
+ 19fe650:      	b.ne	0x19fe6b0 <Board::TouchBegan(Sexy::Touch*)+0x304>
+ 19fe654:      	b	0x19fe658 <Board::TouchBegan(Sexy::Touch*)+0x2ac>
+ 19fe658:      	ldr	x8, [sp, #0x28]
+ 19fe65c:      	ldr	x8, [x8, #0x230]
+ 19fe660:      	cbz	x8, 0x19fe6b0 <Board::TouchBegan(Sexy::Touch*)+0x304>
+ 19fe664:      	b	0x19fe668 <Board::TouchBegan(Sexy::Touch*)+0x2bc>
+ 19fe668:      	ldr	x8, [sp, #0x28]
+ 19fe66c:      	ldr	x0, [x8, #0x230]
+ 19fe670:      	bl	0x2d96460 <_ZN10GameButton11IsMouseOverEv@plt>
+ 19fe674:      	tbz	w0, #0x0, 0x19fe6b0 <Board::TouchBegan(Sexy::Touch*)+0x304>
+ 19fe678:      	b	0x19fe67c <Board::TouchBegan(Sexy::Touch*)+0x2d0>
+ 19fe67c:      	ldr	x0, [sp, #0x28]
+ 19fe680:      	bl	0x2d98300 <_ZN5Board27CanInteractWithBoardButtonsEv@plt>
+ 19fe684:      	tbz	w0, #0x0, 0x19fe6b0 <Board::TouchBegan(Sexy::Touch*)+0x304>
+ 19fe688:      	b	0x19fe68c <Board::TouchBegan(Sexy::Touch*)+0x2e0>
+ 19fe68c:      	ldr	x8, [sp, #0x28]
+ 19fe690:      	ldr	x0, [x8, #0x110]
+ 19fe694:      	adrp	x8, 0x2f24000
+ 19fe698:      	ldr	x8, [x8, #0x378]
+ 19fe69c:      	ldr	w1, [x8]
+ 19fe6a0:      	ldr	x8, [x0]
+ 19fe6a4:      	ldr	x8, [x8, #0x1c0]
+ 19fe6a8:      	blr	x8
+ 19fe6ac:      	b	0x19fe6b0 <Board::TouchBegan(Sexy::Touch*)+0x304>
+ 19fe6b0:      	b	0x19fe6b4 <Board::TouchBegan(Sexy::Touch*)+0x308>
+ 19fe6b4:      	mov	w8, wzr
+ 19fe6b8:      	str	w8, [sp, #0x4c]
+ 19fe6bc:      	b	0x19fe6c0 <Board::TouchBegan(Sexy::Touch*)+0x314>
+ 19fe6c0:      	ldr	w8, [sp, #0x4c]
+ 19fe6c4:      	subs	w8, w8, #0x5
+ 19fe6c8:      	b.gt	0x19fe7ac <Board::TouchBegan(Sexy::Touch*)+0x400>
+ 19fe6cc:      	b	0x19fe6d0 <Board::TouchBegan(Sexy::Touch*)+0x324>
+ 19fe6d0:      	ldr	x8, [sp, #0x28]
+ 19fe6d4:      	ldr	x8, [x8, #0x110]
+ 19fe6d8:      	ldr	w8, [x8, #0xbe0]
+ 19fe6dc:      	subs	w8, w8, #0x3
+ 19fe6e0:      	b.eq	0x19fe6ec <Board::TouchBegan(Sexy::Touch*)+0x340>
+ 19fe6e4:      	b	0x19fe6e8 <Board::TouchBegan(Sexy::Touch*)+0x33c>
+ 19fe6e8:      	b	0x19fe79c <Board::TouchBegan(Sexy::Touch*)+0x3f0>
+ 19fe6ec:      	ldr	x0, [sp, #0x28]
+ 19fe6f0:      	bl	0x2d97880 <_ZN5Board19IsAdventureTutorialEv@plt>
+ 19fe6f4:      	tbz	w0, #0x0, 0x19fe700 <Board::TouchBegan(Sexy::Touch*)+0x354>
+ 19fe6f8:      	b	0x19fe6fc <Board::TouchBegan(Sexy::Touch*)+0x350>
+ 19fe6fc:      	b	0x19fe79c <Board::TouchBegan(Sexy::Touch*)+0x3f0>
+ 19fe700:      	ldr	x0, [sp, #0x28]
+ 19fe704:      	ldr	w1, [sp, #0x4c]
+ 19fe708:      	bl	0x2d97a10 <_ZN5Board15RowHasLawnMowerEi@plt>
+ 19fe70c:      	tbz	w0, #0x0, 0x19fe798 <Board::TouchBegan(Sexy::Touch*)+0x3ec>
+ 19fe710:      	b	0x19fe714 <Board::TouchBegan(Sexy::Touch*)+0x368>
+ 19fe714:      	ldr	x8, [sp, #0x28]
+ 19fe718:      	ldrsw	x9, [sp, #0x4c]
+ 19fe71c:      	add	x8, x8, x9
+ 19fe720:      	mov	w9, #0x5b5d             // =23389
+ 19fe724:      	ldrb	w8, [x8, x9]
+ 19fe728:      	tbz	w8, #0x0, 0x19fe798 <Board::TouchBegan(Sexy::Touch*)+0x3ec>
+ 19fe72c:      	b	0x19fe730 <Board::TouchBegan(Sexy::Touch*)+0x384>
+ 19fe730:      	ldr	x8, [sp, #0x28]
+ 19fe734:      	ldrsw	x9, [sp, #0x4c]
+ 19fe738:      	add	x8, x8, x9, lsl #3
+ 19fe73c:      	ldr	x8, [x8, #0x268]
+ 19fe740:      	cbz	x8, 0x19fe798 <Board::TouchBegan(Sexy::Touch*)+0x3ec>
+ 19fe744:      	b	0x19fe748 <Board::TouchBegan(Sexy::Touch*)+0x39c>
+ 19fe748:      	ldr	x8, [sp, #0x28]
+ 19fe74c:      	ldrsw	x9, [sp, #0x4c]
+ 19fe750:      	add	x8, x8, x9, lsl #3
+ 19fe754:      	ldr	x0, [x8, #0x268]
+ 19fe758:      	bl	0x2d96460 <_ZN10GameButton11IsMouseOverEv@plt>
+ 19fe75c:      	tbz	w0, #0x0, 0x19fe798 <Board::TouchBegan(Sexy::Touch*)+0x3ec>
+ 19fe760:      	b	0x19fe764 <Board::TouchBegan(Sexy::Touch*)+0x3b8>
+ 19fe764:      	ldr	x0, [sp, #0x28]
+ 19fe768:      	bl	0x2d98300 <_ZN5Board27CanInteractWithBoardButtonsEv@plt>
+ 19fe76c:      	tbz	w0, #0x0, 0x19fe798 <Board::TouchBegan(Sexy::Touch*)+0x3ec>
+ 19fe770:      	b	0x19fe774 <Board::TouchBegan(Sexy::Touch*)+0x3c8>
+ 19fe774:      	ldr	x8, [sp, #0x28]
+ 19fe778:      	ldr	x0, [x8, #0x110]
+ 19fe77c:      	adrp	x8, 0x2f24000
+ 19fe780:      	ldr	x8, [x8, #0x2c0]
+ 19fe784:      	ldr	w1, [x8]
+ 19fe788:      	ldr	x8, [x0]
+ 19fe78c:      	ldr	x8, [x8, #0x1c0]
+ 19fe790:      	blr	x8
+ 19fe794:      	b	0x19fe798 <Board::TouchBegan(Sexy::Touch*)+0x3ec>
+ 19fe798:      	b	0x19fe79c <Board::TouchBegan(Sexy::Touch*)+0x3f0>
+ 19fe79c:      	ldr	w8, [sp, #0x4c]
+ 19fe7a0:      	add	w8, w8, #0x1
+ 19fe7a4:      	str	w8, [sp, #0x4c]
+ 19fe7a8:      	b	0x19fe6c0 <Board::TouchBegan(Sexy::Touch*)+0x314>
+ 19fe7ac:      	ldr	x0, [sp, #0x28]
+ 19fe7b0:      	mov	w1, #0x8                // =8
+ 19fe7b4:      	bl	0x2d96e50 <_ZN5Board16CanUseGameObjectE14GameObjectType@plt>
+ 19fe7b8:      	tbz	w0, #0x0, 0x19fe7f8 <Board::TouchBegan(Sexy::Touch*)+0x44c>
+ 19fe7bc:      	b	0x19fe7c0 <Board::TouchBegan(Sexy::Touch*)+0x414>
+ 19fe7c0:      	ldr	x8, [sp, #0x28]
+ 19fe7c4:      	ldr	x0, [x8, #0x2a0]
+ 19fe7c8:      	bl	0x2d96460 <_ZN10GameButton11IsMouseOverEv@plt>
+ 19fe7cc:      	tbz	w0, #0x0, 0x19fe7f8 <Board::TouchBegan(Sexy::Touch*)+0x44c>
+ 19fe7d0:      	b	0x19fe7d4 <Board::TouchBegan(Sexy::Touch*)+0x428>
+ 19fe7d4:      	ldr	x8, [sp, #0x28]
+ 19fe7d8:      	ldr	x0, [x8, #0x110]
+ 19fe7dc:      	adrp	x8, 0x2f24000
+ 19fe7e0:      	ldr	x8, [x8, #0x2c0]
+ 19fe7e4:      	ldr	w1, [x8]
+ 19fe7e8:      	ldr	x8, [x0]
+ 19fe7ec:      	ldr	x8, [x8, #0x1c0]
+ 19fe7f0:      	blr	x8
+ 19fe7f4:      	b	0x19fe7f8 <Board::TouchBegan(Sexy::Touch*)+0x44c>
+ 19fe7f8:      	ldr	x0, [sp, #0x28]
+ 19fe7fc:      	mov	w1, #0x7                // =7
+ 19fe800:      	bl	0x2d96e50 <_ZN5Board16CanUseGameObjectE14GameObjectType@plt>
+ 19fe804:      	tbz	w0, #0x0, 0x19fe844 <Board::TouchBegan(Sexy::Touch*)+0x498>
+ 19fe808:      	b	0x19fe80c <Board::TouchBegan(Sexy::Touch*)+0x460>
+ 19fe80c:      	ldr	x8, [sp, #0x28]
+ 19fe810:      	ldr	x0, [x8, #0x298]
+ 19fe814:      	bl	0x2d96460 <_ZN10GameButton11IsMouseOverEv@plt>
+ 19fe818:      	tbz	w0, #0x0, 0x19fe844 <Board::TouchBegan(Sexy::Touch*)+0x498>
+ 19fe81c:      	b	0x19fe820 <Board::TouchBegan(Sexy::Touch*)+0x474>
+ 19fe820:      	ldr	x8, [sp, #0x28]
+ 19fe824:      	ldr	x0, [x8, #0x110]
+ 19fe828:      	adrp	x8, 0x2f24000
+ 19fe82c:      	ldr	x8, [x8, #0x2c0]
+ 19fe830:      	ldr	w1, [x8]
+ 19fe834:      	ldr	x8, [x0]
+ 19fe838:      	ldr	x8, [x8, #0x1c0]
+ 19fe83c:      	blr	x8
+ 19fe840:      	b	0x19fe844 <Board::TouchBegan(Sexy::Touch*)+0x498>
+ 19fe844:      	ldr	x0, [sp, #0x28]
+ 19fe848:      	mov	w1, #0xa                // =10
+ 19fe84c:      	bl	0x2d96e50 <_ZN5Board16CanUseGameObjectE14GameObjectType@plt>
+ 19fe850:      	tbz	w0, #0x0, 0x19fe890 <Board::TouchBegan(Sexy::Touch*)+0x4e4>
+ 19fe854:      	b	0x19fe858 <Board::TouchBegan(Sexy::Touch*)+0x4ac>
+ 19fe858:      	ldr	x8, [sp, #0x28]
+ 19fe85c:      	ldr	x0, [x8, #0x2a8]
+ 19fe860:      	bl	0x2d96460 <_ZN10GameButton11IsMouseOverEv@plt>
+ 19fe864:      	tbz	w0, #0x0, 0x19fe890 <Board::TouchBegan(Sexy::Touch*)+0x4e4>
+ 19fe868:      	b	0x19fe86c <Board::TouchBegan(Sexy::Touch*)+0x4c0>
+ 19fe86c:      	ldr	x8, [sp, #0x28]
+ 19fe870:      	ldr	x0, [x8, #0x110]
+ 19fe874:      	adrp	x8, 0x2f24000
+ 19fe878:      	ldr	x8, [x8, #0x2c0]
+ 19fe87c:      	ldr	w1, [x8]
+ 19fe880:      	ldr	x8, [x0]
+ 19fe884:      	ldr	x8, [x8, #0x1c0]
+ 19fe888:      	blr	x8
+ 19fe88c:      	b	0x19fe890 <Board::TouchBegan(Sexy::Touch*)+0x4e4>
+ 19fe890:      	ldr	x8, [sp, #0x28]
+ 19fe894:      	ldr	x8, [x8, #0x110]
+ 19fe898:      	ldr	w8, [x8, #0xbdc]
+ 19fe89c:      	subs	w8, w8, #0x1f
+ 19fe8a0:      	b.eq	0x19fe8bc <Board::TouchBegan(Sexy::Touch*)+0x510>
+ 19fe8a4:      	b	0x19fe8a8 <Board::TouchBegan(Sexy::Touch*)+0x4fc>
+ 19fe8a8:      	ldr	x8, [sp, #0x28]
+ 19fe8ac:      	ldr	x0, [x8, #0x110]
+ 19fe8b0:      	bl	0x2d96910 <_ZN7LawnApp15IsLastStandModeEv@plt>
+ 19fe8b4:      	tbz	w0, #0x0, 0x19fe904 <Board::TouchBegan(Sexy::Touch*)+0x558>
+ 19fe8b8:      	b	0x19fe8bc <Board::TouchBegan(Sexy::Touch*)+0x510>
+ 19fe8bc:      	ldr	x8, [sp, #0x28]
+ 19fe8c0:      	ldr	x0, [x8, #0x230]
+ 19fe8c4:      	bl	0x2d96460 <_ZN10GameButton11IsMouseOverEv@plt>
+ 19fe8c8:      	tbz	w0, #0x0, 0x19fe904 <Board::TouchBegan(Sexy::Touch*)+0x558>
+ 19fe8cc:      	b	0x19fe8d0 <Board::TouchBegan(Sexy::Touch*)+0x524>
+ 19fe8d0:      	ldr	x0, [sp, #0x28]
+ 19fe8d4:      	bl	0x2d98300 <_ZN5Board27CanInteractWithBoardButtonsEv@plt>
+ 19fe8d8:      	tbz	w0, #0x0, 0x19fe904 <Board::TouchBegan(Sexy::Touch*)+0x558>
+ 19fe8dc:      	b	0x19fe8e0 <Board::TouchBegan(Sexy::Touch*)+0x534>
+ 19fe8e0:      	ldr	x8, [sp, #0x28]
+ 19fe8e4:      	ldr	x0, [x8, #0x110]
+ 19fe8e8:      	adrp	x8, 0x2f24000
+ 19fe8ec:      	ldr	x8, [x8, #0x2c0]
+ 19fe8f0:      	ldr	w1, [x8]
+ 19fe8f4:      	ldr	x8, [x0]
+ 19fe8f8:      	ldr	x8, [x8, #0x1c0]
+ 19fe8fc:      	blr	x8
+ 19fe900:      	b	0x19fe904 <Board::TouchBegan(Sexy::Touch*)+0x558>
+ 19fe904:      	ldr	x8, [sp, #0x28]
+ 19fe908:      	ldr	x0, [x8, #0x110]
+ 19fe90c:      	bl	0x2d96910 <_ZN7LawnApp15IsLastStandModeEv@plt>
+ 19fe910:      	tbz	w0, #0x0, 0x19fe93c <Board::TouchBegan(Sexy::Touch*)+0x590>
+ 19fe914:      	b	0x19fe918 <Board::TouchBegan(Sexy::Touch*)+0x56c>
+ 19fe918:      	ldr	x8, [sp, #0x28]
+ 19fe91c:      	ldr	w8, [x8, #0x4ac]
+ 19fe920:      	subs	w8, w8, #0x5
+ 19fe924:      	b.ne	0x19fe93c <Board::TouchBegan(Sexy::Touch*)+0x590>
+ 19fe928:      	b	0x19fe92c <Board::TouchBegan(Sexy::Touch*)+0x580>
+ 19fe92c:      	ldr	x8, [sp, #0x28]
+ 19fe930:      	ldr	x0, [x8, #0x490]
+ 19fe934:      	bl	0x2d984d0 <_ZN9Challenge17CancelPreviewViewEv@plt>
+ 19fe938:      	b	0x19fe93c <Board::TouchBegan(Sexy::Touch*)+0x590>
+ 19fe93c:      	ldr	x8, [sp, #0x28]
+ 19fe940:      	ldr	x8, [x8, #0x110]
+ 19fe944:      	ldr	w8, [x8, #0xbe0]
+ 19fe948:      	subs	w8, w8, #0x2
+ 19fe94c:      	b.ne	0x19fe97c <Board::TouchBegan(Sexy::Touch*)+0x5d0>
+ 19fe950:      	b	0x19fe954 <Board::TouchBegan(Sexy::Touch*)+0x5a8>
+ 19fe954:      	ldr	x8, [sp, #0x28]
+ 19fe958:      	ldr	x8, [x8, #0x110]
+ 19fe95c:      	ldr	x8, [x8, #0xb40]
+ 19fe960:      	cbz	x8, 0x19fe97c <Board::TouchBegan(Sexy::Touch*)+0x5d0>
+ 19fe964:      	b	0x19fe968 <Board::TouchBegan(Sexy::Touch*)+0x5bc>
+ 19fe968:      	ldr	x8, [sp, #0x28]
+ 19fe96c:      	ldr	x8, [x8, #0x110]
+ 19fe970:      	ldr	x0, [x8, #0xb40]
+ 19fe974:      	bl	0x2d984e0 <_ZN17SeedChooserScreen14CancelLawnViewEv@plt>
+ 19fe978:      	b	0x19fe97c <Board::TouchBegan(Sexy::Touch*)+0x5d0>
+ 19fe97c:      	ldr	x8, [sp, #0x28]
+ 19fe980:      	ldr	x8, [x8, #0x110]
+ 19fe984:      	ldr	w8, [x8, #0xbe0]
+ 19fe988:      	subs	w8, w8, #0x4
+ 19fe98c:      	b.ne	0x19fe9a4 <Board::TouchBegan(Sexy::Touch*)+0x5f8>
+ 19fe990:      	b	0x19fe994 <Board::TouchBegan(Sexy::Touch*)+0x5e8>
+ 19fe994:      	ldr	x8, [sp, #0x28]
+ 19fe998:      	ldr	x0, [x8, #0x488]
+ 19fe99c:      	bl	0x2d984f0 <_ZN8CutScene14ZombieWonClickEv@plt>
+ 19fe9a0:      	b	0x19fedc8 <Board::TouchBegan(Sexy::Touch*)+0xa1c>
+ 19fe9a4:      	ldr	x8, [sp, #0x28]
+ 19fe9a8:      	ldr	x8, [x8, #0x110]
+ 19fe9ac:      	ldr	w8, [x8, #0xbe0]
+ 19fe9b0:      	subs	w8, w8, #0x2
+ 19fe9b4:      	b.ne	0x19fe9d4 <Board::TouchBegan(Sexy::Touch*)+0x628>
+ 19fe9b8:      	b	0x19fe9bc <Board::TouchBegan(Sexy::Touch*)+0x610>
+ 19fe9bc:      	ldr	x8, [sp, #0x28]
+ 19fe9c0:      	ldr	x0, [x8, #0x488]
+ 19fe9c4:      	ldur	w1, [x29, #-0x44]
+ 19fe9c8:      	ldur	w2, [x29, #-0x48]
+ 19fe9cc:      	bl	0x2d98500 <_ZN8CutScene9MouseDownEii@plt>
+ 19fe9d0:      	b	0x19fe9d4 <Board::TouchBegan(Sexy::Touch*)+0x628>
+ 19fe9d4:      	ldr	x8, [sp, #0x28]
+ 19fe9d8:      	ldr	x8, [x8, #0x110]
+ 19fe9dc:      	ldrb	w8, [x8, #0xbd9]
+ 19fe9e0:      	tbz	w8, #0x0, 0x19feaa0 <Board::TouchBegan(Sexy::Touch*)+0x6f4>
+ 19fe9e4:      	b	0x19fe9e8 <Board::TouchBegan(Sexy::Touch*)+0x63c>
+ 19fe9e8:      	ldr	x8, [sp, #0x28]
+ 19fe9ec:      	ldr	x0, [x8, #0x110]
+ 19fe9f0:      	bl	0x2d97520 <_ZN7LawnApp18IsScaryPotterLevelEv@plt>
+ 19fe9f4:      	tbnz	w0, #0x0, 0x19feaa0 <Board::TouchBegan(Sexy::Touch*)+0x6f4>
+ 19fe9f8:      	b	0x19fe9fc <Board::TouchBegan(Sexy::Touch*)+0x650>
+ 19fe9fc:      	ldr	x8, [sp, #0x28]
+ 19fea00:      	mov	w9, #0x5988             // =22920
+ 19fea04:      	ldr	w8, [x8, x9]
+ 19fea08:      	subs	w8, w8, #0x1
+ 19fea0c:      	b.lt	0x19fea9c <Board::TouchBegan(Sexy::Touch*)+0x6f0>
+ 19fea10:      	b	0x19fea14 <Board::TouchBegan(Sexy::Touch*)+0x668>
+ 19fea14:      	ldr	x9, [sp, #0x28]
+ 19fea18:      	mov	w8, #0x5988             // =22920
+ 19fea1c:      	mov	w10, w8
+ 19fea20:      	mov	w8, #0x2                // =2
+ 19fea24:      	str	w8, [x9, x10]
+ 19fea28:      	mov	w8, wzr
+ 19fea2c:      	str	w8, [sp, #0x48]
+ 19fea30:      	b	0x19fea34 <Board::TouchBegan(Sexy::Touch*)+0x688>
+ 19fea34:      	ldr	w8, [sp, #0x48]
+ 19fea38:      	subs	w8, w8, #0x5
+ 19fea3c:      	b.gt	0x19fea98 <Board::TouchBegan(Sexy::Touch*)+0x6ec>
+ 19fea40:      	b	0x19fea44 <Board::TouchBegan(Sexy::Touch*)+0x698>
+ 19fea44:      	ldr	x9, [sp, #0x28]
+ 19fea48:      	ldrsw	x8, [sp, #0x48]
+ 19fea4c:      	add	x8, x9, x8, lsl #2
+ 19fea50:      	ldr	w8, [x8, #0x988]
+ 19fea54:      	mov	w10, #0x5988            // =22920
+ 19fea58:      	ldr	w9, [x9, x10]
+ 19fea5c:      	subs	w8, w8, w9
+ 19fea60:      	b.le	0x19fea84 <Board::TouchBegan(Sexy::Touch*)+0x6d8>
+ 19fea64:      	b	0x19fea68 <Board::TouchBegan(Sexy::Touch*)+0x6bc>
+ 19fea68:      	ldr	x9, [sp, #0x28]
+ 19fea6c:      	mov	w8, #0x5988             // =22920
+ 19fea70:      	ldr	w8, [x9, x8]
+ 19fea74:      	ldrsw	x10, [sp, #0x48]
+ 19fea78:      	add	x9, x9, x10, lsl #2
+ 19fea7c:      	str	w8, [x9, #0x988]
+ 19fea80:      	b	0x19fea84 <Board::TouchBegan(Sexy::Touch*)+0x6d8>
+ 19fea84:      	b	0x19fea88 <Board::TouchBegan(Sexy::Touch*)+0x6dc>
+ 19fea88:      	ldr	w8, [sp, #0x48]
+ 19fea8c:      	add	w8, w8, #0x1
+ 19fea90:      	str	w8, [sp, #0x48]
+ 19fea94:      	b	0x19fea34 <Board::TouchBegan(Sexy::Touch*)+0x688>
+ 19fea98:      	b	0x19fea9c <Board::TouchBegan(Sexy::Touch*)+0x6f0>
+ 19fea9c:      	b	0x19feaa0 <Board::TouchBegan(Sexy::Touch*)+0x6f4>
+ 19feaa0:      	ldur	w8, [x29, #-0x20]
+ 19feaa4:      	subs	w8, w8, #0x3
+ 19feaa8:      	b.ne	0x19febe4 <Board::TouchBegan(Sexy::Touch*)+0x838>
+ 19feaac:      	b	0x19feab0 <Board::TouchBegan(Sexy::Touch*)+0x704>
+ 19feab0:      	ldr	x8, [sp, #0x28]
+ 19feab4:      	ldur	x9, [x29, #-0x28]
+ 19feab8:      	str	x9, [sp, #0x40]
+ 19feabc:      	ldr	x0, [x8, #0x110]
+ 19feac0:      	bl	0x2d98510 <_ZN7LawnApp22IsPlantsFromCoinsLevelEv@plt>
+ 19feac4:      	tbz	w0, #0x0, 0x19febb8 <Board::TouchBegan(Sexy::Touch*)+0x80c>
+ 19feac8:      	b	0x19feacc <Board::TouchBegan(Sexy::Touch*)+0x720>
+ 19feacc:      	ldr	x8, [sp, #0x28]
+ 19fead0:      	ldr	x8, [x8, #0x470]
+ 19fead4:      	ldr	x8, [x8, #0x10]
+ 19fead8:      	ldr	w8, [x8, #0x44]
+ 19feadc:      	subs	w8, w8, #0x2
+ 19feae0:      	b.ne	0x19feb88 <Board::TouchBegan(Sexy::Touch*)+0x7dc>
+ 19feae4:      	b	0x19feae8 <Board::TouchBegan(Sexy::Touch*)+0x73c>
+ 19feae8:      	mov	x8, xzr
+ 19feaec:      	stur	x8, [x29, #-0x30]
+ 19feaf0:      	b	0x19feaf4 <Board::TouchBegan(Sexy::Touch*)+0x748>
+ 19feaf4:      	ldr	x0, [sp, #0x28]
+ 19feaf8:      	sub	x1, x29, #0x30
+ 19feafc:      	bl	0x2d97120 <_ZN5Board12IterateCoinsERP4Coin@plt>
+ 19feb00:      	tbz	w0, #0x0, 0x19feb84 <Board::TouchBegan(Sexy::Touch*)+0x7d8>
+ 19feb04:      	b	0x19feb08 <Board::TouchBegan(Sexy::Touch*)+0x75c>
+ 19feb08:      	ldur	x8, [x29, #-0x30]
+ 19feb0c:      	ldr	w8, [x8, #0x74]
+ 19feb10:      	subs	w8, w8, #0x10
+ 19feb14:      	b.ne	0x19feb80 <Board::TouchBegan(Sexy::Touch*)+0x7d4>
+ 19feb18:      	b	0x19feb1c <Board::TouchBegan(Sexy::Touch*)+0x770>
+ 19feb1c:      	ldur	x8, [x29, #-0x30]
+ 19feb20:      	ldrb	w8, [x8, #0x6c]
+ 19feb24:      	tbz	w8, #0x0, 0x19feb80 <Board::TouchBegan(Sexy::Touch*)+0x7d4>
+ 19feb28:      	b	0x19feb2c <Board::TouchBegan(Sexy::Touch*)+0x780>
+ 19feb2c:      	ldur	x8, [x29, #-0x30]
+ 19feb30:      	ldr	x9, [sp, #0x40]
+ 19feb34:      	subs	x8, x8, x9
+ 19feb38:      	b.ne	0x19feb64 <Board::TouchBegan(Sexy::Touch*)+0x7b8>
+ 19feb3c:      	b	0x19feb40 <Board::TouchBegan(Sexy::Touch*)+0x794>
+ 19feb40:      	ldur	x0, [x29, #-0x30]
+ 19feb44:      	bl	0x2d97cc0 <_ZN4Coin17DroppedUsableSeedEv@plt>
+ 19feb48:      	ldr	x0, [sp, #0x28]
+ 19feb4c:      	ldr	x9, [x0, #0x470]
+ 19feb50:      	mov	w8, #0x1                // =1
+ 19feb54:      	strb	w8, [x9]
+ 19feb58:      	mov	w1, wzr
+ 19feb5c:      	bl	0x2d97690 <_ZN5Board11ClearCursorEb@plt>
+ 19feb60:      	b	0x19fedc8 <Board::TouchBegan(Sexy::Touch*)+0xa1c>
+ 19feb64:      	ldur	x0, [x29, #-0x30]
+ 19feb68:      	bl	0x2d97cc0 <_ZN4Coin17DroppedUsableSeedEv@plt>
+ 19feb6c:      	ldr	x0, [sp, #0x28]
+ 19feb70:      	mov	w1, wzr
+ 19feb74:      	bl	0x2d97690 <_ZN5Board11ClearCursorEb@plt>
+ 19feb78:      	b	0x19feb7c <Board::TouchBegan(Sexy::Touch*)+0x7d0>
+ 19feb7c:      	b	0x19feb80 <Board::TouchBegan(Sexy::Touch*)+0x7d4>
+ 19feb80:      	b	0x19feaf4 <Board::TouchBegan(Sexy::Touch*)+0x748>
+ 19feb84:      	b	0x19febb4 <Board::TouchBegan(Sexy::Touch*)+0x808>
+ 19feb88:      	ldr	x8, [sp, #0x28]
+ 19feb8c:      	ldr	x8, [x8, #0x470]
+ 19feb90:      	ldr	x8, [x8, #0x10]
+ 19feb94:      	ldr	w8, [x8, #0x44]
+ 19feb98:      	subs	w8, w8, #0x1
+ 19feb9c:      	b.ne	0x19febb0 <Board::TouchBegan(Sexy::Touch*)+0x804>
+ 19feba0:      	b	0x19feba4 <Board::TouchBegan(Sexy::Touch*)+0x7f8>
+ 19feba4:      	ldr	x0, [sp, #0x28]
+ 19feba8:      	bl	0x2d97620 <_ZN5Board27RefreshSeedPacketFromCursorEv@plt>
+ 19febac:      	b	0x19febb0 <Board::TouchBegan(Sexy::Touch*)+0x804>
+ 19febb0:      	b	0x19febb4 <Board::TouchBegan(Sexy::Touch*)+0x808>
+ 19febb4:      	b	0x19febb8 <Board::TouchBegan(Sexy::Touch*)+0x80c>
+ 19febb8:      	ldr	x0, [sp, #0x40]
+ 19febbc:      	ldur	w1, [x29, #-0x44]
+ 19febc0:      	ldur	w2, [x29, #-0x48]
+ 19febc4:      	mov	w3, #0x1                // =1
+ 19febc8:      	str	w3, [sp, #0xc]
+ 19febcc:      	bl	0x2d98520 <_ZN4Coin9MouseDownEiii@plt>
+ 19febd0:      	ldr	x9, [sp, #0x28]
+ 19febd4:      	ldr	w8, [sp, #0xc]
+ 19febd8:      	ldr	x9, [x9, #0x470]
+ 19febdc:      	strb	w8, [x9]
+ 19febe0:      	b	0x19fedbc <Board::TouchBegan(Sexy::Touch*)+0xa10>
+ 19febe4:      	ldur	w8, [x29, #-0x20]
+ 19febe8:      	subs	w8, w8, #0x4
+ 19febec:      	b.ne	0x19fec1c <Board::TouchBegan(Sexy::Touch*)+0x870>
+ 19febf0:      	b	0x19febf4 <Board::TouchBegan(Sexy::Touch*)+0x848>
+ 19febf4:      	ldr	x0, [sp, #0x28]
+ 19febf8:      	bl	0x2d97620 <_ZN5Board27RefreshSeedPacketFromCursorEv@plt>
+ 19febfc:      	ldur	x8, [x29, #-0x28]
+ 19fec00:      	str	x8, [sp, #0x38]
+ 19fec04:      	ldr	x0, [sp, #0x38]
+ 19fec08:      	ldur	w1, [x29, #-0x44]
+ 19fec0c:      	ldur	w2, [x29, #-0x48]
+ 19fec10:      	mov	w3, #0x1                // =1
+ 19fec14:      	bl	0x2d98530 <_ZN10SeedPacket9MouseDownEiii@plt>
+ 19fec18:      	b	0x19fedb8 <Board::TouchBegan(Sexy::Touch*)+0xa0c>
+ 19fec1c:      	ldur	w8, [x29, #-0x20]
+ 19fec20:      	subs	w8, w8, #0xf
+ 19fec24:      	b.ne	0x19fec5c <Board::TouchBegan(Sexy::Touch*)+0x8b0>
+ 19fec28:      	b	0x19fec2c <Board::TouchBegan(Sexy::Touch*)+0x880>
+ 19fec2c:      	ldr	x8, [sp, #0x28]
+ 19fec30:      	ldr	x8, [x8, #0x110]
+ 19fec34:      	ldr	w8, [x8, #0xbdc]
+ 19fec38:      	subs	w8, w8, #0x2b
+ 19fec3c:      	b.ne	0x19fec58 <Board::TouchBegan(Sexy::Touch*)+0x8ac>
+ 19fec40:      	b	0x19fec44 <Board::TouchBegan(Sexy::Touch*)+0x898>
+ 19fec44:      	ldr	x8, [sp, #0x28]
+ 19fec48:      	ldr	x8, [x8, #0x110]
+ 19fec4c:      	ldr	x0, [x8, #0xc00]
+ 19fec50:      	bl	0x2d98540 <_ZN9ZenGarden14GotoNextGardenEv@plt>
+ 19fec54:      	b	0x19fec58 <Board::TouchBegan(Sexy::Touch*)+0x8ac>
+ 19fec58:      	b	0x19fedb4 <Board::TouchBegan(Sexy::Touch*)+0xa08>
+ 19fec5c:      	ldur	w8, [x29, #-0x20]
+ 19fec60:      	subs	w8, w8, #0x5
+ 19fec64:      	b.eq	0x19fed1c <Board::TouchBegan(Sexy::Touch*)+0x970>
+ 19fec68:      	b	0x19fec6c <Board::TouchBegan(Sexy::Touch*)+0x8c0>
+ 19fec6c:      	ldur	w8, [x29, #-0x20]
+ 19fec70:      	subs	w8, w8, #0x6
+ 19fec74:      	b.eq	0x19fed1c <Board::TouchBegan(Sexy::Touch*)+0x970>
+ 19fec78:      	b	0x19fec7c <Board::TouchBegan(Sexy::Touch*)+0x8d0>
+ 19fec7c:      	ldur	w8, [x29, #-0x20]
+ 19fec80:      	subs	w8, w8, #0x7
+ 19fec84:      	b.eq	0x19fed1c <Board::TouchBegan(Sexy::Touch*)+0x970>
+ 19fec88:      	b	0x19fec8c <Board::TouchBegan(Sexy::Touch*)+0x8e0>
+ 19fec8c:      	ldur	w8, [x29, #-0x20]
+ 19fec90:      	subs	w8, w8, #0x8
+ 19fec94:      	b.eq	0x19fed1c <Board::TouchBegan(Sexy::Touch*)+0x970>
+ 19fec98:      	b	0x19fec9c <Board::TouchBegan(Sexy::Touch*)+0x8f0>
+ 19fec9c:      	ldur	w8, [x29, #-0x20]
+ 19feca0:      	subs	w8, w8, #0x9
+ 19feca4:      	b.eq	0x19fed1c <Board::TouchBegan(Sexy::Touch*)+0x970>
+ 19feca8:      	b	0x19fecac <Board::TouchBegan(Sexy::Touch*)+0x900>
+ 19fecac:      	ldur	w8, [x29, #-0x20]
+ 19fecb0:      	subs	w8, w8, #0xa
+ 19fecb4:      	b.eq	0x19fed1c <Board::TouchBegan(Sexy::Touch*)+0x970>
+ 19fecb8:      	b	0x19fecbc <Board::TouchBegan(Sexy::Touch*)+0x910>
+ 19fecbc:      	ldur	w8, [x29, #-0x20]
+ 19fecc0:      	subs	w8, w8, #0xb
+ 19fecc4:      	b.eq	0x19fed1c <Board::TouchBegan(Sexy::Touch*)+0x970>
+ 19fecc8:      	b	0x19feccc <Board::TouchBegan(Sexy::Touch*)+0x920>
+ 19feccc:      	ldur	w8, [x29, #-0x20]
+ 19fecd0:      	subs	w8, w8, #0xc
+ 19fecd4:      	b.eq	0x19fed1c <Board::TouchBegan(Sexy::Touch*)+0x970>
+ 19fecd8:      	b	0x19fecdc <Board::TouchBegan(Sexy::Touch*)+0x930>
+ 19fecdc:      	ldur	w8, [x29, #-0x20]
+ 19fece0:      	subs	w8, w8, #0xd
+ 19fece4:      	b.eq	0x19fed1c <Board::TouchBegan(Sexy::Touch*)+0x970>
+ 19fece8:      	b	0x19fecec <Board::TouchBegan(Sexy::Touch*)+0x940>
+ 19fecec:      	ldur	w8, [x29, #-0x20]
+ 19fecf0:      	subs	w8, w8, #0x12
+ 19fecf4:      	b.eq	0x19fed1c <Board::TouchBegan(Sexy::Touch*)+0x970>
+ 19fecf8:      	b	0x19fecfc <Board::TouchBegan(Sexy::Touch*)+0x950>
+ 19fecfc:      	ldur	w8, [x29, #-0x20]
+ 19fed00:      	subs	w8, w8, #0xe
+ 19fed04:      	b.eq	0x19fed1c <Board::TouchBegan(Sexy::Touch*)+0x970>
+ 19fed08:      	b	0x19fed0c <Board::TouchBegan(Sexy::Touch*)+0x960>
+ 19fed0c:      	ldur	w8, [x29, #-0x20]
+ 19fed10:      	subs	w8, w8, #0x16
+ 19fed14:      	b.ne	0x19fed7c <Board::TouchBegan(Sexy::Touch*)+0x9d0>
+ 19fed18:      	b	0x19fed1c <Board::TouchBegan(Sexy::Touch*)+0x970>
+ 19fed1c:      	ldr	x8, [sp, #0x28]
+ 19fed20:      	ldr	x8, [x8, #0x470]
+ 19fed24:      	ldr	x8, [x8, #0x10]
+ 19fed28:      	ldr	w8, [x8, #0x44]
+ 19fed2c:      	subs	w8, w8, #0x6
+ 19fed30:      	b.eq	0x19fed6c <Board::TouchBegan(Sexy::Touch*)+0x9c0>
+ 19fed34:      	b	0x19fed38 <Board::TouchBegan(Sexy::Touch*)+0x98c>
+ 19fed38:      	ldr	x8, [sp, #0x28]
+ 19fed3c:      	ldr	x8, [x8, #0x470]
+ 19fed40:      	ldr	x8, [x8, #0x10]
+ 19fed44:      	ldr	w8, [x8, #0x44]
+ 19fed48:      	subs	w8, w8, #0x12
+ 19fed4c:      	b.eq	0x19fed6c <Board::TouchBegan(Sexy::Touch*)+0x9c0>
+ 19fed50:      	b	0x19fed54 <Board::TouchBegan(Sexy::Touch*)+0x9a8>
+ 19fed54:      	ldr	x0, [sp, #0x28]
+ 19fed58:      	bl	0x2d97620 <_ZN5Board27RefreshSeedPacketFromCursorEv@plt>
+ 19fed5c:      	ldr	x0, [sp, #0x28]
+ 19fed60:      	ldur	w1, [x29, #-0x20]
+ 19fed64:      	bl	0x2d98440 <_ZN5Board10PickUpToolE14GameObjectType@plt>
+ 19fed68:      	b	0x19fedc8 <Board::TouchBegan(Sexy::Touch*)+0xa1c>
+ 19fed6c:      	ldr	x0, [sp, #0x28]
+ 19fed70:      	bl	0x2d97620 <_ZN5Board27RefreshSeedPacketFromCursorEv@plt>
+ 19fed74:      	b	0x19fed78 <Board::TouchBegan(Sexy::Touch*)+0x9cc>
+ 19fed78:      	b	0x19fedb0 <Board::TouchBegan(Sexy::Touch*)+0xa04>
+ 19fed7c:      	ldur	w8, [x29, #-0x20]
+ 19fed80:      	subs	w8, w8, #0x1
+ 19fed84:      	b.ne	0x19fedac <Board::TouchBegan(Sexy::Touch*)+0xa00>
+ 19fed88:      	b	0x19fed8c <Board::TouchBegan(Sexy::Touch*)+0x9e0>
+ 19fed8c:      	ldur	x8, [x29, #-0x28]
+ 19fed90:      	str	x8, [sp, #0x30]
+ 19fed94:      	ldr	x0, [sp, #0x30]
+ 19fed98:      	ldur	w1, [x29, #-0x44]
+ 19fed9c:      	ldur	w2, [x29, #-0x48]
+ 19feda0:      	mov	w3, #0x1                // =1
+ 19feda4:      	bl	0x2d98550 <_ZN5Plant9MouseDownEiii@plt>
+ 19feda8:      	b	0x19fedac <Board::TouchBegan(Sexy::Touch*)+0xa00>
+ 19fedac:      	b	0x19fedb0 <Board::TouchBegan(Sexy::Touch*)+0xa04>
+ 19fedb0:      	b	0x19fedb4 <Board::TouchBegan(Sexy::Touch*)+0xa08>
+ 19fedb4:      	b	0x19fedb8 <Board::TouchBegan(Sexy::Touch*)+0xa0c>
+ 19fedb8:      	b	0x19fedbc <Board::TouchBegan(Sexy::Touch*)+0xa10>
+ 19fedbc:      	ldr	x0, [sp, #0x28]
+ 19fedc0:      	bl	0x2d980b0 <_ZN5Board12UpdateCursorEv@plt>
+ 19fedc4:      	b	0x19fedc8 <Board::TouchBegan(Sexy::Touch*)+0xa1c>
+ 19fedc8:      	mrs	x8, TPIDR_EL0
+ 19fedcc:      	ldr	x8, [x8, #0x28]
+ 19fedd0:      	ldur	x9, [x29, #-0x8]
+ 19fedd4:      	subs	x8, x8, x9
+ 19fedd8:      	b.ne	0x19fedec <Board::TouchBegan(Sexy::Touch*)+0xa40>
+ 19feddc:      	b	0x19fede0 <Board::TouchBegan(Sexy::Touch*)+0xa34>
+ 19fede0:      	ldp	x29, x30, [sp, #0xa0]
+ 19fede4:      	add	sp, sp, #0xb0
+ 19fede8:      	ret
+ 19fedec:      	bl	0x2d6af80 <__stack_chk_fail@plt>

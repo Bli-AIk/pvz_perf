@@ -1,0 +1,107 @@
+
+C:/Users/Administrator/CLionProjects/codex/tv_assets/FREE_3.18.0_Phone/apk_contents/split_config.arm64_v8a/lib/arm64-v8a/libpvz.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+00000000019edbd8 <Board::GetGameObjectFromCursor(CursorType)>:
+ 19edbd8: d10083ff     	sub	sp, sp, #0x20
+ 19edbdc: f9000be0     	str	x0, [sp, #0x10]
+ 19edbe0: b9000fe1     	str	w1, [sp, #0xc]
+ 19edbe4: b9400fe8     	ldr	w8, [sp, #0xc]
+ 19edbe8: 71000108     	subs	w8, w8, #0x0
+ 19edbec: 5400008c     	b.gt	0x19edbfc <Board::GetGameObjectFromCursor(CursorType)+0x24>
+ 19edbf0: 14000001     	b	0x19edbf4 <Board::GetGameObjectFromCursor(CursorType)+0x1c>
+ 19edbf4: b9001fff     	str	wzr, [sp, #0x1c]
+ 19edbf8: 1400005a     	b	0x19edd60 <Board::GetGameObjectFromCursor(CursorType)+0x188>
+ 19edbfc: b9000bff     	str	wzr, [sp, #0x8]
+ 19edc00: b9400fe8     	ldr	w8, [sp, #0xc]
+ 19edc04: b90007e8     	str	w8, [sp, #0x4]
+ 19edc08: 340005e8     	cbz	w8, 0x19edcc4 <Board::GetGameObjectFromCursor(CursorType)+0xec>
+ 19edc0c: 14000001     	b	0x19edc10 <Board::GetGameObjectFromCursor(CursorType)+0x38>
+ 19edc10: b94007e8     	ldr	w8, [sp, #0x4]
+ 19edc14: 71000508     	subs	w8, w8, #0x1
+ 19edc18: 71001108     	subs	w8, w8, #0x4
+ 19edc1c: 54000589     	b.ls	0x19edccc <Board::GetGameObjectFromCursor(CursorType)+0xf4>
+ 19edc20: 14000001     	b	0x19edc24 <Board::GetGameObjectFromCursor(CursorType)+0x4c>
+ 19edc24: b94007e8     	ldr	w8, [sp, #0x4]
+ 19edc28: 71001908     	subs	w8, w8, #0x6
+ 19edc2c: 54000560     	b.eq	0x19edcd8 <Board::GetGameObjectFromCursor(CursorType)+0x100>
+ 19edc30: 14000001     	b	0x19edc34 <Board::GetGameObjectFromCursor(CursorType)+0x5c>
+ 19edc34: b94007e8     	ldr	w8, [sp, #0x4]
+ 19edc38: 71002508     	subs	w8, w8, #0x9
+ 19edc3c: 54000540     	b.eq	0x19edce4 <Board::GetGameObjectFromCursor(CursorType)+0x10c>
+ 19edc40: 14000001     	b	0x19edc44 <Board::GetGameObjectFromCursor(CursorType)+0x6c>
+ 19edc44: b94007e8     	ldr	w8, [sp, #0x4]
+ 19edc48: 71002908     	subs	w8, w8, #0xa
+ 19edc4c: 54000520     	b.eq	0x19edcf0 <Board::GetGameObjectFromCursor(CursorType)+0x118>
+ 19edc50: 14000001     	b	0x19edc54 <Board::GetGameObjectFromCursor(CursorType)+0x7c>
+ 19edc54: b94007e8     	ldr	w8, [sp, #0x4]
+ 19edc58: 71002d08     	subs	w8, w8, #0xb
+ 19edc5c: 54000500     	b.eq	0x19edcfc <Board::GetGameObjectFromCursor(CursorType)+0x124>
+ 19edc60: 14000001     	b	0x19edc64 <Board::GetGameObjectFromCursor(CursorType)+0x8c>
+ 19edc64: b94007e8     	ldr	w8, [sp, #0x4]
+ 19edc68: 71003108     	subs	w8, w8, #0xc
+ 19edc6c: 540004e0     	b.eq	0x19edd08 <Board::GetGameObjectFromCursor(CursorType)+0x130>
+ 19edc70: 14000001     	b	0x19edc74 <Board::GetGameObjectFromCursor(CursorType)+0x9c>
+ 19edc74: b94007e8     	ldr	w8, [sp, #0x4]
+ 19edc78: 71003508     	subs	w8, w8, #0xd
+ 19edc7c: 540004c0     	b.eq	0x19edd14 <Board::GetGameObjectFromCursor(CursorType)+0x13c>
+ 19edc80: 14000001     	b	0x19edc84 <Board::GetGameObjectFromCursor(CursorType)+0xac>
+ 19edc84: b94007e8     	ldr	w8, [sp, #0x4]
+ 19edc88: 71003908     	subs	w8, w8, #0xe
+ 19edc8c: 540004a0     	b.eq	0x19edd20 <Board::GetGameObjectFromCursor(CursorType)+0x148>
+ 19edc90: 14000001     	b	0x19edc94 <Board::GetGameObjectFromCursor(CursorType)+0xbc>
+ 19edc94: b94007e8     	ldr	w8, [sp, #0x4]
+ 19edc98: 71003d08     	subs	w8, w8, #0xf
+ 19edc9c: 54000480     	b.eq	0x19edd2c <Board::GetGameObjectFromCursor(CursorType)+0x154>
+ 19edca0: 14000001     	b	0x19edca4 <Board::GetGameObjectFromCursor(CursorType)+0xcc>
+ 19edca4: b94007e8     	ldr	w8, [sp, #0x4]
+ 19edca8: 71004108     	subs	w8, w8, #0x10
+ 19edcac: 54000460     	b.eq	0x19edd38 <Board::GetGameObjectFromCursor(CursorType)+0x160>
+ 19edcb0: 14000001     	b	0x19edcb4 <Board::GetGameObjectFromCursor(CursorType)+0xdc>
+ 19edcb4: b94007e8     	ldr	w8, [sp, #0x4]
+ 19edcb8: 71004908     	subs	w8, w8, #0x12
+ 19edcbc: 54000440     	b.eq	0x19edd44 <Board::GetGameObjectFromCursor(CursorType)+0x16c>
+ 19edcc0: 14000024     	b	0x19edd50 <Board::GetGameObjectFromCursor(CursorType)+0x178>
+ 19edcc4: b9000bff     	str	wzr, [sp, #0x8]
+ 19edcc8: 14000023     	b	0x19edd54 <Board::GetGameObjectFromCursor(CursorType)+0x17c>
+ 19edccc: 52800028     	mov	w8, #0x1                // =1
+ 19edcd0: b9000be8     	str	w8, [sp, #0x8]
+ 19edcd4: 14000020     	b	0x19edd54 <Board::GetGameObjectFromCursor(CursorType)+0x17c>
+ 19edcd8: 528000a8     	mov	w8, #0x5                // =5
+ 19edcdc: b9000be8     	str	w8, [sp, #0x8]
+ 19edce0: 1400001d     	b	0x19edd54 <Board::GetGameObjectFromCursor(CursorType)+0x17c>
+ 19edce4: 528000c8     	mov	w8, #0x6                // =6
+ 19edce8: b9000be8     	str	w8, [sp, #0x8]
+ 19edcec: 1400001a     	b	0x19edd54 <Board::GetGameObjectFromCursor(CursorType)+0x17c>
+ 19edcf0: 528000e8     	mov	w8, #0x7                // =7
+ 19edcf4: b9000be8     	str	w8, [sp, #0x8]
+ 19edcf8: 14000017     	b	0x19edd54 <Board::GetGameObjectFromCursor(CursorType)+0x17c>
+ 19edcfc: 52800108     	mov	w8, #0x8                // =8
+ 19edd00: b9000be8     	str	w8, [sp, #0x8]
+ 19edd04: 14000014     	b	0x19edd54 <Board::GetGameObjectFromCursor(CursorType)+0x17c>
+ 19edd08: 52800128     	mov	w8, #0x9                // =9
+ 19edd0c: b9000be8     	str	w8, [sp, #0x8]
+ 19edd10: 14000011     	b	0x19edd54 <Board::GetGameObjectFromCursor(CursorType)+0x17c>
+ 19edd14: 52800148     	mov	w8, #0xa                // =10
+ 19edd18: b9000be8     	str	w8, [sp, #0x8]
+ 19edd1c: 1400000e     	b	0x19edd54 <Board::GetGameObjectFromCursor(CursorType)+0x17c>
+ 19edd20: 52800168     	mov	w8, #0xb                // =11
+ 19edd24: b9000be8     	str	w8, [sp, #0x8]
+ 19edd28: 1400000b     	b	0x19edd54 <Board::GetGameObjectFromCursor(CursorType)+0x17c>
+ 19edd2c: 52800188     	mov	w8, #0xc                // =12
+ 19edd30: b9000be8     	str	w8, [sp, #0x8]
+ 19edd34: 14000008     	b	0x19edd54 <Board::GetGameObjectFromCursor(CursorType)+0x17c>
+ 19edd38: 528001a8     	mov	w8, #0xd                // =13
+ 19edd3c: b9000be8     	str	w8, [sp, #0x8]
+ 19edd40: 14000005     	b	0x19edd54 <Board::GetGameObjectFromCursor(CursorType)+0x17c>
+ 19edd44: 528002c8     	mov	w8, #0x16               // =22
+ 19edd48: b9000be8     	str	w8, [sp, #0x8]
+ 19edd4c: 14000002     	b	0x19edd54 <Board::GetGameObjectFromCursor(CursorType)+0x17c>
+ 19edd50: 14000001     	b	0x19edd54 <Board::GetGameObjectFromCursor(CursorType)+0x17c>
+ 19edd54: b9400be8     	ldr	w8, [sp, #0x8]
+ 19edd58: b9001fe8     	str	w8, [sp, #0x1c]
+ 19edd5c: 14000001     	b	0x19edd60 <Board::GetGameObjectFromCursor(CursorType)+0x188>
+ 19edd60: b9401fe0     	ldr	w0, [sp, #0x1c]
+ 19edd64: 910083ff     	add	sp, sp, #0x20
+ 19edd68: d65f03c0     	ret

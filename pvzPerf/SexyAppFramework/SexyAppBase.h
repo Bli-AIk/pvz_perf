@@ -175,6 +175,10 @@ public:
     std::array<double, 3> mNativeLastClickTime{-1000,-1000,-1000};
     std::array<double, 3> mNativeLastClickX{}, mNativeLastClickY{};
     double mNativeWheelRemainder = 0;
+    bool mNativeTouchOwnsCursor = false;
+    bool mNativeMouseMotionPending = false;
+    POINT mNativeMouseClientPosition{};
+    void QueueNativeTouch(unsigned int id, unsigned int flags, double x, double y);
     void PumpWindowEvents();
     void RequestNativeClose();
     void DrainWindowMessages() { ProcessDeferredMessages(false); }

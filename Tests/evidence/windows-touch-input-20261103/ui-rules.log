@@ -1,0 +1,2062 @@
+PASS pure wrapped text measurement: wrapping, newlines, color tags, no glyph draws and empty fill
+pool GPU day-normal-nearest: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU night-normal-linear: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU day-additive-partial-fractional: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU night-additive-phase-wrap: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU day-opaque-partial-fractional: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU night-opaque-large-counter: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU feedback-float-source-pending-batch: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+PASS production GPU pool vs independent legacy CPU mesh: day/night, normal/additive/opaque, nearest/linear/repeat, phase wrap, destination scissor, fractional translation, ordinary painter order and float target feedback
+PASS precomputed transparent edges: alpha, visible RGB, idempotency, nearest/linear, upload-discard
+PASS public font upload: deferred alpha, upload-and-discard, texture reuse, independent copies
+PASS nonzero source rectangles and repacked whole-sheet atlas views: translation, scale origins, clipping, tint, additive, local-source views and floating scales
+PASS necessary local-clip contract: independent full-pixel rect/image/source/mirror/matrix/particle/convex oracles, disjoint/partial/empty clips and negative framebuffer crossings
+PASS actual TitleScreen grass reveal: widths 0/1/157/313/314/400, translated draw and unrevealed black pixels
+PASS actual GameButton atlas states: normal, hover, press/fallbacks, disabled, overAlpha, additive glow, translation/offsets and hidden state match independent images
+PASS direct shared-image snapshots and reference lifetime
+PASS actual boss back-arm drawing: four attack offsets, reference pixels, 1024 exact shared-animation translation restorations
+PASS reanimation appearances: independent options, image slots, atlas dimensions, original centers and actual AttachmentDraw visibility pixels
+PASS fullscreen reanimation: destination fill pixels, hidden/zero alpha, color modulation, both blend modes, translation and effective clip without track matrices
+Store clock fixture: initialize
+Almanac begin level=0 width=800 Hz=100
+Almanac plant level=0 width=800 Hz=100 seed=0 visible=1
+Almanac plant level=0 width=800 Hz=100 seed=1 visible=1
+Almanac plant level=0 width=800 Hz=100 seed=2 visible=1
+Almanac plant level=0 width=800 Hz=100 seed=3 visible=1
+Almanac plant level=0 width=800 Hz=100 seed=4 visible=1
+Almanac plant level=0 width=800 Hz=100 seed=5 visible=1
+Almanac plant level=0 width=800 Hz=100 seed=6 visible=1
+Almanac plant level=0 width=800 Hz=100 seed=7 visible=1
+Almanac plant level=0 width=800 Hz=100 seed=8 visible=1
+Almanac plant level=0 width=800 Hz=100 seed=9 visible=1
+Almanac plant level=0 width=800 Hz=100 seed=10 visible=1
+Almanac plant level=0 width=800 Hz=100 seed=11 visible=1
+Almanac plant level=0 width=800 Hz=100 seed=12 visible=1
+Almanac plant level=0 width=800 Hz=100 seed=13 visible=1
+Almanac plant level=0 width=800 Hz=100 seed=14 visible=1
+Almanac plant level=0 width=800 Hz=100 seed=15 visible=1
+Almanac plant level=0 width=800 Hz=100 seed=16 visible=1
+Almanac plant level=0 width=800 Hz=100 seed=17 visible=1
+Almanac plant level=0 width=800 Hz=100 seed=18 visible=1
+Almanac plant level=0 width=800 Hz=100 seed=19 visible=1
+Almanac plant level=0 width=800 Hz=100 seed=20 visible=1
+Almanac plant level=0 width=800 Hz=100 seed=21 visible=1
+Almanac plant level=0 width=800 Hz=100 seed=22 visible=1
+Almanac plant level=0 width=800 Hz=100 seed=23 visible=1
+Almanac plant level=0 width=800 Hz=100 seed=24 visible=1
+Almanac plant level=0 width=800 Hz=100 seed=25 visible=1
+Almanac plant level=0 width=800 Hz=100 seed=26 visible=1
+Almanac plant level=0 width=800 Hz=100 seed=27 visible=1
+Almanac plant level=0 width=800 Hz=100 seed=28 visible=1
+Almanac plant level=0 width=800 Hz=100 seed=29 visible=1
+Almanac plant level=0 width=800 Hz=100 seed=30 visible=1
+Almanac plant level=0 width=800 Hz=100 seed=31 visible=1
+Almanac plant level=0 width=800 Hz=100 seed=32 visible=1
+Almanac plant level=0 width=800 Hz=100 seed=33 visible=1
+Almanac plant level=0 width=800 Hz=100 seed=34 visible=1
+Almanac plant level=0 width=800 Hz=100 seed=35 visible=1
+Almanac plant level=0 width=800 Hz=100 seed=36 visible=1
+Almanac plant level=0 width=800 Hz=100 seed=37 visible=1
+Almanac plant level=0 width=800 Hz=100 seed=38 visible=1
+Almanac plant level=0 width=800 Hz=100 seed=39 visible=1
+Almanac plant level=0 width=800 Hz=100 seed=40 visible=1
+Almanac plant level=0 width=800 Hz=100 seed=41 visible=1
+Almanac plant level=0 width=800 Hz=100 seed=42 visible=1
+Almanac plant level=0 width=800 Hz=100 seed=43 visible=1
+Almanac plant level=0 width=800 Hz=100 seed=44 visible=1
+Almanac plant level=0 width=800 Hz=100 seed=45 visible=1
+Almanac plant level=0 width=800 Hz=100 seed=46 visible=1
+Almanac plant level=0 width=800 Hz=100 seed=47 visible=1
+Almanac plant level=0 width=800 Hz=100 seed=48 visible=1
+Almanac zombie level=0 width=800 Hz=100 type=0 visible=1
+Almanac zombie level=0 width=800 Hz=100 type=1 visible=1
+Almanac zombie level=0 width=800 Hz=100 type=2 visible=1
+Almanac zombie level=0 width=800 Hz=100 type=3 visible=1
+Almanac zombie level=0 width=800 Hz=100 type=4 visible=1
+Almanac zombie level=0 width=800 Hz=100 type=5 visible=1
+Almanac zombie level=0 width=800 Hz=100 type=6 visible=1
+Almanac zombie level=0 width=800 Hz=100 type=7 visible=1
+Almanac zombie level=0 width=800 Hz=100 type=8 visible=1
+Almanac zombie level=0 width=800 Hz=100 type=9 visible=1
+Almanac zombie level=0 width=800 Hz=100 type=10 visible=1
+Almanac zombie level=0 width=800 Hz=100 type=11 visible=1
+Almanac zombie level=0 width=800 Hz=100 type=12 visible=1
+Almanac zombie level=0 width=800 Hz=100 type=13 visible=1
+Almanac zombie level=0 width=800 Hz=100 type=14 visible=1
+Almanac zombie level=0 width=800 Hz=100 type=15 visible=1
+Almanac zombie level=0 width=800 Hz=100 type=16 visible=1
+Almanac zombie level=0 width=800 Hz=100 type=17 visible=1
+Almanac zombie level=0 width=800 Hz=100 type=18 visible=1
+Almanac zombie level=0 width=800 Hz=100 type=19 visible=1
+Almanac zombie level=0 width=800 Hz=100 type=20 visible=1
+Almanac zombie level=0 width=800 Hz=100 type=21 visible=1
+Almanac zombie level=0 width=800 Hz=100 type=22 visible=1
+Almanac zombie level=0 width=800 Hz=100 type=23 visible=1
+Almanac zombie level=0 width=800 Hz=100 type=24 visible=1
+Almanac zombie level=0 width=800 Hz=100 type=25 visible=1
+Almanac primary level=0 width=800 Hz=100 plants=49 zombies=26 closed=1
+Almanac begin level=0 width=800 Hz=30
+Almanac plant level=0 width=800 Hz=30 seed=0 visible=1
+Almanac plant level=0 width=800 Hz=30 seed=1 visible=1
+Almanac plant level=0 width=800 Hz=30 seed=2 visible=1
+Almanac plant level=0 width=800 Hz=30 seed=3 visible=1
+Almanac plant level=0 width=800 Hz=30 seed=4 visible=1
+Almanac plant level=0 width=800 Hz=30 seed=5 visible=1
+Almanac plant level=0 width=800 Hz=30 seed=6 visible=1
+Almanac plant level=0 width=800 Hz=30 seed=7 visible=1
+Almanac plant level=0 width=800 Hz=30 seed=8 visible=1
+Almanac plant level=0 width=800 Hz=30 seed=9 visible=1
+Almanac plant level=0 width=800 Hz=30 seed=10 visible=1
+Almanac plant level=0 width=800 Hz=30 seed=11 visible=1
+Almanac plant level=0 width=800 Hz=30 seed=12 visible=1
+Almanac plant level=0 width=800 Hz=30 seed=13 visible=1
+Almanac plant level=0 width=800 Hz=30 seed=14 visible=1
+Almanac plant level=0 width=800 Hz=30 seed=15 visible=1
+Almanac plant level=0 width=800 Hz=30 seed=16 visible=1
+Almanac plant level=0 width=800 Hz=30 seed=17 visible=1
+Almanac plant level=0 width=800 Hz=30 seed=18 visible=1
+Almanac plant level=0 width=800 Hz=30 seed=19 visible=1
+Almanac plant level=0 width=800 Hz=30 seed=20 visible=1
+Almanac plant level=0 width=800 Hz=30 seed=21 visible=1
+Almanac plant level=0 width=800 Hz=30 seed=22 visible=1
+Almanac plant level=0 width=800 Hz=30 seed=23 visible=1
+Almanac plant level=0 width=800 Hz=30 seed=24 visible=1
+Almanac plant level=0 width=800 Hz=30 seed=25 visible=1
+Almanac plant level=0 width=800 Hz=30 seed=26 visible=1
+Almanac plant level=0 width=800 Hz=30 seed=27 visible=1
+Almanac plant level=0 width=800 Hz=30 seed=28 visible=1
+Almanac plant level=0 width=800 Hz=30 seed=29 visible=1
+Almanac plant level=0 width=800 Hz=30 seed=30 visible=1
+Almanac plant level=0 width=800 Hz=30 seed=31 visible=1
+Almanac plant level=0 width=800 Hz=30 seed=32 visible=1
+Almanac plant level=0 width=800 Hz=30 seed=33 visible=1
+Almanac plant level=0 width=800 Hz=30 seed=34 visible=1
+Almanac plant level=0 width=800 Hz=30 seed=35 visible=1
+Almanac plant level=0 width=800 Hz=30 seed=36 visible=1
+Almanac plant level=0 width=800 Hz=30 seed=37 visible=1
+Almanac plant level=0 width=800 Hz=30 seed=38 visible=1
+Almanac plant level=0 width=800 Hz=30 seed=39 visible=1
+Almanac plant level=0 width=800 Hz=30 seed=40 visible=1
+Almanac plant level=0 width=800 Hz=30 seed=41 visible=1
+Almanac plant level=0 width=800 Hz=30 seed=42 visible=1
+Almanac plant level=0 width=800 Hz=30 seed=43 visible=1
+Almanac plant level=0 width=800 Hz=30 seed=44 visible=1
+Almanac plant level=0 width=800 Hz=30 seed=45 visible=1
+Almanac plant level=0 width=800 Hz=30 seed=46 visible=1
+Almanac plant level=0 width=800 Hz=30 seed=47 visible=1
+Almanac plant level=0 width=800 Hz=30 seed=48 visible=1
+Almanac zombie level=0 width=800 Hz=30 type=0 visible=1
+Almanac zombie level=0 width=800 Hz=30 type=1 visible=1
+Almanac zombie level=0 width=800 Hz=30 type=2 visible=1
+Almanac zombie level=0 width=800 Hz=30 type=3 visible=1
+Almanac zombie level=0 width=800 Hz=30 type=4 visible=1
+Almanac zombie level=0 width=800 Hz=30 type=5 visible=1
+Almanac zombie level=0 width=800 Hz=30 type=6 visible=1
+Almanac zombie level=0 width=800 Hz=30 type=7 visible=1
+Almanac zombie level=0 width=800 Hz=30 type=8 visible=1
+Almanac zombie level=0 width=800 Hz=30 type=9 visible=1
+Almanac zombie level=0 width=800 Hz=30 type=10 visible=1
+Almanac zombie level=0 width=800 Hz=30 type=11 visible=1
+Almanac zombie level=0 width=800 Hz=30 type=12 visible=1
+Almanac zombie level=0 width=800 Hz=30 type=13 visible=1
+Almanac zombie level=0 width=800 Hz=30 type=14 visible=1
+Almanac zombie level=0 width=800 Hz=30 type=15 visible=1
+Almanac zombie level=0 width=800 Hz=30 type=16 visible=1
+Almanac zombie level=0 width=800 Hz=30 type=17 visible=1
+Almanac zombie level=0 width=800 Hz=30 type=18 visible=1
+Almanac zombie level=0 width=800 Hz=30 type=19 visible=1
+Almanac zombie level=0 width=800 Hz=30 type=20 visible=1
+Almanac zombie level=0 width=800 Hz=30 type=21 visible=1
+Almanac zombie level=0 width=800 Hz=30 type=22 visible=1
+Almanac zombie level=0 width=800 Hz=30 type=23 visible=1
+Almanac zombie level=0 width=800 Hz=30 type=24 visible=1
+Almanac zombie level=0 width=800 Hz=30 type=25 visible=1
+Almanac primary level=0 width=800 Hz=30 plants=49 zombies=26 closed=1
+Almanac begin level=0 width=800 Hz=240
+Almanac plant level=0 width=800 Hz=240 seed=0 visible=1
+Almanac plant level=0 width=800 Hz=240 seed=1 visible=1
+Almanac plant level=0 width=800 Hz=240 seed=2 visible=1
+Almanac plant level=0 width=800 Hz=240 seed=3 visible=1
+Almanac plant level=0 width=800 Hz=240 seed=4 visible=1
+Almanac plant level=0 width=800 Hz=240 seed=5 visible=1
+Almanac plant level=0 width=800 Hz=240 seed=6 visible=1
+Almanac plant level=0 width=800 Hz=240 seed=7 visible=1
+Almanac plant level=0 width=800 Hz=240 seed=8 visible=1
+Almanac plant level=0 width=800 Hz=240 seed=9 visible=1
+Almanac plant level=0 width=800 Hz=240 seed=10 visible=1
+Almanac plant level=0 width=800 Hz=240 seed=11 visible=1
+Almanac plant level=0 width=800 Hz=240 seed=12 visible=1
+Almanac plant level=0 width=800 Hz=240 seed=13 visible=1
+Almanac plant level=0 width=800 Hz=240 seed=14 visible=1
+Almanac plant level=0 width=800 Hz=240 seed=15 visible=1
+Almanac plant level=0 width=800 Hz=240 seed=16 visible=1
+Almanac plant level=0 width=800 Hz=240 seed=17 visible=1
+Almanac plant level=0 width=800 Hz=240 seed=18 visible=1
+Almanac plant level=0 width=800 Hz=240 seed=19 visible=1
+Almanac plant level=0 width=800 Hz=240 seed=20 visible=1
+Almanac plant level=0 width=800 Hz=240 seed=21 visible=1
+Almanac plant level=0 width=800 Hz=240 seed=22 visible=1
+Almanac plant level=0 width=800 Hz=240 seed=23 visible=1
+Almanac plant level=0 width=800 Hz=240 seed=24 visible=1
+Almanac plant level=0 width=800 Hz=240 seed=25 visible=1
+Almanac plant level=0 width=800 Hz=240 seed=26 visible=1
+Almanac plant level=0 width=800 Hz=240 seed=27 visible=1
+Almanac plant level=0 width=800 Hz=240 seed=28 visible=1
+Almanac plant level=0 width=800 Hz=240 seed=29 visible=1
+Almanac plant level=0 width=800 Hz=240 seed=30 visible=1
+Almanac plant level=0 width=800 Hz=240 seed=31 visible=1
+Almanac plant level=0 width=800 Hz=240 seed=32 visible=1
+Almanac plant level=0 width=800 Hz=240 seed=33 visible=1
+Almanac plant level=0 width=800 Hz=240 seed=34 visible=1
+Almanac plant level=0 width=800 Hz=240 seed=35 visible=1
+Almanac plant level=0 width=800 Hz=240 seed=36 visible=1
+Almanac plant level=0 width=800 Hz=240 seed=37 visible=1
+Almanac plant level=0 width=800 Hz=240 seed=38 visible=1
+Almanac plant level=0 width=800 Hz=240 seed=39 visible=1
+Almanac plant level=0 width=800 Hz=240 seed=40 visible=1
+Almanac plant level=0 width=800 Hz=240 seed=41 visible=1
+Almanac plant level=0 width=800 Hz=240 seed=42 visible=1
+Almanac plant level=0 width=800 Hz=240 seed=43 visible=1
+Almanac plant level=0 width=800 Hz=240 seed=44 visible=1
+Almanac plant level=0 width=800 Hz=240 seed=45 visible=1
+Almanac plant level=0 width=800 Hz=240 seed=46 visible=1
+Almanac plant level=0 width=800 Hz=240 seed=47 visible=1
+Almanac plant level=0 width=800 Hz=240 seed=48 visible=1
+Almanac zombie level=0 width=800 Hz=240 type=0 visible=1
+Almanac zombie level=0 width=800 Hz=240 type=1 visible=1
+Almanac zombie level=0 width=800 Hz=240 type=2 visible=1
+Almanac zombie level=0 width=800 Hz=240 type=3 visible=1
+Almanac zombie level=0 width=800 Hz=240 type=4 visible=1
+Almanac zombie level=0 width=800 Hz=240 type=5 visible=1
+Almanac zombie level=0 width=800 Hz=240 type=6 visible=1
+Almanac zombie level=0 width=800 Hz=240 type=7 visible=1
+Almanac zombie level=0 width=800 Hz=240 type=8 visible=1
+Almanac zombie level=0 width=800 Hz=240 type=9 visible=1
+Almanac zombie level=0 width=800 Hz=240 type=10 visible=1
+Almanac zombie level=0 width=800 Hz=240 type=11 visible=1
+Almanac zombie level=0 width=800 Hz=240 type=12 visible=1
+Almanac zombie level=0 width=800 Hz=240 type=13 visible=1
+Almanac zombie level=0 width=800 Hz=240 type=14 visible=1
+Almanac zombie level=0 width=800 Hz=240 type=15 visible=1
+Almanac zombie level=0 width=800 Hz=240 type=16 visible=1
+Almanac zombie level=0 width=800 Hz=240 type=17 visible=1
+Almanac zombie level=0 width=800 Hz=240 type=18 visible=1
+Almanac zombie level=0 width=800 Hz=240 type=19 visible=1
+Almanac zombie level=0 width=800 Hz=240 type=20 visible=1
+Almanac zombie level=0 width=800 Hz=240 type=21 visible=1
+Almanac zombie level=0 width=800 Hz=240 type=22 visible=1
+Almanac zombie level=0 width=800 Hz=240 type=23 visible=1
+Almanac zombie level=0 width=800 Hz=240 type=24 visible=1
+Almanac zombie level=0 width=800 Hz=240 type=25 visible=1
+Almanac primary level=0 width=800 Hz=240 plants=49 zombies=26 closed=1
+Almanac begin level=0 width=800 Hz=0
+Almanac plant level=0 width=800 Hz=0 seed=0 visible=1
+Almanac plant level=0 width=800 Hz=0 seed=1 visible=1
+Almanac plant level=0 width=800 Hz=0 seed=2 visible=1
+Almanac plant level=0 width=800 Hz=0 seed=3 visible=1
+Almanac plant level=0 width=800 Hz=0 seed=4 visible=1
+Almanac plant level=0 width=800 Hz=0 seed=5 visible=1
+Almanac plant level=0 width=800 Hz=0 seed=6 visible=1
+Almanac plant level=0 width=800 Hz=0 seed=7 visible=1
+Almanac plant level=0 width=800 Hz=0 seed=8 visible=1
+Almanac plant level=0 width=800 Hz=0 seed=9 visible=1
+Almanac plant level=0 width=800 Hz=0 seed=10 visible=1
+Almanac plant level=0 width=800 Hz=0 seed=11 visible=1
+Almanac plant level=0 width=800 Hz=0 seed=12 visible=1
+Almanac plant level=0 width=800 Hz=0 seed=13 visible=1
+Almanac plant level=0 width=800 Hz=0 seed=14 visible=1
+Almanac plant level=0 width=800 Hz=0 seed=15 visible=1
+Almanac plant level=0 width=800 Hz=0 seed=16 visible=1
+Almanac plant level=0 width=800 Hz=0 seed=17 visible=1
+Almanac plant level=0 width=800 Hz=0 seed=18 visible=1
+Almanac plant level=0 width=800 Hz=0 seed=19 visible=1
+Almanac plant level=0 width=800 Hz=0 seed=20 visible=1
+Almanac plant level=0 width=800 Hz=0 seed=21 visible=1
+Almanac plant level=0 width=800 Hz=0 seed=22 visible=1
+Almanac plant level=0 width=800 Hz=0 seed=23 visible=1
+Almanac plant level=0 width=800 Hz=0 seed=24 visible=1
+Almanac plant level=0 width=800 Hz=0 seed=25 visible=1
+Almanac plant level=0 width=800 Hz=0 seed=26 visible=1
+Almanac plant level=0 width=800 Hz=0 seed=27 visible=1
+Almanac plant level=0 width=800 Hz=0 seed=28 visible=1
+Almanac plant level=0 width=800 Hz=0 seed=29 visible=1
+Almanac plant level=0 width=800 Hz=0 seed=30 visible=1
+Almanac plant level=0 width=800 Hz=0 seed=31 visible=1
+Almanac plant level=0 width=800 Hz=0 seed=32 visible=1
+Almanac plant level=0 width=800 Hz=0 seed=33 visible=1
+Almanac plant level=0 width=800 Hz=0 seed=34 visible=1
+Almanac plant level=0 width=800 Hz=0 seed=35 visible=1
+Almanac plant level=0 width=800 Hz=0 seed=36 visible=1
+Almanac plant level=0 width=800 Hz=0 seed=37 visible=1
+Almanac plant level=0 width=800 Hz=0 seed=38 visible=1
+Almanac plant level=0 width=800 Hz=0 seed=39 visible=1
+Almanac plant level=0 width=800 Hz=0 seed=40 visible=1
+Almanac plant level=0 width=800 Hz=0 seed=41 visible=1
+Almanac plant level=0 width=800 Hz=0 seed=42 visible=1
+Almanac plant level=0 width=800 Hz=0 seed=43 visible=1
+Almanac plant level=0 width=800 Hz=0 seed=44 visible=1
+Almanac plant level=0 width=800 Hz=0 seed=45 visible=1
+Almanac plant level=0 width=800 Hz=0 seed=46 visible=1
+Almanac plant level=0 width=800 Hz=0 seed=47 visible=1
+Almanac plant level=0 width=800 Hz=0 seed=48 visible=1
+Almanac zombie level=0 width=800 Hz=0 type=0 visible=1
+Almanac zombie level=0 width=800 Hz=0 type=1 visible=1
+Almanac zombie level=0 width=800 Hz=0 type=2 visible=1
+Almanac zombie level=0 width=800 Hz=0 type=3 visible=1
+Almanac zombie level=0 width=800 Hz=0 type=4 visible=1
+Almanac zombie level=0 width=800 Hz=0 type=5 visible=1
+Almanac zombie level=0 width=800 Hz=0 type=6 visible=1
+Almanac zombie level=0 width=800 Hz=0 type=7 visible=1
+Almanac zombie level=0 width=800 Hz=0 type=8 visible=1
+Almanac zombie level=0 width=800 Hz=0 type=9 visible=1
+Almanac zombie level=0 width=800 Hz=0 type=10 visible=1
+Almanac zombie level=0 width=800 Hz=0 type=11 visible=1
+Almanac zombie level=0 width=800 Hz=0 type=12 visible=1
+Almanac zombie level=0 width=800 Hz=0 type=13 visible=1
+Almanac zombie level=0 width=800 Hz=0 type=14 visible=1
+Almanac zombie level=0 width=800 Hz=0 type=15 visible=1
+Almanac zombie level=0 width=800 Hz=0 type=16 visible=1
+Almanac zombie level=0 width=800 Hz=0 type=17 visible=1
+Almanac zombie level=0 width=800 Hz=0 type=18 visible=1
+Almanac zombie level=0 width=800 Hz=0 type=19 visible=1
+Almanac zombie level=0 width=800 Hz=0 type=20 visible=1
+Almanac zombie level=0 width=800 Hz=0 type=21 visible=1
+Almanac zombie level=0 width=800 Hz=0 type=22 visible=1
+Almanac zombie level=0 width=800 Hz=0 type=23 visible=1
+Almanac zombie level=0 width=800 Hz=0 type=24 visible=1
+Almanac zombie level=0 width=800 Hz=0 type=25 visible=1
+Almanac primary level=0 width=800 Hz=0 plants=49 zombies=26 closed=1
+Almanac begin level=0 width=1400 Hz=100
+Almanac plant level=0 width=1400 Hz=100 seed=0 visible=1
+Almanac plant level=0 width=1400 Hz=100 seed=1 visible=1
+Almanac plant level=0 width=1400 Hz=100 seed=2 visible=1
+Almanac plant level=0 width=1400 Hz=100 seed=3 visible=1
+Almanac plant level=0 width=1400 Hz=100 seed=4 visible=1
+Almanac plant level=0 width=1400 Hz=100 seed=5 visible=1
+Almanac plant level=0 width=1400 Hz=100 seed=6 visible=1
+Almanac plant level=0 width=1400 Hz=100 seed=7 visible=1
+Almanac plant level=0 width=1400 Hz=100 seed=8 visible=1
+Almanac plant level=0 width=1400 Hz=100 seed=9 visible=1
+Almanac plant level=0 width=1400 Hz=100 seed=10 visible=1
+Almanac plant level=0 width=1400 Hz=100 seed=11 visible=1
+Almanac plant level=0 width=1400 Hz=100 seed=12 visible=1
+Almanac plant level=0 width=1400 Hz=100 seed=13 visible=1
+Almanac plant level=0 width=1400 Hz=100 seed=14 visible=1
+Almanac plant level=0 width=1400 Hz=100 seed=15 visible=1
+Almanac plant level=0 width=1400 Hz=100 seed=16 visible=1
+Almanac plant level=0 width=1400 Hz=100 seed=17 visible=1
+Almanac plant level=0 width=1400 Hz=100 seed=18 visible=1
+Almanac plant level=0 width=1400 Hz=100 seed=19 visible=1
+Almanac plant level=0 width=1400 Hz=100 seed=20 visible=1
+Almanac plant level=0 width=1400 Hz=100 seed=21 visible=1
+Almanac plant level=0 width=1400 Hz=100 seed=22 visible=1
+Almanac plant level=0 width=1400 Hz=100 seed=23 visible=1
+Almanac plant level=0 width=1400 Hz=100 seed=24 visible=1
+Almanac plant level=0 width=1400 Hz=100 seed=25 visible=1
+Almanac plant level=0 width=1400 Hz=100 seed=26 visible=1
+Almanac plant level=0 width=1400 Hz=100 seed=27 visible=1
+Almanac plant level=0 width=1400 Hz=100 seed=28 visible=1
+Almanac plant level=0 width=1400 Hz=100 seed=29 visible=1
+Almanac plant level=0 width=1400 Hz=100 seed=30 visible=1
+Almanac plant level=0 width=1400 Hz=100 seed=31 visible=1
+Almanac plant level=0 width=1400 Hz=100 seed=32 visible=1
+Almanac plant level=0 width=1400 Hz=100 seed=33 visible=1
+Almanac plant level=0 width=1400 Hz=100 seed=34 visible=1
+Almanac plant level=0 width=1400 Hz=100 seed=35 visible=1
+Almanac plant level=0 width=1400 Hz=100 seed=36 visible=1
+Almanac plant level=0 width=1400 Hz=100 seed=37 visible=1
+Almanac plant level=0 width=1400 Hz=100 seed=38 visible=1
+Almanac plant level=0 width=1400 Hz=100 seed=39 visible=1
+Almanac plant level=0 width=1400 Hz=100 seed=40 visible=1
+Almanac plant level=0 width=1400 Hz=100 seed=41 visible=1
+Almanac plant level=0 width=1400 Hz=100 seed=42 visible=1
+Almanac plant level=0 width=1400 Hz=100 seed=43 visible=1
+Almanac plant level=0 width=1400 Hz=100 seed=44 visible=1
+Almanac plant level=0 width=1400 Hz=100 seed=45 visible=1
+Almanac plant level=0 width=1400 Hz=100 seed=46 visible=1
+Almanac plant level=0 width=1400 Hz=100 seed=47 visible=1
+Almanac plant level=0 width=1400 Hz=100 seed=48 visible=1
+Almanac zombie level=0 width=1400 Hz=100 type=0 visible=1
+Almanac zombie level=0 width=1400 Hz=100 type=1 visible=1
+Almanac zombie level=0 width=1400 Hz=100 type=2 visible=1
+Almanac zombie level=0 width=1400 Hz=100 type=3 visible=1
+Almanac zombie level=0 width=1400 Hz=100 type=4 visible=1
+Almanac zombie level=0 width=1400 Hz=100 type=5 visible=1
+Almanac zombie level=0 width=1400 Hz=100 type=6 visible=1
+Almanac zombie level=0 width=1400 Hz=100 type=7 visible=1
+Almanac zombie level=0 width=1400 Hz=100 type=8 visible=1
+Almanac zombie level=0 width=1400 Hz=100 type=9 visible=1
+Almanac zombie level=0 width=1400 Hz=100 type=10 visible=1
+Almanac zombie level=0 width=1400 Hz=100 type=11 visible=1
+Almanac zombie level=0 width=1400 Hz=100 type=12 visible=1
+Almanac zombie level=0 width=1400 Hz=100 type=13 visible=1
+Almanac zombie level=0 width=1400 Hz=100 type=14 visible=1
+Almanac zombie level=0 width=1400 Hz=100 type=15 visible=1
+Almanac zombie level=0 width=1400 Hz=100 type=16 visible=1
+Almanac zombie level=0 width=1400 Hz=100 type=17 visible=1
+Almanac zombie level=0 width=1400 Hz=100 type=18 visible=1
+Almanac zombie level=0 width=1400 Hz=100 type=19 visible=1
+Almanac zombie level=0 width=1400 Hz=100 type=20 visible=1
+Almanac zombie level=0 width=1400 Hz=100 type=21 visible=1
+Almanac zombie level=0 width=1400 Hz=100 type=22 visible=1
+Almanac zombie level=0 width=1400 Hz=100 type=23 visible=1
+Almanac zombie level=0 width=1400 Hz=100 type=24 visible=1
+Almanac zombie level=0 width=1400 Hz=100 type=25 visible=1
+Almanac primary level=0 width=1400 Hz=100 plants=49 zombies=26 closed=1
+Almanac begin level=0 width=1400 Hz=30
+Almanac plant level=0 width=1400 Hz=30 seed=0 visible=1
+Almanac plant level=0 width=1400 Hz=30 seed=1 visible=1
+Almanac plant level=0 width=1400 Hz=30 seed=2 visible=1
+Almanac plant level=0 width=1400 Hz=30 seed=3 visible=1
+Almanac plant level=0 width=1400 Hz=30 seed=4 visible=1
+Almanac plant level=0 width=1400 Hz=30 seed=5 visible=1
+Almanac plant level=0 width=1400 Hz=30 seed=6 visible=1
+Almanac plant level=0 width=1400 Hz=30 seed=7 visible=1
+Almanac plant level=0 width=1400 Hz=30 seed=8 visible=1
+Almanac plant level=0 width=1400 Hz=30 seed=9 visible=1
+Almanac plant level=0 width=1400 Hz=30 seed=10 visible=1
+Almanac plant level=0 width=1400 Hz=30 seed=11 visible=1
+Almanac plant level=0 width=1400 Hz=30 seed=12 visible=1
+Almanac plant level=0 width=1400 Hz=30 seed=13 visible=1
+Almanac plant level=0 width=1400 Hz=30 seed=14 visible=1
+Almanac plant level=0 width=1400 Hz=30 seed=15 visible=1
+Almanac plant level=0 width=1400 Hz=30 seed=16 visible=1
+Almanac plant level=0 width=1400 Hz=30 seed=17 visible=1
+Almanac plant level=0 width=1400 Hz=30 seed=18 visible=1
+Almanac plant level=0 width=1400 Hz=30 seed=19 visible=1
+Almanac plant level=0 width=1400 Hz=30 seed=20 visible=1
+Almanac plant level=0 width=1400 Hz=30 seed=21 visible=1
+Almanac plant level=0 width=1400 Hz=30 seed=22 visible=1
+Almanac plant level=0 width=1400 Hz=30 seed=23 visible=1
+Almanac plant level=0 width=1400 Hz=30 seed=24 visible=1
+Almanac plant level=0 width=1400 Hz=30 seed=25 visible=1
+Almanac plant level=0 width=1400 Hz=30 seed=26 visible=1
+Almanac plant level=0 width=1400 Hz=30 seed=27 visible=1
+Almanac plant level=0 width=1400 Hz=30 seed=28 visible=1
+Almanac plant level=0 width=1400 Hz=30 seed=29 visible=1
+Almanac plant level=0 width=1400 Hz=30 seed=30 visible=1
+Almanac plant level=0 width=1400 Hz=30 seed=31 visible=1
+Almanac plant level=0 width=1400 Hz=30 seed=32 visible=1
+Almanac plant level=0 width=1400 Hz=30 seed=33 visible=1
+Almanac plant level=0 width=1400 Hz=30 seed=34 visible=1
+Almanac plant level=0 width=1400 Hz=30 seed=35 visible=1
+Almanac plant level=0 width=1400 Hz=30 seed=36 visible=1
+Almanac plant level=0 width=1400 Hz=30 seed=37 visible=1
+Almanac plant level=0 width=1400 Hz=30 seed=38 visible=1
+Almanac plant level=0 width=1400 Hz=30 seed=39 visible=1
+Almanac plant level=0 width=1400 Hz=30 seed=40 visible=1
+Almanac plant level=0 width=1400 Hz=30 seed=41 visible=1
+Almanac plant level=0 width=1400 Hz=30 seed=42 visible=1
+Almanac plant level=0 width=1400 Hz=30 seed=43 visible=1
+Almanac plant level=0 width=1400 Hz=30 seed=44 visible=1
+Almanac plant level=0 width=1400 Hz=30 seed=45 visible=1
+Almanac plant level=0 width=1400 Hz=30 seed=46 visible=1
+Almanac plant level=0 width=1400 Hz=30 seed=47 visible=1
+Almanac plant level=0 width=1400 Hz=30 seed=48 visible=1
+Almanac zombie level=0 width=1400 Hz=30 type=0 visible=1
+Almanac zombie level=0 width=1400 Hz=30 type=1 visible=1
+Almanac zombie level=0 width=1400 Hz=30 type=2 visible=1
+Almanac zombie level=0 width=1400 Hz=30 type=3 visible=1
+Almanac zombie level=0 width=1400 Hz=30 type=4 visible=1
+Almanac zombie level=0 width=1400 Hz=30 type=5 visible=1
+Almanac zombie level=0 width=1400 Hz=30 type=6 visible=1
+Almanac zombie level=0 width=1400 Hz=30 type=7 visible=1
+Almanac zombie level=0 width=1400 Hz=30 type=8 visible=1
+Almanac zombie level=0 width=1400 Hz=30 type=9 visible=1
+Almanac zombie level=0 width=1400 Hz=30 type=10 visible=1
+Almanac zombie level=0 width=1400 Hz=30 type=11 visible=1
+Almanac zombie level=0 width=1400 Hz=30 type=12 visible=1
+Almanac zombie level=0 width=1400 Hz=30 type=13 visible=1
+Almanac zombie level=0 width=1400 Hz=30 type=14 visible=1
+Almanac zombie level=0 width=1400 Hz=30 type=15 visible=1
+Almanac zombie level=0 width=1400 Hz=30 type=16 visible=1
+Almanac zombie level=0 width=1400 Hz=30 type=17 visible=1
+Almanac zombie level=0 width=1400 Hz=30 type=18 visible=1
+Almanac zombie level=0 width=1400 Hz=30 type=19 visible=1
+Almanac zombie level=0 width=1400 Hz=30 type=20 visible=1
+Almanac zombie level=0 width=1400 Hz=30 type=21 visible=1
+Almanac zombie level=0 width=1400 Hz=30 type=22 visible=1
+Almanac zombie level=0 width=1400 Hz=30 type=23 visible=1
+Almanac zombie level=0 width=1400 Hz=30 type=24 visible=1
+Almanac zombie level=0 width=1400 Hz=30 type=25 visible=1
+Almanac primary level=0 width=1400 Hz=30 plants=49 zombies=26 closed=1
+Almanac begin level=0 width=1400 Hz=240
+Almanac plant level=0 width=1400 Hz=240 seed=0 visible=1
+Almanac plant level=0 width=1400 Hz=240 seed=1 visible=1
+Almanac plant level=0 width=1400 Hz=240 seed=2 visible=1
+Almanac plant level=0 width=1400 Hz=240 seed=3 visible=1
+Almanac plant level=0 width=1400 Hz=240 seed=4 visible=1
+Almanac plant level=0 width=1400 Hz=240 seed=5 visible=1
+Almanac plant level=0 width=1400 Hz=240 seed=6 visible=1
+Almanac plant level=0 width=1400 Hz=240 seed=7 visible=1
+Almanac plant level=0 width=1400 Hz=240 seed=8 visible=1
+Almanac plant level=0 width=1400 Hz=240 seed=9 visible=1
+Almanac plant level=0 width=1400 Hz=240 seed=10 visible=1
+Almanac plant level=0 width=1400 Hz=240 seed=11 visible=1
+Almanac plant level=0 width=1400 Hz=240 seed=12 visible=1
+Almanac plant level=0 width=1400 Hz=240 seed=13 visible=1
+Almanac plant level=0 width=1400 Hz=240 seed=14 visible=1
+Almanac plant level=0 width=1400 Hz=240 seed=15 visible=1
+Almanac plant level=0 width=1400 Hz=240 seed=16 visible=1
+Almanac plant level=0 width=1400 Hz=240 seed=17 visible=1
+Almanac plant level=0 width=1400 Hz=240 seed=18 visible=1
+Almanac plant level=0 width=1400 Hz=240 seed=19 visible=1
+Almanac plant level=0 width=1400 Hz=240 seed=20 visible=1
+Almanac plant level=0 width=1400 Hz=240 seed=21 visible=1
+Almanac plant level=0 width=1400 Hz=240 seed=22 visible=1
+Almanac plant level=0 width=1400 Hz=240 seed=23 visible=1
+Almanac plant level=0 width=1400 Hz=240 seed=24 visible=1
+Almanac plant level=0 width=1400 Hz=240 seed=25 visible=1
+Almanac plant level=0 width=1400 Hz=240 seed=26 visible=1
+Almanac plant level=0 width=1400 Hz=240 seed=27 visible=1
+Almanac plant level=0 width=1400 Hz=240 seed=28 visible=1
+Almanac plant level=0 width=1400 Hz=240 seed=29 visible=1
+Almanac plant level=0 width=1400 Hz=240 seed=30 visible=1
+Almanac plant level=0 width=1400 Hz=240 seed=31 visible=1
+Almanac plant level=0 width=1400 Hz=240 seed=32 visible=1
+Almanac plant level=0 width=1400 Hz=240 seed=33 visible=1
+Almanac plant level=0 width=1400 Hz=240 seed=34 visible=1
+Almanac plant level=0 width=1400 Hz=240 seed=35 visible=1
+Almanac plant level=0 width=1400 Hz=240 seed=36 visible=1
+Almanac plant level=0 width=1400 Hz=240 seed=37 visible=1
+Almanac plant level=0 width=1400 Hz=240 seed=38 visible=1
+Almanac plant level=0 width=1400 Hz=240 seed=39 visible=1
+Almanac plant level=0 width=1400 Hz=240 seed=40 visible=1
+Almanac plant level=0 width=1400 Hz=240 seed=41 visible=1
+Almanac plant level=0 width=1400 Hz=240 seed=42 visible=1
+Almanac plant level=0 width=1400 Hz=240 seed=43 visible=1
+Almanac plant level=0 width=1400 Hz=240 seed=44 visible=1
+Almanac plant level=0 width=1400 Hz=240 seed=45 visible=1
+Almanac plant level=0 width=1400 Hz=240 seed=46 visible=1
+Almanac plant level=0 width=1400 Hz=240 seed=47 visible=1
+Almanac plant level=0 width=1400 Hz=240 seed=48 visible=1
+Almanac zombie level=0 width=1400 Hz=240 type=0 visible=1
+Almanac zombie level=0 width=1400 Hz=240 type=1 visible=1
+Almanac zombie level=0 width=1400 Hz=240 type=2 visible=1
+Almanac zombie level=0 width=1400 Hz=240 type=3 visible=1
+Almanac zombie level=0 width=1400 Hz=240 type=4 visible=1
+Almanac zombie level=0 width=1400 Hz=240 type=5 visible=1
+Almanac zombie level=0 width=1400 Hz=240 type=6 visible=1
+Almanac zombie level=0 width=1400 Hz=240 type=7 visible=1
+Almanac zombie level=0 width=1400 Hz=240 type=8 visible=1
+Almanac zombie level=0 width=1400 Hz=240 type=9 visible=1
+Almanac zombie level=0 width=1400 Hz=240 type=10 visible=1
+Almanac zombie level=0 width=1400 Hz=240 type=11 visible=1
+Almanac zombie level=0 width=1400 Hz=240 type=12 visible=1
+Almanac zombie level=0 width=1400 Hz=240 type=13 visible=1
+Almanac zombie level=0 width=1400 Hz=240 type=14 visible=1
+Almanac zombie level=0 width=1400 Hz=240 type=15 visible=1
+Almanac zombie level=0 width=1400 Hz=240 type=16 visible=1
+Almanac zombie level=0 width=1400 Hz=240 type=17 visible=1
+Almanac zombie level=0 width=1400 Hz=240 type=18 visible=1
+Almanac zombie level=0 width=1400 Hz=240 type=19 visible=1
+Almanac zombie level=0 width=1400 Hz=240 type=20 visible=1
+Almanac zombie level=0 width=1400 Hz=240 type=21 visible=1
+Almanac zombie level=0 width=1400 Hz=240 type=22 visible=1
+Almanac zombie level=0 width=1400 Hz=240 type=23 visible=1
+Almanac zombie level=0 width=1400 Hz=240 type=24 visible=1
+Almanac zombie level=0 width=1400 Hz=240 type=25 visible=1
+Almanac primary level=0 width=1400 Hz=240 plants=49 zombies=26 closed=1
+Almanac begin level=0 width=1400 Hz=0
+Almanac plant level=0 width=1400 Hz=0 seed=0 visible=1
+Almanac plant level=0 width=1400 Hz=0 seed=1 visible=1
+Almanac plant level=0 width=1400 Hz=0 seed=2 visible=1
+Almanac plant level=0 width=1400 Hz=0 seed=3 visible=1
+Almanac plant level=0 width=1400 Hz=0 seed=4 visible=1
+Almanac plant level=0 width=1400 Hz=0 seed=5 visible=1
+Almanac plant level=0 width=1400 Hz=0 seed=6 visible=1
+Almanac plant level=0 width=1400 Hz=0 seed=7 visible=1
+Almanac plant level=0 width=1400 Hz=0 seed=8 visible=1
+Almanac plant level=0 width=1400 Hz=0 seed=9 visible=1
+Almanac plant level=0 width=1400 Hz=0 seed=10 visible=1
+Almanac plant level=0 width=1400 Hz=0 seed=11 visible=1
+Almanac plant level=0 width=1400 Hz=0 seed=12 visible=1
+Almanac plant level=0 width=1400 Hz=0 seed=13 visible=1
+Almanac plant level=0 width=1400 Hz=0 seed=14 visible=1
+Almanac plant level=0 width=1400 Hz=0 seed=15 visible=1
+Almanac plant level=0 width=1400 Hz=0 seed=16 visible=1
+Almanac plant level=0 width=1400 Hz=0 seed=17 visible=1
+Almanac plant level=0 width=1400 Hz=0 seed=18 visible=1
+Almanac plant level=0 width=1400 Hz=0 seed=19 visible=1
+Almanac plant level=0 width=1400 Hz=0 seed=20 visible=1
+Almanac plant level=0 width=1400 Hz=0 seed=21 visible=1
+Almanac plant level=0 width=1400 Hz=0 seed=22 visible=1
+Almanac plant level=0 width=1400 Hz=0 seed=23 visible=1
+Almanac plant level=0 width=1400 Hz=0 seed=24 visible=1
+Almanac plant level=0 width=1400 Hz=0 seed=25 visible=1
+Almanac plant level=0 width=1400 Hz=0 seed=26 visible=1
+Almanac plant level=0 width=1400 Hz=0 seed=27 visible=1
+Almanac plant level=0 width=1400 Hz=0 seed=28 visible=1
+Almanac plant level=0 width=1400 Hz=0 seed=29 visible=1
+Almanac plant level=0 width=1400 Hz=0 seed=30 visible=1
+Almanac plant level=0 width=1400 Hz=0 seed=31 visible=1
+Almanac plant level=0 width=1400 Hz=0 seed=32 visible=1
+Almanac plant level=0 width=1400 Hz=0 seed=33 visible=1
+Almanac plant level=0 width=1400 Hz=0 seed=34 visible=1
+Almanac plant level=0 width=1400 Hz=0 seed=35 visible=1
+Almanac plant level=0 width=1400 Hz=0 seed=36 visible=1
+Almanac plant level=0 width=1400 Hz=0 seed=37 visible=1
+Almanac plant level=0 width=1400 Hz=0 seed=38 visible=1
+Almanac plant level=0 width=1400 Hz=0 seed=39 visible=1
+Almanac plant level=0 width=1400 Hz=0 seed=40 visible=1
+Almanac plant level=0 width=1400 Hz=0 seed=41 visible=1
+Almanac plant level=0 width=1400 Hz=0 seed=42 visible=1
+Almanac plant level=0 width=1400 Hz=0 seed=43 visible=1
+Almanac plant level=0 width=1400 Hz=0 seed=44 visible=1
+Almanac plant level=0 width=1400 Hz=0 seed=45 visible=1
+Almanac plant level=0 width=1400 Hz=0 seed=46 visible=1
+Almanac plant level=0 width=1400 Hz=0 seed=47 visible=1
+Almanac plant level=0 width=1400 Hz=0 seed=48 visible=1
+Almanac zombie level=0 width=1400 Hz=0 type=0 visible=1
+Almanac zombie level=0 width=1400 Hz=0 type=1 visible=1
+Almanac zombie level=0 width=1400 Hz=0 type=2 visible=1
+Almanac zombie level=0 width=1400 Hz=0 type=3 visible=1
+Almanac zombie level=0 width=1400 Hz=0 type=4 visible=1
+Almanac zombie level=0 width=1400 Hz=0 type=5 visible=1
+Almanac zombie level=0 width=1400 Hz=0 type=6 visible=1
+Almanac zombie level=0 width=1400 Hz=0 type=7 visible=1
+Almanac zombie level=0 width=1400 Hz=0 type=8 visible=1
+Almanac zombie level=0 width=1400 Hz=0 type=9 visible=1
+Almanac zombie level=0 width=1400 Hz=0 type=10 visible=1
+Almanac zombie level=0 width=1400 Hz=0 type=11 visible=1
+Almanac zombie level=0 width=1400 Hz=0 type=12 visible=1
+Almanac zombie level=0 width=1400 Hz=0 type=13 visible=1
+Almanac zombie level=0 width=1400 Hz=0 type=14 visible=1
+Almanac zombie level=0 width=1400 Hz=0 type=15 visible=1
+Almanac zombie level=0 width=1400 Hz=0 type=16 visible=1
+Almanac zombie level=0 width=1400 Hz=0 type=17 visible=1
+Almanac zombie level=0 width=1400 Hz=0 type=18 visible=1
+Almanac zombie level=0 width=1400 Hz=0 type=19 visible=1
+Almanac zombie level=0 width=1400 Hz=0 type=20 visible=1
+Almanac zombie level=0 width=1400 Hz=0 type=21 visible=1
+Almanac zombie level=0 width=1400 Hz=0 type=22 visible=1
+Almanac zombie level=0 width=1400 Hz=0 type=23 visible=1
+Almanac zombie level=0 width=1400 Hz=0 type=24 visible=1
+Almanac zombie level=0 width=1400 Hz=0 type=25 visible=1
+Almanac primary level=0 width=1400 Hz=0 plants=49 zombies=26 closed=1
+Almanac begin level=1 width=800 Hz=100
+Almanac plant level=1 width=800 Hz=100 seed=0 visible=1
+Almanac plant level=1 width=800 Hz=100 seed=1 visible=1
+Almanac plant level=1 width=800 Hz=100 seed=2 visible=1
+Almanac plant level=1 width=800 Hz=100 seed=3 visible=1
+Almanac plant level=1 width=800 Hz=100 seed=4 visible=1
+Almanac plant level=1 width=800 Hz=100 seed=5 visible=1
+Almanac plant level=1 width=800 Hz=100 seed=6 visible=1
+Almanac plant level=1 width=800 Hz=100 seed=7 visible=1
+Almanac plant level=1 width=800 Hz=100 seed=8 visible=1
+Almanac plant level=1 width=800 Hz=100 seed=9 visible=1
+Almanac plant level=1 width=800 Hz=100 seed=10 visible=1
+Almanac plant level=1 width=800 Hz=100 seed=11 visible=1
+Almanac plant level=1 width=800 Hz=100 seed=12 visible=1
+Almanac plant level=1 width=800 Hz=100 seed=13 visible=1
+Almanac plant level=1 width=800 Hz=100 seed=14 visible=1
+Almanac plant level=1 width=800 Hz=100 seed=15 visible=1
+Almanac plant level=1 width=800 Hz=100 seed=16 visible=1
+Almanac plant level=1 width=800 Hz=100 seed=17 visible=1
+Almanac plant level=1 width=800 Hz=100 seed=18 visible=1
+Almanac plant level=1 width=800 Hz=100 seed=19 visible=1
+Almanac plant level=1 width=800 Hz=100 seed=20 visible=1
+Almanac plant level=1 width=800 Hz=100 seed=21 visible=1
+Almanac plant level=1 width=800 Hz=100 seed=22 visible=1
+Almanac plant level=1 width=800 Hz=100 seed=23 visible=1
+Almanac plant level=1 width=800 Hz=100 seed=24 visible=1
+Almanac plant level=1 width=800 Hz=100 seed=25 visible=1
+Almanac plant level=1 width=800 Hz=100 seed=26 visible=1
+Almanac plant level=1 width=800 Hz=100 seed=27 visible=1
+Almanac plant level=1 width=800 Hz=100 seed=28 visible=1
+Almanac plant level=1 width=800 Hz=100 seed=29 visible=1
+Almanac plant level=1 width=800 Hz=100 seed=30 visible=1
+Almanac plant level=1 width=800 Hz=100 seed=31 visible=1
+Almanac plant level=1 width=800 Hz=100 seed=32 visible=1
+Almanac plant level=1 width=800 Hz=100 seed=33 visible=1
+Almanac plant level=1 width=800 Hz=100 seed=34 visible=1
+Almanac plant level=1 width=800 Hz=100 seed=35 visible=1
+Almanac plant level=1 width=800 Hz=100 seed=36 visible=1
+Almanac plant level=1 width=800 Hz=100 seed=37 visible=1
+Almanac plant level=1 width=800 Hz=100 seed=38 visible=1
+Almanac plant level=1 width=800 Hz=100 seed=39 visible=1
+Almanac plant level=1 width=800 Hz=100 seed=40 visible=1
+Almanac plant level=1 width=800 Hz=100 seed=41 visible=1
+Almanac plant level=1 width=800 Hz=100 seed=42 visible=1
+Almanac plant level=1 width=800 Hz=100 seed=43 visible=1
+Almanac plant level=1 width=800 Hz=100 seed=44 visible=1
+Almanac plant level=1 width=800 Hz=100 seed=45 visible=1
+Almanac plant level=1 width=800 Hz=100 seed=46 visible=1
+Almanac plant level=1 width=800 Hz=100 seed=47 visible=1
+Almanac plant level=1 width=800 Hz=100 seed=48 visible=1
+Almanac zombie level=1 width=800 Hz=100 type=0 visible=1
+Almanac zombie level=1 width=800 Hz=100 type=1 visible=1
+Almanac zombie level=1 width=800 Hz=100 type=2 visible=1
+Almanac zombie level=1 width=800 Hz=100 type=3 visible=1
+Almanac zombie level=1 width=800 Hz=100 type=4 visible=1
+Almanac zombie level=1 width=800 Hz=100 type=5 visible=1
+Almanac zombie level=1 width=800 Hz=100 type=6 visible=1
+Almanac zombie level=1 width=800 Hz=100 type=7 visible=1
+Almanac zombie level=1 width=800 Hz=100 type=8 visible=1
+Almanac zombie level=1 width=800 Hz=100 type=9 visible=1
+Almanac zombie level=1 width=800 Hz=100 type=10 visible=1
+Almanac zombie level=1 width=800 Hz=100 type=11 visible=1
+Almanac zombie level=1 width=800 Hz=100 type=12 visible=1
+Almanac zombie level=1 width=800 Hz=100 type=13 visible=1
+Almanac zombie level=1 width=800 Hz=100 type=14 visible=1
+Almanac zombie level=1 width=800 Hz=100 type=15 visible=1
+Almanac zombie level=1 width=800 Hz=100 type=16 visible=1
+Almanac zombie level=1 width=800 Hz=100 type=17 visible=1
+Almanac zombie level=1 width=800 Hz=100 type=18 visible=1
+Almanac zombie level=1 width=800 Hz=100 type=19 visible=1
+Almanac zombie level=1 width=800 Hz=100 type=20 visible=1
+Almanac zombie level=1 width=800 Hz=100 type=21 visible=1
+Almanac zombie level=1 width=800 Hz=100 type=22 visible=1
+Almanac zombie level=1 width=800 Hz=100 type=23 visible=1
+Almanac zombie level=1 width=800 Hz=100 type=24 visible=1
+Almanac zombie level=1 width=800 Hz=100 type=25 visible=1
+Almanac resume width=800 Hz=100 birthDomain=1 domain=1 battle=7891011 expectedPhase=7891011 actualPhase=7891011
+Almanac primary level=1 width=800 Hz=100 plants=49 zombies=26 closed=1
+Almanac begin level=1 width=800 Hz=30
+Almanac plant level=1 width=800 Hz=30 seed=0 visible=1
+Almanac plant level=1 width=800 Hz=30 seed=1 visible=1
+Almanac plant level=1 width=800 Hz=30 seed=2 visible=1
+Almanac plant level=1 width=800 Hz=30 seed=3 visible=1
+Almanac plant level=1 width=800 Hz=30 seed=4 visible=1
+Almanac plant level=1 width=800 Hz=30 seed=5 visible=1
+Almanac plant level=1 width=800 Hz=30 seed=6 visible=1
+Almanac plant level=1 width=800 Hz=30 seed=7 visible=1
+Almanac plant level=1 width=800 Hz=30 seed=8 visible=1
+Almanac plant level=1 width=800 Hz=30 seed=9 visible=1
+Almanac plant level=1 width=800 Hz=30 seed=10 visible=1
+Almanac plant level=1 width=800 Hz=30 seed=11 visible=1
+Almanac plant level=1 width=800 Hz=30 seed=12 visible=1
+Almanac plant level=1 width=800 Hz=30 seed=13 visible=1
+Almanac plant level=1 width=800 Hz=30 seed=14 visible=1
+Almanac plant level=1 width=800 Hz=30 seed=15 visible=1
+Almanac plant level=1 width=800 Hz=30 seed=16 visible=1
+Almanac plant level=1 width=800 Hz=30 seed=17 visible=1
+Almanac plant level=1 width=800 Hz=30 seed=18 visible=1
+Almanac plant level=1 width=800 Hz=30 seed=19 visible=1
+Almanac plant level=1 width=800 Hz=30 seed=20 visible=1
+Almanac plant level=1 width=800 Hz=30 seed=21 visible=1
+Almanac plant level=1 width=800 Hz=30 seed=22 visible=1
+Almanac plant level=1 width=800 Hz=30 seed=23 visible=1
+Almanac plant level=1 width=800 Hz=30 seed=24 visible=1
+Almanac plant level=1 width=800 Hz=30 seed=25 visible=1
+Almanac plant level=1 width=800 Hz=30 seed=26 visible=1
+Almanac plant level=1 width=800 Hz=30 seed=27 visible=1
+Almanac plant level=1 width=800 Hz=30 seed=28 visible=1
+Almanac plant level=1 width=800 Hz=30 seed=29 visible=1
+Almanac plant level=1 width=800 Hz=30 seed=30 visible=1
+Almanac plant level=1 width=800 Hz=30 seed=31 visible=1
+Almanac plant level=1 width=800 Hz=30 seed=32 visible=1
+Almanac plant level=1 width=800 Hz=30 seed=33 visible=1
+Almanac plant level=1 width=800 Hz=30 seed=34 visible=1
+Almanac plant level=1 width=800 Hz=30 seed=35 visible=1
+Almanac plant level=1 width=800 Hz=30 seed=36 visible=1
+Almanac plant level=1 width=800 Hz=30 seed=37 visible=1
+Almanac plant level=1 width=800 Hz=30 seed=38 visible=1
+Almanac plant level=1 width=800 Hz=30 seed=39 visible=1
+Almanac plant level=1 width=800 Hz=30 seed=40 visible=1
+Almanac plant level=1 width=800 Hz=30 seed=41 visible=1
+Almanac plant level=1 width=800 Hz=30 seed=42 visible=1
+Almanac plant level=1 width=800 Hz=30 seed=43 visible=1
+Almanac plant level=1 width=800 Hz=30 seed=44 visible=1
+Almanac plant level=1 width=800 Hz=30 seed=45 visible=1
+Almanac plant level=1 width=800 Hz=30 seed=46 visible=1
+Almanac plant level=1 width=800 Hz=30 seed=47 visible=1
+Almanac plant level=1 width=800 Hz=30 seed=48 visible=1
+Almanac zombie level=1 width=800 Hz=30 type=0 visible=1
+Almanac zombie level=1 width=800 Hz=30 type=1 visible=1
+Almanac zombie level=1 width=800 Hz=30 type=2 visible=1
+Almanac zombie level=1 width=800 Hz=30 type=3 visible=1
+Almanac zombie level=1 width=800 Hz=30 type=4 visible=1
+Almanac zombie level=1 width=800 Hz=30 type=5 visible=1
+Almanac zombie level=1 width=800 Hz=30 type=6 visible=1
+Almanac zombie level=1 width=800 Hz=30 type=7 visible=1
+Almanac zombie level=1 width=800 Hz=30 type=8 visible=1
+Almanac zombie level=1 width=800 Hz=30 type=9 visible=1
+Almanac zombie level=1 width=800 Hz=30 type=10 visible=1
+Almanac zombie level=1 width=800 Hz=30 type=11 visible=1
+Almanac zombie level=1 width=800 Hz=30 type=12 visible=1
+Almanac zombie level=1 width=800 Hz=30 type=13 visible=1
+Almanac zombie level=1 width=800 Hz=30 type=14 visible=1
+Almanac zombie level=1 width=800 Hz=30 type=15 visible=1
+Almanac zombie level=1 width=800 Hz=30 type=16 visible=1
+Almanac zombie level=1 width=800 Hz=30 type=17 visible=1
+Almanac zombie level=1 width=800 Hz=30 type=18 visible=1
+Almanac zombie level=1 width=800 Hz=30 type=19 visible=1
+Almanac zombie level=1 width=800 Hz=30 type=20 visible=1
+Almanac zombie level=1 width=800 Hz=30 type=21 visible=1
+Almanac zombie level=1 width=800 Hz=30 type=22 visible=1
+Almanac zombie level=1 width=800 Hz=30 type=23 visible=1
+Almanac zombie level=1 width=800 Hz=30 type=24 visible=1
+Almanac zombie level=1 width=800 Hz=30 type=25 visible=1
+Almanac resume width=800 Hz=30 birthDomain=1 domain=1 battle=7891011 expectedPhase=7891011 actualPhase=7891011
+Almanac primary level=1 width=800 Hz=30 plants=49 zombies=26 closed=1
+Almanac begin level=1 width=800 Hz=240
+Almanac plant level=1 width=800 Hz=240 seed=0 visible=1
+Almanac plant level=1 width=800 Hz=240 seed=1 visible=1
+Almanac plant level=1 width=800 Hz=240 seed=2 visible=1
+Almanac plant level=1 width=800 Hz=240 seed=3 visible=1
+Almanac plant level=1 width=800 Hz=240 seed=4 visible=1
+Almanac plant level=1 width=800 Hz=240 seed=5 visible=1
+Almanac plant level=1 width=800 Hz=240 seed=6 visible=1
+Almanac plant level=1 width=800 Hz=240 seed=7 visible=1
+Almanac plant level=1 width=800 Hz=240 seed=8 visible=1
+Almanac plant level=1 width=800 Hz=240 seed=9 visible=1
+Almanac plant level=1 width=800 Hz=240 seed=10 visible=1
+Almanac plant level=1 width=800 Hz=240 seed=11 visible=1
+Almanac plant level=1 width=800 Hz=240 seed=12 visible=1
+Almanac plant level=1 width=800 Hz=240 seed=13 visible=1
+Almanac plant level=1 width=800 Hz=240 seed=14 visible=1
+Almanac plant level=1 width=800 Hz=240 seed=15 visible=1
+Almanac plant level=1 width=800 Hz=240 seed=16 visible=1
+Almanac plant level=1 width=800 Hz=240 seed=17 visible=1
+Almanac plant level=1 width=800 Hz=240 seed=18 visible=1
+Almanac plant level=1 width=800 Hz=240 seed=19 visible=1
+Almanac plant level=1 width=800 Hz=240 seed=20 visible=1
+Almanac plant level=1 width=800 Hz=240 seed=21 visible=1
+Almanac plant level=1 width=800 Hz=240 seed=22 visible=1
+Almanac plant level=1 width=800 Hz=240 seed=23 visible=1
+Almanac plant level=1 width=800 Hz=240 seed=24 visible=1
+Almanac plant level=1 width=800 Hz=240 seed=25 visible=1
+Almanac plant level=1 width=800 Hz=240 seed=26 visible=1
+Almanac plant level=1 width=800 Hz=240 seed=27 visible=1
+Almanac plant level=1 width=800 Hz=240 seed=28 visible=1
+Almanac plant level=1 width=800 Hz=240 seed=29 visible=1
+Almanac plant level=1 width=800 Hz=240 seed=30 visible=1
+Almanac plant level=1 width=800 Hz=240 seed=31 visible=1
+Almanac plant level=1 width=800 Hz=240 seed=32 visible=1
+Almanac plant level=1 width=800 Hz=240 seed=33 visible=1
+Almanac plant level=1 width=800 Hz=240 seed=34 visible=1
+Almanac plant level=1 width=800 Hz=240 seed=35 visible=1
+Almanac plant level=1 width=800 Hz=240 seed=36 visible=1
+Almanac plant level=1 width=800 Hz=240 seed=37 visible=1
+Almanac plant level=1 width=800 Hz=240 seed=38 visible=1
+Almanac plant level=1 width=800 Hz=240 seed=39 visible=1
+Almanac plant level=1 width=800 Hz=240 seed=40 visible=1
+Almanac plant level=1 width=800 Hz=240 seed=41 visible=1
+Almanac plant level=1 width=800 Hz=240 seed=42 visible=1
+Almanac plant level=1 width=800 Hz=240 seed=43 visible=1
+Almanac plant level=1 width=800 Hz=240 seed=44 visible=1
+Almanac plant level=1 width=800 Hz=240 seed=45 visible=1
+Almanac plant level=1 width=800 Hz=240 seed=46 visible=1
+Almanac plant level=1 width=800 Hz=240 seed=47 visible=1
+Almanac plant level=1 width=800 Hz=240 seed=48 visible=1
+Almanac zombie level=1 width=800 Hz=240 type=0 visible=1
+Almanac zombie level=1 width=800 Hz=240 type=1 visible=1
+Almanac zombie level=1 width=800 Hz=240 type=2 visible=1
+Almanac zombie level=1 width=800 Hz=240 type=3 visible=1
+Almanac zombie level=1 width=800 Hz=240 type=4 visible=1
+Almanac zombie level=1 width=800 Hz=240 type=5 visible=1
+Almanac zombie level=1 width=800 Hz=240 type=6 visible=1
+Almanac zombie level=1 width=800 Hz=240 type=7 visible=1
+Almanac zombie level=1 width=800 Hz=240 type=8 visible=1
+Almanac zombie level=1 width=800 Hz=240 type=9 visible=1
+Almanac zombie level=1 width=800 Hz=240 type=10 visible=1
+Almanac zombie level=1 width=800 Hz=240 type=11 visible=1
+Almanac zombie level=1 width=800 Hz=240 type=12 visible=1
+Almanac zombie level=1 width=800 Hz=240 type=13 visible=1
+Almanac zombie level=1 width=800 Hz=240 type=14 visible=1
+Almanac zombie level=1 width=800 Hz=240 type=15 visible=1
+Almanac zombie level=1 width=800 Hz=240 type=16 visible=1
+Almanac zombie level=1 width=800 Hz=240 type=17 visible=1
+Almanac zombie level=1 width=800 Hz=240 type=18 visible=1
+Almanac zombie level=1 width=800 Hz=240 type=19 visible=1
+Almanac zombie level=1 width=800 Hz=240 type=20 visible=1
+Almanac zombie level=1 width=800 Hz=240 type=21 visible=1
+Almanac zombie level=1 width=800 Hz=240 type=22 visible=1
+Almanac zombie level=1 width=800 Hz=240 type=23 visible=1
+Almanac zombie level=1 width=800 Hz=240 type=24 visible=1
+Almanac zombie level=1 width=800 Hz=240 type=25 visible=1
+Almanac resume width=800 Hz=240 birthDomain=1 domain=1 battle=7891011 expectedPhase=7891011 actualPhase=7891011
+Almanac primary level=1 width=800 Hz=240 plants=49 zombies=26 closed=1
+Almanac begin level=1 width=800 Hz=0
+Almanac plant level=1 width=800 Hz=0 seed=0 visible=1
+Almanac plant level=1 width=800 Hz=0 seed=1 visible=1
+Almanac plant level=1 width=800 Hz=0 seed=2 visible=1
+Almanac plant level=1 width=800 Hz=0 seed=3 visible=1
+Almanac plant level=1 width=800 Hz=0 seed=4 visible=1
+Almanac plant level=1 width=800 Hz=0 seed=5 visible=1
+Almanac plant level=1 width=800 Hz=0 seed=6 visible=1
+Almanac plant level=1 width=800 Hz=0 seed=7 visible=1
+Almanac plant level=1 width=800 Hz=0 seed=8 visible=1
+Almanac plant level=1 width=800 Hz=0 seed=9 visible=1
+Almanac plant level=1 width=800 Hz=0 seed=10 visible=1
+Almanac plant level=1 width=800 Hz=0 seed=11 visible=1
+Almanac plant level=1 width=800 Hz=0 seed=12 visible=1
+Almanac plant level=1 width=800 Hz=0 seed=13 visible=1
+Almanac plant level=1 width=800 Hz=0 seed=14 visible=1
+Almanac plant level=1 width=800 Hz=0 seed=15 visible=1
+Almanac plant level=1 width=800 Hz=0 seed=16 visible=1
+Almanac plant level=1 width=800 Hz=0 seed=17 visible=1
+Almanac plant level=1 width=800 Hz=0 seed=18 visible=1
+Almanac plant level=1 width=800 Hz=0 seed=19 visible=1
+Almanac plant level=1 width=800 Hz=0 seed=20 visible=1
+Almanac plant level=1 width=800 Hz=0 seed=21 visible=1
+Almanac plant level=1 width=800 Hz=0 seed=22 visible=1
+Almanac plant level=1 width=800 Hz=0 seed=23 visible=1
+Almanac plant level=1 width=800 Hz=0 seed=24 visible=1
+Almanac plant level=1 width=800 Hz=0 seed=25 visible=1
+Almanac plant level=1 width=800 Hz=0 seed=26 visible=1
+Almanac plant level=1 width=800 Hz=0 seed=27 visible=1
+Almanac plant level=1 width=800 Hz=0 seed=28 visible=1
+Almanac plant level=1 width=800 Hz=0 seed=29 visible=1
+Almanac plant level=1 width=800 Hz=0 seed=30 visible=1
+Almanac plant level=1 width=800 Hz=0 seed=31 visible=1
+Almanac plant level=1 width=800 Hz=0 seed=32 visible=1
+Almanac plant level=1 width=800 Hz=0 seed=33 visible=1
+Almanac plant level=1 width=800 Hz=0 seed=34 visible=1
+Almanac plant level=1 width=800 Hz=0 seed=35 visible=1
+Almanac plant level=1 width=800 Hz=0 seed=36 visible=1
+Almanac plant level=1 width=800 Hz=0 seed=37 visible=1
+Almanac plant level=1 width=800 Hz=0 seed=38 visible=1
+Almanac plant level=1 width=800 Hz=0 seed=39 visible=1
+Almanac plant level=1 width=800 Hz=0 seed=40 visible=1
+Almanac plant level=1 width=800 Hz=0 seed=41 visible=1
+Almanac plant level=1 width=800 Hz=0 seed=42 visible=1
+Almanac plant level=1 width=800 Hz=0 seed=43 visible=1
+Almanac plant level=1 width=800 Hz=0 seed=44 visible=1
+Almanac plant level=1 width=800 Hz=0 seed=45 visible=1
+Almanac plant level=1 width=800 Hz=0 seed=46 visible=1
+Almanac plant level=1 width=800 Hz=0 seed=47 visible=1
+Almanac plant level=1 width=800 Hz=0 seed=48 visible=1
+Almanac zombie level=1 width=800 Hz=0 type=0 visible=1
+Almanac zombie level=1 width=800 Hz=0 type=1 visible=1
+Almanac zombie level=1 width=800 Hz=0 type=2 visible=1
+Almanac zombie level=1 width=800 Hz=0 type=3 visible=1
+Almanac zombie level=1 width=800 Hz=0 type=4 visible=1
+Almanac zombie level=1 width=800 Hz=0 type=5 visible=1
+Almanac zombie level=1 width=800 Hz=0 type=6 visible=1
+Almanac zombie level=1 width=800 Hz=0 type=7 visible=1
+Almanac zombie level=1 width=800 Hz=0 type=8 visible=1
+Almanac zombie level=1 width=800 Hz=0 type=9 visible=1
+Almanac zombie level=1 width=800 Hz=0 type=10 visible=1
+Almanac zombie level=1 width=800 Hz=0 type=11 visible=1
+Almanac zombie level=1 width=800 Hz=0 type=12 visible=1
+Almanac zombie level=1 width=800 Hz=0 type=13 visible=1
+Almanac zombie level=1 width=800 Hz=0 type=14 visible=1
+Almanac zombie level=1 width=800 Hz=0 type=15 visible=1
+Almanac zombie level=1 width=800 Hz=0 type=16 visible=1
+Almanac zombie level=1 width=800 Hz=0 type=17 visible=1
+Almanac zombie level=1 width=800 Hz=0 type=18 visible=1
+Almanac zombie level=1 width=800 Hz=0 type=19 visible=1
+Almanac zombie level=1 width=800 Hz=0 type=20 visible=1
+Almanac zombie level=1 width=800 Hz=0 type=21 visible=1
+Almanac zombie level=1 width=800 Hz=0 type=22 visible=1
+Almanac zombie level=1 width=800 Hz=0 type=23 visible=1
+Almanac zombie level=1 width=800 Hz=0 type=24 visible=1
+Almanac zombie level=1 width=800 Hz=0 type=25 visible=1
+Almanac resume width=800 Hz=0 birthDomain=1 domain=1 battle=7891011 expectedPhase=7891011 actualPhase=7891011
+Almanac primary level=1 width=800 Hz=0 plants=49 zombies=26 closed=1
+Almanac begin level=1 width=1400 Hz=100
+Almanac plant level=1 width=1400 Hz=100 seed=0 visible=1
+Almanac plant level=1 width=1400 Hz=100 seed=1 visible=1
+Almanac plant level=1 width=1400 Hz=100 seed=2 visible=1
+Almanac plant level=1 width=1400 Hz=100 seed=3 visible=1
+Almanac plant level=1 width=1400 Hz=100 seed=4 visible=1
+Almanac plant level=1 width=1400 Hz=100 seed=5 visible=1
+Almanac plant level=1 width=1400 Hz=100 seed=6 visible=1
+Almanac plant level=1 width=1400 Hz=100 seed=7 visible=1
+Almanac plant level=1 width=1400 Hz=100 seed=8 visible=1
+Almanac plant level=1 width=1400 Hz=100 seed=9 visible=1
+Almanac plant level=1 width=1400 Hz=100 seed=10 visible=1
+Almanac plant level=1 width=1400 Hz=100 seed=11 visible=1
+Almanac plant level=1 width=1400 Hz=100 seed=12 visible=1
+Almanac plant level=1 width=1400 Hz=100 seed=13 visible=1
+Almanac plant level=1 width=1400 Hz=100 seed=14 visible=1
+Almanac plant level=1 width=1400 Hz=100 seed=15 visible=1
+Almanac plant level=1 width=1400 Hz=100 seed=16 visible=1
+Almanac plant level=1 width=1400 Hz=100 seed=17 visible=1
+Almanac plant level=1 width=1400 Hz=100 seed=18 visible=1
+Almanac plant level=1 width=1400 Hz=100 seed=19 visible=1
+Almanac plant level=1 width=1400 Hz=100 seed=20 visible=1
+Almanac plant level=1 width=1400 Hz=100 seed=21 visible=1
+Almanac plant level=1 width=1400 Hz=100 seed=22 visible=1
+Almanac plant level=1 width=1400 Hz=100 seed=23 visible=1
+Almanac plant level=1 width=1400 Hz=100 seed=24 visible=1
+Almanac plant level=1 width=1400 Hz=100 seed=25 visible=1
+Almanac plant level=1 width=1400 Hz=100 seed=26 visible=1
+Almanac plant level=1 width=1400 Hz=100 seed=27 visible=1
+Almanac plant level=1 width=1400 Hz=100 seed=28 visible=1
+Almanac plant level=1 width=1400 Hz=100 seed=29 visible=1
+Almanac plant level=1 width=1400 Hz=100 seed=30 visible=1
+Almanac plant level=1 width=1400 Hz=100 seed=31 visible=1
+Almanac plant level=1 width=1400 Hz=100 seed=32 visible=1
+Almanac plant level=1 width=1400 Hz=100 seed=33 visible=1
+Almanac plant level=1 width=1400 Hz=100 seed=34 visible=1
+Almanac plant level=1 width=1400 Hz=100 seed=35 visible=1
+Almanac plant level=1 width=1400 Hz=100 seed=36 visible=1
+Almanac plant level=1 width=1400 Hz=100 seed=37 visible=1
+Almanac plant level=1 width=1400 Hz=100 seed=38 visible=1
+Almanac plant level=1 width=1400 Hz=100 seed=39 visible=1
+Almanac plant level=1 width=1400 Hz=100 seed=40 visible=1
+Almanac plant level=1 width=1400 Hz=100 seed=41 visible=1
+Almanac plant level=1 width=1400 Hz=100 seed=42 visible=1
+Almanac plant level=1 width=1400 Hz=100 seed=43 visible=1
+Almanac plant level=1 width=1400 Hz=100 seed=44 visible=1
+Almanac plant level=1 width=1400 Hz=100 seed=45 visible=1
+Almanac plant level=1 width=1400 Hz=100 seed=46 visible=1
+Almanac plant level=1 width=1400 Hz=100 seed=47 visible=1
+Almanac plant level=1 width=1400 Hz=100 seed=48 visible=1
+Almanac zombie level=1 width=1400 Hz=100 type=0 visible=1
+Almanac zombie level=1 width=1400 Hz=100 type=1 visible=1
+Almanac zombie level=1 width=1400 Hz=100 type=2 visible=1
+Almanac zombie level=1 width=1400 Hz=100 type=3 visible=1
+Almanac zombie level=1 width=1400 Hz=100 type=4 visible=1
+Almanac zombie level=1 width=1400 Hz=100 type=5 visible=1
+Almanac zombie level=1 width=1400 Hz=100 type=6 visible=1
+Almanac zombie level=1 width=1400 Hz=100 type=7 visible=1
+Almanac zombie level=1 width=1400 Hz=100 type=8 visible=1
+Almanac zombie level=1 width=1400 Hz=100 type=9 visible=1
+Almanac zombie level=1 width=1400 Hz=100 type=10 visible=1
+Almanac zombie level=1 width=1400 Hz=100 type=11 visible=1
+Almanac zombie level=1 width=1400 Hz=100 type=12 visible=1
+Almanac zombie level=1 width=1400 Hz=100 type=13 visible=1
+Almanac zombie level=1 width=1400 Hz=100 type=14 visible=1
+Almanac zombie level=1 width=1400 Hz=100 type=15 visible=1
+Almanac zombie level=1 width=1400 Hz=100 type=16 visible=1
+Almanac zombie level=1 width=1400 Hz=100 type=17 visible=1
+Almanac zombie level=1 width=1400 Hz=100 type=18 visible=1
+Almanac zombie level=1 width=1400 Hz=100 type=19 visible=1
+Almanac zombie level=1 width=1400 Hz=100 type=20 visible=1
+Almanac zombie level=1 width=1400 Hz=100 type=21 visible=1
+Almanac zombie level=1 width=1400 Hz=100 type=22 visible=1
+Almanac zombie level=1 width=1400 Hz=100 type=23 visible=1
+Almanac zombie level=1 width=1400 Hz=100 type=24 visible=1
+Almanac zombie level=1 width=1400 Hz=100 type=25 visible=1
+Almanac resume width=1400 Hz=100 birthDomain=1 domain=1 battle=7891011 expectedPhase=7891011 actualPhase=7891011
+Almanac primary level=1 width=1400 Hz=100 plants=49 zombies=26 closed=1
+Almanac begin level=1 width=1400 Hz=30
+Almanac plant level=1 width=1400 Hz=30 seed=0 visible=1
+Almanac plant level=1 width=1400 Hz=30 seed=1 visible=1
+Almanac plant level=1 width=1400 Hz=30 seed=2 visible=1
+Almanac plant level=1 width=1400 Hz=30 seed=3 visible=1
+Almanac plant level=1 width=1400 Hz=30 seed=4 visible=1
+Almanac plant level=1 width=1400 Hz=30 seed=5 visible=1
+Almanac plant level=1 width=1400 Hz=30 seed=6 visible=1
+Almanac plant level=1 width=1400 Hz=30 seed=7 visible=1
+Almanac plant level=1 width=1400 Hz=30 seed=8 visible=1
+Almanac plant level=1 width=1400 Hz=30 seed=9 visible=1
+Almanac plant level=1 width=1400 Hz=30 seed=10 visible=1
+Almanac plant level=1 width=1400 Hz=30 seed=11 visible=1
+Almanac plant level=1 width=1400 Hz=30 seed=12 visible=1
+Almanac plant level=1 width=1400 Hz=30 seed=13 visible=1
+Almanac plant level=1 width=1400 Hz=30 seed=14 visible=1
+Almanac plant level=1 width=1400 Hz=30 seed=15 visible=1
+Almanac plant level=1 width=1400 Hz=30 seed=16 visible=1
+Almanac plant level=1 width=1400 Hz=30 seed=17 visible=1
+Almanac plant level=1 width=1400 Hz=30 seed=18 visible=1
+Almanac plant level=1 width=1400 Hz=30 seed=19 visible=1
+Almanac plant level=1 width=1400 Hz=30 seed=20 visible=1
+Almanac plant level=1 width=1400 Hz=30 seed=21 visible=1
+Almanac plant level=1 width=1400 Hz=30 seed=22 visible=1
+Almanac plant level=1 width=1400 Hz=30 seed=23 visible=1
+Almanac plant level=1 width=1400 Hz=30 seed=24 visible=1
+Almanac plant level=1 width=1400 Hz=30 seed=25 visible=1
+Almanac plant level=1 width=1400 Hz=30 seed=26 visible=1
+Almanac plant level=1 width=1400 Hz=30 seed=27 visible=1
+Almanac plant level=1 width=1400 Hz=30 seed=28 visible=1
+Almanac plant level=1 width=1400 Hz=30 seed=29 visible=1
+Almanac plant level=1 width=1400 Hz=30 seed=30 visible=1
+Almanac plant level=1 width=1400 Hz=30 seed=31 visible=1
+Almanac plant level=1 width=1400 Hz=30 seed=32 visible=1
+Almanac plant level=1 width=1400 Hz=30 seed=33 visible=1
+Almanac plant level=1 width=1400 Hz=30 seed=34 visible=1
+Almanac plant level=1 width=1400 Hz=30 seed=35 visible=1
+Almanac plant level=1 width=1400 Hz=30 seed=36 visible=1
+Almanac plant level=1 width=1400 Hz=30 seed=37 visible=1
+Almanac plant level=1 width=1400 Hz=30 seed=38 visible=1
+Almanac plant level=1 width=1400 Hz=30 seed=39 visible=1
+Almanac plant level=1 width=1400 Hz=30 seed=40 visible=1
+Almanac plant level=1 width=1400 Hz=30 seed=41 visible=1
+Almanac plant level=1 width=1400 Hz=30 seed=42 visible=1
+Almanac plant level=1 width=1400 Hz=30 seed=43 visible=1
+Almanac plant level=1 width=1400 Hz=30 seed=44 visible=1
+Almanac plant level=1 width=1400 Hz=30 seed=45 visible=1
+Almanac plant level=1 width=1400 Hz=30 seed=46 visible=1
+Almanac plant level=1 width=1400 Hz=30 seed=47 visible=1
+Almanac plant level=1 width=1400 Hz=30 seed=48 visible=1
+Almanac zombie level=1 width=1400 Hz=30 type=0 visible=1
+Almanac zombie level=1 width=1400 Hz=30 type=1 visible=1
+Almanac zombie level=1 width=1400 Hz=30 type=2 visible=1
+Almanac zombie level=1 width=1400 Hz=30 type=3 visible=1
+Almanac zombie level=1 width=1400 Hz=30 type=4 visible=1
+Almanac zombie level=1 width=1400 Hz=30 type=5 visible=1
+Almanac zombie level=1 width=1400 Hz=30 type=6 visible=1
+Almanac zombie level=1 width=1400 Hz=30 type=7 visible=1
+Almanac zombie level=1 width=1400 Hz=30 type=8 visible=1
+Almanac zombie level=1 width=1400 Hz=30 type=9 visible=1
+Almanac zombie level=1 width=1400 Hz=30 type=10 visible=1
+Almanac zombie level=1 width=1400 Hz=30 type=11 visible=1
+Almanac zombie level=1 width=1400 Hz=30 type=12 visible=1
+Almanac zombie level=1 width=1400 Hz=30 type=13 visible=1
+Almanac zombie level=1 width=1400 Hz=30 type=14 visible=1
+Almanac zombie level=1 width=1400 Hz=30 type=15 visible=1
+Almanac zombie level=1 width=1400 Hz=30 type=16 visible=1
+Almanac zombie level=1 width=1400 Hz=30 type=17 visible=1
+Almanac zombie level=1 width=1400 Hz=30 type=18 visible=1
+Almanac zombie level=1 width=1400 Hz=30 type=19 visible=1
+Almanac zombie level=1 width=1400 Hz=30 type=20 visible=1
+Almanac zombie level=1 width=1400 Hz=30 type=21 visible=1
+Almanac zombie level=1 width=1400 Hz=30 type=22 visible=1
+Almanac zombie level=1 width=1400 Hz=30 type=23 visible=1
+Almanac zombie level=1 width=1400 Hz=30 type=24 visible=1
+Almanac zombie level=1 width=1400 Hz=30 type=25 visible=1
+Almanac resume width=1400 Hz=30 birthDomain=1 domain=1 battle=7891011 expectedPhase=7891011 actualPhase=7891011
+Almanac primary level=1 width=1400 Hz=30 plants=49 zombies=26 closed=1
+Almanac begin level=1 width=1400 Hz=240
+Almanac plant level=1 width=1400 Hz=240 seed=0 visible=1
+Almanac plant level=1 width=1400 Hz=240 seed=1 visible=1
+Almanac plant level=1 width=1400 Hz=240 seed=2 visible=1
+Almanac plant level=1 width=1400 Hz=240 seed=3 visible=1
+Almanac plant level=1 width=1400 Hz=240 seed=4 visible=1
+Almanac plant level=1 width=1400 Hz=240 seed=5 visible=1
+Almanac plant level=1 width=1400 Hz=240 seed=6 visible=1
+Almanac plant level=1 width=1400 Hz=240 seed=7 visible=1
+Almanac plant level=1 width=1400 Hz=240 seed=8 visible=1
+Almanac plant level=1 width=1400 Hz=240 seed=9 visible=1
+Almanac plant level=1 width=1400 Hz=240 seed=10 visible=1
+Almanac plant level=1 width=1400 Hz=240 seed=11 visible=1
+Almanac plant level=1 width=1400 Hz=240 seed=12 visible=1
+Almanac plant level=1 width=1400 Hz=240 seed=13 visible=1
+Almanac plant level=1 width=1400 Hz=240 seed=14 visible=1
+Almanac plant level=1 width=1400 Hz=240 seed=15 visible=1
+Almanac plant level=1 width=1400 Hz=240 seed=16 visible=1
+Almanac plant level=1 width=1400 Hz=240 seed=17 visible=1
+Almanac plant level=1 width=1400 Hz=240 seed=18 visible=1
+Almanac plant level=1 width=1400 Hz=240 seed=19 visible=1
+Almanac plant level=1 width=1400 Hz=240 seed=20 visible=1
+Almanac plant level=1 width=1400 Hz=240 seed=21 visible=1
+Almanac plant level=1 width=1400 Hz=240 seed=22 visible=1
+Almanac plant level=1 width=1400 Hz=240 seed=23 visible=1
+Almanac plant level=1 width=1400 Hz=240 seed=24 visible=1
+Almanac plant level=1 width=1400 Hz=240 seed=25 visible=1
+Almanac plant level=1 width=1400 Hz=240 seed=26 visible=1
+Almanac plant level=1 width=1400 Hz=240 seed=27 visible=1
+Almanac plant level=1 width=1400 Hz=240 seed=28 visible=1
+Almanac plant level=1 width=1400 Hz=240 seed=29 visible=1
+Almanac plant level=1 width=1400 Hz=240 seed=30 visible=1
+Almanac plant level=1 width=1400 Hz=240 seed=31 visible=1
+Almanac plant level=1 width=1400 Hz=240 seed=32 visible=1
+Almanac plant level=1 width=1400 Hz=240 seed=33 visible=1
+Almanac plant level=1 width=1400 Hz=240 seed=34 visible=1
+Almanac plant level=1 width=1400 Hz=240 seed=35 visible=1
+Almanac plant level=1 width=1400 Hz=240 seed=36 visible=1
+Almanac plant level=1 width=1400 Hz=240 seed=37 visible=1
+Almanac plant level=1 width=1400 Hz=240 seed=38 visible=1
+Almanac plant level=1 width=1400 Hz=240 seed=39 visible=1
+Almanac plant level=1 width=1400 Hz=240 seed=40 visible=1
+Almanac plant level=1 width=1400 Hz=240 seed=41 visible=1
+Almanac plant level=1 width=1400 Hz=240 seed=42 visible=1
+Almanac plant level=1 width=1400 Hz=240 seed=43 visible=1
+Almanac plant level=1 width=1400 Hz=240 seed=44 visible=1
+Almanac plant level=1 width=1400 Hz=240 seed=45 visible=1
+Almanac plant level=1 width=1400 Hz=240 seed=46 visible=1
+Almanac plant level=1 width=1400 Hz=240 seed=47 visible=1
+Almanac plant level=1 width=1400 Hz=240 seed=48 visible=1
+Almanac zombie level=1 width=1400 Hz=240 type=0 visible=1
+Almanac zombie level=1 width=1400 Hz=240 type=1 visible=1
+Almanac zombie level=1 width=1400 Hz=240 type=2 visible=1
+Almanac zombie level=1 width=1400 Hz=240 type=3 visible=1
+Almanac zombie level=1 width=1400 Hz=240 type=4 visible=1
+Almanac zombie level=1 width=1400 Hz=240 type=5 visible=1
+Almanac zombie level=1 width=1400 Hz=240 type=6 visible=1
+Almanac zombie level=1 width=1400 Hz=240 type=7 visible=1
+Almanac zombie level=1 width=1400 Hz=240 type=8 visible=1
+Almanac zombie level=1 width=1400 Hz=240 type=9 visible=1
+Almanac zombie level=1 width=1400 Hz=240 type=10 visible=1
+Almanac zombie level=1 width=1400 Hz=240 type=11 visible=1
+Almanac zombie level=1 width=1400 Hz=240 type=12 visible=1
+Almanac zombie level=1 width=1400 Hz=240 type=13 visible=1
+Almanac zombie level=1 width=1400 Hz=240 type=14 visible=1
+Almanac zombie level=1 width=1400 Hz=240 type=15 visible=1
+Almanac zombie level=1 width=1400 Hz=240 type=16 visible=1
+Almanac zombie level=1 width=1400 Hz=240 type=17 visible=1
+Almanac zombie level=1 width=1400 Hz=240 type=18 visible=1
+Almanac zombie level=1 width=1400 Hz=240 type=19 visible=1
+Almanac zombie level=1 width=1400 Hz=240 type=20 visible=1
+Almanac zombie level=1 width=1400 Hz=240 type=21 visible=1
+Almanac zombie level=1 width=1400 Hz=240 type=22 visible=1
+Almanac zombie level=1 width=1400 Hz=240 type=23 visible=1
+Almanac zombie level=1 width=1400 Hz=240 type=24 visible=1
+Almanac zombie level=1 width=1400 Hz=240 type=25 visible=1
+Almanac resume width=1400 Hz=240 birthDomain=1 domain=1 battle=7891011 expectedPhase=7891011 actualPhase=7891011
+Almanac primary level=1 width=1400 Hz=240 plants=49 zombies=26 closed=1
+Almanac begin level=1 width=1400 Hz=0
+Almanac plant level=1 width=1400 Hz=0 seed=0 visible=1
+Almanac plant level=1 width=1400 Hz=0 seed=1 visible=1
+Almanac plant level=1 width=1400 Hz=0 seed=2 visible=1
+Almanac plant level=1 width=1400 Hz=0 seed=3 visible=1
+Almanac plant level=1 width=1400 Hz=0 seed=4 visible=1
+Almanac plant level=1 width=1400 Hz=0 seed=5 visible=1
+Almanac plant level=1 width=1400 Hz=0 seed=6 visible=1
+Almanac plant level=1 width=1400 Hz=0 seed=7 visible=1
+Almanac plant level=1 width=1400 Hz=0 seed=8 visible=1
+Almanac plant level=1 width=1400 Hz=0 seed=9 visible=1
+Almanac plant level=1 width=1400 Hz=0 seed=10 visible=1
+Almanac plant level=1 width=1400 Hz=0 seed=11 visible=1
+Almanac plant level=1 width=1400 Hz=0 seed=12 visible=1
+Almanac plant level=1 width=1400 Hz=0 seed=13 visible=1
+Almanac plant level=1 width=1400 Hz=0 seed=14 visible=1
+Almanac plant level=1 width=1400 Hz=0 seed=15 visible=1
+Almanac plant level=1 width=1400 Hz=0 seed=16 visible=1
+Almanac plant level=1 width=1400 Hz=0 seed=17 visible=1
+Almanac plant level=1 width=1400 Hz=0 seed=18 visible=1
+Almanac plant level=1 width=1400 Hz=0 seed=19 visible=1
+Almanac plant level=1 width=1400 Hz=0 seed=20 visible=1
+Almanac plant level=1 width=1400 Hz=0 seed=21 visible=1
+Almanac plant level=1 width=1400 Hz=0 seed=22 visible=1
+Almanac plant level=1 width=1400 Hz=0 seed=23 visible=1
+Almanac plant level=1 width=1400 Hz=0 seed=24 visible=1
+Almanac plant level=1 width=1400 Hz=0 seed=25 visible=1
+Almanac plant level=1 width=1400 Hz=0 seed=26 visible=1
+Almanac plant level=1 width=1400 Hz=0 seed=27 visible=1
+Almanac plant level=1 width=1400 Hz=0 seed=28 visible=1
+Almanac plant level=1 width=1400 Hz=0 seed=29 visible=1
+Almanac plant level=1 width=1400 Hz=0 seed=30 visible=1
+Almanac plant level=1 width=1400 Hz=0 seed=31 visible=1
+Almanac plant level=1 width=1400 Hz=0 seed=32 visible=1
+Almanac plant level=1 width=1400 Hz=0 seed=33 visible=1
+Almanac plant level=1 width=1400 Hz=0 seed=34 visible=1
+Almanac plant level=1 width=1400 Hz=0 seed=35 visible=1
+Almanac plant level=1 width=1400 Hz=0 seed=36 visible=1
+Almanac plant level=1 width=1400 Hz=0 seed=37 visible=1
+Almanac plant level=1 width=1400 Hz=0 seed=38 visible=1
+Almanac plant level=1 width=1400 Hz=0 seed=39 visible=1
+Almanac plant level=1 width=1400 Hz=0 seed=40 visible=1
+Almanac plant level=1 width=1400 Hz=0 seed=41 visible=1
+Almanac plant level=1 width=1400 Hz=0 seed=42 visible=1
+Almanac plant level=1 width=1400 Hz=0 seed=43 visible=1
+Almanac plant level=1 width=1400 Hz=0 seed=44 visible=1
+Almanac plant level=1 width=1400 Hz=0 seed=45 visible=1
+Almanac plant level=1 width=1400 Hz=0 seed=46 visible=1
+Almanac plant level=1 width=1400 Hz=0 seed=47 visible=1
+Almanac plant level=1 width=1400 Hz=0 seed=48 visible=1
+Almanac zombie level=1 width=1400 Hz=0 type=0 visible=1
+Almanac zombie level=1 width=1400 Hz=0 type=1 visible=1
+Almanac zombie level=1 width=1400 Hz=0 type=2 visible=1
+Almanac zombie level=1 width=1400 Hz=0 type=3 visible=1
+Almanac zombie level=1 width=1400 Hz=0 type=4 visible=1
+Almanac zombie level=1 width=1400 Hz=0 type=5 visible=1
+Almanac zombie level=1 width=1400 Hz=0 type=6 visible=1
+Almanac zombie level=1 width=1400 Hz=0 type=7 visible=1
+Almanac zombie level=1 width=1400 Hz=0 type=8 visible=1
+Almanac zombie level=1 width=1400 Hz=0 type=9 visible=1
+Almanac zombie level=1 width=1400 Hz=0 type=10 visible=1
+Almanac zombie level=1 width=1400 Hz=0 type=11 visible=1
+Almanac zombie level=1 width=1400 Hz=0 type=12 visible=1
+Almanac zombie level=1 width=1400 Hz=0 type=13 visible=1
+Almanac zombie level=1 width=1400 Hz=0 type=14 visible=1
+Almanac zombie level=1 width=1400 Hz=0 type=15 visible=1
+Almanac zombie level=1 width=1400 Hz=0 type=16 visible=1
+Almanac zombie level=1 width=1400 Hz=0 type=17 visible=1
+Almanac zombie level=1 width=1400 Hz=0 type=18 visible=1
+Almanac zombie level=1 width=1400 Hz=0 type=19 visible=1
+Almanac zombie level=1 width=1400 Hz=0 type=20 visible=1
+Almanac zombie level=1 width=1400 Hz=0 type=21 visible=1
+Almanac zombie level=1 width=1400 Hz=0 type=22 visible=1
+Almanac zombie level=1 width=1400 Hz=0 type=23 visible=1
+Almanac zombie level=1 width=1400 Hz=0 type=24 visible=1
+Almanac zombie level=1 width=1400 Hz=0 type=25 visible=1
+Almanac resume width=1400 Hz=0 birthDomain=1 domain=1 battle=7891011 expectedPhase=7891011 actualPhase=7891011
+Almanac primary level=1 width=1400 Hz=0 plants=49 zombies=26 closed=1
+PASS actual Almanac: all49 plants/all26 zombies, icon input, visible previews, menu/paused-battle clocks and close at two widths/four schedules
+Award begin level=1 replay=0 Hz=100
+Award primary level=1 replay=0 Hz=100 next=2 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=1 replay=0 Hz=30
+Award primary level=1 replay=0 Hz=30 next=2 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=1 replay=0 Hz=240
+Award primary level=1 replay=0 Hz=240 next=2 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=1 replay=0 Hz=0
+Award primary level=1 replay=0 Hz=0 next=2 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=2 replay=0 Hz=100
+Award primary level=2 replay=0 Hz=100 next=3 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=2 replay=0 Hz=30
+Award primary level=2 replay=0 Hz=30 next=3 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=2 replay=0 Hz=240
+Award primary level=2 replay=0 Hz=240 next=3 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=2 replay=0 Hz=0
+Award primary level=2 replay=0 Hz=0 next=3 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=3 replay=0 Hz=100
+Award primary level=3 replay=0 Hz=100 next=4 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=3 replay=0 Hz=30
+Award primary level=3 replay=0 Hz=30 next=4 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=3 replay=0 Hz=240
+Award primary level=3 replay=0 Hz=240 next=4 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=3 replay=0 Hz=0
+Award primary level=3 replay=0 Hz=0 next=4 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=4 replay=0 Hz=100
+Award primary level=4 replay=0 Hz=100 next=5 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=4 replay=0 Hz=30
+Award primary level=4 replay=0 Hz=30 next=5 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=4 replay=0 Hz=240
+Award primary level=4 replay=0 Hz=240 next=5 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=4 replay=0 Hz=0
+Award primary level=4 replay=0 Hz=0 next=5 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=5 replay=0 Hz=100
+Award primary level=5 replay=0 Hz=100 next=6 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=5 replay=0 Hz=30
+Award primary level=5 replay=0 Hz=30 next=6 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=5 replay=0 Hz=240
+Award primary level=5 replay=0 Hz=240 next=6 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=5 replay=0 Hz=0
+Award primary level=5 replay=0 Hz=0 next=6 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=6 replay=0 Hz=100
+Award primary level=6 replay=0 Hz=100 next=7 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=6 replay=0 Hz=30
+Award primary level=6 replay=0 Hz=30 next=7 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=6 replay=0 Hz=240
+Award primary level=6 replay=0 Hz=240 next=7 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=6 replay=0 Hz=0
+Award primary level=6 replay=0 Hz=0 next=7 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=7 replay=0 Hz=100
+Award primary level=7 replay=0 Hz=100 next=8 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=7 replay=0 Hz=30
+Award primary level=7 replay=0 Hz=30 next=8 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=7 replay=0 Hz=240
+Award primary level=7 replay=0 Hz=240 next=8 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=7 replay=0 Hz=0
+Award primary level=7 replay=0 Hz=0 next=8 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=8 replay=0 Hz=100
+Award primary level=8 replay=0 Hz=100 next=9 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=8 replay=0 Hz=30
+Award primary level=8 replay=0 Hz=30 next=9 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=8 replay=0 Hz=240
+Award primary level=8 replay=0 Hz=240 next=9 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=8 replay=0 Hz=0
+Award primary level=8 replay=0 Hz=0 next=9 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=9 replay=0 Hz=100
+Award primary level=9 replay=0 Hz=100 next=10 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=9 replay=0 Hz=30
+Award primary level=9 replay=0 Hz=30 next=10 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=9 replay=0 Hz=240
+Award primary level=9 replay=0 Hz=240 next=10 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=9 replay=0 Hz=0
+Award primary level=9 replay=0 Hz=0 next=10 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=10 replay=0 Hz=100
+Award primary level=10 replay=0 Hz=100 next=11 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=10 replay=0 Hz=30
+Award primary level=10 replay=0 Hz=30 next=11 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=10 replay=0 Hz=240
+Award primary level=10 replay=0 Hz=240 next=11 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=10 replay=0 Hz=0
+Award primary level=10 replay=0 Hz=0 next=11 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=11 replay=0 Hz=100
+Award primary level=11 replay=0 Hz=100 next=12 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=11 replay=0 Hz=30
+Award primary level=11 replay=0 Hz=30 next=12 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=11 replay=0 Hz=240
+Award primary level=11 replay=0 Hz=240 next=12 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=11 replay=0 Hz=0
+Award primary level=11 replay=0 Hz=0 next=12 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=12 replay=0 Hz=100
+Award primary level=12 replay=0 Hz=100 next=13 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=12 replay=0 Hz=30
+Award primary level=12 replay=0 Hz=30 next=13 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=12 replay=0 Hz=240
+Award primary level=12 replay=0 Hz=240 next=13 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=12 replay=0 Hz=0
+Award primary level=12 replay=0 Hz=0 next=13 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=13 replay=0 Hz=100
+Award primary level=13 replay=0 Hz=100 next=14 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=13 replay=0 Hz=30
+Award primary level=13 replay=0 Hz=30 next=14 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=13 replay=0 Hz=240
+Award primary level=13 replay=0 Hz=240 next=14 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=13 replay=0 Hz=0
+Award primary level=13 replay=0 Hz=0 next=14 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=14 replay=0 Hz=100
+Award primary level=14 replay=0 Hz=100 next=15 scene=2 almanac=1 store=-1 clicks=0
+Award begin level=14 replay=0 Hz=30
+Award primary level=14 replay=0 Hz=30 next=15 scene=2 almanac=1 store=-1 clicks=0
+Award begin level=14 replay=0 Hz=240
+Award primary level=14 replay=0 Hz=240 next=15 scene=2 almanac=1 store=-1 clicks=0
+Award begin level=14 replay=0 Hz=0
+Award primary level=14 replay=0 Hz=0 next=15 scene=2 almanac=1 store=-1 clicks=0
+Award begin level=15 replay=0 Hz=100
+Award primary level=15 replay=0 Hz=100 next=16 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=15 replay=0 Hz=30
+Award primary level=15 replay=0 Hz=30 next=16 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=15 replay=0 Hz=240
+Award primary level=15 replay=0 Hz=240 next=16 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=15 replay=0 Hz=0
+Award primary level=15 replay=0 Hz=0 next=16 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=16 replay=0 Hz=100
+Award primary level=16 replay=0 Hz=100 next=17 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=16 replay=0 Hz=30
+Award primary level=16 replay=0 Hz=30 next=17 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=16 replay=0 Hz=240
+Award primary level=16 replay=0 Hz=240 next=17 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=16 replay=0 Hz=0
+Award primary level=16 replay=0 Hz=0 next=17 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=17 replay=0 Hz=100
+Award primary level=17 replay=0 Hz=100 next=18 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=17 replay=0 Hz=30
+Award primary level=17 replay=0 Hz=30 next=18 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=17 replay=0 Hz=240
+Award primary level=17 replay=0 Hz=240 next=18 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=17 replay=0 Hz=0
+Award primary level=17 replay=0 Hz=0 next=18 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=18 replay=0 Hz=100
+Award primary level=18 replay=0 Hz=100 next=19 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=18 replay=0 Hz=30
+Award primary level=18 replay=0 Hz=30 next=19 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=18 replay=0 Hz=240
+Award primary level=18 replay=0 Hz=240 next=19 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=18 replay=0 Hz=0
+Award primary level=18 replay=0 Hz=0 next=19 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=19 replay=0 Hz=100
+Award primary level=19 replay=0 Hz=100 next=20 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=19 replay=0 Hz=30
+Award primary level=19 replay=0 Hz=30 next=20 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=19 replay=0 Hz=240
+Award primary level=19 replay=0 Hz=240 next=20 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=19 replay=0 Hz=0
+Award primary level=19 replay=0 Hz=0 next=20 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=20 replay=0 Hz=100
+Award primary level=20 replay=0 Hz=100 next=21 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=20 replay=0 Hz=30
+Award primary level=20 replay=0 Hz=30 next=21 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=20 replay=0 Hz=240
+Award primary level=20 replay=0 Hz=240 next=21 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=20 replay=0 Hz=0
+Award primary level=20 replay=0 Hz=0 next=21 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=21 replay=0 Hz=100
+Award primary level=21 replay=0 Hz=100 next=22 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=21 replay=0 Hz=30
+Award primary level=21 replay=0 Hz=30 next=22 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=21 replay=0 Hz=240
+Award primary level=21 replay=0 Hz=240 next=22 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=21 replay=0 Hz=0
+Award primary level=21 replay=0 Hz=0 next=22 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=22 replay=0 Hz=100
+Award primary level=22 replay=0 Hz=100 next=23 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=22 replay=0 Hz=30
+Award primary level=22 replay=0 Hz=30 next=23 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=22 replay=0 Hz=240
+Award primary level=22 replay=0 Hz=240 next=23 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=22 replay=0 Hz=0
+Award primary level=22 replay=0 Hz=0 next=23 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=23 replay=0 Hz=100
+Award primary level=23 replay=0 Hz=100 next=24 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=23 replay=0 Hz=30
+Award primary level=23 replay=0 Hz=30 next=24 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=23 replay=0 Hz=240
+Award primary level=23 replay=0 Hz=240 next=24 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=23 replay=0 Hz=0
+Award primary level=23 replay=0 Hz=0 next=24 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=24 replay=0 Hz=100
+Award primary level=24 replay=0 Hz=100 next=25 scene=2 almanac=0 store=301 clicks=4
+Award begin level=24 replay=0 Hz=30
+Award primary level=24 replay=0 Hz=30 next=25 scene=2 almanac=0 store=301 clicks=4
+Award begin level=24 replay=0 Hz=240
+Award primary level=24 replay=0 Hz=240 next=25 scene=2 almanac=0 store=301 clicks=4
+Award begin level=24 replay=0 Hz=0
+Award primary level=24 replay=0 Hz=0 next=25 scene=2 almanac=0 store=301 clicks=4
+Award begin level=25 replay=0 Hz=100
+Award primary level=25 replay=0 Hz=100 next=26 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=25 replay=0 Hz=30
+Award primary level=25 replay=0 Hz=30 next=26 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=25 replay=0 Hz=240
+Award primary level=25 replay=0 Hz=240 next=26 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=25 replay=0 Hz=0
+Award primary level=25 replay=0 Hz=0 next=26 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=26 replay=0 Hz=100
+Award primary level=26 replay=0 Hz=100 next=27 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=26 replay=0 Hz=30
+Award primary level=26 replay=0 Hz=30 next=27 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=26 replay=0 Hz=240
+Award primary level=26 replay=0 Hz=240 next=27 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=26 replay=0 Hz=0
+Award primary level=26 replay=0 Hz=0 next=27 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=27 replay=0 Hz=100
+Award primary level=27 replay=0 Hz=100 next=28 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=27 replay=0 Hz=30
+Award primary level=27 replay=0 Hz=30 next=28 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=27 replay=0 Hz=240
+Award primary level=27 replay=0 Hz=240 next=28 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=27 replay=0 Hz=0
+Award primary level=27 replay=0 Hz=0 next=28 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=28 replay=0 Hz=100
+Award primary level=28 replay=0 Hz=100 next=29 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=28 replay=0 Hz=30
+Award primary level=28 replay=0 Hz=30 next=29 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=28 replay=0 Hz=240
+Award primary level=28 replay=0 Hz=240 next=29 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=28 replay=0 Hz=0
+Award primary level=28 replay=0 Hz=0 next=29 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=29 replay=0 Hz=100
+Award primary level=29 replay=0 Hz=100 next=30 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=29 replay=0 Hz=30
+Award primary level=29 replay=0 Hz=30 next=30 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=29 replay=0 Hz=240
+Award primary level=29 replay=0 Hz=240 next=30 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=29 replay=0 Hz=0
+Award primary level=29 replay=0 Hz=0 next=30 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=30 replay=0 Hz=100
+Award primary level=30 replay=0 Hz=100 next=31 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=30 replay=0 Hz=30
+Award primary level=30 replay=0 Hz=30 next=31 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=30 replay=0 Hz=240
+Award primary level=30 replay=0 Hz=240 next=31 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=30 replay=0 Hz=0
+Award primary level=30 replay=0 Hz=0 next=31 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=31 replay=0 Hz=100
+Award primary level=31 replay=0 Hz=100 next=32 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=31 replay=0 Hz=30
+Award primary level=31 replay=0 Hz=30 next=32 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=31 replay=0 Hz=240
+Award primary level=31 replay=0 Hz=240 next=32 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=31 replay=0 Hz=0
+Award primary level=31 replay=0 Hz=0 next=32 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=32 replay=0 Hz=100
+Award primary level=32 replay=0 Hz=100 next=33 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=32 replay=0 Hz=30
+Award primary level=32 replay=0 Hz=30 next=33 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=32 replay=0 Hz=240
+Award primary level=32 replay=0 Hz=240 next=33 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=32 replay=0 Hz=0
+Award primary level=32 replay=0 Hz=0 next=33 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=33 replay=0 Hz=100
+Award primary level=33 replay=0 Hz=100 next=34 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=33 replay=0 Hz=30
+Award primary level=33 replay=0 Hz=30 next=34 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=33 replay=0 Hz=240
+Award primary level=33 replay=0 Hz=240 next=34 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=33 replay=0 Hz=0
+Award primary level=33 replay=0 Hz=0 next=34 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=34 replay=0 Hz=100
+Award primary level=34 replay=0 Hz=100 next=35 scene=2 almanac=0 store=601 clicks=6
+Award begin level=34 replay=0 Hz=30
+Award primary level=34 replay=0 Hz=30 next=35 scene=2 almanac=0 store=601 clicks=6
+Award begin level=34 replay=0 Hz=240
+Award primary level=34 replay=0 Hz=240 next=35 scene=2 almanac=0 store=601 clicks=6
+Award begin level=34 replay=0 Hz=0
+Award primary level=34 replay=0 Hz=0 next=35 scene=2 almanac=0 store=601 clicks=6
+Award begin level=35 replay=0 Hz=100
+Award primary level=35 replay=0 Hz=100 next=36 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=35 replay=0 Hz=30
+Award primary level=35 replay=0 Hz=30 next=36 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=35 replay=0 Hz=240
+Award primary level=35 replay=0 Hz=240 next=36 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=35 replay=0 Hz=0
+Award primary level=35 replay=0 Hz=0 next=36 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=36 replay=0 Hz=100
+Award primary level=36 replay=0 Hz=100 next=37 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=36 replay=0 Hz=30
+Award primary level=36 replay=0 Hz=30 next=37 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=36 replay=0 Hz=240
+Award primary level=36 replay=0 Hz=240 next=37 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=36 replay=0 Hz=0
+Award primary level=36 replay=0 Hz=0 next=37 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=37 replay=0 Hz=100
+Award primary level=37 replay=0 Hz=100 next=38 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=37 replay=0 Hz=30
+Award primary level=37 replay=0 Hz=30 next=38 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=37 replay=0 Hz=240
+Award primary level=37 replay=0 Hz=240 next=38 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=37 replay=0 Hz=0
+Award primary level=37 replay=0 Hz=0 next=38 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=38 replay=0 Hz=100
+Award primary level=38 replay=0 Hz=100 next=39 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=38 replay=0 Hz=30
+Award primary level=38 replay=0 Hz=30 next=39 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=38 replay=0 Hz=240
+Award primary level=38 replay=0 Hz=240 next=39 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=38 replay=0 Hz=0
+Award primary level=38 replay=0 Hz=0 next=39 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=39 replay=0 Hz=100
+Award primary level=39 replay=0 Hz=100 next=40 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=39 replay=0 Hz=30
+Award primary level=39 replay=0 Hz=30 next=40 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=39 replay=0 Hz=240
+Award primary level=39 replay=0 Hz=240 next=40 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=39 replay=0 Hz=0
+Award primary level=39 replay=0 Hz=0 next=40 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=40 replay=0 Hz=100
+Award primary level=40 replay=0 Hz=100 next=41 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=40 replay=0 Hz=30
+Award primary level=40 replay=0 Hz=30 next=41 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=40 replay=0 Hz=240
+Award primary level=40 replay=0 Hz=240 next=41 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=40 replay=0 Hz=0
+Award primary level=40 replay=0 Hz=0 next=41 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=41 replay=0 Hz=100
+Award primary level=41 replay=0 Hz=100 next=42 scene=2 almanac=0 store=3100 clicks=1
+Award begin level=41 replay=0 Hz=30
+Award primary level=41 replay=0 Hz=30 next=42 scene=2 almanac=0 store=3100 clicks=1
+Award begin level=41 replay=0 Hz=240
+Award primary level=41 replay=0 Hz=240 next=42 scene=2 almanac=0 store=3100 clicks=1
+Award begin level=41 replay=0 Hz=0
+Award primary level=41 replay=0 Hz=0 next=42 scene=2 almanac=0 store=3100 clicks=1
+Award begin level=42 replay=0 Hz=100
+Award primary level=42 replay=0 Hz=100 next=43 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=42 replay=0 Hz=30
+Award primary level=42 replay=0 Hz=30 next=43 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=42 replay=0 Hz=240
+Award primary level=42 replay=0 Hz=240 next=43 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=42 replay=0 Hz=0
+Award primary level=42 replay=0 Hz=0 next=43 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=43 replay=0 Hz=100
+Award primary level=43 replay=0 Hz=100 next=44 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=43 replay=0 Hz=30
+Award primary level=43 replay=0 Hz=30 next=44 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=43 replay=0 Hz=240
+Award primary level=43 replay=0 Hz=240 next=44 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=43 replay=0 Hz=0
+Award primary level=43 replay=0 Hz=0 next=44 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=44 replay=0 Hz=100
+Award primary level=44 replay=0 Hz=100 next=45 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=44 replay=0 Hz=30
+Award primary level=44 replay=0 Hz=30 next=45 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=44 replay=0 Hz=240
+Award primary level=44 replay=0 Hz=240 next=45 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=44 replay=0 Hz=0
+Award primary level=44 replay=0 Hz=0 next=45 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=45 replay=0 Hz=100
+Award primary level=45 replay=0 Hz=100 next=46 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=45 replay=0 Hz=30
+Award primary level=45 replay=0 Hz=30 next=46 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=45 replay=0 Hz=240
+Award primary level=45 replay=0 Hz=240 next=46 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=45 replay=0 Hz=0
+Award primary level=45 replay=0 Hz=0 next=46 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=46 replay=0 Hz=100
+Award primary level=46 replay=0 Hz=100 next=47 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=46 replay=0 Hz=30
+Award primary level=46 replay=0 Hz=30 next=47 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=46 replay=0 Hz=240
+Award primary level=46 replay=0 Hz=240 next=47 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=46 replay=0 Hz=0
+Award primary level=46 replay=0 Hz=0 next=47 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=47 replay=0 Hz=100
+Award primary level=47 replay=0 Hz=100 next=48 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=47 replay=0 Hz=30
+Award primary level=47 replay=0 Hz=30 next=48 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=47 replay=0 Hz=240
+Award primary level=47 replay=0 Hz=240 next=48 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=47 replay=0 Hz=0
+Award primary level=47 replay=0 Hz=0 next=48 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=48 replay=0 Hz=100
+Award primary level=48 replay=0 Hz=100 next=49 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=48 replay=0 Hz=30
+Award primary level=48 replay=0 Hz=30 next=49 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=48 replay=0 Hz=240
+Award primary level=48 replay=0 Hz=240 next=49 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=48 replay=0 Hz=0
+Award primary level=48 replay=0 Hz=0 next=49 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=49 replay=0 Hz=100
+Award primary level=49 replay=0 Hz=100 next=50 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=49 replay=0 Hz=30
+Award primary level=49 replay=0 Hz=30 next=50 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=49 replay=0 Hz=240
+Award primary level=49 replay=0 Hz=240 next=50 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=49 replay=0 Hz=0
+Award primary level=49 replay=0 Hz=0 next=50 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=50 replay=0 Hz=100
+Award primary level=50 replay=0 Hz=100 next=1 scene=6 almanac=0 store=-1 clicks=0
+Award begin level=50 replay=0 Hz=30
+Award primary level=50 replay=0 Hz=30 next=1 scene=6 almanac=0 store=-1 clicks=0
+Award begin level=50 replay=0 Hz=240
+Award primary level=50 replay=0 Hz=240 next=1 scene=6 almanac=0 store=-1 clicks=0
+Award begin level=50 replay=0 Hz=0
+Award primary level=50 replay=0 Hz=0 next=1 scene=6 almanac=0 store=-1 clicks=0
+Award begin level=1 replay=1 Hz=100
+Award primary level=1 replay=1 Hz=100 next=2 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=1 replay=1 Hz=30
+Award primary level=1 replay=1 Hz=30 next=2 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=1 replay=1 Hz=240
+Award primary level=1 replay=1 Hz=240 next=2 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=1 replay=1 Hz=0
+Award primary level=1 replay=1 Hz=0 next=2 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=2 replay=1 Hz=100
+Award primary level=2 replay=1 Hz=100 next=3 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=2 replay=1 Hz=30
+Award primary level=2 replay=1 Hz=30 next=3 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=2 replay=1 Hz=240
+Award primary level=2 replay=1 Hz=240 next=3 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=2 replay=1 Hz=0
+Award primary level=2 replay=1 Hz=0 next=3 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=3 replay=1 Hz=100
+Award primary level=3 replay=1 Hz=100 next=4 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=3 replay=1 Hz=30
+Award primary level=3 replay=1 Hz=30 next=4 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=3 replay=1 Hz=240
+Award primary level=3 replay=1 Hz=240 next=4 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=3 replay=1 Hz=0
+Award primary level=3 replay=1 Hz=0 next=4 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=4 replay=1 Hz=100
+Award primary level=4 replay=1 Hz=100 next=5 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=4 replay=1 Hz=30
+Award primary level=4 replay=1 Hz=30 next=5 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=4 replay=1 Hz=240
+Award primary level=4 replay=1 Hz=240 next=5 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=4 replay=1 Hz=0
+Award primary level=4 replay=1 Hz=0 next=5 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=5 replay=1 Hz=100
+Award primary level=5 replay=1 Hz=100 next=6 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=5 replay=1 Hz=30
+Award primary level=5 replay=1 Hz=30 next=6 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=5 replay=1 Hz=240
+Award primary level=5 replay=1 Hz=240 next=6 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=5 replay=1 Hz=0
+Award primary level=5 replay=1 Hz=0 next=6 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=6 replay=1 Hz=100
+Award primary level=6 replay=1 Hz=100 next=7 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=6 replay=1 Hz=30
+Award primary level=6 replay=1 Hz=30 next=7 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=6 replay=1 Hz=240
+Award primary level=6 replay=1 Hz=240 next=7 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=6 replay=1 Hz=0
+Award primary level=6 replay=1 Hz=0 next=7 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=7 replay=1 Hz=100
+Award primary level=7 replay=1 Hz=100 next=8 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=7 replay=1 Hz=30
+Award primary level=7 replay=1 Hz=30 next=8 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=7 replay=1 Hz=240
+Award primary level=7 replay=1 Hz=240 next=8 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=7 replay=1 Hz=0
+Award primary level=7 replay=1 Hz=0 next=8 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=8 replay=1 Hz=100
+Award primary level=8 replay=1 Hz=100 next=9 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=8 replay=1 Hz=30
+Award primary level=8 replay=1 Hz=30 next=9 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=8 replay=1 Hz=240
+Award primary level=8 replay=1 Hz=240 next=9 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=8 replay=1 Hz=0
+Award primary level=8 replay=1 Hz=0 next=9 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=9 replay=1 Hz=100
+Award primary level=9 replay=1 Hz=100 next=10 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=9 replay=1 Hz=30
+Award primary level=9 replay=1 Hz=30 next=10 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=9 replay=1 Hz=240
+Award primary level=9 replay=1 Hz=240 next=10 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=9 replay=1 Hz=0
+Award primary level=9 replay=1 Hz=0 next=10 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=10 replay=1 Hz=100
+Award primary level=10 replay=1 Hz=100 next=11 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=10 replay=1 Hz=30
+Award primary level=10 replay=1 Hz=30 next=11 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=10 replay=1 Hz=240
+Award primary level=10 replay=1 Hz=240 next=11 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=10 replay=1 Hz=0
+Award primary level=10 replay=1 Hz=0 next=11 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=11 replay=1 Hz=100
+Award primary level=11 replay=1 Hz=100 next=12 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=11 replay=1 Hz=30
+Award primary level=11 replay=1 Hz=30 next=12 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=11 replay=1 Hz=240
+Award primary level=11 replay=1 Hz=240 next=12 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=11 replay=1 Hz=0
+Award primary level=11 replay=1 Hz=0 next=12 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=12 replay=1 Hz=100
+Award primary level=12 replay=1 Hz=100 next=13 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=12 replay=1 Hz=30
+Award primary level=12 replay=1 Hz=30 next=13 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=12 replay=1 Hz=240
+Award primary level=12 replay=1 Hz=240 next=13 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=12 replay=1 Hz=0
+Award primary level=12 replay=1 Hz=0 next=13 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=13 replay=1 Hz=100
+Award primary level=13 replay=1 Hz=100 next=14 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=13 replay=1 Hz=30
+Award primary level=13 replay=1 Hz=30 next=14 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=13 replay=1 Hz=240
+Award primary level=13 replay=1 Hz=240 next=14 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=13 replay=1 Hz=0
+Award primary level=13 replay=1 Hz=0 next=14 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=14 replay=1 Hz=100
+Award primary level=14 replay=1 Hz=100 next=15 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=14 replay=1 Hz=30
+Award primary level=14 replay=1 Hz=30 next=15 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=14 replay=1 Hz=240
+Award primary level=14 replay=1 Hz=240 next=15 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=14 replay=1 Hz=0
+Award primary level=14 replay=1 Hz=0 next=15 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=15 replay=1 Hz=100
+Award primary level=15 replay=1 Hz=100 next=16 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=15 replay=1 Hz=30
+Award primary level=15 replay=1 Hz=30 next=16 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=15 replay=1 Hz=240
+Award primary level=15 replay=1 Hz=240 next=16 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=15 replay=1 Hz=0
+Award primary level=15 replay=1 Hz=0 next=16 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=16 replay=1 Hz=100
+Award primary level=16 replay=1 Hz=100 next=17 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=16 replay=1 Hz=30
+Award primary level=16 replay=1 Hz=30 next=17 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=16 replay=1 Hz=240
+Award primary level=16 replay=1 Hz=240 next=17 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=16 replay=1 Hz=0
+Award primary level=16 replay=1 Hz=0 next=17 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=17 replay=1 Hz=100
+Award primary level=17 replay=1 Hz=100 next=18 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=17 replay=1 Hz=30
+Award primary level=17 replay=1 Hz=30 next=18 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=17 replay=1 Hz=240
+Award primary level=17 replay=1 Hz=240 next=18 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=17 replay=1 Hz=0
+Award primary level=17 replay=1 Hz=0 next=18 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=18 replay=1 Hz=100
+Award primary level=18 replay=1 Hz=100 next=19 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=18 replay=1 Hz=30
+Award primary level=18 replay=1 Hz=30 next=19 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=18 replay=1 Hz=240
+Award primary level=18 replay=1 Hz=240 next=19 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=18 replay=1 Hz=0
+Award primary level=18 replay=1 Hz=0 next=19 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=19 replay=1 Hz=100
+Award primary level=19 replay=1 Hz=100 next=20 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=19 replay=1 Hz=30
+Award primary level=19 replay=1 Hz=30 next=20 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=19 replay=1 Hz=240
+Award primary level=19 replay=1 Hz=240 next=20 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=19 replay=1 Hz=0
+Award primary level=19 replay=1 Hz=0 next=20 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=20 replay=1 Hz=100
+Award primary level=20 replay=1 Hz=100 next=21 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=20 replay=1 Hz=30
+Award primary level=20 replay=1 Hz=30 next=21 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=20 replay=1 Hz=240
+Award primary level=20 replay=1 Hz=240 next=21 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=20 replay=1 Hz=0
+Award primary level=20 replay=1 Hz=0 next=21 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=21 replay=1 Hz=100
+Award primary level=21 replay=1 Hz=100 next=22 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=21 replay=1 Hz=30
+Award primary level=21 replay=1 Hz=30 next=22 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=21 replay=1 Hz=240
+Award primary level=21 replay=1 Hz=240 next=22 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=21 replay=1 Hz=0
+Award primary level=21 replay=1 Hz=0 next=22 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=22 replay=1 Hz=100
+Award primary level=22 replay=1 Hz=100 next=23 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=22 replay=1 Hz=30
+Award primary level=22 replay=1 Hz=30 next=23 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=22 replay=1 Hz=240
+Award primary level=22 replay=1 Hz=240 next=23 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=22 replay=1 Hz=0
+Award primary level=22 replay=1 Hz=0 next=23 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=23 replay=1 Hz=100
+Award primary level=23 replay=1 Hz=100 next=24 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=23 replay=1 Hz=30
+Award primary level=23 replay=1 Hz=30 next=24 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=23 replay=1 Hz=240
+Award primary level=23 replay=1 Hz=240 next=24 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=23 replay=1 Hz=0
+Award primary level=23 replay=1 Hz=0 next=24 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=24 replay=1 Hz=100
+Award primary level=24 replay=1 Hz=100 next=25 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=24 replay=1 Hz=30
+Award primary level=24 replay=1 Hz=30 next=25 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=24 replay=1 Hz=240
+Award primary level=24 replay=1 Hz=240 next=25 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=24 replay=1 Hz=0
+Award primary level=24 replay=1 Hz=0 next=25 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=25 replay=1 Hz=100
+Award primary level=25 replay=1 Hz=100 next=26 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=25 replay=1 Hz=30
+Award primary level=25 replay=1 Hz=30 next=26 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=25 replay=1 Hz=240
+Award primary level=25 replay=1 Hz=240 next=26 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=25 replay=1 Hz=0
+Award primary level=25 replay=1 Hz=0 next=26 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=26 replay=1 Hz=100
+Award primary level=26 replay=1 Hz=100 next=27 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=26 replay=1 Hz=30
+Award primary level=26 replay=1 Hz=30 next=27 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=26 replay=1 Hz=240
+Award primary level=26 replay=1 Hz=240 next=27 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=26 replay=1 Hz=0
+Award primary level=26 replay=1 Hz=0 next=27 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=27 replay=1 Hz=100
+Award primary level=27 replay=1 Hz=100 next=28 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=27 replay=1 Hz=30
+Award primary level=27 replay=1 Hz=30 next=28 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=27 replay=1 Hz=240
+Award primary level=27 replay=1 Hz=240 next=28 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=27 replay=1 Hz=0
+Award primary level=27 replay=1 Hz=0 next=28 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=28 replay=1 Hz=100
+Award primary level=28 replay=1 Hz=100 next=29 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=28 replay=1 Hz=30
+Award primary level=28 replay=1 Hz=30 next=29 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=28 replay=1 Hz=240
+Award primary level=28 replay=1 Hz=240 next=29 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=28 replay=1 Hz=0
+Award primary level=28 replay=1 Hz=0 next=29 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=29 replay=1 Hz=100
+Award primary level=29 replay=1 Hz=100 next=30 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=29 replay=1 Hz=30
+Award primary level=29 replay=1 Hz=30 next=30 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=29 replay=1 Hz=240
+Award primary level=29 replay=1 Hz=240 next=30 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=29 replay=1 Hz=0
+Award primary level=29 replay=1 Hz=0 next=30 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=30 replay=1 Hz=100
+Award primary level=30 replay=1 Hz=100 next=31 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=30 replay=1 Hz=30
+Award primary level=30 replay=1 Hz=30 next=31 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=30 replay=1 Hz=240
+Award primary level=30 replay=1 Hz=240 next=31 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=30 replay=1 Hz=0
+Award primary level=30 replay=1 Hz=0 next=31 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=31 replay=1 Hz=100
+Award primary level=31 replay=1 Hz=100 next=32 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=31 replay=1 Hz=30
+Award primary level=31 replay=1 Hz=30 next=32 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=31 replay=1 Hz=240
+Award primary level=31 replay=1 Hz=240 next=32 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=31 replay=1 Hz=0
+Award primary level=31 replay=1 Hz=0 next=32 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=32 replay=1 Hz=100
+Award primary level=32 replay=1 Hz=100 next=33 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=32 replay=1 Hz=30
+Award primary level=32 replay=1 Hz=30 next=33 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=32 replay=1 Hz=240
+Award primary level=32 replay=1 Hz=240 next=33 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=32 replay=1 Hz=0
+Award primary level=32 replay=1 Hz=0 next=33 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=33 replay=1 Hz=100
+Award primary level=33 replay=1 Hz=100 next=34 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=33 replay=1 Hz=30
+Award primary level=33 replay=1 Hz=30 next=34 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=33 replay=1 Hz=240
+Award primary level=33 replay=1 Hz=240 next=34 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=33 replay=1 Hz=0
+Award primary level=33 replay=1 Hz=0 next=34 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=34 replay=1 Hz=100
+Award primary level=34 replay=1 Hz=100 next=35 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=34 replay=1 Hz=30
+Award primary level=34 replay=1 Hz=30 next=35 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=34 replay=1 Hz=240
+Award primary level=34 replay=1 Hz=240 next=35 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=34 replay=1 Hz=0
+Award primary level=34 replay=1 Hz=0 next=35 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=35 replay=1 Hz=100
+Award primary level=35 replay=1 Hz=100 next=36 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=35 replay=1 Hz=30
+Award primary level=35 replay=1 Hz=30 next=36 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=35 replay=1 Hz=240
+Award primary level=35 replay=1 Hz=240 next=36 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=35 replay=1 Hz=0
+Award primary level=35 replay=1 Hz=0 next=36 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=36 replay=1 Hz=100
+Award primary level=36 replay=1 Hz=100 next=37 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=36 replay=1 Hz=30
+Award primary level=36 replay=1 Hz=30 next=37 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=36 replay=1 Hz=240
+Award primary level=36 replay=1 Hz=240 next=37 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=36 replay=1 Hz=0
+Award primary level=36 replay=1 Hz=0 next=37 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=37 replay=1 Hz=100
+Award primary level=37 replay=1 Hz=100 next=38 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=37 replay=1 Hz=30
+Award primary level=37 replay=1 Hz=30 next=38 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=37 replay=1 Hz=240
+Award primary level=37 replay=1 Hz=240 next=38 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=37 replay=1 Hz=0
+Award primary level=37 replay=1 Hz=0 next=38 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=38 replay=1 Hz=100
+Award primary level=38 replay=1 Hz=100 next=39 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=38 replay=1 Hz=30
+Award primary level=38 replay=1 Hz=30 next=39 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=38 replay=1 Hz=240
+Award primary level=38 replay=1 Hz=240 next=39 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=38 replay=1 Hz=0
+Award primary level=38 replay=1 Hz=0 next=39 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=39 replay=1 Hz=100
+Award primary level=39 replay=1 Hz=100 next=40 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=39 replay=1 Hz=30
+Award primary level=39 replay=1 Hz=30 next=40 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=39 replay=1 Hz=240
+Award primary level=39 replay=1 Hz=240 next=40 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=39 replay=1 Hz=0
+Award primary level=39 replay=1 Hz=0 next=40 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=40 replay=1 Hz=100
+Award primary level=40 replay=1 Hz=100 next=41 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=40 replay=1 Hz=30
+Award primary level=40 replay=1 Hz=30 next=41 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=40 replay=1 Hz=240
+Award primary level=40 replay=1 Hz=240 next=41 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=40 replay=1 Hz=0
+Award primary level=40 replay=1 Hz=0 next=41 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=41 replay=1 Hz=100
+Award primary level=41 replay=1 Hz=100 next=42 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=41 replay=1 Hz=30
+Award primary level=41 replay=1 Hz=30 next=42 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=41 replay=1 Hz=240
+Award primary level=41 replay=1 Hz=240 next=42 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=41 replay=1 Hz=0
+Award primary level=41 replay=1 Hz=0 next=42 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=42 replay=1 Hz=100
+Award primary level=42 replay=1 Hz=100 next=43 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=42 replay=1 Hz=30
+Award primary level=42 replay=1 Hz=30 next=43 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=42 replay=1 Hz=240
+Award primary level=42 replay=1 Hz=240 next=43 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=42 replay=1 Hz=0
+Award primary level=42 replay=1 Hz=0 next=43 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=43 replay=1 Hz=100
+Award primary level=43 replay=1 Hz=100 next=44 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=43 replay=1 Hz=30
+Award primary level=43 replay=1 Hz=30 next=44 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=43 replay=1 Hz=240
+Award primary level=43 replay=1 Hz=240 next=44 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=43 replay=1 Hz=0
+Award primary level=43 replay=1 Hz=0 next=44 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=44 replay=1 Hz=100
+Award primary level=44 replay=1 Hz=100 next=45 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=44 replay=1 Hz=30
+Award primary level=44 replay=1 Hz=30 next=45 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=44 replay=1 Hz=240
+Award primary level=44 replay=1 Hz=240 next=45 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=44 replay=1 Hz=0
+Award primary level=44 replay=1 Hz=0 next=45 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=45 replay=1 Hz=100
+Award primary level=45 replay=1 Hz=100 next=46 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=45 replay=1 Hz=30
+Award primary level=45 replay=1 Hz=30 next=46 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=45 replay=1 Hz=240
+Award primary level=45 replay=1 Hz=240 next=46 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=45 replay=1 Hz=0
+Award primary level=45 replay=1 Hz=0 next=46 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=46 replay=1 Hz=100
+Award primary level=46 replay=1 Hz=100 next=47 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=46 replay=1 Hz=30
+Award primary level=46 replay=1 Hz=30 next=47 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=46 replay=1 Hz=240
+Award primary level=46 replay=1 Hz=240 next=47 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=46 replay=1 Hz=0
+Award primary level=46 replay=1 Hz=0 next=47 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=47 replay=1 Hz=100
+Award primary level=47 replay=1 Hz=100 next=48 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=47 replay=1 Hz=30
+Award primary level=47 replay=1 Hz=30 next=48 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=47 replay=1 Hz=240
+Award primary level=47 replay=1 Hz=240 next=48 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=47 replay=1 Hz=0
+Award primary level=47 replay=1 Hz=0 next=48 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=48 replay=1 Hz=100
+Award primary level=48 replay=1 Hz=100 next=49 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=48 replay=1 Hz=30
+Award primary level=48 replay=1 Hz=30 next=49 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=48 replay=1 Hz=240
+Award primary level=48 replay=1 Hz=240 next=49 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=48 replay=1 Hz=0
+Award primary level=48 replay=1 Hz=0 next=49 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=49 replay=1 Hz=100
+Award primary level=49 replay=1 Hz=100 next=50 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=49 replay=1 Hz=30
+Award primary level=49 replay=1 Hz=30 next=50 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=49 replay=1 Hz=240
+Award primary level=49 replay=1 Hz=240 next=50 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=49 replay=1 Hz=0
+Award primary level=49 replay=1 Hz=0 next=50 scene=2 almanac=0 store=-1 clicks=0
+Award begin level=50 replay=1 Hz=100
+Award primary level=50 replay=1 Hz=100 next=1 scene=6 almanac=0 store=-1 clicks=0
+Award begin level=50 replay=1 Hz=30
+Award primary level=50 replay=1 Hz=30 next=1 scene=6 almanac=0 store=-1 clicks=0
+Award begin level=50 replay=1 Hz=240
+Award primary level=50 replay=1 Hz=240 next=1 scene=6 almanac=0 store=-1 clicks=0
+Award begin level=50 replay=1 Hz=0
+Award primary level=50 replay=1 Hz=0 next=1 scene=6 almanac=0 store=-1 clicks=0
+PASS actual Adventure award routes: fifty levels/first/replay/four schedules, nested Almanac/Store inputs, Garden tutorial and Credits

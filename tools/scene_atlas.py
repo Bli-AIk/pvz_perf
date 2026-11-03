@@ -104,7 +104,11 @@ def parse(text: str) -> dict:
 
 def fixed_ui() -> dict:
     return {"name": "FixedUI", "sprites": [
-        {"name": name, "image": "IMAGE_" + name, "scale": 1.0} for name in FIXED_UI_NAMES]}
+        {"name": name, "image": "IMAGE_" + name, "scale": 1.0} for name in FIXED_UI_NAMES] + [
+        {"name": "TOUCH_FRAME_" + name, "image": "IMAGE_TOUCH_SELECTION_FRAME_BLUE",
+         "rect": rect, "scale": 1.0} for name, rect in (
+            ("TL", [0, 0, 42, 36]), ("TR", [62, 0, 42, 36]),
+            ("BL", [0, 108, 42, 36]), ("BR", [62, 108, 42, 36]))]}
 
 
 def record_path(module: str) -> str:

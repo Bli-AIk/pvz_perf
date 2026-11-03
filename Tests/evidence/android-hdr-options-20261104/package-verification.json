@@ -1,0 +1,13 @@
+{
+  "apk": "C:\\Users\\Administrator\\CLionProjects\\codex\\PlantsVsZombiesModern\\out\\arm64-android14-vulkan1.3\\hdr-options\\pvz_perf-hdr-options-arm64-android14-vulkan1.3.apk",
+  "sha256": "dc60c21898014ee57c9c2a52b99950c9287e08011503eba21429ee5cc7929714",
+  "members": {
+    "lib/arm64-v8a/libpvz_perf.so": "3b9def8577bb3782f7857334801b7e75eddc0653b49b743b80348d56107a6ef7",
+    "assets/main.pak64": "eaa474681349eaf533d6c80f70fb362af6b0314af04c44e190303f5a68ff22e9",
+    "assets/shaders/game_hdr_ps.spv": "f4b30b9d7b06c8adcd59e4644f4a6f0ef9d6c8cb4ff2b05da1ef39098e9e07b6",
+    "assets/scale.json": "8f2e3d4b972124d3406ede97fee43f13c984082ab8e99e9d8afe8e3882f250eb"
+  },
+  "signature": "v2/v3 verified",
+  "alignment": "16 KiB verified",
+  "android_device_hdr_validated": false
+}

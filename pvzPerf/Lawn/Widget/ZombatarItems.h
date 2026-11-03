@@ -179,6 +179,7 @@ public:
 
 	void Update() override;
 	void Draw(Graphics* g) override;
+    const void* TouchHitTest(int x, int y) override;
 	void MouseDown(int x, int y, int theClickCount) override;
 	void MouseDown(int x, int y, int theBtnNum, int theClickCount) override;
 	void MouseMove(int x, int y) override;

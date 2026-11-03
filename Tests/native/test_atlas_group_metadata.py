@@ -175,9 +175,19 @@ class ProgramAtlasMetadataTests(unittest.TestCase):
         loading += (GENERATED / "ZombatarAtlasData.cpp").read_text(encoding="utf-8")
         actual = re.findall(
             r"DefinitionBindAtlasPath\(([^,]+),\s*(\d+),\s*(\d+),\s*(\"[^\"]*\")\)", loading)
+        # Reanimation images are direct C++ binds; CPU particle definitions
+        # carry their variant image tables in the runtime behavior record.
+        from test_particle_image_variants import ParticleVariantPackageTests
+        ParticleVariantPackageTests.setUpClass()
+        self.assertIn("TodParticleLoadCompiledDefinition(Particles[i],ParticlePaths[i])", loading)
+        for path, (_, rows) in ParticleVariantPackageTests.runtime.items():
+            root = path.replace("compiled/particle-runtime/", "compiled/particles/")
+            expected_rows = self.definitions[root]["variants"]
+            self.assertEqual([(w,h,p) for w,h,p,_ in rows],
+                             [(r["atlas_width"],r["atlas_height"],r["atlas_path"]) for r in expected_rows])
         expected = []
         for kind, directory, table in (("reanim", "reanim", "Reanimations"),
-                                        ("particle", "particles", "Particles")):
+                                        ):
             for index, (_, name) in enumerate(self.config.definition_orders[kind]):
                 definition = self.definitions[f"compiled/{directory}/{name.casefold()}.compiled"]
                 for variant, row in enumerate(definition["variants"]):
@@ -195,7 +205,8 @@ class ProgramAtlasMetadataTests(unittest.TestCase):
         self.assertCountEqual(actual, expected)
         self.assertNotRegex(loading, r"DefinitionImageBindings|DefinitionImageRects|\.compiled")
         self.assertEqual(set(summary["atlases"]), {json.loads(row[3]) for row in expected} |
-                         {row["atlas_path"] for row in self.scenes.values()})
+                         {row["atlas_path"] for row in self.scenes.values()} |
+                         {r["atlas_path"] for d in self.definitions.values() for r in d.get("variants", []) if r["atlas_path"]})
         for pattern in ("*.cpp", "*.h"):
             for path in (ROOT / "pvzPerf").rglob(pattern):
                 self.assertNotRegex(path.read_text(encoding="utf-8-sig"),

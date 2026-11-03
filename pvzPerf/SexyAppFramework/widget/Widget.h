@@ -5,6 +5,7 @@
 #include "graphics/Graphics.h"
 #include "misc/KeyCodes.h"
 #include "WidgetContainer.h"
+#include "TouchEvent.h"
 
 namespace Sexy
 {
@@ -76,6 +77,11 @@ public:
 	virtual void			MouseUp(int x, int y, int theBtnNum, int theClickCount);
 	virtual void			MouseDrag(int x, int y);
 	virtual void			MouseWheel(int theDelta);
+	virtual void            TouchBegan(const TouchEvent& event);
+	virtual void            TouchMoved(const TouchEvent& event);
+	virtual void            TouchEnded(const TouchEvent& event);
+	virtual void            TouchCanceled(const TouchEvent& event);
+    virtual const void* TouchHitTest(int x, int y);
 	virtual bool			IsPointVisible(int x, int y);
 	
 	//////// Helper functions

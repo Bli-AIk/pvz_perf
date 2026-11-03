@@ -1,0 +1,17 @@
+{
+  "date": "2026-11-03",
+  "label": "native Windows touch, side-button emulation removed",
+  "executable_sha256": "402127cc99f7ee5f1fcf752a278c0608dfd69ebb17de552b3c69132fdb49a75c",
+  "pak_sha256": "b472ceb365211ba6e1de9f8f4fb4d9b799609ef3aeac5109165f5d270240553c",
+  "layout_tool_sha256": "4cffd68e9a65fdf0f32d65ab18289ce24c798f88f0d0cffbcb0256b84d065934",
+  "canonical_source_sha256": "a1bbc2f43a129b655f0068de8f28a731f1ef6814170419d3f4ec406436437cf1",
+  "converted_sha256": "cb18bdbe8a5104ac16a7aa923bbd350b7780e48f4c26a78c8e690b47adc86541",
+  "profile": "PerfTest / ID1",
+  "affinity": "0x4000 / LP14",
+  "cpu_multiplier": "11x, user controlled",
+  "target_fps": 240,
+  "auto_detect_frame_rate": false,
+  "vsync": 0,
+  "sampling": "Enter to verify and start, 3s preroll, Quit to stop",
+  "prior_mixed_input_run": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pvz-vulkan-lp14-240-touch-20261103-568b9e75"
+}

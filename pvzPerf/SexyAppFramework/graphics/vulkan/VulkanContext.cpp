@@ -384,7 +384,21 @@ void VulkanContext::CreateSwapchain(const VkSurfaceCapabilitiesKHR& caps, VkExte
             return vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, surface, count, values);
         });
     if (formats.empty()) throw std::runtime_error("Vulkan surface advertises no formats");
+    if (swapchainGeneration == 0 && scInfo.imageColorSpace == VK_COLOR_SPACE_EXTENDED_SRGB_LINEAR_EXT) {
+        const bool supported = std::any_of(formats.begin(), formats.end(), [](const auto& format) {
+            return format.format == VK_FORMAT_R16G16B16A16_SFLOAT &&
+                format.colorSpace == VK_COLOR_SPACE_EXTENDED_SRGB_LINEAR_EXT;
+        });
+        if (!supported) {
+            scInfo.imageFormat = VK_FORMAT_B8G8R8A8_UNORM;
+            scInfo.imageColorSpace = VK_COLOR_SPACE_SRGB_NONLINEAR_KHR;
+        }
+    }
     const auto chosenFormat=ChooseVulkanSurfaceFormat(formats,scInfo.imageFormat,scInfo.imageColorSpace);
+    // Resume/recreation must retain the renderer's original encoding. In
+    // particular, an SDR fallback cannot silently become HDR after resume.
+    swapchainConfig_.imageFormat = chosenFormat.format;
+    swapchainConfig_.imageColorSpace = chosenFormat.colorSpace;
     scInfo.imageFormat=swapchainFormat=chosenFormat.format;
     scInfo.imageColorSpace=swapchainColorSpace=chosenFormat.colorSpace;
 
@@ -771,18 +785,28 @@ VulkanContext::FrameContext VulkanContext::BeginCommands() {
     // frame. A skipped attempt leaves the slot, command buffer, acquire
     // semaphore and serials untouched; the next draw retries the same slot.
     if (resource.serial > completedSerial) {
-        const auto status = vkGetFenceStatus(device, resource.fence);
-        if (status == VK_NOT_READY) return {};
+        VkResult status;
+        {
+            status = vkGetFenceStatus(device, resource.fence);
+        }
+        if (status == VK_NOT_READY) {
+            return {};
+        }
         VK_CHECK(status);
         completedSerial = std::max(completedSerial, resource.serial);
     }
 
     uint32_t imageIndex = 0;
-    const auto acquired=vkAcquireNextImageKHR(device, swapchain, 0,
-        resource.acquired, VK_NULL_HANDLE,&imageIndex);
+    VkResult acquired;
+    {
+        acquired = vkAcquireNextImageKHR(device, swapchain, 0,
+            resource.acquired, VK_NULL_HANDLE, &imageIndex);
+    }
     // No image was acquired, so the semaphore remains unsignaled and can be
     // reused unchanged. Do not convert presentation backpressure into a wait.
-    if (acquired == VK_NOT_READY || acquired == VK_TIMEOUT) return {};
+    if (acquired == VK_NOT_READY || acquired == VK_TIMEOUT) {
+        return {};
+    }
     if (acquired == VK_ERROR_OUT_OF_DATE_KHR) {
         swapchainDirty_=true;     // Next frame rebuilds only when the surface is drawable.
         return {};                // valid=false
@@ -883,8 +907,10 @@ void VulkanContext::EndFrame() {
     submit.pCommandBufferInfos = &commands;
     submit.signalSemaphoreInfoCount = 1;
     submit.pSignalSemaphoreInfos = &signal;
-    VK_CHECK(vkResetFences(device, 1, &resource.fence));
-    VK_CHECK(VulkanContext::queueSubmit2(graphicsQueue, 1, &submit, resource.fence));
+    {
+        VK_CHECK(vkResetFences(device, 1, &resource.fence));
+        VK_CHECK(VulkanContext::queueSubmit2(graphicsQueue, 1, &submit, resource.fence));
+    }
     resource.serial = submittedSerial = recordingSerial;
     recordingSerial = 0;
     frameActive_ = false;
@@ -897,7 +923,10 @@ void VulkanContext::EndFrame() {
     present.pSwapchains = &swapchain;
     uint32_t imageIndex = currentImageIndex_;
     present.pImageIndices = &imageIndex;
-    const auto result=vkQueuePresentKHR(presentQueue,&present);
+    VkResult result;
+    {
+        result = vkQueuePresentKHR(presentQueue, &present);
+    }
     // 仅 OUT_OF_DATE 触发重建；SUBOPTIMAL 在安卓强制 IDENTITY（合成器旋转）
     // 形态下每次 present 都返回，当作正常状态——标脏即逐帧重建风暴，
     // 且 VK_CHECK 拒收 SUBOPTIMAL 会直接致命（"result failed: 1000001003"）。

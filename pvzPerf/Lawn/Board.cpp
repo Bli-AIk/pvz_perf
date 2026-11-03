@@ -229,6 +229,8 @@ Board::Board(LawnApp* theApp)
 //0x408670、0x408690
 Board::~Board()
 {
+    if (mWidgetManager) mWidgetManager->CancelTouches(this);
+    DisposeTouchState();
 	delete mAdvice;
 	delete mCursorObject;
 	delete mCursorPreview;
@@ -4079,6 +4081,13 @@ void Board::UpdateMousePosition()
 {
 	UpdateCursor();
 	UpdateToolTip();
+    if (!UpdateTouchHighlights())
+        UpdatePointerHighlights(mApp->mWidgetManager->mLastMouseX - mX,
+            mApp->mWidgetManager->mLastMouseY - mY);
+}
+
+void Board::UpdatePointerHighlights(int aMouseX, int aMouseY)
+{
 	Plant* aPlant = nullptr;
 	while (IteratePlants(aPlant))
 	{
@@ -4086,9 +4095,6 @@ void Board::UpdateMousePosition()
 	}
 
 	SeedType aCursorSeedType = GetSeedTypeInCursor();
-	int aMouseX = mApp->mWidgetManager->mLastMouseX - mX;
-	int aMouseY = mApp->mWidgetManager->mLastMouseY - mY;
-
 	// 破罐者关卡中，检测并高亮鼠标悬浮的罐子
 	if (mApp->IsScaryPotterLevel())
 	{
@@ -4141,8 +4147,8 @@ void Board::UpdateMousePosition()
 	// 咖啡豆及坚果包扎术
 	if (aCursorSeedType == SeedType::SEED_INSTANT_COFFEE)
 	{
-		int aGridX = PlantingPixelToGridX(mApp->mWidgetManager->mLastMouseX, mApp->mWidgetManager->mLastMouseY, aCursorSeedType);
-		int aGridY = PlantingPixelToGridY(mApp->mWidgetManager->mLastMouseX, mApp->mWidgetManager->mLastMouseY, aCursorSeedType);
+		int aGridX = PlantingPixelToGridX(aMouseX, aMouseY, aCursorSeedType);
+		int aGridY = PlantingPixelToGridY(aMouseX, aMouseY, aCursorSeedType);
 
 		Plant* aPlant = GetTopPlantAt(aGridX, aGridY, PlantPriority::TOPPLANT_ONLY_NORMAL_POSITION);
 		if (aPlant && aPlant->mIsAsleep && CanPlantAt(aGridX, aGridY, SeedType::SEED_INSTANT_COFFEE) == PlantingReason::PLANTING_OK)
@@ -4152,8 +4158,8 @@ void Board::UpdateMousePosition()
 	}
 	else if (aCursorSeedType == SeedType::SEED_WALLNUT || aCursorSeedType == SeedType::SEED_TALLNUT)
 	{
-		int aGridX = PlantingPixelToGridX(mApp->mWidgetManager->mLastMouseX, mApp->mWidgetManager->mLastMouseY, aCursorSeedType);
-		int aGridY = PlantingPixelToGridY(mApp->mWidgetManager->mLastMouseX, mApp->mWidgetManager->mLastMouseY, aCursorSeedType);
+		int aGridX = PlantingPixelToGridX(aMouseX, aMouseY, aCursorSeedType);
+		int aGridY = PlantingPixelToGridY(aMouseX, aMouseY, aCursorSeedType);
 
 		Plant* aPlant = GetTopPlantAt(aGridX, aGridY, PlantPriority::TOPPLANT_ONLY_PUMPKIN);
 		if (aPlant && aPlant->mSeedType == aCursorSeedType && CanPlantAt(aGridX, aGridY, aCursorSeedType) == PlantingReason::PLANTING_OK)
@@ -4163,8 +4169,8 @@ void Board::UpdateMousePosition()
 	}
 	else if (aCursorSeedType == SeedType::SEED_PUMPKINSHELL)
 	{
-		int aGridX = PlantingPixelToGridX(mApp->mWidgetManager->mLastMouseX, mApp->mWidgetManager->mLastMouseY, aCursorSeedType);
-		int aGridY = PlantingPixelToGridY(mApp->mWidgetManager->mLastMouseX, mApp->mWidgetManager->mLastMouseY, aCursorSeedType);
+		int aGridX = PlantingPixelToGridX(aMouseX, aMouseY, aCursorSeedType);
+		int aGridY = PlantingPixelToGridY(aMouseX, aMouseY, aCursorSeedType);
 
 		Plant* aPlant = GetTopPlantAt(aGridX, aGridY, PlantPriority::TOPPLANT_ONLY_NORMAL_POSITION);
 		if (aPlant && aPlant->mSeedType == SeedType::SEED_PUMPKINSHELL && CanPlantAt(aGridX, aGridY, SeedType::SEED_PUMPKINSHELL) == PlantingReason::PLANTING_OK)
@@ -4547,7 +4553,7 @@ void Board::MouseDownCobcannonFire(int x, int y, int theClickCount)
 		if (mCursorObject->mCursorType != CursorType::CURSOR_TYPE_PLANT_FROM_DUPLICATOR)
 		{
 			Plant* aCobcannon = mPlants.DataArrayTryToGet(mCursorObject->mCobCannonPlantID);
-			if (aCobcannon)
+			if (aCobcannon && !aCobcannon->mDead && aCobcannon->mState == PlantState::STATE_COBCANNON_READY)
 			{
 				aCobcannon->CobCannonFire(static_cast<std::int64_t>(mLevelTimeNs), x, y);
 			}
@@ -5163,12 +5169,12 @@ bool Board::MouseHitTest(int x, int y, HitResult* theHitResult)
 		return false;
 	}
 
-	if (mMenuButton->IsMouseOver() && CanInteractWithBoardButtons())
+	if (mMenuButton->HitTest(x, y, this) && CanInteractWithBoardButtons())
 	{
 		theHitResult->mObjectType = GameObjectType::OBJECT_TYPE_MENU_BUTTON;
 		return true;
 	}
-	else if (mStoreButton && mStoreButton->IsMouseOver() && CanInteractWithBoardButtons())
+	else if (mStoreButton && mStoreButton->HitTest(x, y, this) && CanInteractWithBoardButtons())
 	{
 		theHitResult->mObjectType = GameObjectType::OBJECT_TYPE_STORE_BUTTON;
 		return true;
@@ -5452,9 +5458,10 @@ void Board::PickUpTool(GameObjectType theObjectType)
 //0x411F20
 void Board::MouseDown(int x, int y, int theClickCount)
 {
+	PrepareMouseSelection();
 	RefreshHudLayout();
 	// Move and click may arrive between updates; feeding tools use highlights.
-	UpdateMousePosition();
+	UpdatePointerHighlights(x, y);
 	Widget::MouseDown(x, y, theClickCount);
 	mIgnoreMouseUp = !CanInteractWithBoardButtons();
 	if (mTimeStopCounter > 0)
@@ -5465,11 +5472,11 @@ void Board::MouseDown(int x, int y, int theClickCount)
 	if (mChallenge->MouseDown(x, y, theClickCount, &aHitResult))
 		return;
 
-	if (mMenuButton->IsMouseOver() && CanInteractWithBoardButtons() && theClickCount > 0)
+	if (mMenuButton->HitTest(x, y, this) && CanInteractWithBoardButtons() && theClickCount > 0)
 	{
 		mApp->PlaySample(Sexy::SOUND_GRAVEBUTTON);
 	}
-	else if (mStoreButton && mStoreButton->IsMouseOver() && CanInteractWithBoardButtons() && theClickCount > 0)
+	else if (mStoreButton && mStoreButton->HitTest(x, y, this) && CanInteractWithBoardButtons() && theClickCount > 0)
 	{
 		if (mApp->mGameMode == GameMode::GAMEMODE_LIMBO_ZEN_GARDEN || mApp->mGameMode == GameMode::GAMEMODE_TREE_OF_WISDOM)
 		{
@@ -5801,7 +5808,7 @@ void Board::MouseUp(int x, int y, int theClickCount)
 
 	if (CanInteractWithBoardButtons() && theClickCount > 0)
 	{
-		if (mMenuButton->IsMouseOver() && !mApp->GetDialog(Dialogs::DIALOG_GAME_OVER) && !mApp->GetDialog(Dialogs::DIALOG_LEVEL_COMPLETE))
+		if (mMenuButton->HitTest(x, y, this) && !mApp->GetDialog(Dialogs::DIALOG_GAME_OVER) && !mApp->GetDialog(Dialogs::DIALOG_LEVEL_COMPLETE))
 		{
 			mMenuButton->mIsOver = false;
 			mMenuButton->mIsDown = false;
@@ -5822,7 +5829,7 @@ void Board::MouseUp(int x, int y, int theClickCount)
 				mApp->DoBackToMain();
 			}
 		}
-		else if(mStoreButton && mStoreButton->IsMouseOver())
+		else if(mStoreButton && mStoreButton->HitTest(x, y, this))
 		{
 			// B 形态 -> 动作枚举表（上方 kStoreButtonAction，GameMode 直下标）；
 			// 异构动作体保留 switch；原 UPSELL 死分支（else if (false)）随表移除（见上表注）
@@ -5855,6 +5862,7 @@ void Board::Pause(bool thePause)
 {
 	if (mPaused == thePause)
 		return;
+    if (thePause && mWidgetManager) mWidgetManager->CancelTouches(this);
 
 	mPaused = thePause;
 	if (thePause && mApp->mPlayerInfo->mCoins > 0)
@@ -6244,6 +6252,7 @@ void Board::UpdateGameObjects(std::uint64_t theLevelDeltaNs)
 
 	mCursorPreview->Update();
 	mCursorObject->Update();
+    UpdateTouchCursors();
 
 	for (int i = 0; !survivalRepick && i < mSeedBank->mNumPackets; i++)
 	{
@@ -7843,7 +7852,7 @@ void Board::DrawGameObjects(Graphics* g)
 		/* [5]  RENDER_ITEM_PLANT                */ [](Board* aBoard, Graphics* g, RenderItem& aRenderItem) { Plant* aPlant = aRenderItem.mPlant; const float x = g->mTransX, y = g->mTransY; if (aPlant->BeginDraw(g)) { aPlant->Draw(static_cast<std::int64_t>(aBoard->mLevelTimeNs), g); aPlant->EndDraw(g, x, y); } },
 		/* [6]  RENDER_ITEM_PLANT_OVERLAY        */ [](Board* aBoard, Graphics* g, RenderItem& aRenderItem) { Plant* aPlant = aRenderItem.mPlant; const float x = g->mTransX, y = g->mTransY; if (aPlant->BeginDraw(g)) { aBoard->mApp->mZenGarden->DrawPlantOverlay(g, aPlant); aPlant->EndDraw(g, x, y); } },
 		/* [7]  RENDER_ITEM_PLANT_MAGNET_ITEMS   */ [](Board* aBoard, Graphics* g, RenderItem& aRenderItem) { Plant* aPlant = aRenderItem.mPlant; const float x = g->mTransX, y = g->mTransY; if (aPlant->BeginDraw(g)) { aPlant->DrawMagnetItems(static_cast<std::int64_t>(aBoard->mLevelTimeNs), g); aPlant->EndDraw(g, x, y); } },
-		/* [8]  RENDER_ITEM_CURSOR_PREVIEW       */ [](Board*, Graphics* g, RenderItem& aRenderItem) { CursorPreview* aCursorPreview = aRenderItem.mCursorPreview; const float x = g->mTransX, y = g->mTransY; if (aCursorPreview->BeginDraw(g)) { aCursorPreview->Draw(g); aCursorPreview->EndDraw(g, x, y); } },
+		/* [8]  RENDER_ITEM_CURSOR_PREVIEW       */ [](Board* board, Graphics* g, RenderItem& aRenderItem) { CursorPreview* aCursorPreview = aRenderItem.mCursorPreview; const float x = g->mTransX, y = g->mTransY; if (aCursorPreview->BeginDraw(g)) { aCursorPreview->Draw(g); aCursorPreview->EndDraw(g, x, y); } board->DrawTouchPreviews(g); },
 		/* [9]  RENDER_ITEM_PARTICLE             */ [](Board* aBoard, Graphics* g, RenderItem& aRenderItem) {
 			const ParticleEffect aEffect = aRenderItem.mParticleSytem->mEffectType;
 			const bool aBankArrow = aEffect == ParticleEffect::PARTICLE_SEED_PACKET_PICK &&
@@ -8986,6 +8995,9 @@ void Board::DrawUIBottom(Graphics* g)
 	}
 
 	DrawShovel(g);
+    // Card/tool frames share bottom UI occlusion with their owners. Drawing
+    // them in DrawUITop would leave a floating frame over an occluding zombie.
+    DrawTouchSelection(g);
 	if (!StageHasFog())
 	{
 		DrawTopRightUI(g);
@@ -9224,6 +9236,7 @@ void Board::DrawUITop(Graphics* g)
 	}
 
 	const float aBeforeCursorX = g->mTransX, aBeforeCursorY = g->mTransY;
+    DrawTouchCursors(g);
 	if (mTimeStopCounter == 0 && mCursorObject->BeginDraw(g))
 	{
 		mCursorObject->Draw(g);

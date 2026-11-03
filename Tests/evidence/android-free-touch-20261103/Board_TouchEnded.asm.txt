@@ -1,0 +1,59 @@
+
+..\tv_assets\FREE_3.18.0_Phone\apk_contents\split_config.arm64_v8a\lib\arm64-v8a\libpvz.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+00000000019ff6d4 <Board::TouchEnded(Sexy::Touch*)>:
+ 19ff6d4:      	sub	sp, sp, #0x30
+ 19ff6d8:      	stp	x29, x30, [sp, #0x20]
+ 19ff6dc:      	add	x29, sp, #0x20
+ 19ff6e0:      	stur	x0, [x29, #-0x8]
+ 19ff6e4:      	str	x1, [sp, #0x10]
+ 19ff6e8:      	ldur	x0, [x29, #-0x8]
+ 19ff6ec:      	str	x0, [sp]
+ 19ff6f0:      	ldr	x1, [sp, #0x10]
+ 19ff6f4:      	bl	0x2d985f0 <_ZN5Board17ProcessTouchEndedEPN4Sexy5TouchE@plt>
+ 19ff6f8:      	ldr	x0, [sp]
+ 19ff6fc:      	ldr	x1, [sp, #0x10]
+ 19ff700:      	bl	0x2d984a0 <_ZN5Board11RemoveTouchEPN4Sexy5TouchE@plt>
+ 19ff704:      	ldr	x8, [sp]
+ 19ff708:      	str	xzr, [x8, #0x470]
+ 19ff70c:      	ldr	w8, [x8, #0x468]
+ 19ff710:      	cbnz	w8, 0x19ff79c <Board::TouchEnded(Sexy::Touch*)+0xc8>
+ 19ff714:      	b	0x19ff718 <Board::TouchEnded(Sexy::Touch*)+0x44>
+ 19ff718:      	ldr	x8, [sp]
+ 19ff71c:      	ldr	x0, [x8, #0x110]
+ 19ff720:      	bl	0x2d97400 <_ZN7LawnApp19IsWhackAZombieLevelEv@plt>
+ 19ff724:      	tbz	w0, #0x0, 0x19ff740 <Board::TouchEnded(Sexy::Touch*)+0x6c>
+ 19ff728:      	b	0x19ff72c <Board::TouchEnded(Sexy::Touch*)+0x58>
+ 19ff72c:      	ldr	x8, [sp]
+ 19ff730:      	ldr	x0, [x8, #0x220]
+ 19ff734:      	bl	0x2d98600 <_ZN8SeedBank27GetSelectedSeedPacketsCountEv@plt>
+ 19ff738:      	str	w0, [sp, #0xc]
+ 19ff73c:      	b	0x19ff750 <Board::TouchEnded(Sexy::Touch*)+0x7c>
+ 19ff740:      	ldr	x0, [sp]
+ 19ff744:      	bl	0x2d985e0 <_ZN5Board14GetCursorCountEv@plt>
+ 19ff748:      	str	w0, [sp, #0xc]
+ 19ff74c:      	b	0x19ff750 <Board::TouchEnded(Sexy::Touch*)+0x7c>
+ 19ff750:      	ldr	w8, [sp, #0xc]
+ 19ff754:      	subs	w8, w8, #0x1
+ 19ff758:      	b.gt	0x19ff784 <Board::TouchEnded(Sexy::Touch*)+0xb0>
+ 19ff75c:      	b	0x19ff760 <Board::TouchEnded(Sexy::Touch*)+0x8c>
+ 19ff760:      	ldr	w8, [sp, #0xc]
+ 19ff764:      	subs	w8, w8, #0x1
+ 19ff768:      	b.ne	0x19ff798 <Board::TouchEnded(Sexy::Touch*)+0xc4>
+ 19ff76c:      	b	0x19ff770 <Board::TouchEnded(Sexy::Touch*)+0x9c>
+ 19ff770:      	ldr	x8, [sp]
+ 19ff774:      	ldr	x8, [x8, #0x2c0]
+ 19ff778:      	ldr	w8, [x8, #0x44]
+ 19ff77c:      	cbnz	w8, 0x19ff798 <Board::TouchEnded(Sexy::Touch*)+0xc4>
+ 19ff780:      	b	0x19ff784 <Board::TouchEnded(Sexy::Touch*)+0xb0>
+ 19ff784:      	ldr	x0, [sp]
+ 19ff788:      	bl	0x2d98460 <_ZN5Board22ClearSeedPacketCursorsEv@plt>
+ 19ff78c:      	ldr	x0, [sp]
+ 19ff790:      	bl	0x2d98560 <_ZN5Board16ClearToolCursorsEv@plt>
+ 19ff794:      	b	0x19ff798 <Board::TouchEnded(Sexy::Touch*)+0xc4>
+ 19ff798:      	b	0x19ff79c <Board::TouchEnded(Sexy::Touch*)+0xc8>
+ 19ff79c:      	ldp	x29, x30, [sp, #0x20]
+ 19ff7a0:      	add	sp, sp, #0x30
+ 19ff7a4:      	ret

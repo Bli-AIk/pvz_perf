@@ -1,0 +1,13 @@
+Test project C:/Users/Administrator/CLionProjects/codex/PlantsVsZombiesModern/out/x64-win32-vulkan
+    Start 36: pvz_game_viewport
+1/4 Test #36: pvz_game_viewport ................   Passed    0.03 sec
+    Start 44: pvz_time_counter_save
+2/4 Test #44: pvz_time_counter_save ............   Passed    0.01 sec
+    Start 46: pvz_v7_save_schema
+3/4 Test #46: pvz_v7_save_schema ...............   Passed    0.01 sec
+    Start 47: pvz_android_touch_input
+4/4 Test #47: pvz_android_touch_input ..........   Passed    0.01 sec
+
+100% tests passed out of 4
+
+Total Test time (real) =   0.07 sec

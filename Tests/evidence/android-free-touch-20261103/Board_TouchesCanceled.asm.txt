@@ -1,0 +1,22 @@
+
+..\tv_assets\FREE_3.18.0_Phone\apk_contents\split_config.arm64_v8a\lib\arm64-v8a\libpvz.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+00000000019fedf0 <Board::TouchesCanceled()>:
+ 19fedf0:      	sub	sp, sp, #0x20
+ 19fedf4:      	stp	x29, x30, [sp, #0x10]
+ 19fedf8:      	add	x29, sp, #0x10
+ 19fedfc:      	str	x0, [sp, #0x8]
+ 19fee00:      	ldr	x0, [sp, #0x8]
+ 19fee04:      	str	x0, [sp]
+ 19fee08:      	bl	0x2d98560 <_ZN5Board16ClearToolCursorsEv@plt>
+ 19fee0c:      	ldr	x0, [sp]
+ 19fee10:      	bl	0x2d98570 <_ZN5Board21ClearCobCannonCursorsEv@plt>
+ 19fee14:      	ldr	x0, [sp]
+ 19fee18:      	bl	0x2d98460 <_ZN5Board22ClearSeedPacketCursorsEv@plt>
+ 19fee1c:      	ldr	x0, [sp]
+ 19fee20:      	bl	0x2d984b0 <_ZN5Board16RemoveAllTouchesEv@plt>
+ 19fee24:      	ldp	x29, x30, [sp, #0x10]
+ 19fee28:      	add	sp, sp, #0x20
+ 19fee2c:      	ret

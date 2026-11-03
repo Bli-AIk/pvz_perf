@@ -18,9 +18,12 @@ public:
 
 public:
 	CursorObject();
+    void CreateHammerAnimation();
 
 	void					Update();
+    void Update(int x, int y); // Board-local pointer coordinates; also used by touch.
 	void					Draw(Graphics* g);
+    void Draw(Graphics* g, int x, int y);
 	void					Die();
 };
 
@@ -34,6 +37,7 @@ public:
 	CursorPreview();
 
 	void					Update();
+    void Update(int x, int y); // Board-local pointer coordinates.
 	void					Draw(Graphics* g);
 };
 

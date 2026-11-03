@@ -13,6 +13,7 @@
 | Vulkan帧准入 | test_vulkan_frame_admission.py编译实际BeginCommands | 资源忙时仅延期绘制，资源和模拟时间不被重置 |
 | 存档 | time_counter_save、v7_save_schema，真实原版→v4读写／重载 | 原输入SHA256不变；当前游戏仅直接读取v4 |
 | 实际图像与资源 | test-image-runtime.ps1链接生产对象，使用实际PAK | 字体、资源分组、reanim外观、CPU粒子、共享纹理及反复释放通过 |
+| Windows触点输入 | Win7 WM_TOUCH／Win10 WM_POINTER；延迟分发、双触点、侧键移除、共享选择、炮拖动、花园、图集与保存回归 | Vulkan／OpenGL生产对象回归及Win7导入检查通过；真实触屏和Win7系统实测待确认，见[当前证据](../Tests/evidence/windows-native-touch-20261103/README.md) |
 | 拉霸HUD与透明边缘 | hud-seams：18组实际绘制／命中／拉动，实际噬碑藤图集GPU读回 | 窗口／Board／种子栏偏移一致，最近邻不变，线性修补与旧shader参考差不超过一个颜色级；手机显示需另行确认 |
 | 植物主要行为 | 53种植物各运行100／30／240Hz及不规则步长，212个真实对象场景 | 核对首轮攻击、产量和主要特殊动作；不代表所有交互／地形／存档状态组合已验收 |
 | 僵尸主要行为 | 34种实际ZombieType各四种步长，136个主要行为场景及20项定身恢复 | 核对普通／专属动作链；僵王从公开攻击入口分别验证，不代表随机选招、全血量阶段及死亡结算已验收 |

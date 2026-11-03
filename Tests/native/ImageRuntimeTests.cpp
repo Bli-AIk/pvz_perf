@@ -1,3 +1,5 @@
+#include "Lawn/BoardTouch.h"
+#include "Lawn/System/SaveGame.h"
 #include "ReanimClock.h"
 #include "SexyAppFramework/SexyAppBase.h"
 #include "SexyAppFramework/graphics/DDInterface.h"
@@ -50,6 +52,10 @@
 #include "Lawn/Widget/GameSelector.h"
 #include <chrono>
 #include "SexyAppFramework/widget/HyperlinkWidget.h"
+#include "SexyAppFramework/widget/ListWidget.h"
+#include "SexyAppFramework/widget/ListListener.h"
+#include "SexyAppFramework/widget/ButtonWidget.h"
+#include "SexyAppFramework/widget/ButtonListener.h"
 #include "SexyAppFramework/misc/MTRand.h"
 #include "Sexy.TodLib/TodFoley.h"
 #include "SexyAppFramework/imagelib/ImageLib.h"
@@ -86,6 +92,7 @@ namespace
 using namespace Sexy;
 bool gPlantCatalogOnly=false;
 bool gZombieCatalogOnly=false;
+bool gIce3Only=false;
 bool gMinigameRulesOnly=false;
 bool gPuzzleRulesOnly=false;
 bool gSurvivalRulesOnly=false;
@@ -102,6 +109,8 @@ bool gOpeningRulesOnly=false;
 bool gLifecycleRulesOnly=false;
 bool gGraveRulesOnly=false;
 bool gHudSeamsOnly=false;
+bool gTouchOnly=false;
+bool gTouchPerf=false;
 
 LONG CALLBACK SuppressFixtureCrashDialogs(EXCEPTION_POINTERS* exception)
 {
@@ -134,6 +143,7 @@ LONG CALLBACK SuppressFixtureCrashDialogs(EXCEPTION_POINTERS* exception)
 class TestApp final : public LawnApp
 {
 public:
+    using SexyAppBase::ProcessMessageNow;
     using SexyAppBase::ProcessSafeDeleteList;
     std::function<bool(bool*)> fixtureNestedPump;
     bool UpdateAppStep(bool* updated) override {
@@ -2790,6 +2800,103 @@ void ZombieBehaviorCatalogRuntime(TestApp& app)
     profile.mLevel=31;profile.mFinishedAdventure=1;
     app.mPlayerInfo=&profile;app.mZenGarden=&garden;
     app.mGameMode=GAMEMODE_ADVENTURE;app.mGameScene=SCENE_PLAYING;
+    for(const auto type:{ZOMBIE_GARGANTUAR,ZOMBIE_REDEYE_GARGANTUAR})
+    for(const int hz:{100,30,240,0})
+    for(const int stun:{0,1,2})
+    {
+        clocks.mVisualTimeNs=clocks.mBattleTimeNs=0;
+        Sexy::gLegacyTickPhaseNs=0;Sexy::SRand(0x1CE3);
+        Board board(&app);board.mLevel=31;board.mCurrentWave=6;board.mNumWaves=20;
+        board.mSeedBank->mNumPackets=0;board.mBackground=BACKGROUND_1_DAY;
+        for(int row=0;row<MAX_GRID_SIZE_Y;++row) board.mPlantRow[row]=row==5?PLANTROW_DIRT:PLANTROW_NORMAL;
+        auto* giant=board.AddZombieInRow(type,2,0);
+        giant->mX=700;giant->mRootBindingGeneration=0;
+        giant->mBodyHealth=giant->mBodyMaxHealth/2-100;
+        giant->mZombiePhase=PHASE_GARGANTUAR_THROWING;
+        giant->PlayZombieReanim(0,ReanimTrackId::anim_throw,REANIM_PLAY_ONCE_AND_HOLD,0,24.f);
+        auto* animation=app.ReanimationGet(giant->mBodyReanimID);
+        bool armed=false,applied=false,retried=false,finishedFirst=false;
+        int imps=0;
+        constexpr std::array<long long,7> jitter{1'234'567,18'765'433,4'000'003,32'333'333,7'891'011,5'432'109,11'111'111};
+        for(int index=0;board.mLevelTimeNs<15'000'000'000ULL;++index)
+        {
+            const bool pending=animation->ShouldTriggerTimedEvent(.74f);
+            if(!armed && pending) {
+                Require(giant->mHasObject,"ICE3 event was committed before the plant could interrupt it");
+                armed=true;
+                if(stun==2) {giant->ApplyButter(board.mLevelTimeNs);applied=true;} // Projectile stage after the last actor update.
+            }
+            const auto step=static_cast<unsigned long long>(hz?1'000'000'000ULL/hz:jitter[index%jitter.size()]);
+            Sexy::ApplySimulationStep(step);board.mLevelTimeNs+=step;
+            clocks.mVisualTimeNs+=step;clocks.mBattleTimeNs=board.mLevelTimeNs;
+            app.mEffectSystem->UpdateAt(clocks.mVisualTimeNs,clocks.mBattleTimeNs);
+            if(pending && armed && !applied && stun==1) {
+                giant->HitIceTrap(board.mLevelTimeNs,clocks.mVisualTimeNs,board.mLevelTimeNs); // Plant stage before actors.
+                applied=true;
+            }
+            board.UpdateGameObjects(step);
+            if(armed && giant->mZombiePhase==PHASE_ZOMBIE_NORMAL) finishedFirst=true;
+            if(finishedFirst && giant->mZombiePhase==PHASE_GARGANTUAR_THROWING) retried=true;
+            imps=0;Zombie* other=nullptr;while(board.IterateZombies(other)) imps+=other->mZombieType==ZOMBIE_IMP;
+            if(imps) break;
+            app.mEffectSystem->ProcessDeleteQueue();
+        }
+        std::cout<<"ICE3 result type="<<int(type)<<" Hz="<<hz<<" stun="<<stun<<" armed="<<armed<<" retried="<<retried<<" imps="<<imps<<'\n';
+        Require(armed&&imps==1&&!giant->mHasObject,"Gargantuar did not eventually release exactly one imp");
+        Require(stun?retried:!retried,"ICE3 did not skip and retry the throw, or the unstunned control retried");
+        std::cout<<"PASS ICE3 type="<<int(type)<<" Hz="<<hz<<" stun="<<stun<<" retried="<<retried<<" imps="<<imps<<'\n';
+    }
+    for(const auto type:{ZOMBIE_GARGANTUAR,ZOMBIE_REDEYE_GARGANTUAR})
+    for(const int hz:{100,30,240,0})
+    for(const int stun:{0,1,2})
+    {
+        clocks.mVisualTimeNs=clocks.mBattleTimeNs=0;
+        Sexy::gLegacyTickPhaseNs=0;Sexy::SRand(0x1CE4);
+        Board board(&app);board.mLevel=31;board.mCurrentWave=6;board.mNumWaves=20;
+        board.mSeedBank->mNumPackets=0;board.mBackground=BACKGROUND_1_DAY;
+        for(int row=0;row<MAX_GRID_SIZE_Y;++row) board.mPlantRow[row]=row==5?PLANTROW_DIRT:PLANTROW_NORMAL;
+        auto* target=board.NewPlant(5,2,SEED_WALLNUT,SEED_NONE);
+        auto* giant=board.AddZombieInRow(type,2,0);
+        giant->mX=float(target->mX);giant->mRootBindingGeneration=0;
+        Require(giant->FindPlantTarget(ATTACKTYPE_CHEW)==target,"ICE4 fixture wallnut is outside the real smash target rectangle");
+        giant->mZombiePhase=PHASE_GARGANTUAR_SMASHING;
+        giant->PlayZombieReanim(0,ReanimTrackId::anim_smash,REANIM_PLAY_ONCE_AND_HOLD,0,16.f);
+        auto* animation=app.ReanimationGet(giant->mBodyReanimID);
+        bool armed=false,applied=false,retried=false,finishedFirst=false;
+        constexpr std::array<long long,7> jitter{1'234'567,18'765'433,4'000'003,32'333'333,7'891'011,5'432'109,11'111'111};
+        for(int index=0;board.mLevelTimeNs<20'000'000'000ULL;++index)
+        {
+            const bool pending=animation->ShouldTriggerTimedEvent(.64f);
+            if(!armed && pending) {
+                Require(!target->mDead && !target->mSquished,"ICE4 smash was committed before the plant could interrupt it");
+                armed=true;
+                if(stun==2) {giant->ApplyButter(board.mLevelTimeNs);applied=true;}
+            }
+            const auto step=static_cast<unsigned long long>(hz?1'000'000'000ULL/hz:jitter[index%jitter.size()]);
+            Sexy::ApplySimulationStep(step);board.mLevelTimeNs+=step;
+            clocks.mVisualTimeNs+=step;clocks.mBattleTimeNs=board.mLevelTimeNs;
+            app.mEffectSystem->UpdateAt(clocks.mVisualTimeNs,clocks.mBattleTimeNs);
+            if(pending && armed && !applied && stun==1) {
+                giant->HitIceTrap(board.mLevelTimeNs,clocks.mVisualTimeNs,board.mLevelTimeNs);
+                applied=true;
+            }
+            board.UpdateGameObjects(step);
+            if(armed && !finishedFirst && giant->mZombiePhase==PHASE_ZOMBIE_NORMAL) {
+                Require(stun && !target->mDead && !target->mSquished,"ICE4 first smash must finish without hitting the wallnut");
+                finishedFirst=true;
+            }
+            if(finishedFirst && giant->mZombiePhase==PHASE_GARGANTUAR_SMASHING) retried=true;
+            if(target->mSquished || target->mDead) break; // Squish retains its flattened sprite for five seconds before Die.
+            app.mEffectSystem->ProcessDeleteQueue();
+        }
+        std::cout<<"ICE4 result type="<<int(type)<<" Hz="<<hz<<" stun="<<stun<<" armed="<<armed
+            <<" finishedFirst="<<finishedFirst<<" retried="<<retried<<" squished="<<target->mSquished<<'\n';
+        Require(armed && target->mSquished,"Gargantuar did not eventually squish its real ICE4 target");
+        Require(stun?(applied&&finishedFirst&&retried):(!finishedFirst&&!retried),
+            "ICE4 merely delayed the same smash instead of skipping its event and starting a second smash");
+        std::cout<<"PASS ICE4 type="<<int(type)<<" Hz="<<hz<<" stun="<<stun<<" retried="<<retried<<'\n';
+    }
+    if(gIce3Only) return;
     for(const int hz:{100,30,240,0})
     {
         Sexy::SRand(0x6C715);Sexy::gLegacyTickPhaseNs=0;
@@ -4987,7 +5094,11 @@ void ActorBirthClockRuntime(TestApp& app)
             // two ordinary actors; their first update must consume its age.
             if(body&&((group==0&&type==SEED_PEASHOOTER)||(group==1&&type==ZOMBIE_NORMAL))) {
                 constexpr auto step=7'891'011ULL;
-                const auto expected=body->SamplePlaybackAt(animationNow+step).phaseNs;
+                // Retained on-board zombies deliberately do not update during
+                // the intro. Their street-preview counterparts are group 2.
+                const bool retainedIntroZombie = group==1 && scene==SCENE_LEVEL_INTRO;
+                const auto expected = retainedIntroZombie ? body->SamplePlayback().phaseNs
+                    : body->SamplePlaybackAt(animationNow+step).phaseNs;
                 Sexy::ApplySimulationStep(step);holder.mVisualTimeNs+=step;
                 if(scene==SCENE_PLAYING) board.mLevelTimeNs+=step;
                 holder.mBattleTimeNs=board.mLevelTimeNs;board.UpdateGameObjects(scene==SCENE_PLAYING?step:0);
@@ -5665,6 +5776,1176 @@ void LossRulesRuntime(TestApp& app)
     std::cout<<"PASS actual loss routes: 224 cutscene/direct-modal, frozen clocks, visible movie, retry and menu contexts\n";
 }
 
+
+Image* gTouchFrameReference=nullptr;
+
+bool TouchFrameMatches(const std::vector<unsigned int>& actual,const std::vector<unsigned int>& expected)
+{
+    if(actual.size()!=expected.size()) return false;
+    int maximum=0;
+    for(size_t i=0;i<actual.size();++i)
+        for(int shift=0;shift<32;shift+=8)
+            maximum=std::max(maximum,std::abs(int((actual[i]>>shift)&255)-int((expected[i]>>shift)&255)));
+    std::cout<<"Frame atlas/reference maximum channel difference="<<maximum<<'\n';
+#if defined(PVZ_GPU_OPENGL)
+    return maximum<=1; // Repacked normalized UVs can round one RGBA8 unit in the GL sampler.
+#else
+    return maximum==0;
+#endif
+}
+
+void TouchPresentationRuntime(TestApp& app, Board& board)
+{
+    app.mReanimatorCache->PrebuildCacheFrames();
+    auto& render=*app.mDDInterface->mRenderInterface;
+    auto& manager=*app.mWidgetManager;
+    auto& contact=*board.mTouchState->selection;
+    auto& cursor=*contact.cursor;
+    const auto savedType=cursor.mCursorType;
+    const auto savedBackground=board.mBackground;
+    Require(gTouchFrameReference&&gTouchFrameReference->mWidth==104&&
+        gTouchFrameReference->mHeight==144,"Standalone TV selection frame is missing from the actual PAK");
+    for(const int width:{800,1400}) {
+        app.mScreenBounds=Rect((800-width)/2,0,width,600);manager.Resize(app.mScreenBounds,app.mScreenBounds);
+        for(const bool shovel:{false,true}) {
+                cursor.mCursorType=shovel?CURSOR_TYPE_SHOVEL:savedType;
+                const auto& packet=board.mSeedBank->mSeedPackets[cursor.mSeedBankIndex];
+                const Rect bounds=shovel?board.GetShovelButtonRect():Rect(app.mScreenBounds.mX+board.mSeedBank->mX+
+                    packet.mX+packet.mOffsetX,board.mSeedBank->mY+packet.mY,packet.mWidth,packet.mHeight);
+                std::unique_ptr<Image> actual(render.CreateRenderImage(width,600)),expected(render.CreateRenderImage(width,600));
+                const auto draw=[&](Image* target,bool production) {
+                    GpuImageDrawScope destination(render,target);Graphics g(target);
+                    g.mColor=Color::Black;g.FillRect(0,0,width,600);g.Translate(-app.mScreenBounds.mX,0);
+                    if(production) board.DrawTouchSelection(&g);
+                    else {
+                        for(int i=0;i<4;++i) {
+                            const Rect source(i&1?62:0,i&2?108:0,42,36);
+                            const Rect destination(i&1?bounds.mX+bounds.mWidth-18:bounds.mX-3,
+                                i&2?bounds.mY+bounds.mHeight-15:bounds.mY-3,21,18);
+                            g.DrawImage(gTouchFrameReference,destination,source);
+                        }
+                    }
+                };
+                draw(actual.get(),true);draw(expected.get(),false);render.Flush();
+                const auto pixels=render.ReadImagePixels(*actual);
+                Require(TouchFrameMatches(pixels.pixels,render.ReadImagePixels(*expected).pixels),
+                    "Selection UVs or card/shovel/widescreen placement differ from independent pixel-crop reference");
+                Require(std::count_if(pixels.pixels.begin(),pixels.pixels.end(),[](unsigned int p){return (p&255)>80;})>80,
+                    "Retained selection did not draw visible blue corners");
+                const auto name="touch-frame-"+std::to_string(width)+(shovel?"-shovel.png":"-card.png");
+                Require(ImageLib::WritePNGImage(name,width,600,pixels.pixels),"Cannot write selection frame proof");
+                // Exercise the actual bottom/top passes, with an opaque object
+                // between them. A frame accidentally left in top UI will leak
+                // blue pixels through this occluder.
+                {
+                    GpuImageDrawScope destination(render,actual.get());Graphics g(actual.get());
+                    g.mColor=Color::Black;g.FillRect(0,0,width,600);g.Translate(-app.mScreenBounds.mX,0);
+                    board.DrawUIBottom(&g);
+                    g.mColor=Color(191,31,47);
+                    g.FillRect(bounds.mX-5,bounds.mY-5,bounds.mWidth+10,bounds.mHeight+10);
+                    board.DrawUITop(&g);
+                }
+                render.Flush();
+                const auto occluded=render.ReadImagePixels(*actual);
+                const auto expectedColor=0xffbf1f2fu;
+                for(int py=std::max(0,bounds.mY-3);py<std::min(600,bounds.mY+bounds.mHeight+3);++py)
+                    for(int px=std::max(0,bounds.mX-app.mScreenBounds.mX-3);
+                        px<std::min(width,bounds.mX-app.mScreenBounds.mX+bounds.mWidth+3);++px)
+                        Require(occluded.pixels.at(py*width+px)==expectedColor,
+                            "Top UI redrew the card/tool frame over a later occluder");
+            }
+        }
+        cursor.mCursorType=savedType;
+        app.mScreenBounds=Rect(0,0,800,600);manager.Resize(app.mScreenBounds,app.mScreenBounds);
+        for(const auto background:{BACKGROUND_1_DAY,BACKGROUND_3_POOL,BACKGROUND_5_ROOF}) {
+            board.mBackground=background;
+            const int col=background==BACKGROUND_5_ROOF?2:5,row=background==BACKGROUND_3_POOL?3:1;
+            const int x=board.GridToPixelX(col,row),y=board.GridToPixelY(col,row);
+            const int height=board.GridToPixelY(col,1)-board.GridToPixelY(col,0);
+            const TouchEvent event{751,x+40,y+height/2};
+            for(const bool shovel:{false,true}) {
+            cursor.mCursorType=shovel?CURSOR_TYPE_SHOVEL:savedType;
+            Plant* shovelPlant=shovel?board.NewPlant(col,row,SEED_PEASHOOTER,SEED_NONE):nullptr;
+            manager.TouchBegan(event);board.UpdateTouchCursors();
+            Require(contact.preview->mGridX==col&&contact.preview->mGridY==row,"Guide preview cached the wrong planting cell");
+            contact.preview->mVisible=false; // Isolate the guides; invalid cells still show an intended region.
+            std::unique_ptr<Image> target(render.CreateRenderImage(800,600));
+            {
+                GpuImageDrawScope destination(render,target.get());Graphics g(target.get());
+                g.mColor=Color::Black;g.FillRect(0,0,800,600);board.DrawTouchPreviews(&g);
+            }
+            render.Flush();const auto pixels=render.ReadImagePixels(*target);
+            const auto brightness=[&](int px,int py){return pixels.pixels.at(py*800+px)&255;};
+            const bool roof=background==BACKGROUND_5_ROOF;
+            const int inset=roof?30:5;
+            const unsigned int vertical=brightness(x+5,board.GridToPixelY(col,0)+inset);
+            const unsigned int horizontal=brightness(board.GridToPixelX(8,row)+5,board.GridToPixelY(8,row)+inset);
+            const unsigned int overlap=brightness(x+5,y+inset);
+            Require(std::abs(int(vertical)-64)<=1&&std::abs(int(horizontal)-64)<=1&&
+                std::abs(int(overlap)-128)<=1&&brightness(10,590)==0,
+                "Plant/shovel guides did not match additive white alpha 64 with a twice-bright target");
+            if(roof) {
+                const int slopeY=board.GridToPixelY(col,0)+10;
+                Require(brightness(x+5,slopeY)==0&&brightness(x+75,slopeY)>60,
+                    "Roof column top is a rectangle/staircase instead of following its slope");
+                const int rowSlopeY=y+10;
+                Require(brightness(x+85,rowSlopeY)>60,
+                    "Roof row band has a gap instead of joining adjacent column heights");
+            }
+            const auto name="touch-guides-"+std::to_string(int(background))+(shovel?"-shovel.png":"-plant.png");
+            Require(ImageLib::WritePNGImage(name,800,600,pixels.pixels),"Cannot write planting guide proof");
+            // Check the real blend against a colored background; normal alpha
+            // compositing cannot satisfy this reference even if black looks similar.
+            {
+                GpuImageDrawScope destination(render,target.get());Graphics g(target.get());
+                g.mColor=Color(24,48,72,255);g.FillRect(0,0,800,600);board.DrawTouchPreviews(&g);
+            }
+            render.Flush();const auto colored=render.ReadImagePixels(*target);
+            const unsigned int rgb=colored.pixels.at((y+inset)*800+x+5);
+            Require(std::abs(int((rgb>>16)&255)-152)<=1&&std::abs(int((rgb>>8)&255)-176)<=1&&
+                std::abs(int(rgb&255)-200)<=1,"Guide color did not add to the destination background");
+            if(shovel) {
+                manager.TouchMoved({event.id,board.GridToPixelX(8,4)+40,board.GridToPixelY(8,4)+40});
+                board.UpdateTouchCursors();
+                {
+                    GpuImageDrawScope destination(render,target.get());Graphics g(target.get());
+                    g.mColor=Color::Black;g.FillRect(0,0,800,600);board.DrawTouchPreviews(&g);
+                }
+                render.Flush();const auto noTarget=render.ReadImagePixels(*target);
+                Require(std::all_of(noTarget.pixels.begin(),noTarget.pixels.end(),[](unsigned int p){return p==0xff000000u;}),
+                    "Shovel guides remained over an empty planting cell");
+            }
+            manager.TouchCanceled(event);
+            std::unique_ptr<Image> idle(render.CreateRenderImage(800,600));
+            {
+                GpuImageDrawScope destination(render,idle.get());Graphics g(idle.get());
+                g.mColor=Color::Black;g.FillRect(0,0,800,600);board.DrawTouchPreviews(&g);
+            }
+            render.Flush();const auto inactive=render.ReadImagePixels(*idle);
+            Require(std::all_of(inactive.pixels.begin(),inactive.pixels.end(),[](unsigned int p){return p==0xff000000u;}),
+                "Planting guides remained after the gesture ended");
+            if(shovelPlant) {
+                shovelPlant->Die(board.mLevelTimeNs,app.mEffectSystem->mReanimationHolder->mVisualTimeNs,board.mLevelTimeNs);
+                board.ProcessDeleteQueue();
+            }
+        }
+        cursor.mCursorType=savedType;
+    }
+    board.mBackground=savedBackground;
+    std::cout<<"PASS touch presentation: standalone blue corners, card/shovel 800/1400 widths, independent UV oracle, plant/shovel additive 64 bands, colored-background 128 target, sloping roof, empty-target/inactive suppression\n";
+}
+
+void TouchFieldCardsRuntime(TestApp& app, Board& board)
+{
+    auto& manager=*app.mWidgetManager;
+    auto& render=*app.mDDInterface->mRenderInterface;
+    const auto savedMode=app.mGameMode;
+    const auto savedBackground=board.mBackground;
+    const auto savedPacket=board.mSeedBank->mSeedPackets[0];
+    const auto point=[&](Coin* coin,unsigned long long id=801){
+        return TouchEvent{id,int(coin->mPosX)+25,int(coin->mPosY)+35};
+    };
+    const auto tap=[&](const TouchEvent& event){manager.TouchBegan(event);manager.TouchEnded(event);};
+    const auto makeCard=[&](SeedType seed,int x,int y){
+        auto* coin=board.AddCoin(x,y,COIN_USABLE_SEED_PACKET,COIN_MOTION_COIN);
+        coin->mPosX=float(x);coin->mPosY=float(y);coin->mUsableSeedType=seed;
+        return coin;
+    };
+    const auto coinId=[&](Coin* coin){return static_cast<CoinID>(board.mCoins.DataArrayGetID(coin));};
+    for(const auto mode:{GAMEMODE_MINIGAME_RAINING_SEEDS,GAMEMODE_SCARY_POTTER_1}) {
+        app.mGameMode=mode;
+        board.mBackground=mode==GAMEMODE_SCARY_POTTER_1?BACKGROUND_2_NIGHT:BACKGROUND_1_DAY;
+        board.ClearTouchSelection();board.RefreshSeedPacketFromCursor();
+        const int initialPlants=board.mPlants.mSize;
+        std::vector<PlantID> placed;
+        auto* first=makeCard(SEED_SUNFLOWER,300,180);
+        auto* second=makeCard(SEED_PEASHOOTER,500,180);
+        const auto firstId=coinId(first),secondId=coinId(second);
+        const auto a=point(first),b=point(second);
+        auto& selected=*board.mTouchState->selection->cursor;
+        manager.TouchBegan(a);manager.TouchEnded({a.id,a.x+4,a.y});
+        Require(selected.mCoinID==firstId&&first->mIsBeingCollected&&board.mPlants.mSize==initialPlants,
+            "Field-card tap/jitter planted at its source instead of retaining selection");
+        tap(a);
+        Require(selected.mCursorType==CURSOR_TYPE_NORMAL&&!first->mIsBeingCollected&&first->mTimesDropped==1&&
+            board.mPlants.mSize==initialPlants,"Tapping the same field card did not return it exactly once");
+        tap(a);tap(b);
+        Require(!first->mIsBeingCollected&&second->mIsBeingCollected&&selected.mCoinID==secondId&&
+            board.mPlants.mSize==initialPlants,"Tapping another field card planted the old card or lost its source");
+
+        manager.TouchBegan(b);manager.TouchMoved({b.id,b.x+100,b.y+100});manager.TouchEnded(b);
+        Require(selected.mCoinID==secondId&&second->mIsBeingCollected&&board.mPlants.mSize==initialPlants,
+            "Dragging back onto the source card canceled or planted it");
+        manager.TouchBegan(b);manager.TouchEnded({b.id,b.x+7,b.y});
+        Require(selected.mCoinID==secondId&&board.mPlants.mSize==initialPlants,
+            "A release inside the source card planted it after exceeding movement tolerance");
+
+        tap(a);
+        const TouchEvent target{a.id,board.GridToPixelX(7,2)+40,board.GridToPixelY(7,2)+40};
+        manager.TouchBegan(a);manager.TouchMoved({a.id,b.x,b.y});
+        manager.TouchBegan({802,b.x,b.y});manager.TouchEnded({802,b.x,b.y});
+        Require(selected.mCoinID==firstId&&!second->mIsBeingCollected&&manager.mTouchCount==1,
+            "Passing another card or a second finger replaced the shared field-card source");
+        manager.TouchEnded(target);
+        auto* plant=board.GetTopPlantAt(7,2,TOPPLANT_ONLY_NORMAL_POSITION);
+        Require(plant&&plant->mSeedType==SEED_SUNFLOWER&&first->mDead&&!second->mIsBeingCollected&&
+            board.mPlants.mSize==initialPlants+1,"Field-card drag did not consume exactly its captured source");
+        placed.push_back(static_cast<PlantID>(board.mPlants.DataArrayGetID(plant)));
+
+        manager.TouchBegan(b);manager.TouchEnded({b.id,-100,700});
+        Require(selected.mCoinID==secondId&&second->mIsBeingCollected&&board.mPlants.mSize==initialPlants+1,
+            "Failed field-card drop lost selection or planted outside the lawn");
+        const TouchEvent lawn{803,board.GridToPixelX(6,4)+40,board.GridToPixelY(6,4)+40};
+        tap(lawn);plant=board.GetTopPlantAt(6,4,TOPPLANT_ONLY_NORMAL_POSITION);
+        Require(plant&&plant->mSeedType==SEED_PEASHOOTER&&second->mDead&&selected.mCursorType==CURSOR_TYPE_NORMAL,
+            "A retained field card could not be planted by tapping the lawn");
+        placed.push_back(static_cast<PlantID>(board.mPlants.DataArrayGetID(plant)));
+
+        auto* third=makeCard(SEED_SUNFLOWER,420,300);
+        const auto c=point(third);const auto thirdId=coinId(third);
+        manager.MouseDown(c.x,c.y,1);manager.MouseUp(c.x,c.y,1);
+        Require(board.mCursorObject->mCoinID==thirdId,"Mouse fixture did not hold its own field card");
+        const int mouseX=manager.mLastMouseX,mouseY=manager.mLastMouseY;
+        tap(c);
+        Require(selected.mCursorType==CURSOR_TYPE_NORMAL&&board.mCursorObject->mCursorType==CURSOR_TYPE_NORMAL&&!third->mIsBeingCollected&&
+            board.mPlants.mSize==initialPlants+2,"Touch stole a mouse-owned field card or committed another plant");
+        board.RefreshSeedPacketFromCursor();
+        auto& packet=board.mSeedBank->mSeedPackets[0];
+        packet.mPacketType=SEED_PEASHOOTER;packet.mRefreshing=false;packet.mRefreshTime=0;packet.mActive=true;
+        const TouchEvent bank{804,int(board.mSeedBank->mX+packet.mX)+packet.mOffsetX+20,int(board.mSeedBank->mY)+30};
+        tap(bank);tap(c);
+        Require(selected.mCoinID==thirdId&&packet.mActive,"Field-card pickup did not return the held bank card");
+        tap(bank);
+        Require(selected.mCursorType==CURSOR_TYPE_PLANT_FROM_BANK&&!third->mIsBeingCollected,
+            "Bank-card pickup did not return the held field card");
+        tap(c);
+        const auto shovel=board.GetShovelButtonRect();
+        tap({805,shovel.mX+shovel.mWidth/2,shovel.mY+shovel.mHeight/2});
+        Require(selected.mCursorType==CURSOR_TYPE_SHOVEL&&!third->mIsBeingCollected,
+            "Shovel pickup did not share selection with a field card");
+        tap(c);
+        Require(selected.mCoinID==thirdId&&manager.mLastMouseX==mouseX&&manager.mLastMouseY==mouseY,
+            "Field-card pickup did not replace the shovel or changed physical mouse position");
+
+        for(const int width:{800,1400}) {
+            app.mScreenBounds=Rect((800-width)/2,0,width,600);manager.Resize(app.mScreenBounds,app.mScreenBounds);
+            std::unique_ptr<Image> actual(render.CreateRenderImage(width,600)),expected(render.CreateRenderImage(width,600));
+            const auto draw=[&](Image* image,bool production){
+                GpuImageDrawScope destination(render,image);Graphics g(image);
+                g.mColor=Color::Black;g.FillRect(0,0,width,600);g.Translate(37-app.mScreenBounds.mX,11);
+                if(production) board.DrawFieldCardSelection(&g,*third);
+                else for(int i=0;i<4;++i) {
+                    const Rect src(i&1?62:0,i&2?108:0,42,36);
+                    const Rect dst(int(third->mPosX)+(i&1?third->mWidth-18:-3),
+                        int(third->mPosY)+(i&2?third->mHeight-15:-3),21,18);
+                    g.DrawImage(gTouchFrameReference,dst,src);
+                }
+            };
+            draw(actual.get(),true);draw(expected.get(),false);render.Flush();
+            const auto pixels=render.ReadImagePixels(*actual);
+            Require(TouchFrameMatches(pixels.pixels,render.ReadImagePixels(*expected).pixels)&&
+                std::count_if(pixels.pixels.begin(),pixels.pixels.end(),[](unsigned int p){return (p&255)>80;})>80,
+                "Field-card blue frame did not follow its source bounds under translation/widescreen");
+            Require(ImageLib::WritePNGImage("touch-field-card-"+std::to_string(int(mode))+"-"+
+                std::to_string(width)+".png",width,600,pixels.pixels),"Cannot write field-card frame proof");
+        }
+        app.mScreenBounds=Rect(0,0,800,600);manager.Resize(app.mScreenBounds,app.mScreenBounds);
+        board.ClearTouchSelection();
+        auto* bottom=makeCard(SEED_SUNFLOWER,550,400);
+        auto* top=makeCard(SEED_WALLNUT,550,400);top->mRenderOrder=bottom->mRenderOrder+1;
+        tap(point(top));
+        Require(selected.mCoinID==coinId(top)&&top->mIsBeingCollected&&!bottom->mIsBeingCollected,
+            "Overlapping field cards did not select the visible top card");
+        tap(point(top));Require(selected.mCursorType==CURSOR_TYPE_NORMAL,"Top-card repeat tap did not cancel");
+
+        if(mode==GAMEMODE_SCARY_POTTER_1) {
+            tap(c);
+            const auto makePot=[&](int col){
+                auto* pot=board.mGridItems.DataArrayAlloc();pot->mGridItemType=GRIDITEM_SCARY_POT;
+                pot->mGridItemState=GRIDITEM_STATE_SCARY_POT_QUESTION;pot->mGridX=col;pot->mGridY=0;
+                pot->mScaryPotType=SCARYPOT_SEED;pot->mSeedType=SEED_SNOWPEA;
+                pot->mRenderOrder=Board::MakeRenderOrder(RENDER_LAYER_PLANT,0,0);return pot;
+            };
+            auto* pot=makePot(8);auto* spare=makePot(6);
+            const auto potId=board.mGridItems.DataArrayGetID(pot);
+            const TouchEvent hit{806,board.GridToPixelX(8,0)+40,board.GridToPixelY(8,0)+40};
+            manager.TouchBegan(hit);
+            Require(board.mChallenge->mChallengeState==STATECHALLENGE_SCARY_POTTER_MALLETING&&
+                selected.mCoinID==thirdId,"Touching a vase with a held card did not start only the vase action");
+            for(int i=0;i<240&&!pot->mDead;++i) {
+                board.mLevelTimeNs+=8'333'333;
+                app.mEffectSystem->mReanimationHolder->mBattleTimeNs=board.mLevelTimeNs;
+                if(auto* hammer=app.ReanimationTryToGet(board.mChallenge->mReanimChallenge)) hammer->UpdateAt(board.mLevelTimeNs);
+                board.mChallenge->ScaryPotterUpdate();
+            }
+            Require(pot->mDead&&board.mChallenge->mChallengeState==STATECHALLENGE_NORMAL,
+                "Actual vase hammer did not release its card while the touch stayed down");
+            Coin* dropped=nullptr;Coin* coin=nullptr;
+            while(board.IterateCoins(coin)) if(coin->mType==COIN_USABLE_SEED_PACKET&&coin->mUsableSeedType==SEED_SNOWPEA) dropped=coin;
+            Require(dropped,"Actual vase did not produce its configured plant card");
+            const auto end=point(dropped,hit.id);
+            manager.TouchMoved(end);manager.TouchEnded(end);
+            Require(selected.mCoinID==thirdId&&!dropped->mIsBeingCollected&&board.mPlants.mSize==initialPlants+2&&
+                manager.mTouchCount==0,"Vase gesture selected its new card or planted the previous selection on release");
+            tap(point(dropped));
+            Require(selected.mCoinID==coinId(dropped)&&!third->mIsBeingCollected&&board.mPlants.mSize==initialPlants+2,
+                "A fresh gesture could not select the card released by the vase");
+            spare->GridItemDie();
+            Require(board.mGridItems.DataArrayTryToGet(potId)==pot,"Vase fixture lost its stable grid-item allocation");
+        }
+
+        board.ClearTouchSelection();
+        auto* stale=makeCard(SEED_PEASHOOTER,360,400);const auto oldId=coinId(stale);
+        const auto stalePoint=point(stale);manager.TouchBegan(stalePoint);
+        stale->Die();board.mCoins.DataArrayFree(stale);
+        auto* replacement=makeCard(SEED_PEASHOOTER,360,400);
+        manager.TouchEnded({stalePoint.id,740,540});
+        Require(coinId(replacement)!=oldId&&selected.mCursorType==CURSOR_TYPE_NORMAL&&
+            !replacement->mIsBeingCollected&&board.mPlants.mSize==initialPlants+2,
+            "A reused Coin slot became the captured card or was planted by a stale gesture");
+        tap(point(replacement));
+        const auto save=(std::filesystem::current_path()/("touch-field-card-"+std::to_string(int(mode))+".dat64")).string();
+        Require(LawnSaveGame(&board,save)&&!replacement->mIsBeingCollected&&selected.mCursorType==CURSOR_TYPE_NORMAL&&
+            LawnLoadGame(&board,save),"Saving a retained field-card selection failed or serialized the transient gesture");
+        for(const auto id:placed) if(auto* p=board.mPlants.DataArrayTryToGet(id))
+            p->Die(board.mLevelTimeNs,app.mEffectSystem->mReanimationHolder->mVisualTimeNs,board.mLevelTimeNs);
+        Coin* coin=nullptr;while(board.IterateCoins(coin)) if(coin->mType==COIN_USABLE_SEED_PACKET) coin->Die();
+        board.ProcessDeleteQueue();
+        Require(board.mPlants.mSize==initialPlants,"Field-card fixture left a planted test object");
+        std::cout<<"PASS actual field cards mode="<<int(mode)<<": tap/jitter, same-card cancel, switch, source-return guard, drag through cards, shared selection, mouse ownership, frame UVs, stale generation and DAT64\n";
+    }
+    app.mGameMode=savedMode;board.mBackground=savedBackground;
+    board.mSeedBank->mSeedPackets[0]=savedPacket;
+    std::cout<<"PASS actual vase touch: hammer/payload during held gesture, no chained pickup/planting, fresh gesture selects the released card\n";
+}
+
+void TouchCannonPickupRuntime(TestApp& app, Board& board)
+{
+    auto& manager=*app.mWidgetManager;
+    board.ClearTouchSelection();board.RefreshSeedPacketFromCursor();
+    // Hit areas must remain byte-for-byte equivalent to the old mouse formula.
+    Coin sample;
+    sample.mAttachmentID=ATTACHMENTID_NULL;sample.mApp=&app;sample.mBoard=&board;
+    sample.mPosX=300.25f;sample.mPosY=300.5f;sample.mWidth=40;sample.mHeight=40;
+    sample.mDead=false;sample.mIsBeingCollected=false;
+    for(const bool whack:{false,true}) {
+        app.mGameMode=whack?GAMEMODE_MINIGAME_WHACK_A_ZOMBIE:GAMEMODE_ADVENTURE;
+        for(int type=0;type<=int(COIN_PRESENT_SURVIVAL_MODE);++type) {
+            sample.mType=static_cast<CoinType>(type);
+            const bool lowered=sample.mType==COIN_PRESENT_PLANT||sample.mType==COIN_AWARD_PRESENT||
+                sample.mType==COIN_PRESENT_MINIGAMES||sample.mType==COIN_PRESENT_PUZZLE_MODE||sample.mType==COIN_PRESENT_SURVIVAL_MODE;
+            const int offset=lowered?-20:0,margin=whack||sample.mType==COIN_SUN?15:0;
+            for(const int x:{285,286,300,301,340,341,355,356})
+            for(const int y:{265,266,280,281,285,286,300,301,340,341,355,356,370,371,385,386}) {
+                HitResult hit;
+                const bool expected=x>=sample.mPosX-margin&&x<sample.mPosX+sample.mWidth+margin&&
+                    y>=sample.mPosY+offset-margin&&y<sample.mPosY+sample.mHeight+offset+margin+(whack?30:0);
+                Require(sample.MouseHitTest(x,y,&hit)==expected,"Shared coin hit area differs from the original mouse formula");
+                Require(sample.TouchHitTest(x,y,x,y)==(expected&&(sample.IsSun()||sample.IsMoney()||sample.IsLevelAward())),
+                    "Point touch pickup changed hit area or award/card eligibility");
+            }
+        }
+    }
+    app.mGameMode=GAMEMODE_ADVENTURE;
+    sample.mType=COIN_GOLD;sample.mPosX=sample.mPosY=300;
+    Require(sample.TouchHitTest(250,320,400,320)&&sample.TouchHitTest(320,250,320,400),
+        "Touch movement skipped a coin between sample endpoints");
+    Require(!sample.TouchHitTest(250,310,310,250)&&!sample.TouchHitTest(340,310,340,330)&&
+        !sample.TouchHitTest(300,380,380,300),"Touch sweep accepted an AABB-only hit or an excluded edge");
+    sample.mIsBeingCollected=true;
+    Require(!sample.TouchHitTest(250,320,400,320),"Touch sweep recollected a coin");
+    sample.mIsBeingCollected=false;sample.mDead=true;
+    Require(!sample.TouchHitTest(250,320,400,320),"Touch sweep collected a dead coin");
+
+    auto* first=board.NewPlant(0,3,SEED_COBCANNON,SEED_NONE);
+    auto* second=board.NewPlant(3,3,SEED_COBCANNON,SEED_NONE);
+    const auto firstId=static_cast<PlantID>(board.mPlants.DataArrayGetID(first));
+    const auto secondId=static_cast<PlantID>(board.mPlants.DataArrayGetID(second));
+    const TouchEvent a{701,board.GridToPixelX(1,3)+40,board.GridToPixelY(1,3)+40}; // Right half of cannon one.
+    const TouchEvent b{702,board.GridToPixelX(3,3)+40,board.GridToPixelY(3,3)+40};
+    const TouchEvent targetA{a.id,700,200},targetB{b.id,680,450};
+    const auto placeCoin=[&](CoinType type,int centerX,int centerY){
+        auto* coin=board.AddCoin(centerX,centerY,type,COIN_MOTION_COIN);
+        coin->mPosX=float(centerX-20);coin->mPosY=float(centerY-20);coin->mWidth=coin->mHeight=40;
+        return coin;
+    };
+    const auto arm=[&]{first->mState=second->mState=STATE_COBCANNON_READY;};
+    arm();
+    auto* startSun=placeCoin(COIN_SUN,a.x,a.y);
+    auto* startGold=placeCoin(COIN_GOLD,b.x,b.y);
+    auto* pathSilver=placeCoin(COIN_SILVER,(a.x+targetA.x)/2,(a.y+targetA.y)/2);
+    auto* pathSun=placeCoin(COIN_SMALLSUN,(b.x+targetB.x)/2,(b.y+targetB.y)/2);
+    manager.MouseMove(450,550);const int mouseX=manager.mLastMouseX,mouseY=manager.mLastMouseY;
+    manager.TouchBegan(a);manager.TouchBegan(b);
+    auto& ca=board.mTouchState->contacts[0];auto& cb=board.mTouchState->contacts[1];
+    Require(ca.cannon&&cb.cannon&&ca.cursor!=cb.cursor&&ca.cursor->mCobCannonPlantID==firstId&&
+        cb.cursor->mCobCannonPlantID==secondId,"Two fingers did not claim two independent cob cannons");
+    Require(startSun->mIsBeingCollected&&startGold->mIsBeingCollected,
+        "Coins in front of a cannon blocked selection or were not collected");
+    auto* incidentalGold=placeCoin(COIN_GOLD,640,550);
+    manager.TouchBegan({708,600,550});manager.TouchMoved({708,700,550});manager.TouchEnded({708,700,550});
+    Require(incidentalGold->mIsBeingCollected&&ca.cannon&&cb.cannon&&manager.mTouchCount==2&&
+        first->mState==STATE_COBCANNON_READY&&second->mState==STATE_COBCANNON_READY,
+        "An unassigned third finger failed pickup or disturbed the two aiming fingers");
+    const int startBX=cb.startX,startBY=cb.startY;
+    manager.TouchMoved(targetA);board.UpdateTouchCursors();
+    Require(pathSilver->mIsBeingCollected&&ca.cursor->mCobCannonPlantID==firstId&&cb.cursor->mCobCannonPlantID==secondId,
+        "Sweep pickup stole a cannon target or missed the movement segment");
+    manager.TouchEnded(targetA);
+    Require(first->mState==STATE_COBCANNON_FIRING&&first->mTargetX==targetA.x-47&&first->mTargetY==targetA.y&&
+        second->mState==STATE_COBCANNON_READY&&cb.active&&cb.cannon&&cb.startX==startBX&&cb.startY==startBY,
+        "First release fired the wrong cannon or changed the remaining finger");
+    manager.TouchMoved(targetB);board.UpdateTouchCursors();manager.TouchEnded(targetB);
+    Require(second->mState==STATE_COBCANNON_FIRING&&second->mTargetX==targetB.x-47&&second->mTargetY==targetB.y&&
+        pathSun->mIsBeingCollected&&manager.mTouchCount==0&&board.mTouchState->activeCount==0&&
+        manager.mLastMouseX==mouseX&&manager.mLastMouseY==mouseY,"Second cannon release/pickup changed IDs, aim or the physical mouse");
+    manager.TouchEnded(targetA);manager.TouchEnded(targetB);
+    Require(first->mTargetY==targetA.y&&second->mTargetY==targetB.y,"A late release fired again");
+
+    arm();manager.TouchBegan(a);manager.TouchBegan({703,a.x,a.y});
+    Require(ca.cannon&&!cb.cannon,"Two fingers claimed the same cannon");
+    manager.TouchEnded({703,targetA.x,targetA.y});
+    Require(first->mState==STATE_COBCANNON_READY&&ca.active,"Duplicate claim released or fired the owning finger");
+    manager.TouchCanceled(a);
+    Require(first->mState==STATE_COBCANNON_READY&&ca.cursor->mCursorType==CURSOR_TYPE_NORMAL,
+        "Cancel fired a cannon or retained its canceled target");
+    arm();manager.TouchBegan(a);manager.TouchBegan(b);manager.TouchCanceled(a);
+    manager.TouchMoved(targetB);manager.TouchEnded(targetB);
+    Require(first->mState==STATE_COBCANNON_READY&&second->mState==STATE_COBCANNON_FIRING,
+        "Canceling one cannon canceled another finger");
+
+    arm();manager.TouchBegan(a);manager.TouchBegan(b);manager.TouchEnded(a);
+    Require(ca.cursor->mCursorType==CURSOR_TYPE_NORMAL&&cb.active,
+        "Short cannon tap retained a pending tap-to-aim target");
+    manager.TouchBegan({709,b.x,b.y});manager.TouchMoved({709,targetA.x,targetA.y});manager.TouchEnded({709,targetA.x,targetA.y});
+    Require(first->mState==STATE_COBCANNON_READY&&second->mState==STATE_COBCANNON_READY&&cb.active&&
+        ca.cursor->mCursorType==CURSOR_TYPE_NORMAL,"Rejected claim of B fired a cannon");
+    manager.TouchCanceled(b);board.ClearTouchSelection();
+
+    for(const auto offset:std::array<std::pair<int,int>,6>{{{0,0},{80,0},{0,-80},{81,0},{60,-60},{-81,0}}}) {
+        arm();manager.TouchBegan(a);manager.TouchEnded({a.id,a.x+offset.first,a.y+offset.second});
+        const bool fires=offset.first*offset.first+offset.second*offset.second>80*80;
+        Require((first->mState==STATE_COBCANNON_FIRING)==fires&&ca.cursor->mCursorType==CURSOR_TYPE_NORMAL,
+            "Cannon drag did not enforce the one-cell radial boundary or clear its target");
+        manager.TouchBegan({710,targetA.x,targetA.y});manager.TouchEnded({710,targetA.x,targetA.y});
+        Require((first->mState==STATE_COBCANNON_FIRING)==fires,
+            "Tap cannon then tap lawn fired a pending cannon");
+    }
+
+    arm();manager.TouchBegan(a);manager.TouchBegan(b);
+    const auto aimingSave=(std::filesystem::current_path()/"touch-cannon-aiming.dat64").string();
+    Require(LawnSaveGame(&board,aimingSave)&&manager.mTouchCount==0&&board.mTouchState->activeCount==0&&
+        !ca.cannon&&!cb.cannon&&ca.cursor->mCursorType==CURSOR_TYPE_NORMAL&&
+        cb.cursor->mCursorType==CURSOR_TYPE_NORMAL&&first->mState==STATE_COBCANNON_READY&&
+        second->mState==STATE_COBCANNON_READY,"Saving two active cannon gestures fired or serialized a touch target");
+
+    // Mouse and touch can race to fire the same cannon. The second submit must
+    // never assert in Plant::CobCannonFire or overwrite the first target.
+    arm();manager.MouseDown(a.x,a.y,1);manager.MouseUp(a.x,a.y,1);
+    manager.TouchBegan(a);manager.TouchEnded(targetA);
+    Require(!ca.cannon&&first->mState==STATE_COBCANNON_FIRING&&
+        board.mCursorObject->mCursorType==CURSOR_TYPE_NORMAL,
+        "Touch did not cancel the mouse cannon target before starting its own drag");
+    board.RefreshSeedPacketFromCursor();
+    arm();
+    manager.TouchBegan(a);manager.MouseDown(a.x,a.y,1);manager.MouseUp(a.x,a.y,1);
+    manager.TouchEnded(targetA);
+    manager.MouseDown(targetB.x,targetB.y,1);manager.MouseUp(targetB.x,targetB.y,1);
+    Require(first->mState==STATE_COBCANNON_FIRING&&first->mTargetY==targetA.y,
+        "A stale mouse target fired the cannon a second time");
+
+    auto* removed=board.NewPlant(6,1,SEED_COBCANNON,SEED_NONE);removed->mState=STATE_COBCANNON_READY;
+    const TouchEvent dying{704,board.GridToPixelX(6,1)+40,board.GridToPixelY(6,1)+40};
+    manager.TouchBegan(dying);
+    const auto visual=app.mEffectSystem->mReanimationHolder->mVisualTimeNs;
+    removed->Die(static_cast<std::int64_t>(board.mLevelTimeNs),visual,static_cast<std::int64_t>(board.mLevelTimeNs));
+    board.ProcessDeleteQueue();manager.TouchEnded({dying.id,700,250});
+    Require(ca.cursor->mCursorType==CURSOR_TYPE_NORMAL&&manager.mTouchCount==0,
+        "Removing a cannon while aiming left a dangling target");
+
+    auto* pausedGold=placeCoin(COIN_GOLD,500,550);
+    board.Pause(true);manager.TouchBegan({705,420,550});manager.TouchMoved({705,600,550});manager.TouchEnded({705,600,550});
+    Require(!pausedGold->mIsBeingCollected,"Touch sweep collected money while Board was paused");
+    board.Pause(false);
+    manager.TouchBegan({706,420,550});manager.TouchMoved({706,600,550});manager.TouchEnded({706,600,550});
+    Require(pausedGold->mIsBeingCollected,"Ordinary touch movement did not collect money");
+    const float collectionOrigin=pausedGold->mCollectX;
+    pausedGold->mPosX+=10;
+    manager.TouchBegan({707,420,550});manager.TouchMoved({707,600,550});manager.TouchEnded({707,600,550});
+    Require(pausedGold->mCollectX==collectionOrigin,"Passing the same coin collected it twice");
+    board.ClearTouchSelection();
+    std::cout<<"PASS cannon touch/pickup: independent cannons, drag-only one-cell boundary, no pending tap aim, interleaved cancel, duplicate/mouse claims, stale/deleted target, swept sun/money, pause and idempotence\n";
+
+    // Exercise the real reward handler, not just its hit rectangle. An award
+    // encountered mid-drag must cancel the cannon before it can fire on up.
+    board.RefreshSeedPacketFromCursor();
+    for(const auto type:{COIN_FINAL_SEED_PACKET,COIN_AWARD_MONEY_BAG,COIN_TROPHY}) {
+        arm();board.mBoardFadeOutCounter=-1;board.mLevelComplete=false;
+        auto* award=placeCoin(type,type==COIN_FINAL_SEED_PACKET?450:(a.x+targetA.x)/2,
+            type==COIN_FINAL_SEED_PACKET?260:(a.y+targetA.y)/2);
+        if(type==COIN_FINAL_SEED_PACKET) {
+            manager.TouchBegan({711,450,260});manager.TouchEnded({711,450,260});
+        } else {
+            manager.TouchBegan(a);
+            if(type==COIN_AWARD_MONEY_BAG) manager.TouchMoved(targetA);
+            else manager.TouchEnded(targetA);
+        }
+        Require(award->mIsBeingCollected&&board.mBoardFadeOutCounter>=0&&manager.mTouchCount==0&&
+            board.mTouchState->activeCount==0&&first->mState==STATE_COBCANNON_READY,
+            ("Touch award did not enter the existing level transition or committed a canceled cannon: type="+
+            std::to_string(int(type))+" collected="+std::to_string(award->mIsBeingCollected)+
+            " fade="+std::to_string(board.mBoardFadeOutCounter.mNanoseconds)+" touches="+
+            std::to_string(manager.mTouchCount)+" active="+std::to_string(board.mTouchState->activeCount)+
+            " cannon="+std::to_string(int(first->mState))).c_str());
+        manager.TouchEnded({a.id,700,200});
+        Require(first->mState==STATE_COBCANNON_READY,"A late award gesture fired a cannon");
+    }
+    board.mBoardFadeOutCounter=-1;board.mLevelComplete=false;
+    std::cout<<"PASS award touch pickup: new plant on down, moneybag on move, trophy on up, real FadeOutLevel, canceled gesture and late release\n";
+}
+
+void TouchGardenRuntime(TestApp& app)
+{
+    auto& manager=*app.mWidgetManager;
+    struct Restore {
+        TestApp& app;
+        Board* board=app.mBoard;
+        PlayerInfo* player=app.mPlayerInfo;
+        ZenGarden* garden=app.mZenGarden;
+        GameMode mode=app.mGameMode;
+        GameScenes scene=app.mGameScene;
+        Rect bounds=app.mScreenBounds;
+        int daveMessage=app.mCrazyDaveMessageIndex;
+        ~Restore() {
+            app.mBoard=board;app.mPlayerInfo=player;app.mZenGarden=garden;
+            app.mGameMode=mode;app.mGameScene=scene;app.mCrazyDaveMessageIndex=daveMessage;
+            app.mScreenBounds=bounds;app.mWidgetManager->Resize(bounds,bounds);
+        }
+    } restore{app};
+    PlayerInfo profile;
+    ZenGarden garden;
+    profile.mId=46;profile.mLevel=50;profile.mFinishedAdventure=1;
+    profile.mNumPottedPlants=1;
+    auto& spec=profile.mPottedPlant[0];
+    spec.InitializePottedPlant(SEED_PEASHOOTER);spec.mWhichZenGarden=GARDEN_MAIN;
+    spec.mPlantAge=PLANTAGE_FULL;spec.mX=1;spec.mY=1;
+    for(const auto item:{STORE_ITEM_GARDENING_GLOVE,STORE_ITEM_WHEEL_BARROW,
+        STORE_ITEM_PHONOGRAPH,STORE_ITEM_MUSHROOM_GARDEN}) profile.mPurchases[item]=1;
+    for(const auto item:{STORE_ITEM_FERTILIZER,STORE_ITEM_BUG_SPRAY,STORE_ITEM_CHOCOLATE,STORE_ITEM_TREE_FOOD})
+        profile.mPurchases[item]=PURCHASE_COUNT_OFFSET+10;
+    app.mPlayerInfo=&profile;app.mZenGarden=&garden;
+    app.mGameMode=GAMEMODE_LIMBO_ZEN_GARDEN;app.mGameScene=SCENE_PLAYING;app.mCrazyDaveMessageIndex=-1;
+    app.mScreenBounds=Rect(0,0,800,600);manager.Resize(app.mScreenBounds,app.mScreenBounds);
+    Board board(&app);board.InitLevel();board.StartLevel();board.Resize(0,0,800,600);
+    struct Remove {WidgetManager& manager;Board& board;~Remove(){
+        manager.CancelTouches(&board);manager.RemoveWidget(&board);manager.CancelMouseDownState();
+    }} remove{manager,board};
+    manager.AddWidget(&board);manager.MouseMove(770,550);
+    const int mouseX=manager.mLastMouseX,mouseY=manager.mLastMouseY;
+    const auto purchases=std::to_array(profile.mPurchases);
+    const auto point=[&](GameObjectType tool,unsigned long long id=901) {
+        Rect bounds=board.GetShovelButtonRect();board.GetZenButtonRect(tool,bounds);
+        return TouchEvent{id,board.mX+bounds.mX+bounds.mWidth/2,board.mY+bounds.mY+bounds.mHeight/2};
+    };
+    const auto tap=[&](GameObjectType tool) {const auto e=point(tool);manager.TouchBegan(e);manager.TouchEnded(e);};
+    constexpr std::array tools{
+        std::pair{OBJECT_TYPE_WATERING_CAN,CURSOR_TYPE_WATERING_CAN},
+        std::pair{OBJECT_TYPE_FERTILIZER,CURSOR_TYPE_FERTILIZER},
+        std::pair{OBJECT_TYPE_BUG_SPRAY,CURSOR_TYPE_BUG_SPRAY},
+        std::pair{OBJECT_TYPE_PHONOGRAPH,CURSOR_TYPE_PHONOGRAPH},
+        std::pair{OBJECT_TYPE_CHOCOLATE,CURSOR_TYPE_CHOCOLATE},
+        std::pair{OBJECT_TYPE_GLOVE,CURSOR_TYPE_GLOVE},
+        std::pair{OBJECT_TYPE_MONEY_SIGN,CURSOR_TYPE_MONEY_SIGN},
+        std::pair{OBJECT_TYPE_WHEELBARROW,CURSOR_TYPE_WHEEELBARROW}
+    };
+    for(const auto [tool,cursor]:tools) {
+        tap(tool);
+        Require(board.mTouchState->selection->cursor->mCursorType==cursor,
+            "Garden tool tap did not retain its unique selection");
+        tap(tool);
+        Require(board.mTouchState->selection->cursor->mCursorType==CURSOR_TYPE_NORMAL,
+            "Second tap did not cancel the garden tool");
+    }
+    for(const auto [tool,cursor]:tools) {
+        tap(tool);
+        Require(board.mTouchState->selection->cursor->mCursorType==cursor,
+            "Garden tool could not replace another selected tool");
+    }
+    Require(std::equal(std::begin(purchases),std::end(purchases),std::begin(profile.mPurchases))&&
+        board.mGridItems.mSize==0,"Selecting tools used inventory or spawned a feeding animation");
+    board.ClearTouchSelection();
+    auto water=point(OBJECT_TYPE_WATERING_CAN,902),glove=point(OBJECT_TYPE_GLOVE,903);
+    manager.TouchBegan(water);manager.TouchBegan(glove);manager.TouchEnded(glove);
+    Require(board.mTouchState->activeCount==1&&board.mTouchState->selection->cursor->mCursorType==CURSOR_TYPE_WATERING_CAN,
+        "Second garden finger replaced the active shared tool");
+    manager.TouchEnded(water);
+    Require(board.mCursorObject->mCursorType==CURSOR_TYPE_NORMAL&&manager.mLastMouseX==mouseX&&manager.mLastMouseY==mouseY,
+        "Garden touch changed the physical mouse position or cursor");
+    auto& render=*app.mDDInterface->mRenderInterface;
+    for(const int width:{800,1400}) {
+        app.mScreenBounds=Rect((800-width)/2,0,width,600);manager.Resize(app.mScreenBounds,app.mScreenBounds);
+        board.Resize(app.mScreenBounds.mX+110,0,width,600);
+        for(const auto [tool,cursor]:{tools.front(),tools[5],tools.back()}) {
+            board.mTouchState->selection->cursor->mCursorType=cursor;
+            Rect bounds=board.GetShovelButtonRect();board.GetZenButtonRect(tool,bounds);
+            std::unique_ptr<Image> actual(render.CreateRenderImage(width,600)),expected(render.CreateRenderImage(width,600));
+            const auto draw=[&](Image* target,bool production) {
+                GpuImageDrawScope destination(render,target);Graphics g(target);
+                g.mColor=Color::Black;g.FillRect(0,0,width,600);
+                g.Translate(board.mX-app.mScreenBounds.mX,board.mY);
+                if(production) board.DrawTouchSelection(&g);
+                else for(int i=0;i<4;++i) {
+                    const Rect source(i&1?62:0,i&2?108:0,42,36);
+                    const Rect dest(i&1?bounds.mX+bounds.mWidth-18:bounds.mX-3,
+                        i&2?bounds.mY+bounds.mHeight-15:bounds.mY-3,21,18);
+                    g.DrawImage(gTouchFrameReference,dest,source);
+                }
+            };
+            draw(actual.get(),true);draw(expected.get(),false);render.Flush();
+            const auto pixels=render.ReadImagePixels(*actual);
+            Require(TouchFrameMatches(pixels.pixels,render.ReadImagePixels(*expected).pixels)&&
+                std::count_if(pixels.pixels.begin(),pixels.pixels.end(),[](unsigned int p){return (p&255)>80;})>80,
+                "Garden selection frame lost its actual tool bounds, UVs or viewport/Board offset");
+            Require(ImageLib::WritePNGImage("touch-garden-frame-"+std::to_string(width)+"-"+std::to_string(tool)+".png",
+                width,600,pixels.pixels),"Cannot write garden selection proof");
+        }
+    }
+    app.mScreenBounds=Rect(0,0,800,600);manager.Resize(app.mScreenBounds,app.mScreenBounds);board.Resize(0,0,800,600);
+    board.ClearTouchSelection();
+    Plant* target=nullptr;while(board.IteratePlants(target)) if(target->mPottedPlantIndex==0) break;
+    Require(target,"Garden touch fixture did not instantiate its real potted plant");
+    const TouchEvent plantPoint{904,int(target->mX+40),int(target->mY+40)};
+    tap(OBJECT_TYPE_GLOVE);manager.TouchBegan(plantPoint);manager.TouchEnded(plantPoint);
+    Require(board.mTouchState->selection->cursor->mCursorType==CURSOR_TYPE_PLANT_FROM_GLOVE,
+        "Garden glove could not pick up its actual plant");
+    tap(OBJECT_TYPE_GLOVE);
+    Require(board.mTouchState->selection->cursor->mCursorType==CURSOR_TYPE_NORMAL&&target->mPottedPlantIndex==0,
+        "Canceling the glove's carried plant altered or lost the plant");
+    tap(OBJECT_TYPE_GLOVE);manager.TouchBegan(plantPoint);manager.TouchEnded(plantPoint);
+    tap(OBJECT_TYPE_WHEELBARROW);
+    Require(garden.GetPottedPlantInWheelbarrow()==&spec&&board.mTouchState->selection->cursor->mCursorType==CURSOR_TYPE_NORMAL,
+        "Touch toolbar switching bypassed the glove-to-wheelbarrow transfer");
+    tap(OBJECT_TYPE_GLOVE);tap(OBJECT_TYPE_WHEELBARROW);
+    Require(board.mTouchState->selection->cursor->mCursorType==CURSOR_TYPE_PLANT_FROM_WHEEL_BARROW,
+        "Glove could not retrieve a plant from the loaded wheelbarrow");
+    tap(OBJECT_TYPE_WHEELBARROW);
+    Require(board.mTouchState->selection->cursor->mCursorType==CURSOR_TYPE_NORMAL&&garden.GetPottedPlantInWheelbarrow()==&spec,
+        "Canceling a wheelbarrow pickup lost its contents");
+    app.mGameMode=GAMEMODE_TREE_OF_WISDOM;
+    tap(OBJECT_TYPE_TREE_FOOD);
+    Require(board.mTouchState->selection->cursor->mCursorType==CURSOR_TYPE_TREE_FOOD,"Tree food did not retain touch selection");
+    tap(OBJECT_TYPE_TREE_FOOD);
+    Require(board.mTouchState->selection->cursor->mCursorType==CURSOR_TYPE_NORMAL,"Tree food could not cancel selection");
+    std::cout<<"PASS garden touch: eight tools, same-tool cancel, direct replacement, one shared selection, independent mouse, real glove/wheelbarrow transfers, tree food, 800/1400 offset frame GPU readback\n";
+}
+
+void TouchInputRuntime(TestApp& app)
+{
+    auto& manager = *app.mWidgetManager;
+    struct Probe : Widget {
+        int began=0, moved=0, ended=0, canceled=0, mouseDown=0;
+        TouchEvent last;
+        void TouchBegan(const TouchEvent& e) override {++began;last=e;}
+        void TouchMoved(const TouchEvent& e) override {++moved;last=e;}
+        void TouchEnded(const TouchEvent& e) override {++ended;last=e;}
+        void TouchCanceled(const TouchEvent& e) override {++canceled;last=e;}
+        void MouseDown(int,int,int) override {++mouseDown;}
+    } first,second;
+    first.Resize(10,20,100,100);second.Resize(150,20,100,100);
+    manager.AddWidget(&first);manager.AddWidget(&second);
+    manager.TouchBegan({11,30,40});manager.TouchBegan({22,180,40});
+    Require(first.began==1&&second.began==1&&manager.mTouchCount==2,
+        "Touch IDs did not capture independent widgets");
+    Require(manager.mLastPointerInput==PointerInputSource::Touch,"Touch lost its input source");
+    manager.TouchMoved({11,190,80});
+    Require(first.moved==1&&first.last.x==180&&first.last.y==60&&second.moved==0,
+        "Contact movement lost capture or local coordinate mapping");
+    manager.MouseDown(180,40,1);
+    Require(second.mouseDown==1&&manager.mLastDownWidget==&second&&manager.mTouchCount==2,
+        "Touch capture stole mouse capture");
+    Require(manager.mLastPointerInput==PointerInputSource::Mouse,"Physical mouse lost its input source");
+    manager.TouchEnded({11,190,80});
+    Require(first.ended==1&&second.ended==0&&manager.mDownButtons==1,
+        "Releasing a touch released another input");
+    manager.RemoveWidget(&second);
+    Require(second.canceled==1&&manager.mTouchCount==0,"Removed widget retained a contact");
+    manager.CancelMouseDownState();manager.RemoveWidget(&first);
+    manager.TouchEnded({22,180,40});
+    Require(second.ended==0,"Canceled contact activated on late release");
+
+    struct LegacyButton : Widget {
+        int clicks=0;
+        bool mouseStateChanged=false;
+        void MouseDown(int,int,int) override {
+            mouseStateChanged|=mWidgetManager->mLastMouseX!=400||mWidgetManager->mLastMouseY!=200||mWidgetManager->mMouseIn;
+        }
+        void MouseDrag(int,int) override {
+            mouseStateChanged|=mWidgetManager->mLastMouseX!=400||mWidgetManager->mLastMouseY!=200||mWidgetManager->mMouseIn;
+        }
+        void MouseUp(int,int,int) override {
+            mouseStateChanged|=mWidgetManager->mLastMouseX!=400||mWidgetManager->mLastMouseY!=200||mWidgetManager->mMouseIn;
+            if(mIsOver) ++clicks;
+        }
+    } button;
+    button.Resize(10,20,100,100);manager.AddWidget(&button);
+    manager.MouseMove(400,200);manager.MouseExit(400,200);
+    manager.TouchBegan({33,30,40});manager.TouchMoved({33,31,41});manager.TouchEnded({33,30,40});
+    Require(button.clicks==1&&manager.mLastMouseX==400&&manager.mLastMouseY==200&&!button.mouseStateChanged,
+        "Legacy widget touch adapter lost click position or changed mouse position");
+    manager.TouchBegan({33,30,40});manager.TouchEnded({33,400,200});
+    manager.TouchBegan({33,30,40});manager.CancelTouches(&button);
+    Require(button.clicks==1,"Outside release or cancellation clicked a button");
+    manager.RemoveWidget(&button);
+    struct ClickListener : ButtonListener {
+        int clicks=0;
+        void ButtonPress(int) override {}
+        void ButtonDepress(int) override {++clicks;}
+        void ButtonDownTick(int) override {}
+        void ButtonMouseEnter(int) override {}
+        void ButtonMouseLeave(int) override {}
+        void ButtonMouseMove(int,int,int) override {}
+    } clickListener;
+    ButtonWidget clickButton(73,&clickListener);
+    clickButton.Resize(10,20,100,100);manager.AddWidget(&clickButton);
+    const bool hadFocus=manager.mHasFocus;manager.mHasFocus=true;
+    manager.MouseDown(30,40,1);manager.MouseUp(400,200,1);
+    Require(clickListener.clicks==0,"Mouse release used stale hover instead of event coordinates");
+    manager.MouseDown(30,40,1);manager.MouseUp(30,40,1);
+    Require(clickListener.clicks==1,"Mouse press/release at the same button did not activate");
+    manager.RemoveWidget(&clickButton);manager.mHasFocus=hadFocus;
+    manager.AddWidget(&first);manager.AddWidget(&second);
+    manager.TouchBegan({41,30,40});manager.TouchBegan({42,180,40});
+    manager.TouchCanceled({41,30,40});
+    Require(manager.mTouchCount==1&&second.canceled==1,
+        "Canceling one ID canceled another contact");
+    manager.MouseMove(400,200); // An actual move is mouse input.
+    manager.TouchMoved({42,180,41});
+    manager.MouseMove(400,200); // A stationary heartbeat is not new mouse input.
+    Require(manager.mLastPointerInput==PointerInputSource::Touch&&!manager.mMouseHoverEnabled,
+        "Stationary mouse polling overwrote the last real touch source");
+    manager.CancelTouches();manager.RemoveWidget(&first);manager.RemoveWidget(&second);
+
+    struct ListProbe : ListListener {
+        int clicks=0, index=-1, count=0;
+        void ListClicked(int, int row, int clickCount) override {++clicks;index=row;count=clickCount;}
+        void ListClosed(int) override {}
+        void ListHiliteChanged(int,int,int) override {}
+    } listListener;
+    ListWidget list(17,FONT_BRIANNETOD16,&listListener);
+    list.mItemHeight=24;list.Resize(20,20,200,140);
+    list.AddLine("First user",false);list.AddLine("Second user",false);
+    list.AddLine("Create a New User",false);
+    manager.AddWidget(&list);
+    manager.MouseMove(400,200);
+    Require(list.mHiliteIdx==-1,"List touch fixture started with mouse hover");
+    manager.TouchBegan({51,40,60});manager.TouchEnded({51,40,60});
+    Require(listListener.clicks==1&&listListener.index==1&&listListener.count==1,
+        "Touch could not select a user without mouse hover");
+    manager.MouseMove(40,30);
+    Require(list.mHiliteIdx==0,"List mouse hover did not select the first row");
+    manager.TouchBegan({52,40,84});manager.TouchEnded({52,40,84});
+    Require(listListener.clicks==2&&listListener.index==2&&list.mHiliteIdx==0&&
+        manager.mLastMouseX==40&&manager.mLastMouseY==30&&
+        manager.mLastPointerInput==PointerInputSource::Touch,
+        "Touch selected the mouse-hovered user or changed the mouse state");
+    manager.TouchBegan({53,40,130});manager.TouchEnded({53,40,130});
+    Require(listListener.clicks==2,"Empty list space selected the mouse-hovered user");
+    list.mPosition=1.0;
+    manager.TouchBegan({54,40,30});manager.TouchEnded({54,40,30});
+    Require(listListener.clicks==3&&listListener.index==1,"Touch ignored the list scroll offset");
+    manager.RemoveWidget(&list);
+    std::cout<<"PASS list press coordinates: touch without hover, mouse/touch separation, empty space and scroll offset\n";
+
+    struct CompositeButtons : Widget {
+        GameButton left{31},right{32};
+        int leftClicks=0,rightClicks=0,cancels=0;
+        CompositeButtons() {
+            left.mParentWidget=right.mParentWidget=this;
+            left.mX=0;right.mX=100;left.mY=right.mY=0;
+            left.mWidth=right.mWidth=80;left.mHeight=right.mHeight=40;
+            left.mBtnNoDraw=right.mBtnNoDraw=false;left.mDisabled=right.mDisabled=false;
+        }
+        const void* TouchHitTest(int x,int y) override {
+            if(left.HitTest(x,y,this)) return &left;
+            if(right.HitTest(x,y,this)) return &right;
+            return this;
+        }
+        void MouseUp(int x,int y,int) override {
+            if(left.HitTest(x,y,this)) ++leftClicks;
+            if(right.HitTest(x,y,this)) ++rightClicks;
+        }
+        void TouchCanceled(const TouchEvent&) override {++cancels;}
+    } controls;
+    controls.Resize(10,20,200,50);manager.AddWidget(&controls);
+    manager.MouseMove(30,30);controls.left.Update();
+    Require(controls.left.mIsOver,"Physical mouse hover did not highlight the button");
+    manager.TouchBegan({61,130,30});controls.left.Update();controls.right.Update();
+    Require(!manager.mMouseHoverEnabled&&!controls.left.mIsOver&&controls.right.mIsOver,
+        "Touch left a stale mouse hover or did not highlight its pressed button");
+    manager.TouchMoved({61,30,30});controls.left.Update();controls.right.Update();
+    Require(!controls.left.mIsOver&&!controls.right.mIsOver,
+        "Dragging onto another button highlighted a button that was not pressed");
+    manager.TouchEnded({61,30,30});
+    Require(controls.leftClicks==0&&controls.rightClicks==0&&controls.cancels==1,
+        "Different press/release buttons activated a control");
+    manager.TouchBegan({62,130,30});manager.TouchEnded({62,130,30});
+    Require(controls.rightClicks==1&&controls.leftClicks==0,"Matching press/release did not activate once");
+    manager.MouseMove(30,30);
+    Require(!manager.mMouseHoverEnabled,"Stationary mouse polling enabled hover after touch");
+    manager.MouseMove(31,30);controls.left.Update();
+    Require(manager.mMouseHoverEnabled&&controls.left.mIsOver,"Actual mouse movement did not restore hover");
+    manager.RemoveWidget(&controls);
+    std::cout<<"PASS button touch capture: hover source, held target, leave, cross-button cancel, matching release\n";
+
+    app.mGameMode=GAMEMODE_ADVENTURE;app.mGameScene=SCENE_PLAYING;
+    app.mScreenBounds=Rect(0,0,800,600);
+    manager.Resize(Rect(0,0,800,600),Rect(0,0,800,600));
+    struct TouchBoard : Board {
+        using Board::Board;
+        bool saveOnDown=false;
+        bool touchDispatch=false;
+        int mouseX=0,mouseY=0;
+        bool mouseIn=false;
+        std::string nestedSave;
+        void TouchBegan(const TouchEvent& event) override {
+            const auto& manager=*mApp->mWidgetManager;
+            mouseX=manager.mLastMouseX;mouseY=manager.mLastMouseY;mouseIn=manager.mMouseIn;
+            touchDispatch=true;Board::TouchBegan(event);touchDispatch=false;
+        }
+        void MouseDown(int x,int y,int clicks) override {
+            if(touchDispatch) Require(mApp->mWidgetManager->mLastMouseX==mouseX&&
+                mApp->mWidgetManager->mLastMouseY==mouseY&&mApp->mWidgetManager->mMouseIn==mouseIn,
+                "Board touch temporarily rewrote the physical mouse position");
+            Board::MouseDown(x,y,clicks);
+            if(saveOnDown) Require(LawnSaveGame(this,nestedSave),"Nested touch save failed");
+        }
+    } board(&app);
+    struct Restore {TestApp& app;Board& board;~Restore(){
+        app.mWidgetManager->CancelTouches(&board);
+        app.mWidgetManager->RemoveWidget(&board);app.mWidgetManager->CancelMouseDownState();
+        app.mBoard=nullptr;
+    }} restore{app,board};
+    board.Resize(0,0,800,600);app.mGameMode=GAMEMODE_ADVENTURE;app.mGameScene=SCENE_PLAYING;
+    app.mCrazyDaveState=CRAZY_DAVE_OFF;app.mEasyPlantingCheat=false;
+    app.mPlayerInfo->mLevel=12; // Adventure predicates read the profile, not Board::mLevel.
+    board.mLevel=12;board.mBackground=BACKGROUND_1_DAY;board.mSunMoney=9990;
+    board.mCutScene->mSeedChoosing=false;
+    board.mSeedBank->mX=0;board.mSeedBank->mY=0;board.mSeedBank->mNumPackets=3;
+    const SeedType seeds[]{SEED_PEASHOOTER,SEED_SUNFLOWER,SEED_WALLNUT};
+    for(int i=0;i<3;++i) {
+        auto& packet=board.mSeedBank->mSeedPackets[i];
+        packet.mX=board.GetSeedPacketPositionX(i);packet.mY=0;packet.mIndex=i;
+        packet.mPacketType=seeds[i];packet.mImitaterType=SEED_NONE;
+        packet.mActive=true;packet.mRefreshing=false;
+    }
+    manager.AddWidget(&board);manager.MouseMove(400,250);
+    auto* mouseCursor=board.mCursorObject;
+    const auto seedPoint=[&](int i){return TouchEvent{static_cast<unsigned long long>(101+i),
+        int(board.mSeedBank->mSeedPackets[i].mX)+board.mSeedBank->mSeedPackets[i].mOffsetX+20,30};};
+    manager.TouchBegan(seedPoint(0));manager.TouchBegan(seedPoint(1));
+    Require(board.mTouchState&&board.mTouchState->contacts[0].active&&board.mTouchState->contacts[1].active&&
+        board.mTouchState->selection==&board.mTouchState->contacts[0]&&
+        board.mTouchState->contacts[1].cursor==nullptr,
+        "Board allocated a second plant/tool selection");
+    Require(!board.mSeedBank->mSeedPackets[0].mActive&&board.mSeedBank->mSeedPackets[1].mActive&&
+        board.mCursorObject==mouseCursor&&mouseCursor->mCursorType==CURSOR_TYPE_NORMAL,
+        "Touch card pickup corrupted the mouse cursor or did not reserve cards");
+    auto mouseCard=seedPoint(2);
+    Require(mouseCursor->mCursorType==CURSOR_TYPE_NORMAL,"Unexpected mouse selection");
+    int mouseX=manager.mLastMouseX,mouseY=manager.mLastMouseY;
+    const int x=board.GridToPixelX(2,2)+40,y=board.GridToPixelY(2,2)+40;
+    manager.TouchMoved({101,x,y});board.UpdateTouchCursors();
+    Require(board.mTouchState->contacts[0].preview->mVisible&&manager.mLastMouseX==mouseX&&
+        manager.mLastMouseY==mouseY&&board.mCursorObject==mouseCursor,
+        "Touch preview was invisible or leaked temporary input coordinates");
+    manager.TouchEnded({101,x,y});
+    auto* planted=board.GetTopPlantAt(2,2,TOPPLANT_ONLY_NORMAL_POSITION);
+    Require(board.mPlants.mSize==1&&planted&&planted->mSeedType==SEED_PEASHOOTER&&
+        mouseCursor->mCursorType==CURSOR_TYPE_NORMAL&&board.mTouchState->contacts[1].active,
+        "Touch release did not plant exactly once or disturbed another cursor");
+    const int afterFirst=board.mSunMoney;Require(afterFirst==9890,"Touch planting charged sun incorrectly");
+    manager.TouchEnded({102,x+80,y});
+    Require(board.mPlants.mSize==1&&board.mSeedBank->mSeedPackets[1].mActive,
+        "An additional finger planted a second selected card");
+    board.mSunMoney=9990;board.mSeedBank->mSeedPackets[1].mActive=true;
+    manager.TouchBegan(seedPoint(1));board.mSunMoney=0;manager.TouchEnded({102,x+80,y});
+    Require(board.mPlants.mSize==1&&!board.mSeedBank->mSeedPackets[1].mActive&&
+        board.mTouchState->selection->cursor->mType==SEED_SUNFLOWER,
+        "Failed placement did not keep the shared selected card");
+    board.mSunMoney=9990;board.ClearTouchSelection();
+    manager.TouchBegan(seedPoint(1));manager.CancelTouches(&board);manager.TouchEnded({102,x+80,y});
+    Require(board.mPlants.mSize==1&&!board.mSeedBank->mSeedPackets[1].mActive&&manager.mTouchCount==0,
+        "Cancellation planted or lost the retained selection");
+    board.ClearTouchSelection();
+    manager.TouchBegan(seedPoint(1));board.Pause(true);
+    Require(manager.mTouchCount==0&&!board.mSeedBank->mSeedPackets[1].mActive,
+        "Pause retained an active drag or lost the selected card");
+    board.Pause(false);board.ClearTouchSelection();
+    manager.TouchBegan(seedPoint(1));manager.TouchEnded({102,-100,700});
+    Require(board.mPlants.mSize==1&&!board.mSeedBank->mSeedPackets[1].mActive,
+        "Outside release planted or lost the selected card");
+    board.nestedSave=(std::filesystem::current_path()/"touch-input-nested-save.dat64").string();
+    board.ClearTouchSelection();
+    board.saveOnDown=true;manager.TouchBegan(seedPoint(1));board.saveOnDown=false;
+    Require(manager.mTouchCount==0&&board.mSeedBank->mSeedPackets[1].mActive&&
+        board.mCursorObject==mouseCursor,"Save inside touch callback retained a gesture");
+    Require(LawnLoadGame(&board,board.nestedSave)&&mouseCursor->mCursorType==CURSOR_TYPE_NORMAL,
+        "Nested touch save serialized the contact cursor instead of the real mouse");
+    board.RefreshSeedPacketFromCursor();
+    manager.TouchBegan(seedPoint(1));
+    const auto savePath=(std::filesystem::current_path()/"touch-input-save.dat64").string();
+    Require(LawnSaveGame(&board,savePath)&&manager.mTouchCount==0&&
+        board.mSeedBank->mSeedPackets[1].mActive&&board.mCursorObject==mouseCursor,
+        "Save did not cancel and return the touch card before serialization");
+    auto* touchState=board.mTouchState;
+    board.mSunMoney=0;
+    Require(LawnLoadGame(&board,savePath)&&board.mSunMoney==9990&&board.mPlants.mSize==1&&
+        board.mTouchState==touchState&&board.mCursorObject==mouseCursor&&touchState->activeCount==0,
+        "DAT64 roundtrip changed persistent state or serialized transient touch pointers");
+    {
+        const auto previousWindow=app.mHWnd;
+        const bool previousReady=app.mNativeWindowReady;
+        app.mHWnd=app.mDDInterface->mHWnd;app.mNativeWindowReady=true;
+        const auto card=seedPoint(1);
+        RECT client{};Require(GetClientRect(app.mHWnd,&client),"Cannot query hidden input window");
+        const auto present=app.mDDInterface->mRenderInterface->mRenderer->PresentRect(client.right,client.bottom);
+        const double px=present.x+(card.x+0.5)*present.width/800.0;
+        const double py=present.y+(card.y+0.5)*present.height/600.0;
+        const auto mouseBefore=Point(manager.mLastMouseX,manager.mLastMouseY);
+        app.ProcessMessageNow(WM_XBUTTONDOWN,MAKEWPARAM(0,XBUTTON1),MAKELPARAM(int(px),int(py)),app.mHWnd);
+        Require(manager.mTouchCount==0,"Side button still emulates touch");
+        app.QueueNativeTouch(17,TOUCHEVENTF_DOWN,px,py);
+        app.QueueNativeTouch(23,TOUCHEVENTF_DOWN,px+50,py);
+        Require(manager.mTouchCount==0,"Native touch reentered widgets from the window procedure");
+        app.DrainWindowMessages();
+        Require(manager.mTouchCount==2,"Native contact IDs did not survive deferred dispatch");
+        app.QueueNativeTouch(17,TOUCHEVENTF_MOVE,px+80,py+60);
+        app.QueueNativeTouch(23,TOUCHEVENTF_UP,px+50,py);
+        app.DrainWindowMessages();
+        Require(manager.mTouchCount==1&&manager.mLastMouseX==mouseBefore.mX&&manager.mLastMouseY==mouseBefore.mY,
+            "Native touch movement/up changed the mouse or ended another contact");
+        app.QueueNativeTouch(17,0x80000000u,px+80,py+60);app.DrainWindowMessages();
+        Require(manager.mTouchCount==0,"Native pointer capture cancellation retained a contact");
+        app.mNativeTouchOwnsCursor=false;app.mNativeMouseMotionPending=false;
+        app.mHWnd=previousWindow;app.mNativeWindowReady=previousReady;
+    }
+    board.ClearTouchSelection();
+    auto* looseCard=board.AddCoin(500,350,COIN_USABLE_SEED_PACKET,COIN_MOTION_COIN);
+    looseCard->mUsableSeedType=SEED_SUNFLOWER;
+    manager.TouchBegan({301,int(looseCard->mPosX)+10,int(looseCard->mPosY)+10});
+    Require(board.mTouchState->contacts[0].cursor->mCursorType==CURSOR_TYPE_PLANT_FROM_USABLE_COIN,
+        "Touch did not pick up the dropped card");
+    looseCard->Die();board.mCoins.DataArrayFree(looseCard);
+    manager.TouchEnded({301,x+80,y});
+    Require(board.mPlants.mSize==1&&manager.mTouchCount==0,
+        "Expired dropped card was dereferenced or planted on release");
+    app.mGameMode=GAMEMODE_MINIGAME_INVISIGHOUL;
+    for(int i=0;i<3;++i) {
+        auto& packet=board.mSeedBank->mSeedPackets[i];
+        packet.mPacketType=seeds[i];packet.mActive=true;packet.mRefreshing=false;
+    }
+    manager.TouchBegan(seedPoint(1));
+    mouseCard=seedPoint(2);manager.MouseDown(mouseCard.x,mouseCard.y,1);manager.MouseUp(mouseCard.x,mouseCard.y,1);
+    // The first mouse command takes the shared held card and cancels it at the bank.
+    manager.MouseDown(mouseCard.x,mouseCard.y,1);manager.MouseUp(mouseCard.x,mouseCard.y,1);
+    board.mSeedBank->RemoveSeed(0);
+    Require(board.mTouchState->contacts[0].cursor->mCursorType==CURSOR_TYPE_NORMAL&&mouseCursor->mSeedBankIndex==1&&
+        board.mSeedBank->mSeedPackets[0].mActive&&!board.mSeedBank->mSeedPackets[1].mActive,
+        "Conveyor removal changed held cards or made reserved cards available");
+    manager.CancelTouches(&board);board.ClearTouchSelection();board.RefreshSeedPacketFromCursor();
+    app.mGameMode=GAMEMODE_MINIGAME_WHACK_A_ZOMBIE;
+    manager.TouchBegan({401,780,570});
+    auto* hammer=board.mTouchState->contacts[0].cursor;
+    Require(hammer->mCursorType==CURSOR_TYPE_HAMMER&&hammer->mReanimCursorID!=REANIMATIONID_NULL,
+        "Whack touch did not initialize its own hammer");
+    manager.TouchEnded({401,780,570});
+    Require(hammer->mReanimCursorID==REANIMATIONID_NULL,
+        "Released touch retained an unowned hammer animation");
+    manager.TouchBegan({402,780,570});
+    Require(hammer->mReanimCursorID!=REANIMATIONID_NULL,"Reused touch hammer did not recreate its animation");
+    manager.CancelTouches(&board);
+    app.mGameMode=GAMEMODE_ADVENTURE;
+    board.ClearTouchSelection();
+    board.mShowShovel=true;board.mSunMoney=9990;
+    for(auto& packet:board.mSeedBank->mSeedPackets) packet.mOffsetX=0; // Return from the conveyor fixture to a settled normal bank.
+    board.mSeedBank->mSeedPackets[1].mPacketType=SEED_SUNFLOWER;
+    board.mSeedBank->mSeedPackets[1].mRefreshing=false;
+    board.mSeedBank->mSeedPackets[1].mRefreshTime=0;
+    board.mSeedBank->mSeedPackets[1].mActive=true;
+    manager.TouchBegan(seedPoint(1));manager.TouchEnded(seedPoint(1));
+    Require(board.mTouchState->selection->cursor->mType==SEED_SUNFLOWER&&
+        !board.mTouchState->selection->active&&!board.mSeedBank->mSeedPackets[1].mActive,
+        "Tapping a card did not retain its selected slot");
+    manager.TouchBegan(seedPoint(1));manager.TouchEnded(seedPoint(1));
+    Require(board.mTouchState->selection->cursor->mCursorType==CURSOR_TYPE_NORMAL&&
+        board.mSeedBank->mSeedPackets[1].mActive,"Tapping the selected card did not cancel selection");
+    manager.TouchBegan(seedPoint(1));manager.TouchEnded(seedPoint(1));
+    const auto shovel=board.GetShovelButtonRect();
+    mouseX=manager.mLastMouseX;mouseY=manager.mLastMouseY;
+    TouchPresentationRuntime(app,board);
+    const TouchEvent shovelPoint{501,shovel.mX+shovel.mWidth/2,shovel.mY+shovel.mHeight/2};
+    manager.TouchBegan(shovelPoint);manager.TouchEnded(shovelPoint);
+    Require(board.mTouchState->selection->cursor->mCursorType==CURSOR_TYPE_SHOVEL&&
+        board.mSeedBank->mSeedPackets[1].mActive,"Shovel and plant did not share one selection");
+    manager.TouchBegan(shovelPoint);manager.TouchEnded(shovelPoint);
+    Require(board.mTouchState->selection->cursor->mCursorType==CURSOR_TYPE_NORMAL,
+        "Tapping the selected shovel did not cancel selection");
+    manager.TouchBegan(shovelPoint);manager.TouchMoved({shovelPoint.id,x,y});board.UpdateMousePosition();
+    Require(planted->mHighlighted&&manager.mLastMouseX==mouseX&&manager.mLastMouseY==mouseY,
+        "Shovel touch did not highlight its actual plant or changed mouse coordinates");
+    manager.TouchMoved({shovelPoint.id,790,590});board.UpdateMousePosition();
+    Require(!planted->mHighlighted,"Shovel plant highlight persisted after the finger moved away");
+    manager.TouchCanceled(shovelPoint);board.ClearTouchSelection();
+    auto* savedGarden=app.mZenGarden;
+    ZenGarden touchGarden;touchGarden.mBoard=&board;
+    app.mZenGarden=&touchGarden;app.mGameMode=GAMEMODE_LIMBO_ZEN_GARDEN;
+    for(const auto tool:{CURSOR_TYPE_WATERING_CAN,CURSOR_TYPE_GLOVE,CURSOR_TYPE_MONEY_SIGN}) {
+        board.mTouchState->selection->cursor->mCursorType=tool;
+        manager.TouchBegan({752,x,y});
+        Require(board.UpdateTouchHighlights()&&planted->mHighlighted,
+            "Garden tool drag did not highlight its touch target");
+        planted->UpdateReanimColor(static_cast<std::int64_t>(board.mLevelTimeNs));
+        const auto* animation=app.ReanimationTryToGet(planted->mBodyReanimID);
+        Require(animation&&animation->mEnableExtraAdditiveDraw,"Highlighted garden plant did not enable its existing glow draw");
+        manager.TouchMoved({752,790,590});
+        Require(board.UpdateTouchHighlights()&&!planted->mHighlighted,
+            "Garden target kept glowing after the finger moved away");
+        manager.TouchCanceled({752,790,590});board.ClearTouchSelection();
+    }
+    app.mGameMode=GAMEMODE_ADVENTURE;app.mZenGarden=savedGarden;
+    std::cout<<"PASS touch tool glow: shovel target and garden watering/glove/sell targets, actual additive draw, moving away, independent mouse position\n";
+    manager.TouchBegan(shovelPoint);manager.TouchEnded(shovelPoint);
+    manager.TouchBegan(seedPoint(1));manager.TouchEnded(seedPoint(1));
+    Require(board.mTouchState->selection->cursor->mCursorType==CURSOR_TYPE_PLANT_FROM_BANK,
+        "Selecting a plant did not replace the shovel");
+    const int plantsBeforeTap=board.mPlants.mSize;
+    manager.TouchBegan({502,x+160,y});
+    Require(board.mPlants.mSize==plantsBeforeTap,"Tap-to-plant committed on down instead of up");
+    manager.TouchEnded({502,x+160,y});
+    Require(board.mPlants.mSize==plantsBeforeTap+1&&board.GetTopPlantAt(4,2,TOPPLANT_ONLY_NORMAL_POSITION),
+        "Retained card could not be planted by tapping the lawn");
+    std::cout<<"PASS touch input: shared plant/tool selection, one drag, retained tap/failed drop, tap-to-plant, independent mouse, DAT64, conveyor and hammer\n";
+    TouchFieldCardsRuntime(app,board);
+    TouchCannonPickupRuntime(app,board);
+    board.ClearTouchSelection();board.RefreshSeedPacketFromCursor();
+    for(int i=0;i<2;++i) {
+        auto& packet=board.mSeedBank->mSeedPackets[i];
+        packet.mPacketType=seeds[i];packet.mRefreshing=false;packet.mRefreshTime=0;packet.mActive=true;
+    }
+    auto sharedMouse=seedPoint(0);
+    manager.MouseDown(sharedMouse.x,sharedMouse.y,1);manager.MouseUp(sharedMouse.x,sharedMouse.y,1);
+    Require(board.mCursorObject->mCursorType==CURSOR_TYPE_PLANT_FROM_BANK,"Mouse did not establish shared selection");
+    manager.TouchBegan(seedPoint(1));manager.TouchEnded(seedPoint(1));
+    Require(board.mCursorObject->mCursorType==CURSOR_TYPE_NORMAL&&
+        board.mTouchState->selection->cursor->mSeedBankIndex==1&&board.mSeedBank->mSeedPackets[0].mActive,
+        "Touch did not replace and return the mouse's selected card");
+    manager.MouseDown(790,590,-1);manager.MouseUp(790,590,-1);
+    Require(board.mCursorObject->mCursorType==CURSOR_TYPE_NORMAL&&
+        board.mTouchState->selection->cursor->mCursorType==CURSOR_TYPE_NORMAL&&board.mSeedBank->mSeedPackets[1].mActive,
+        "Mouse cancellation left a second touch selection or reserved card");
+    std::cout<<"PASS shared mouse/touch selection: cross-input replacement, source return, mouse cancel, one live selection\n";
+    for(const int width:{800,1400}) {
+        const Rect bounds((800-width)/2,0,width,600);
+        app.mScreenBounds=bounds;manager.Resize(bounds,bounds);
+        app.mGameScene=SCENE_LEVEL_INTRO;board.mCutScene->mSeedChoosing=true;
+        SeedChooserScreen chooser;
+        app.mSeedChooserScreen=&chooser;
+        chooser.Resize(bounds.mX,0,width,600);chooser.mMouseVisible=true;
+        chooser.MouseUp(-2000,-2000,1); // Settle its real responsive layout, without activating a button.
+        manager.AddWidget(&chooser);manager.SetFocus(&chooser);
+        const int menuX=chooser.mMenuButton->mX+50,menuY=10;
+        manager.MouseMove(bounds.mX+10,500);
+        const int savedMouseX=manager.mLastMouseX,savedMouseY=manager.mLastMouseY;
+        const int viewX=chooser.mX+chooser.mViewLawnButton->mX+chooser.mViewLawnButton->mWidth/2;
+        const int viewY=chooser.mY+chooser.mViewLawnButton->mY+10;
+        manager.TouchBegan({600,viewX,viewY});
+        Require(chooser.mChooseState==CHOOSE_NORMAL,"View Lawn activated before release");
+        manager.TouchMoved({600,menuX,menuY});manager.TouchEnded({600,menuX,menuY});
+        Require(chooser.mChooseState==CHOOSE_NORMAL&&!app.GetDialog(DIALOG_NEWOPTIONS),
+            "Cross-button chooser drag activated View Lawn or Menu");
+        manager.TouchBegan({601,menuX,menuY});chooser.mMenuButton->Update();
+        Require(chooser.mMenuButton->mIsOver,"Chooser Menu did not highlight at the touch event position");
+        manager.TouchEnded({601,menuX,menuY});
+        Require(app.GetDialog(DIALOG_NEWOPTIONS)&&manager.mLastMouseX==savedMouseX&&manager.mLastMouseY==savedMouseY,
+            "Chooser Menu touch used the global mouse position or wrong coordinate frame");
+        app.KillDialog(DIALOG_NEWOPTIONS);app.ProcessSafeDeleteList();
+        manager.MouseDown(menuX,menuY,1);manager.MouseUp(menuX,menuY,1);
+        Require(app.GetDialog(DIALOG_NEWOPTIONS),"Chooser Menu mouse event did not open actual options");
+        app.KillDialog(DIALOG_NEWOPTIONS);app.ProcessSafeDeleteList();
+        manager.RemoveWidget(&chooser);app.mSeedChooserScreen=nullptr;
+    }
+    app.mScreenBounds=Rect(0,0,800,600);manager.Resize(app.mScreenBounds,app.mScreenBounds);
+    app.mGameScene=SCENE_PLAYING;board.mCutScene->mSeedChoosing=false;board.Pause(false);
+    std::cout<<"PASS actual chooser Menu: 800/1400 widths, touch with mouse elsewhere, physical click, real options callback\n";
+    if(gTouchPerf)
+    {
+        DWORD_PTR processMask=0,systemMask=0;
+        Require(GetProcessAffinityMask(GetCurrentProcess(),&processMask,&systemMask),"Cannot query affinity");
+        DWORD_PTR affinity=(processMask&(DWORD_PTR(1)<<14)) ? (DWORD_PTR(1)<<14) :
+            (processMask&(~processMask+1));
+        if(const char* requested=std::getenv("PVZ_TOUCH_BENCH_AFFINITY"))
+            affinity=static_cast<DWORD_PTR>(std::strtoull(requested,nullptr,0));
+        Require(affinity&&(affinity&(affinity-1))==0&&(affinity&processMask)==affinity,
+            "Touch benchmark requires one available logical processor");
+        Require(SetProcessAffinityMask(GetCurrentProcess(),affinity),"Cannot pin touch benchmark");
+        std::cout<<"TOUCH_PERF_AFFINITY "<<affinity<<'\n';
+        struct Context {Board* board;WidgetManager* manager;unsigned int touches;};
+        Context context{&board,&manager,0};
+        using Work=void(*)(Context&,unsigned int);
+        const auto measure=[&](const char* name,unsigned int iterations,Work work)
+        {
+            Work volatile entry=work;
+            for(unsigned int i=0;i<2000;++i) entry(context,i);
+            std::array<double,7> samples{};
+            for(auto& ns:samples)
+            {
+                const auto start=std::chrono::steady_clock::now();
+                for(unsigned int i=0;i<iterations;++i) entry(context,i);
+                ns=std::chrono::duration<double,std::nano>(std::chrono::steady_clock::now()-start).count()/iterations;
+            }
+            std::sort(samples.begin(),samples.end());
+            std::cout<<"TOUCH_PERF {\"case\":\""<<name<<"\",\"iterations\":"<<iterations
+                <<",\"rounds\":7,\"median_ns\":"<<samples[3]<<"}\n";
+        };
+        measure("no_touch_update_draw",2000000,[](Context& c,unsigned int){
+            c.board->UpdateTouchCursors();c.board->DrawTouchPreviews(nullptr);c.board->DrawTouchCursors(nullptr);
+        });
+        first.Resize(0,570,100,30);second.Resize(200,570,100,30);
+        manager.AddWidget(&first);manager.AddWidget(&second);
+        measure("mouse_hover_no_touch",300000,[](Context& c,unsigned int i){
+            c.manager->MouseMove((i&1)?20:220,585);
+        });
+        manager.RemoveWidget(&first);manager.RemoveWidget(&second);
+        for(const bool mousePresent:{false,true})
+        for(const unsigned int fingers:{1U,10U})
+        {
+            if(mousePresent) manager.MouseMove(400,250);
+            else manager.MouseExit(-100,-100);
+            board.mSeedBank->mNumPackets=10;
+            for(int i=0;i<10;++i)
+            {
+                auto& packet=board.mSeedBank->mSeedPackets[i];
+                packet.mPacketType=SEED_PEASHOOTER;packet.mActive=true;packet.mRefreshing=false;
+                packet.mRefreshTime=0;packet.mOffsetX=0;packet.mIndex=i;
+                packet.mX=board.GetSeedPacketPositionX(i);packet.mY=0;
+            }
+            for(unsigned int i=0;i<fingers;++i)
+                manager.TouchBegan({777+i,int(board.mSeedBank->mSeedPackets[i].mX)+20,30});
+            Require(manager.mTouchCount==fingers,"Benchmark did not capture every finger");
+            context.touches=fingers;
+            const char* label=mousePresent ? (fingers==1?"one_touch_with_mouse":"ten_touch_with_mouse") :
+                (fingers==1?"one_touch_move_update":"ten_touch_move_update");
+            measure(label,fingers==1?30000:10000,
+                [](Context& c,unsigned int frame){
+                    for(unsigned int i=0;i<c.touches;++i)
+                        c.manager->TouchMoved({777+i,430+int(frame&7),350});
+                    c.board->UpdateTouchCursors();
+                });
+            manager.CancelTouches(&board);
+        }
+    }
+}
+
 void StorePauseClockRuntime(TestApp& app, DecodeOnlySoundManager& sounds)
 {
     std::cerr<<"Store clock fixture: initialize\n";
@@ -5719,6 +7000,17 @@ void StorePauseClockRuntime(TestApp& app, DecodeOnlySoundManager& sounds)
     app.mMusicInterface=&silentMusicInterface;
     app.mReanimatorCache=&cache;
     sounds.allowSilentPlayback=true;
+    if(gTouchOnly) {
+        FixedUIAtlas::Load();
+        struct FreeTouchAtlas { ~FreeTouchAtlas(){FixedUIAtlas::Free();} } freeTouchAtlas;
+        const auto source=std::filesystem::path(__FILE__).parent_path().parent_path().parent_path()/"assets/runtime/images/touch_selection_frame_blue.png";
+        auto* decoded=ImageLib::GetImage(source.string(),false);
+        Require(decoded&&decoded->mBits,"Cannot decode independent original TV frame");
+        ImageLib::FixTransparentEdges(*decoded); // Match the original ResourceManager upload preparation.
+        Image frame;frame.SetBits(decoded->mBits,decoded->mWidth,decoded->mHeight);delete decoded;
+        gTouchFrameReference=&frame;
+        TouchInputRuntime(app);TouchGardenRuntime(app);gTouchFrameReference=nullptr;return;
+    }
     if(gPlantCatalogOnly) {PlantAttackCatalogRuntime(app);return;}
     if(gZombieCatalogOnly) {ZombieBehaviorCatalogRuntime(app);return;}
     if(gMinigameRulesOnly) {MinigameBehaviorRuntime(app);MinigameRulesRuntime(app);return;}
@@ -6419,7 +7711,7 @@ void AllResourceGroups(SexyAppBase& app)
         }
     }
     Require(loadedImages==RESOURCE_LOAD_IMAGE_COUNT,"Full loading skipped an image recipe");
-    if(gPlantCatalogOnly||gZombieCatalogOnly||gMinigameRulesOnly||gPuzzleRulesOnly||gSurvivalRulesOnly||gAdventureRulesOnly||gHiddenRulesOnly||gGardenRulesOnly||gIntroRulesOnly||gUiRulesOnly||gAwardRulesOnly||gAlmanacClockOnly||gActorBirthOnly||gLossRulesOnly||gOpeningRulesOnly||gLifecycleRulesOnly||gGraveRulesOnly||gHudSeamsOnly)
+    if(gPlantCatalogOnly||gZombieCatalogOnly||gMinigameRulesOnly||gPuzzleRulesOnly||gSurvivalRulesOnly||gAdventureRulesOnly||gHiddenRulesOnly||gGardenRulesOnly||gIntroRulesOnly||gUiRulesOnly||gAwardRulesOnly||gAlmanacClockOnly||gActorBirthOnly||gLossRulesOnly||gOpeningRulesOnly||gLifecycleRulesOnly||gGraveRulesOnly||gHudSeamsOnly||gTouchOnly)
     {
         StorePauseClockRuntime(static_cast<TestApp&>(app),sounds);
         DefinitionFreeAtlasImages();
@@ -6534,7 +7826,7 @@ void ParticleDefinitionsAndFrames(SexyAppBase& app, const char* pakPath)
     Require(gPakInterface && gPakInterface->AddPakFile(pakPath),
         "Cannot mount the production particle package");
     AllResourceGroups(app);
-    if(gPlantCatalogOnly||gZombieCatalogOnly||gMinigameRulesOnly||gPuzzleRulesOnly||gSurvivalRulesOnly||gAdventureRulesOnly||gHiddenRulesOnly||gGardenRulesOnly||gIntroRulesOnly||gUiRulesOnly||gAwardRulesOnly||gAlmanacClockOnly||gActorBirthOnly||gLossRulesOnly||gOpeningRulesOnly||gLifecycleRulesOnly||gGraveRulesOnly||gHudSeamsOnly) return;
+    if(gPlantCatalogOnly||gZombieCatalogOnly||gMinigameRulesOnly||gPuzzleRulesOnly||gSurvivalRulesOnly||gAdventureRulesOnly||gHiddenRulesOnly||gGardenRulesOnly||gIntroRulesOnly||gUiRulesOnly||gAwardRulesOnly||gAlmanacClockOnly||gActorBirthOnly||gLossRulesOnly||gOpeningRulesOnly||gLifecycleRulesOnly||gGraveRulesOnly||gHudSeamsOnly||gTouchOnly) return;
     ResourceLoadingOwnership(app);
     ReanimationAppearanceDefinitions(app);
     constexpr ParticleEffect fireEffect=ParticleEffect::PARTICLE_ZOMBIE_BOSS_FIREBALL;
@@ -7018,7 +8310,8 @@ void PrecomputedTransparentEdges(TestApp& app)
 int main(int argc, char** argv)
 {
     gPlantCatalogOnly=argc==3 && std::string_view(argv[2])=="plant-attacks";
-    gZombieCatalogOnly=argc==3 && std::string_view(argv[2])=="zombie-behavior";
+    gIce3Only=argc==3 && std::string_view(argv[2])=="ice3";
+    gZombieCatalogOnly=gIce3Only || (argc==3 && std::string_view(argv[2])=="zombie-behavior");
     gMinigameRulesOnly=argc==3 && std::string_view(argv[2])=="minigame-rules";
     gPuzzleRulesOnly=argc==3 && std::string_view(argv[2])=="puzzle-rules";
     gSurvivalRulesOnly=argc==3 && std::string_view(argv[2])=="survival-rules";
@@ -7035,6 +8328,8 @@ int main(int argc, char** argv)
     gLifecycleRulesOnly=argc==3 && std::string_view(argv[2])=="lifecycle-rules";
     gGraveRulesOnly=argc==3 && std::string_view(argv[2])=="grave-rules";
     gHudSeamsOnly=argc==3 && std::string_view(argv[2])=="hud-seams";
+    gTouchPerf=argc==3 && std::string_view(argv[2])=="touch-perf";
+    gTouchOnly=gTouchPerf||(argc==3 && std::string_view(argv[2])=="touch-input");
     std::cout<<std::unitbuf;
     SetErrorMode(SEM_FAILCRITICALERRORS | SEM_NOGPFAULTERRORBOX | SEM_NOOPENFILEERRORBOX);
     AddVectoredExceptionHandler(1,SuppressFixtureCrashDialogs);
@@ -7088,7 +8383,7 @@ int main(int argc, char** argv)
         SharedReferences(app);
         ReanimationAppearancePixels(app);
         ReanimationFullscreenPixels(app);
-        Require(argc==2||gPlantCatalogOnly||gZombieCatalogOnly||gMinigameRulesOnly||gPuzzleRulesOnly||gSurvivalRulesOnly||gAdventureRulesOnly||gHiddenRulesOnly||gGardenRulesOnly||gIntroRulesOnly||gUiRulesOnly||gAwardRulesOnly||gAlmanacClockOnly||gActorBirthOnly||gLossRulesOnly||gOpeningRulesOnly||gLifecycleRulesOnly||gGraveRulesOnly||gHudSeamsOnly,"Pass the production main.pak64 path and optional focused case");
+        Require(argc==2||gPlantCatalogOnly||gZombieCatalogOnly||gMinigameRulesOnly||gPuzzleRulesOnly||gSurvivalRulesOnly||gAdventureRulesOnly||gHiddenRulesOnly||gGardenRulesOnly||gIntroRulesOnly||gUiRulesOnly||gAwardRulesOnly||gAlmanacClockOnly||gActorBirthOnly||gLossRulesOnly||gOpeningRulesOnly||gLifecycleRulesOnly||gGraveRulesOnly||gHudSeamsOnly||gTouchOnly,"Pass the production main.pak64 path and optional focused case");
         ParticleDefinitionsAndFrames(app,argv[1]);
     }
     catch (const ResourceManagerException& error)

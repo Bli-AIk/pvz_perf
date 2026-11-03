@@ -40,7 +40,13 @@ def main():
     source = args.source.resolve()
     obj = output / "benchmark.obj"
     executable = output / "benchmark.exe"
-    compile_command = mains[0].replace(str(project / "pvzPerf/main.cpp"), str(source)).replace((project / "pvzPerf/main.cpp").as_posix(), str(source))
+    # CMake may spell TEMP using ADMINI~1 while pathlib resolves Administrator.
+    # Match the actual compiler input instead of assuming identical path spelling.
+    compile_command, replacements = re.subn(
+        r'(?i)(/c|-c)\s+("[^"\r\n]*[/\\]main\.cpp"|[^\s"]*[/\\]main\.cpp)(?=\s|$)',
+        lambda match: match[1] + ' "' + str(source) + '"', mains[0])
+    if replacements != 1:
+        raise RuntimeError("Expected one main.cpp compiler input to replace")
     compile_command = re.sub(r"/Fo\S+", lambda _: '/Fo"' + str(obj) + '"', compile_command)
     compile_command = re.sub(r"/Fd\S+", lambda _: '/Fd"' + str(output / "compile.pdb") + '"', compile_command)
     compile_commands = [compile_command]

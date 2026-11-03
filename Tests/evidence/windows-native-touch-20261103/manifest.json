@@ -1,0 +1,26 @@
+{
+  "date": "2026-11-03",
+  "win10": "WM_POINTER / frame batch / skip remaining frame messages",
+  "win7": "WM_TOUCH / one GetTouchInputInfo batch / handle closed",
+  "side_button_emulation": "removed",
+  "results": [
+    "Vulkan production runtime PASS",
+    "OpenGL production runtime PASS",
+    "Win7 imports PASS",
+    "4 native tests PASS"
+  ],
+  "hardware": "GetSystemMetrics: digitizer=197, maximum touches=20; real touchscreen interaction not yet verified",
+  "game_touch_capacity": 10,
+  "save_format": "DAT64 v4 unchanged",
+  "hashes": {
+    "pvzPerf/SexyAppFramework/platform/windows/Win32App.cpp": "848112ba8383013769386b87352699c2fd1d8a0071012543291dce4f81b04e66",
+    "pvzPerf/SexyAppFramework/SexyAppBase.h": "8b168791a34c7210f24a9655d6e84958671ddb608201a5d83557ee9cf81b9d42",
+    "Tests/native/ImageRuntimeTests.cpp": "4ec5f0f737757221646b983692703ec7fc6520cefa3a746c4c6b10ecc2e776d1",
+    "out/x64-win32-vulkan/Release/pvz_perf.exe": "402127cc99f7ee5f1fcf752a278c0608dfd69ebb17de552b3c69132fdb49a75c",
+    "out/x64-win32-vulkan/Release/main.pak64": "b472ceb365211ba6e1de9f8f4fb4d9b799609ef3aeac5109165f5d270240553c",
+    "out/x64-win32-vulkan/Tests/performance/build/pvz_game_perf_layout.exe": "4cffd68e9a65fdf0f32d65ab18289ce24c798f88f0d0cffbcb0256b84d065934",
+    "out/x64-win7-opengl/Release/pvz_perf.exe": "1b5d9c3f97ed282057cb5973c75ca43e765f552d0c7e1264b96e28cff4e21051",
+    "out/x64-win7-opengl/Release/main.pak64": "b472ceb365211ba6e1de9f8f4fb4d9b799609ef3aeac5109165f5d270240553c",
+    "out/x64-win7-opengl/Tests/performance/build/pvz_game_perf_layout.exe": "0f79618264f9ac4c12d813120a8fdfb0f3f9e7cbdf120dfdb3505794bdf3a717"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "window": {
+    "multiplier": 1,
+    "effects": []
+  },
+  "fullScreen": {
+    "output": {
+      "width": 0,
+      "height": 0
+    },
+    "effects": []
+  },
+  "HDR": {
+    "paperWhiteNits": 549.2,
+    "strength": 1.0
+  }
+}

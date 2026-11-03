@@ -12,7 +12,7 @@ enum class NativeCursor {
 };
 enum class NativeWindowEventKind {
     Close, Resize, Focus, MouseMove, MouseLeave, MouseButton, MouseWheel, Key, Text,
-    MouseEnter
+    MouseEnter, TouchBegan, TouchMoved, TouchEnded, TouchCanceled, MouseCanceled
 };
 struct NativePointerState {
     double x = 0, y = 0;
@@ -25,7 +25,10 @@ struct NativeWindowEvent {
     // Buttons: 0=left, 1=right, 2=middle. Key symbol is an XKB keysym.
     unsigned int key = 0, scanCode = 0, text = 0;
     // Native input milliseconds, extended across the server's 32-bit wrap.
-    unsigned long long timeMs = 0;
+    union {
+        unsigned long long timeMs = 0;
+        unsigned long long touchId; // Touch events carry identity, not mouse timing.
+    };
     int button = 0;
     bool pressed = false, focused = false, minimized = false, repeat = false;
 };

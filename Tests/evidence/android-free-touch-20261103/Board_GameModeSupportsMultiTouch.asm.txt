@@ -1,0 +1,47 @@
+
+..\tv_assets\FREE_3.18.0_Phone\apk_contents\split_config.arm64_v8a\lib\arm64-v8a\libpvz.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+00000000019e8100 <Board::GameModeSupportsMultiTouch()>:
+ 19e8100:      	sub	sp, sp, #0x20
+ 19e8104:      	str	x0, [sp, #0x10]
+ 19e8108:      	ldr	x8, [sp, #0x10]
+ 19e810c:      	str	x8, [sp, #0x8]
+ 19e8110:      	ldr	x8, [x8, #0x110]
+ 19e8114:      	ldr	w8, [x8, #0xbdc]
+ 19e8118:      	subs	w8, w8, #0x14
+ 19e811c:      	b.eq	0x19e816c <Board::GameModeSupportsMultiTouch()+0x6c>
+ 19e8120:      	b	0x19e8124 <Board::GameModeSupportsMultiTouch()+0x24>
+ 19e8124:      	ldr	x8, [sp, #0x8]
+ 19e8128:      	ldr	x8, [x8, #0x110]
+ 19e812c:      	ldr	w8, [x8, #0xbdc]
+ 19e8130:      	subs	w8, w8, #0x18
+ 19e8134:      	b.eq	0x19e816c <Board::GameModeSupportsMultiTouch()+0x6c>
+ 19e8138:      	b	0x19e813c <Board::GameModeSupportsMultiTouch()+0x3c>
+ 19e813c:      	ldr	x8, [sp, #0x8]
+ 19e8140:      	ldr	x8, [x8, #0x110]
+ 19e8144:      	ldr	w8, [x8, #0xbdc]
+ 19e8148:      	subs	w8, w8, #0x1b
+ 19e814c:      	b.eq	0x19e816c <Board::GameModeSupportsMultiTouch()+0x6c>
+ 19e8150:      	b	0x19e8154 <Board::GameModeSupportsMultiTouch()+0x54>
+ 19e8154:      	ldr	x8, [sp, #0x8]
+ 19e8158:      	ldr	x8, [x8, #0x110]
+ 19e815c:      	ldr	w8, [x8, #0xbdc]
+ 19e8160:      	subs	w8, w8, #0x13
+ 19e8164:      	b.ne	0x19e8180 <Board::GameModeSupportsMultiTouch()+0x80>
+ 19e8168:      	b	0x19e816c <Board::GameModeSupportsMultiTouch()+0x6c>
+ 19e816c:      	mov	w8, wzr
+ 19e8170:      	and	w8, w8, #0x1
+ 19e8174:      	and	w8, w8, #0x1
+ 19e8178:      	strb	w8, [sp, #0x1f]
+ 19e817c:      	b	0x19e8194 <Board::GameModeSupportsMultiTouch()+0x94>
+ 19e8180:      	mov	w8, #0x1                // =1
+ 19e8184:      	and	w8, w8, #0x1
+ 19e8188:      	and	w8, w8, #0x1
+ 19e818c:      	strb	w8, [sp, #0x1f]
+ 19e8190:      	b	0x19e8194 <Board::GameModeSupportsMultiTouch()+0x94>
+ 19e8194:      	ldrb	w8, [sp, #0x1f]
+ 19e8198:      	and	w0, w8, #0x1
+ 19e819c:      	add	sp, sp, #0x20
+ 19e81a0:      	ret

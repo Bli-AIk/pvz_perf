@@ -103,6 +103,9 @@ public:
     void                    ShowToolTip();
     /*inline*/ void         CancelLawnView();
     virtual void            MouseUp(int x, int y, int theClickCount);
+    const void* TouchHitTest(int x, int y) override;
+    void TouchBegan(const TouchEvent& event) override;
+    void TouchEnded(const TouchEvent& event) override;
     void                    UpdateImitaterButton();
     virtual void            MouseDown(int x, int y, int theClickCount);
     /*inline*/ bool         PickedPlantType(SeedType theSeedType);

@@ -47,6 +47,7 @@ public:
     void                    CoinInitialize(int theX, int theY, CoinType theCoinType, CoinMotion theCoinMotion);
     void                    MouseDown(int x, int y, int theClickCount);
     bool                    MouseHitTest(int theX, int theY, HitResult* theHitResult);
+    bool                    TouchHitTest(int fromX, int fromY, int toX, int toY);
     void                    Die();
     void                    Update();
     void                    Draw(Graphics* g);

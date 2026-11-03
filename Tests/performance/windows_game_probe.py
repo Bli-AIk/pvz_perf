@@ -243,7 +243,9 @@ def measure(game, seconds, scene, multiplier, output, preroll=0, interactive=Fal
             metadata["sample_clock_origin_qpc"] = begin_qpc
             metadata["sample_clock_origin_ns"] = begin_qpc * 1_000_000_000 // core_trace.frequency
         else:
-            begin = last = time.perf_counter()
+            origin_ns = time.perf_counter_ns()
+            begin = last = origin_ns / 1_000_000_000
+            metadata["sample_clock_origin_ns"] = origin_ns
         next_deadline = begin + 1
         end = begin + seconds if seconds else float("inf")
         previous_foreground = False
@@ -375,6 +377,8 @@ def main():
                         help="observe until the game exits; Enter does not stop observation")
     parser.add_argument("--verify-original-endless", action="store_true",
                         help="check retail offsets against the known paused canonical save before observing")
+    parser.add_argument("--verify-project-endless", action="store_true",
+                        help="require the paused canonical DAT64 endless checkpoint before observing")
     parser.add_argument("--preroll", type=int, default=3)
     parser.add_argument("--affinity", type=lambda text: int(text, 0), default=0x4000,
                         help="required game affinity mask, for example 0xC000 for LP14+LP15")
@@ -392,6 +396,11 @@ def main():
             expected = dict(paused=True, counter=229196, wave=0, waves=20, sun=9990)
             if args.kind != "original" or state["mGameScene"] != 3 or state["mGameMode"] != 13 or state.get("board") != expected:
                 raise RuntimeError(f"Retail checkpoint/layout verification failed; expected {expected}, got {state}")
+        if args.verify_project_endless:
+            state = game.snapshot()
+            expected = dict(paused=True, counter=2291960000000, wave=0, waves=20, sun=9990)
+            if args.kind != "project" or state["mGameScene"] != 3 or state["mGameMode"] != 58 or state.get("board") != expected:
+                raise RuntimeError(f"Project checkpoint verification failed; expected {expected}, got {state}")
         result = (measure(game, args.seconds, args.scene, args.multiplier, args.output,
                           args.preroll, args.interactive, args.until_exit, args.affinity, args.per_core_cpu)
                   if args.seconds or args.interactive or args.until_exit else game.snapshot())

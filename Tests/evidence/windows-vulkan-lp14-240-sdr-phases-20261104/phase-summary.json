@@ -1,0 +1,71 @@
+{
+  "whole_fight": {
+    "seconds": 363.0000314999779,
+    "fps": 188.89805523337583,
+    "cpu_percent": 90.12137647707611,
+    "cpu_ms_per_frame": 4.7709001750036455
+  },
+  "phase_selection": "scene=3, paused=0, >=99.9% overlap with valid foreground game intervals",
+  "phase_rows": 362,
+  "phase_seconds": 362.4090402,
+  "cpu_wall_ms_per_call": {
+    "update": 0.9038764224200847,
+    "draw": 3.6565134330754634,
+    "build_draw": 2.6221841850213834,
+    "submit": 0.2104805155708837,
+    "present": 0.7378952096333425,
+    "acquire": 0.007093977787520094,
+    "fence_poll": 0.015669845718205837,
+    "fence_wait": null
+  },
+  "cpu_calls": {
+    "update": 68510,
+    "draw": 68510,
+    "build_draw": 68511,
+    "submit": 68429,
+    "present": 68429,
+    "acquire": 68430,
+    "fence_poll": 68511,
+    "fence_wait": 0
+  },
+  "gpu_scene_ms": 1.291891835510741,
+  "gpu_output_ms": 0.0530740711383896,
+  "gpu_samples": 68430,
+  "counters": {
+    "submitted": 68429,
+    "fence_skipped": 81,
+    "acquire_skipped": 0
+  },
+  "graphics_states": [
+    {
+      "hdr": 0,
+      "scene_width": 960,
+      "scene_height": 600,
+      "output_width": 960,
+      "output_height": 600,
+      "scale": 0,
+      "present_mode": 1
+    }
+  ],
+  "phase_note": "CPU stages are inclusive wall times, not mutually exclusive CPU accounting. GPU intervals can include device bubbles. Results arrive on slot reuse.",
+  "comparison": {
+    "v3.2.4": {
+      "seconds": 358.9997515000032,
+      "fps": 196.73551222499768,
+      "cpu_percent": 89.5500271676364,
+      "cpu_ms_per_frame": 4.5517977997394805
+    },
+    "3.3 beta 上轮（未记录实际HDR）": {
+      "seconds": 359.00052869998035,
+      "fps": 175.5039198080252,
+      "cpu_percent": 90.36372485988981,
+      "cpu_ms_per_frame": 5.148815192203917
+    },
+    "当前 SDR 插桩版": {
+      "seconds": 363.0000314999779,
+      "fps": 188.89805523337583,
+      "cpu_percent": 90.12137647707611,
+      "cpu_ms_per_frame": 4.7709001750036455
+    }
+  }
+}

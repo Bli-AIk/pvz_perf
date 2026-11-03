@@ -1,0 +1,42 @@
+{
+  "pointerBytes": 8,
+  "boardCounterBytes": 8,
+  "mDrawCount": 1632,
+  "mUpdateCount": 1636,
+  "mGameScene": 2480,
+  "mGameMode": 2476,
+  "mBoard": 2376,
+  "mCreditScreen": 2416,
+  "mGameSelector": 2392,
+  "mTitleScreen": 2384,
+  "mAwardScreen": 2408,
+  "mDialogMap": 1160,
+  "mPlayerInfo": 2560,
+  "mLoaded": 1735,
+  "mCacheFramesPrebuilt": 2544,
+  "mHWnd": 1232,
+  "mActive": 1722,
+  "mHasFocus": 1726,
+  "board": {
+    "paused": 568,
+    "counter": 22200,
+    "wave": 22264,
+    "waves": 22192,
+    "sun": 22188
+  },
+  "selector": {
+    "options": 248,
+    "survival": 296
+  },
+  "widget": {
+    "x": 92,
+    "y": 96,
+    "width": 100,
+    "height": 104,
+    "parent": 32
+  },
+  "continueButton": 496,
+  "creditsButton": 528,
+  "awardStart": 208,
+  "executable_sha256": "402127cc99f7ee5f1fcf752a278c0608dfd69ebb17de552b3c69132fdb49a75c"
+}

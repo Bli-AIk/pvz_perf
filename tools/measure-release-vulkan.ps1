@@ -2,6 +2,7 @@
     [int]$ProcessId = 0,
     [long]$AffinityMask = 0x4000,
     [switch]$PerCoreCpu,
+    [switch]$VerifyProjectEndless,
     [int]$Seconds = 0,
     [ValidateSet('11x','25x')][string]$CpuMultiplier = '11x',
     [string]$OutputDirectory = '',
@@ -42,6 +43,7 @@ $probeArguments = @((Join-Path $root 'Tests/performance/windows_game_probe.py'),
     '--multiplier', $CpuMultiplier, '--output', $measurementDirectory, '--preroll', 3)
 $probeArguments += @('--affinity', ('0x{0:X}' -f $AffinityMask))
 if ($PerCoreCpu) { $probeArguments += '--per-core-cpu' }
+if ($VerifyProjectEndless) { $probeArguments += '--verify-project-endless' }
 if ($Seconds) { $probeArguments += @('--seconds', $Seconds) }
 else { $probeArguments += '--until-exit' }
 if (!$NoPrompt) {

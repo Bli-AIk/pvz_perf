@@ -82,7 +82,7 @@ struct Probe {
         if(shader) vkDestroyShaderModule(d,shader,nullptr);
     }
 };
-void MathProbe(VulkanContext& window) {
+void MathProbe(VulkanContext& window,bool linear=false) {
     using namespace Sexy;
     using RGBA=std::array<float,4>;
     std::vector<RGBA> input;
@@ -111,7 +111,7 @@ void MathProbe(VulkanContext& window) {
     VkPipelineLayoutCreateInfo layout{VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO};
     layout.setLayoutCount=1;layout.pSetLayouts=&r.setLayout;layout.pushConstantRangeCount=1;layout.pPushConstantRanges=&push;
     Check(vkCreatePipelineLayout(r.d,&layout,nullptr,&r.layout));
-    std::ifstream file(std::string(PVZ_NATIVE_SHADER_DIR)+"/hdr_probe.spv",std::ios::binary|std::ios::ate);
+    std::ifstream file(std::string(PVZ_NATIVE_SHADER_DIR)+(linear?"/hdr_linear_probe.spv":"/hdr_probe.spv"),std::ios::binary|std::ios::ate);
     Require(bool(file),"Missing HDR probe SPIR-V");
     const auto count=file.tellg();
     Require(count>0 && count%4==0,"Invalid HDR probe SPIR-V");
@@ -165,11 +165,11 @@ void MathProbe(VulkanContext& window) {
         Check(vkWaitForFences(r.d,1,&r.fence,VK_TRUE,UINT64_MAX));
         const auto* actual=static_cast<const RGBA*>(dest.mapped);
         for(size_t i=0;i<input.size();++i) {
-            const auto expected=HdrReference::Apply({input[i][0],input[i][1],input[i][2]},params);
+            const auto expected=HdrReference::Apply({input[i][0],input[i][1],input[i][2]},params,linear);
             for(int j=0;j<3;++j) {
                 const double error=std::abs(double(actual[i][j])-expected[j]);
                 maximumError=std::max(maximumError,error);++values;
-                if(!std::isfinite(actual[i][j]) || error>0.0001) {
+                if(!std::isfinite(actual[i][j]) || error>(linear?.001:.0001)) {
                     std::cerr<<"HDR mismatch sample="<<i<<" channel="<<j<<" actual="<<actual[i][j]<<" expected="<<expected[j]<<" white="<<white<<" strength="<<strength<<'\n';
                     throw std::runtime_error("HDR GPU/reference mismatch");
                 }
@@ -177,7 +177,7 @@ void MathProbe(VulkanContext& window) {
             Require(actual[i][3]==1,"HDR output alpha must be opaque");
         }
     }
-    std::cout<<"PASS HDR equations: "<<values<<" channels, maximum PQ error="<<maximumError<<" (less than 0.103 of a 10-bit code value)\n";
+    std::cout<<"PASS HDR equations "<<(linear?"linear scRGB":"PQ")<<": "<<values<<" channels, maximum error="<<maximumError<<"\n";
 }
 std::vector<uint32_t> DrawSolid(Sexy::VulkanRenderer& renderer) {
     Require(renderer.BeginScene(),"Hidden WSI acquire failed");
@@ -220,6 +220,7 @@ int main() {
         {
             VulkanContext window(init,native.hwnd,config);
             MathProbe(window);
+            MathProbe(window,true);
             Sexy::VulkanRenderer renderer(window,800,600,std::string(PVZ_NATIVE_SHADER_DIR)+"/game_vs.spv",
                 std::string(PVZ_NATIVE_SHADER_DIR)+"/game_ps.spv");
             renderer.PrepareLoadingPipelines();
@@ -232,8 +233,8 @@ int main() {
                 <<" min="<<display.minimumNits<<" full-frame="<<display.fullFrameNits<<'\n';
         }
         if(display.hdr) {
-            config.imageFormat=VK_FORMAT_A2B10G10R10_UNORM_PACK32;
-            config.imageColorSpace=VK_COLOR_SPACE_HDR10_ST2084_EXT;
+            config.imageFormat=VK_FORMAT_R16G16B16A16_SFLOAT;
+            config.imageColorSpace=VK_COLOR_SPACE_EXTENDED_SRGB_LINEAR_EXT;
             VulkanContext window(init,native.hwnd,config);
             const auto params=display.Params(1);
             Sexy::VulkanRenderer renderer(window,800,600,std::string(PVZ_NATIVE_SHADER_DIR)+"/game_vs.spv",
@@ -264,7 +265,7 @@ int main() {
             Require(rejected,"HDR state mutated during recording");
             renderer.EndSceneAndPresent();
             std::cout<<"PASS live HDR constants: 8 metadata changes, invalid/in-frame rejection, no resource rebuild\n";
-            std::cout<<"PASS hidden HDR10 WSI/fragment shader, 8 frames, resize, SDR scene unchanged\n";
+            std::cout<<"PASS hidden linear scRGB WSI/fragment shader, 8 frames, resize, SDR scene unchanged\n";
         } else std::cout<<"SKIP real HDR WSI: desktop HDR is off; GPU math/SDR rejection tests still ran\n";
         Require(errors.load()==0,"Vulkan validation errors");
         std::cout<<"PASS HDR tests; zero validation errors\n";

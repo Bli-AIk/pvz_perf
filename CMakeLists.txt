@@ -568,6 +568,12 @@ if(BUILD_TESTING)
     target_link_libraries(pvz_v7_save_schema_tests PRIVATE pvz_source_headers)
     target_compile_features(pvz_v7_save_schema_tests PRIVATE cxx_std_23)
     add_test(NAME pvz_v7_save_schema COMMAND pvz_v7_save_schema_tests)
+    add_executable(pvz_android_touch_input_tests EXCLUDE_FROM_ALL
+        Tests/native/AndroidTouchInputTests.cpp
+        pvzPerf/SexyAppFramework/platform/android/AndroidTouchInput.cpp)
+    target_link_libraries(pvz_android_touch_input_tests PRIVATE pvz_source_headers)
+    target_compile_features(pvz_android_touch_input_tests PRIVATE cxx_std_23)
+    add_test(NAME pvz_android_touch_input COMMAND pvz_android_touch_input_tests)
     if(WIN32)
         add_executable(pvz_windows_platform_tests EXCLUDE_FROM_ALL Tests/native/WindowsPlatformTests.cpp)
         target_link_libraries(pvz_windows_platform_tests PRIVATE pvz_source_headers user32)

@@ -1,0 +1,68 @@
+PASS pure wrapped text measurement: wrapping, newlines, color tags, no glyph draws and empty fill
+pool GPU day-normal-nearest: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU night-normal-linear: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU day-additive-partial-fractional: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU night-additive-phase-wrap: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU day-opaque-partial-fractional: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU night-opaque-large-counter: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU feedback-float-source-pending-batch: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+PASS production GPU pool vs independent legacy CPU mesh: day/night, normal/additive/opaque, nearest/linear/repeat, phase wrap, destination scissor, fractional translation, ordinary painter order and float target feedback
+PASS precomputed transparent edges: alpha, visible RGB, idempotency, nearest/linear, upload-discard
+PASS public font upload: deferred alpha, upload-and-discard, texture reuse, independent copies
+PASS nonzero source rectangles and repacked whole-sheet atlas views: translation, scale origins, clipping, tint, additive, local-source views and floating scales
+PASS necessary local-clip contract: independent full-pixel rect/image/source/mirror/matrix/particle/convex oracles, disjoint/partial/empty clips and negative framebuffer crossings
+PASS actual TitleScreen grass reveal: widths 0/1/157/313/314/400, translated draw and unrevealed black pixels
+PASS actual GameButton atlas states: normal, hover, press/fallbacks, disabled, overAlpha, additive glow, translation/offsets and hidden state match independent images
+PASS direct shared-image snapshots and reference lifetime
+PASS actual boss back-arm drawing: four attack offsets, reference pixels, 1024 exact shared-animation translation restorations
+PASS reanimation appearances: independent options, image slots, atlas dimensions, original centers and actual AttachmentDraw visibility pixels
+PASS fullscreen reanimation: destination fill pixels, hidden/zero alpha, color modulation, both blend modes, translation and effective clip without track matrices
+Store clock fixture: initialize
+Slot HUD width=800 left=0 boardX=0 bankY=0 same=1 hit=1 tooltip=1 rectX=473
+Slot HUD width=800 left=0 boardX=-160 bankY=0 same=1 hit=1 tooltip=1 rectX=633
+Slot HUD width=800 left=0 boardX=120 bankY=0 same=1 hit=1 tooltip=1 rectX=353
+Slot HUD width=800 left=0 boardX=0 bankY=-40 same=1 hit=1 tooltip=1 rectX=473
+Slot HUD width=800 left=0 boardX=-160 bankY=-40 same=1 hit=1 tooltip=1 rectX=633
+Slot HUD width=800 left=0 boardX=120 bankY=-40 same=1 hit=1 tooltip=1 rectX=353
+Slot HUD width=1400 left=0 boardX=0 bankY=0 same=1 hit=1 tooltip=1 rectX=473
+Slot HUD width=1400 left=0 boardX=-160 bankY=0 same=1 hit=1 tooltip=1 rectX=633
+Slot HUD width=1400 left=0 boardX=120 bankY=0 same=1 hit=1 tooltip=1 rectX=353
+Slot HUD width=1400 left=0 boardX=0 bankY=-40 same=1 hit=1 tooltip=1 rectX=473
+Slot HUD width=1400 left=0 boardX=-160 bankY=-40 same=1 hit=1 tooltip=1 rectX=633
+Slot HUD width=1400 left=0 boardX=120 bankY=-40 same=1 hit=1 tooltip=1 rectX=353
+Slot HUD width=1400 left=-300 boardX=0 bankY=0 same=1 hit=1 tooltip=1 rectX=173
+Slot HUD width=1400 left=-300 boardX=-160 bankY=0 same=1 hit=1 tooltip=1 rectX=333
+Slot HUD width=1400 left=-300 boardX=120 bankY=0 same=1 hit=1 tooltip=1 rectX=53
+Slot HUD width=1400 left=-300 boardX=0 bankY=-40 same=1 hit=1 tooltip=1 rectX=173
+Slot HUD width=1400 left=-300 boardX=-160 bankY=-40 same=1 hit=1 tooltip=1 rectX=333
+Slot HUD width=1400 left=-300 boardX=120 bankY=-40 same=1 hit=1 tooltip=1 rectX=53
+Gravebuster seam frame=0 timeNs=0 state=8 remainingNs=0 frame=0
+Gravebuster seam frame=1 timeNs=100000000 state=8 remainingNs=0 frame=0
+Gravebuster seam frame=2 timeNs=200000000 state=8 remainingNs=0 frame=1
+Gravebuster seam frame=3 timeNs=300000000 state=8 remainingNs=0 frame=2
+Gravebuster seam frame=4 timeNs=500000000 state=8 remainingNs=0 frame=4
+Gravebuster seam frame=5 timeNs=660000000 state=8 remainingNs=0 frame=5
+Gravebuster seam frame=6 timeNs=750000000 state=9 remainingNs=3926666666 frame=0
+Gravebuster seam frame=7 timeNs=1000000000 state=9 remainingNs=3676666666 frame=3
+Gravebuster seam frame=8 timeNs=1250000000 state=9 remainingNs=3426666666 frame=6
+Gravebuster seam frame=9 timeNs=1500000000 state=9 remainingNs=3176666666 frame=9
+Gravebuster seam frame=10 timeNs=1750000000 state=9 remainingNs=2926666666 frame=12
+Gravebuster seam frame=11 timeNs=2000000000 state=9 remainingNs=2676666666 frame=15
+Gravebuster seam frame=12 timeNs=2250000000 state=9 remainingNs=2426666666 frame=18
+Gravebuster seam frame=13 timeNs=2500000000 state=9 remainingNs=2176666666 frame=21
+Gravebuster seam frame=14 timeNs=2750000000 state=9 remainingNs=1926666666 frame=23
+Gravebuster seam frame=15 timeNs=3000000000 state=9 remainingNs=1676666666 frame=26
+Gravebuster seam frame=16 timeNs=3250000000 state=9 remainingNs=1426666666 frame=2
+Gravebuster seam frame=17 timeNs=3500000000 state=9 remainingNs=1176666666 frame=5
+Gravebuster seam frame=18 timeNs=3750000000 state=9 remainingNs=926666666 frame=8
+Gravebuster seam frame=19 timeNs=4000000000 state=9 remainingNs=676666666 frame=11
+Gravebuster seam frame=20 timeNs=4100000000 state=9 remainingNs=576666666 frame=12
+Gravebuster seam frame=21 timeNs=4200000000 state=9 remainingNs=476666666 frame=13
+Gravebuster seam frame=22 timeNs=4300000000 state=9 remainingNs=376666666 frame=14
+Gravebuster seam frame=23 timeNs=4400000000 state=9 remainingNs=276666666 frame=16
+PASS Slot HUD: eighteen camera/viewport/bank positions, fixed draw pixels, hit, tooltip and actual pull
+Atlas transparent edges linear=0 offset=0 maxError=0
+Atlas transparent edges linear=0 offset=0.375 maxError=0
+Atlas transparent edges linear=1 offset=0 maxError=1
+Atlas transparent edges linear=1 offset=0.375 maxError=1
+PASS atlas edge repair: actual Gravebuster PNG, nearest/linear, integral/fractional, legacy shader oracle, upload-discard

@@ -3,10 +3,12 @@
 #include "SaveGame.h"
 #include "LevelSaveFormat.h"
 #include "Lawn/Board.h"
+#include "Lawn/BoardTouch.h"
 #include "Lawn/Challenge.h"
 #include "Lawn/SeedPacket.h"
 #include "LawnApp.h"
 #include "Lawn/CursorObject.h"
+#include "widget/WidgetManager.h"
 #include "Resources.h"
 #include "ConstEnums.h"
 #include "Lawn/MessageWidget.h"
@@ -912,6 +914,23 @@ bool ValidateDat64PoolHeaders(const LegacyByte* thePayload, size_t thePayloadSiz
 // 当前活动状态 → 完整 dat64 文件形态缓冲。
 static bool BuildDat64SaveBuffer(Board* theBoard, Buffer& theOutBuffer)
 {
+    // Gestures are runtime state. Return reserved cards before serializing the
+    // real mouse cursor and seed bank; no touch pointers enter DAT64.
+    if (theBoard->mWidgetManager) theBoard->mWidgetManager->CancelTouches(theBoard);
+    theBoard->ClearTouchSelection();
+	// A legacy input callback may save while its contact context is selected.
+	// Serialize the real mouse even in that nested call, then restore the caller.
+	struct RestoreCursor {
+		Board& board;
+		CursorObject* cursor;
+		CursorPreview* preview;
+		~RestoreCursor() { board.mCursorObject = cursor; board.mCursorPreview = preview; }
+	} restoreCursor{*theBoard, theBoard->mCursorObject, theBoard->mCursorPreview};
+	if (theBoard->mTouchState)
+	{
+		theBoard->mCursorObject = theBoard->mTouchState->mouseCursor;
+		theBoard->mCursorPreview = theBoard->mTouchState->mousePreview;
+	}
 	SaveGameContext aContext;
 	aContext.mFailed = false;
 	aContext.mReading = false;

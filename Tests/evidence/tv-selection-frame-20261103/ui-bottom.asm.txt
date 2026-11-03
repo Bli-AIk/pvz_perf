@@ -1,0 +1,186 @@
+
+C:\Users\ADMINI~1\AppData\Local\Temp/pvz-tv-draw-order-20261104/libGameMain.so:	file format elf32-littlearm
+
+Disassembly of section .text:
+
+001602d4 <Board::DrawUIBottom(Sexy::Graphics*)>:
+  1602d4:      	push.w	{r4, r5, r6, r7, r8, r9, r10, r11, lr}
+  1602d8:      	add.w	r10, r0, #0x5600
+  1602dc:      	ldr.w	r3, [r10, #0x60]
+  1602e0:      	sub	sp, #0x24
+  1602e2:      	mov	r4, r0
+  1602e4:      	mov	r5, r1
+  1602e6:      	ldr.w	r8, [pc, #0x1cc]        @ 0x1604b4 <Board::DrawUIBottom(Sexy::Graphics*)+0x1e0>
+  1602ea:      	cmp	r3, #0x8
+  1602ec:      	add	r8, pc
+  1602ee:      	beq	0x16037c <Board::DrawUIBottom(Sexy::Graphics*)+0xa8> @ imm = #0x8a
+  1602f0:      	subs	r3, #0x7
+  1602f2:      	cmp	r3, #0x1
+  1602f4:      	bls.w	0x16044e <Board::DrawUIBottom(Sexy::Graphics*)+0x17a> @ imm = #0x156
+  1602f8:      	ldr.w	r3, [r4, #0x114]
+  1602fc:      	ldr.w	r3, [r3, #0x904]
+  160300:      	cmp	r3, #0x8
+  160302:      	it	ne
+  160304:      	cmpne	r3, #0x4
+  160306:      	bne	0x160326 <Board::DrawUIBottom(Sexy::Graphics*)+0x52> @ imm = #0x1c
+  160308:      	mov	r0, r4
+  16030a:      	mov	r1, r5
+  16030c:      	bl	0x15f02c <Board::DrawShovel(Sexy::Graphics*)> @ imm = #-0x12e4
+  160310:      	mov	r0, r4
+  160312:      	bl	0x1601e4 <Board::StageHasFog()> @ imm = #-0x132
+  160316:      	cbnz	r0, 0x160320 <Board::DrawUIBottom(Sexy::Graphics*)+0x4c> @ imm = #0x6
+  160318:      	mov	r0, r4
+  16031a:      	mov	r1, r5
+  16031c:      	bl	0x155280 <Board::DrawTopRightUI(Sexy::Graphics*)> @ imm = #-0xb0a0
+  160320:      	add	sp, #0x24
+  160322:      	pop.w	{r4, r5, r6, r7, r8, r9, r10, r11, pc}
+  160326:      	ldr.w	r0, [r4, #0x20c]
+  16032a:      	mov	r1, r5
+  16032c:      	ldr	r3, [r0]
+  16032e:      	ldr	r3, [r3, #0x8]
+  160330:      	blx	r3
+  160332:      	cmp	r0, #0x0
+  160334:      	bne.w	0x16048a <Board::DrawUIBottom(Sexy::Graphics*)+0x1b6> @ imm = #0x152
+  160338:      	ldr.w	r3, [r4, #0x114]
+  16033c:      	ldr.w	r3, [r3, #0x934]
+  160340:      	cbz	r3, 0x160368 <Board::DrawUIBottom(Sexy::Graphics*)+0x94> @ imm = #0x24
+  160342:      	ldr.w	r0, [r4, #0x210]
+  160346:      	cbz	r0, 0x160368 <Board::DrawUIBottom(Sexy::Graphics*)+0x94> @ imm = #0x1e
+  160348:      	ldr	r3, [r0]
+  16034a:      	mov	r1, r5
+  16034c:      	ldr	r3, [r3, #0x8]
+  16034e:      	blx	r3
+  160350:      	cbz	r0, 0x160368 <Board::DrawUIBottom(Sexy::Graphics*)+0x94> @ imm = #0x14
+  160352:      	ldr.w	r0, [r4, #0x210]
+  160356:      	mov	r1, r5
+  160358:      	bl	0x1772ec <SeedBank::Draw(Sexy::Graphics*)> @ imm = #0x16f90
+  16035c:      	ldr.w	r0, [r4, #0x210]
+  160360:      	mov	r1, r5
+  160362:      	ldr	r3, [r0]
+  160364:      	ldr	r3, [r3, #0xc]
+  160366:      	blx	r3
+  160368:      	ldr.w	r0, [r4, #0x208]
+  16036c:      	ldr.w	r3, [r0, #0x9c]
+  160370:      	cmp	r3, #0x10
+  160372:      	bne	0x160308 <Board::DrawUIBottom(Sexy::Graphics*)+0x34> @ imm = #-0x6e
+  160374:      	mov	r1, r5
+  160376:      	bl	0x1a66f4 <MessageWidget::Draw(Sexy::Graphics*)> @ imm = #0x4637a
+  16037a:      	b	0x160308 <Board::DrawUIBottom(Sexy::Graphics*)+0x34> @ imm = #-0x76
+  16037c:      	add.w	r3, r0, #0x5680
+  160380:      	movw	lr, #0xa2e9
+  160384:      	ldr	r3, [r3, #0x4]
+  160386:      	movt	lr, #0x2e8b
+  16038a:      	mov.w	r12, #0x16
+  16038e:      	mov	r0, r1
+  160390:      	movs	r1, #0x1
+  160392:      	mvn	r7, #0xef
+  160396:      	adds	r2, r3, #0x7
+  160398:      	mov	r9, r1
+  16039a:      	bics.w	r3, r3, r3, asr #32
+  16039e:      	it	hs
+  1603a0:      	movhs	r3, r2
+  1603a2:      	movs	r6, #0x0
+  1603a4:      	asrs	r2, r3, #0x3
+  1603a6:      	asrs	r3, r3, #0x1f
+  1603a8:      	str	r3, [sp, #0xc]
+  1603aa:      	smull	r3, r11, lr, r2
+  1603ae:      	ldr	r3, [sp, #0xc]
+  1603b0:      	rsb	r11, r3, r11, asr #2
+  1603b4:      	mls	r11, r12, r11, r2
+  1603b8:      	sub.w	r11, r11, #0xb
+  1603bc:      	cmp.w	r11, #0x0
+  1603c0:      	it	lt
+  1603c2:      	rsblt.w	r11, r11, #0x0
+  1603c6:      	bl	0x30bf9c <Sexy::Graphics::SetDrawMode(int)> @ imm = #0x1abbd2
+  1603ca:      	b	0x1603e8 <Board::DrawUIBottom(Sexy::Graphics*)+0x114> @ imm = #0x1a
+  1603cc:      	ldr.w	r1, [r8, r1]
+  1603d0:      	str.w	r11, [sp]
+  1603d4:      	ldr	r1, [r1]
+  1603d6:      	bl	0x30f140 <Sexy::Graphics::DrawImageCel(Sexy::Image*, int, int, int)> @ imm = #0x1aed66
+  1603da:      	cmp.w	r9, #0x8
+  1603de:      	beq	0x16043a <Board::DrawUIBottom(Sexy::Graphics*)+0x166> @ imm = #0x58
+  1603e0:      	adds	r6, #0x1
+  1603e2:      	add.w	r9, r9, #0x1
+  1603e6:      	adds	r7, #0xa0
+  1603e8:      	ldr	r1, [pc, #0xcc]         @ 0x1604b8 <Board::DrawUIBottom(Sexy::Graphics*)+0x1e4>
+  1603ea:      	mov	r2, r7
+  1603ec:      	mov	r0, r5
+  1603ee:      	mvn	r3, #0x13
+  1603f2:      	cmp	r6, #0x0
+  1603f4:      	beq	0x1604a2 <Board::DrawUIBottom(Sexy::Graphics*)+0x1ce> @ imm = #0xaa
+  1603f6:      	cmp	r6, #0x7
+  1603f8:      	bne	0x1603cc <Board::DrawUIBottom(Sexy::Graphics*)+0xf8> @ imm = #-0x30
+  1603fa:      	ldr	r3, [pc, #0xc0]         @ 0x1604bc <Board::DrawUIBottom(Sexy::Graphics*)+0x1e8>
+  1603fc:      	ldr.w	r6, [r8, r3]
+  160400:      	ldr	r0, [r6]
+  160402:      	bl	0x313354 <Sexy::Image::GetCelWidth()> @ imm = #0x1b2f4e
+  160406:      	mov	r9, r0
+  160408:      	ldr	r0, [r6]
+  16040a:      	bl	0x313344 <Sexy::Image::GetCelHeight()> @ imm = #0x1b2f36
+  16040e:      	mov	lr, r0
+  160410:      	ldr	r1, [r6]
+  160412:      	mul	r11, r11, lr
+  160416:      	movs	r3, #0x1
+  160418:      	add	r6, sp, #0x10
+  16041a:      	str	r3, [sp, #0x4]
+  16041c:      	str	r6, [sp]
+  16041e:      	mov	r0, r5
+  160420:      	movs	r6, #0x0
+  160422:      	mov	r2, r7
+  160424:      	mvn	r3, #0x13
+  160428:      	str.w	r9, [sp, #0x18]
+  16042c:      	str.w	r11, [sp, #0x14]
+  160430:      	str.w	lr, [sp, #0x1c]
+  160434:      	str	r6, [sp, #0x10]
+  160436:      	bl	0x30da8c <Sexy::Graphics::DrawImageMirror(Sexy::Image*, int, int, Sexy::TRect<int> const&, bool)> @ imm = #0x1ad652
+  16043a:      	mov	r0, r5
+  16043c:      	movs	r1, #0x0
+  16043e:      	bl	0x30bf9c <Sexy::Graphics::SetDrawMode(int)> @ imm = #0x1abb5a
+  160442:      	ldr.w	r3, [r10, #0x60]
+  160446:      	subs	r3, #0x7
+  160448:      	cmp	r3, #0x1
+  16044a:      	bhi.w	0x1602f8 <Board::DrawUIBottom(Sexy::Graphics*)+0x24> @ imm = #-0x156
+  16044e:      	mov	r0, r5
+  160450:      	movs	r1, #0x1
+  160452:      	bl	0x30bf9c <Sexy::Graphics::SetDrawMode(int)> @ imm = #0x1abb46
+  160456:      	ldr	r2, [pc, #0x68]         @ 0x1604c0 <Board::DrawUIBottom(Sexy::Graphics*)+0x1ec>
+  160458:      	movs	r6, #0x0
+  16045a:      	ldr	r7, [pc, #0x68]         @ 0x1604c4 <Board::DrawUIBottom(Sexy::Graphics*)+0x1f0>
+  16045c:      	mov	r0, r5
+  16045e:      	add	r3, sp, #0x10
+  160460:      	ldr.w	r2, [r8, r2]
+  160464:      	ldr	r2, [r2]
+  160466:      	ldr.w	lr, [r2, #0x24]
+  16046a:      	mov	r1, r2
+  16046c:      	ldr	r2, [r2, #0x28]
+  16046e:      	str	r6, [sp, #0x10]
+  160470:      	str.w	lr, [sp, #0x18]
+  160474:      	str	r2, [sp, #0x1c]
+  160476:      	str	r6, [sp, #0x14]
+  160478:      	ldr.w	r2, [r8, r7]
+  16047c:      	bl	0x30ddc0 <Sexy::Graphics::DrawImage(Sexy::Image*, Sexy::TRect<int> const&, Sexy::TRect<int> const&)> @ imm = #0x1ad940
+  160480:      	mov	r0, r5
+  160482:      	mov	r1, r6
+  160484:      	bl	0x30bf9c <Sexy::Graphics::SetDrawMode(int)> @ imm = #0x1abb14
+  160488:      	b	0x1602f8 <Board::DrawUIBottom(Sexy::Graphics*)+0x24> @ imm = #-0x194
+  16048a:      	ldr.w	r0, [r4, #0x20c]
+  16048e:      	mov	r1, r5
+  160490:      	bl	0x1772ec <SeedBank::Draw(Sexy::Graphics*)> @ imm = #0x16e58
+  160494:      	ldr.w	r0, [r4, #0x20c]
+  160498:      	mov	r1, r5
+  16049a:      	ldr	r3, [r0]
+  16049c:      	ldr	r3, [r3, #0xc]
+  16049e:      	blx	r3
+  1604a0:      	b	0x160338 <Board::DrawUIBottom(Sexy::Graphics*)+0x64> @ imm = #-0x16c
+  1604a2:      	ldr	r1, [pc, #0x18]         @ 0x1604bc <Board::DrawUIBottom(Sexy::Graphics*)+0x1e8>
+  1604a4:      	ldr.w	r1, [r8, r1]
+  1604a8:      	str.w	r11, [sp]
+  1604ac:      	ldr	r1, [r1]
+  1604ae:      	bl	0x30f140 <Sexy::Graphics::DrawImageCel(Sexy::Image*, int, int, int)> @ imm = #0x1aec8e
+  1604b2:      	b	0x1603e0 <Board::DrawUIBottom(Sexy::Graphics*)+0x10c> @ imm = #-0xd6
+  1604b4:      	sub.w	r0, r8, #0xd20000
+  1604b8:      	b	0x16070c <Board::GetPointsInWave(int)+0x20> @ imm = #0x250
+  1604ba:      	<unknown>
+  1604be:      	vsra.u32	d30, d16, #0x1
+  1604c2:      	<unknown>
+  1604c6:      	vsli.32	d27, d0, #0x1f

@@ -25,30 +25,39 @@ CursorObject::CursorObject()
     mReanimCursorID = ReanimationID::REANIMATIONID_NULL;
     mHammerDownCounter = 0;
     
-    if (mApp->IsWhackAZombieLevel())
-    {
-        ReanimatorEnsureDefinitionLoaded(ReanimationType::REANIM_HAMMER, true);
-        Reanimation* aHammerReanim = mApp->AddReanimation(-25.0f, 16.0f, 0, ReanimationType::REANIM_HAMMER, mApp->mEffectSystem->mReanimationHolder->mVisualTimeNs, ReanimTimeDomain::Visual);
-        aHammerReanim->mIsAttachment = true;
-        aHammerReanim->PlayReanim(ReanimTrackId::anim_whack_zombie, ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD, 0, 24.0f);
-        aHammerReanim->Seek(1000);
-        mReanimCursorID = mApp->ReanimationGetID(aHammerReanim);
-    }
+    if (mApp->IsWhackAZombieLevel()) CreateHammerAnimation();
 
     mWidth = 80;
     mHeight = 80;
 }
 
+void CursorObject::CreateHammerAnimation()
+{
+    ReanimatorEnsureDefinitionLoaded(ReanimationType::REANIM_HAMMER, true);
+    Reanimation* animation = mApp->AddReanimation(-25.0f, 16.0f, 0,
+        ReanimationType::REANIM_HAMMER, mApp->mEffectSystem->mReanimationHolder->mVisualTimeNs,
+        ReanimTimeDomain::Visual);
+    animation->mIsAttachment = true;
+    animation->PlayReanim(ReanimTrackId::anim_whack_zombie, ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD, 0, 24.0f);
+    animation->Seek(1000);
+    mReanimCursorID = mApp->ReanimationGetID(animation);
+}
+
 //0x438780
 void CursorObject::Update()
 {
-    if (mApp->mGameScene != GameScenes::SCENE_PLAYING && !mBoard->mCutScene->IsInShovelTutorial())
+    if (!mApp->mWidgetManager->mMouseIn)
     {
         mVisible = false;
         return;
     }
+    Update(mApp->mWidgetManager->mLastMouseX - mBoard->mX,
+        mApp->mWidgetManager->mLastMouseY - mBoard->mY);
+}
 
-    if (!mApp->mWidgetManager->mMouseIn)
+void CursorObject::Update(int x, int y)
+{
+    if (mApp->mGameScene != GameScenes::SCENE_PLAYING && !mBoard->mCutScene->IsInShovelTutorial())
     {
         mVisible = false;
         return;
@@ -61,9 +70,9 @@ void CursorObject::Update()
     }
 
     mVisible = true;
-    // The mouse is window/world logical; BeginDraw inherits Board's origin.
-    mX = GardenHudLayout::CursorInBoard(mApp->mWidgetManager->mLastMouseX, mBoard->mX, 25);
-    mY = GardenHudLayout::CursorInBoard(mApp->mWidgetManager->mLastMouseY, mBoard->mY, 35);
+    // BeginDraw inherits Board's origin; the input position is already local.
+    mX = x - 25;
+    mY = y - 35;
 }
 
 void CursorObject::Die()
@@ -75,6 +84,12 @@ void CursorObject::Die()
 
 //0x438820
 void CursorObject::Draw(Graphics* g)
+{
+    Draw(g, mApp->mWidgetManager->mLastMouseX - mBoard->mX,
+        mApp->mWidgetManager->mLastMouseY - mBoard->mY);
+}
+
+void CursorObject::Draw(Graphics* g, int x, int y)
 {
     // CursorObject::Draw 分发表：表内匿名 lambda = 原 case 体逐句迁移（生成器
     // + 逆变换 token 对拍 0 差异）；PLANT_FROM_BANK 三标签共体具名。
@@ -151,8 +166,8 @@ void CursorObject::Draw(Graphics* g)
     [](CursorObject& c, Graphics* g)
     {
     HitResult aHitResult;
-    c.mBoard->MouseHitTest(c.mBoard->mPrevMouseX, c.mBoard->mPrevMouseY, &aHitResult);
-    if (aHitResult.mObjectType == GameObjectType::OBJECT_TYPE_NONE && c.mBoard->mPrevMouseY >= 80)
+    c.mBoard->MouseHitTest(c.mX + 25, c.mY + 35, &aHitResult);
+    if (aHitResult.mObjectType == GameObjectType::OBJECT_TYPE_NONE && c.mY + 35 >= 80)
     {
     g->DrawImage(IMAGE_COBCANNON_TARGET, -11, 7, Rect(0, 0, IMAGE_COBCANNON_TARGET->mWidth, IMAGE_COBCANNON_TARGET->mHeight));
     }
@@ -243,11 +258,9 @@ void CursorObject::Draw(Graphics* g)
             mApp->mGameMode == GameMode::GAMEMODE_TREE_OF_WISDOM)
         {
             // BeginDraw already applied the stored cursor origin. Refresh only
-            // its presentation against the live mouse, without shifting plants.
+            // its presentation against this pointer, without shifting plants.
             Graphics cursor(*g);
-            const int x = GardenHudLayout::CursorInBoard(mApp->mWidgetManager->mLastMouseX, mBoard->mX, 25);
-            const int y = GardenHudLayout::CursorInBoard(mApp->mWidgetManager->mLastMouseY, mBoard->mY, 35);
-            cursor.Translate(x - mX, y - mY);
+            cursor.Translate(x - 25 - mX, y - 35 - mY);
             kCursorDrawCases[aCursorIndex](*this, &cursor);
         }
         else
@@ -271,6 +284,12 @@ CursorPreview::CursorPreview()
 //0x438DA0
 void CursorPreview::Update()
 {
+    Update(mApp->mWidgetManager->mLastMouseX - mBoard->mX,
+        mApp->mWidgetManager->mLastMouseY - mBoard->mY);
+}
+
+void CursorPreview::Update(int x, int y)
+{
     if (mApp->mGameScene != GameScenes::SCENE_PLAYING && !mBoard->mCutScene->IsInShovelTutorial())
     {
         mVisible = false;
@@ -278,13 +297,9 @@ void CursorPreview::Update()
     }
 
     SeedType aSeedType = mBoard->GetSeedTypeInCursor();
-    int aMouseX = mApp->mWidgetManager->mLastMouseX;
-    int aMouseY = mApp->mWidgetManager->mLastMouseY;
-    aMouseX = GardenHudLayout::CursorInBoard(aMouseX, mBoard->mX, 0);
-    aMouseY = GardenHudLayout::CursorInBoard(aMouseY, mBoard->mY, 0);
-    mGridX = mBoard->PlantingPixelToGridX(aMouseX, aMouseY, aSeedType);
-    mGridY = mBoard->PlantingPixelToGridY(aMouseX, aMouseY, aSeedType);
-    if (mGridX >= 0 && mGridX < MAX_GRID_SIZE_X && mGridY >= 0 && mGridY <= MAX_GRID_SIZE_Y)
+    mGridX = mBoard->PlantingPixelToGridX(x, y, aSeedType);
+    mGridY = mBoard->PlantingPixelToGridY(x, y, aSeedType);
+    if (mGridX >= 0 && mGridX < MAX_GRID_SIZE_X && mGridY >= 0 && mGridY < MAX_GRID_SIZE_Y)
     {
         bool aShow = false;
         if (mBoard->IsPlantInCursor() && mBoard->CanPlantAt(mGridX, mGridY, aSeedType) == PlantingReason::PLANTING_OK)

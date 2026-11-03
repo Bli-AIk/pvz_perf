@@ -177,6 +177,26 @@ void SexyAppBase::ProcessNativeWindowEvent(const NativeWindowEvent& event)
     if (app.mPlayingDemoBuffer)
         return;
     switch (event.kind) {
+    case Kind::MouseCanceled:
+        app.mWidgetManager->CancelMouseDownState();
+        break;
+    case Kind::TouchBegan: case Kind::TouchMoved: case Kind::TouchEnded: case Kind::TouchCanceled: {
+        if (app.mSEHOccured) break;
+        if (app.mNativeResizePending && !app.mPhysMinimized) app.UpdateWindowGeometry();
+        const auto position = LogicalMouse(app, event.x, event.y);
+        const TouchEvent touch{event.touchId, position.mX, position.mY};
+        app.mLastUserInputTick = SexyGetTickCount();
+        switch (event.kind) {
+        case Kind::TouchBegan:
+            if (app.mScreenBounds.Contains(touch.x, touch.y)) app.mWidgetManager->TouchBegan(touch);
+            break;
+        case Kind::TouchMoved: app.mWidgetManager->TouchMoved(touch); break;
+        case Kind::TouchEnded: app.mWidgetManager->TouchEnded(touch); break;
+        case Kind::TouchCanceled: app.mWidgetManager->TouchCanceled(touch); break;
+        default: break;
+        }
+        break;
+    }
     case Kind::MouseButton:
         if (!app.mSEHOccured) {
             app.mLastUserInputTick = SexyGetTickCount();
@@ -285,8 +305,10 @@ void SexyAppBase::MakeWindow()
 {
     if (mNativeWindow || mGpuContext)
         throw std::logic_error("Linux game window already exists");
+#if !defined(__ANDROID__)
     if (mScaleHDREnabled)
         throw std::logic_error("Linux HDR output is not implemented");
+#endif
     NativeWindowConfig config;
     config.title = mTitle;
     config.width = GameViewport::MaximumWidth;
@@ -309,7 +331,7 @@ void SexyAppBase::MakeWindow()
         init.features.shaderStorageImageExtendedFormats = VK_TRUE;
         init.features.shaderImageGatherExtended = VK_TRUE;
     }
-    const VkSwapchainCreateInfoKHR swapchain{
+    VkSwapchainCreateInfoKHR swapchain{
         .sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR,
         .imageFormat = VK_FORMAT_B8G8R8A8_UNORM,
         .imageColorSpace = VK_COLOR_SPACE_SRGB_NONLINEAR_KHR,
@@ -320,6 +342,10 @@ void SexyAppBase::MakeWindow()
         .presentMode = VK_PRESENT_MODE_MAILBOX_KHR,
         .clipped = VK_TRUE
     };
+#if defined(__ANDROID__)
+    // Android HDR calibration is not ready for the v3.3 release.
+    mScaleHDREnabled = false;
+#endif
     mGpuContext = std::make_unique<GpuContext>(init, mHWnd, swapchain);
     mUseExternalHWND = false;
     mExternalHWND = nullptr;
@@ -422,8 +448,10 @@ void SexyAppBase::UpdateMonitorState()
 
 void SexyAppBase::UpdateHdrDisplay()
 {
+#if !defined(__ANDROID__)
     if (mScaleHDREnabled)
         throw std::logic_error("Linux HDR output is not implemented");
+#endif
 }
 
 void SexyAppBase::SwitchScreenMode(bool windowed, bool force)
@@ -546,6 +574,7 @@ void SexyAppBase::NativeFocusChanged(bool focused)
     if (!focused) {
         mAltEnterDown = false;
         mCtrlDown = mAltDown = false;
+        mWidgetManager->CancelTouches();
         mWidgetManager->CancelMouseDownState();
         mNativeLastClickTime.fill(-1000);
         ClearKeysDown();

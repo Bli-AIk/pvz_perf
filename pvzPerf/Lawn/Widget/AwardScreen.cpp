@@ -593,13 +593,14 @@ void AwardScreen::StartButtonPressed()
 // GOTY @Patoke: 0x4097A0
 void AwardScreen::MouseDown(int x, int y, int theClickCount)
 {
+	const int aPreviousX = mX;
 	RefreshAwardLayout(*this);
-	(void)x;(void)y;
+	x += aPreviousX - mX;
 	if (theClickCount == 1) {
 		mStartButton->Update(); // @Patoke: implemented
 		mMenuButton->Update();
 		mContinueButton->Update();
-		if (mStartButton->IsMouseOver() || mMenuButton->IsMouseOver() || mContinueButton->IsMouseOver())
+		if (mStartButton->HitTest(x, y, this) || mMenuButton->HitTest(x, y, this) || mContinueButton->HitTest(x, y, this))
 			mApp->PlaySample(Sexy::SOUND_TAP);
 	}
 }
@@ -608,15 +609,16 @@ void AwardScreen::MouseDown(int x, int y, int theClickCount)
 // GOTY @Patoke: 0x409840
 void AwardScreen::MouseUp(int x, int y, int theClickCount)
 {
+	const int aPreviousX = mX;
 	RefreshAwardLayout(*this);
-	(void)x;(void)y;
+	x += aPreviousX - mX;
 	if (theClickCount == 1)
 	{
-		if (mStartButton->IsMouseOver())
+		if (mStartButton->HitTest(x, y, this))
 			StartButtonPressed();
-		if (mContinueButton->IsMouseOver()) // @Patoke: add call
+		if (mContinueButton->HitTest(x, y, this)) // @Patoke: add call
 			AchievementsContinuePressed();
-		if (mMenuButton->IsMouseOver())
+		if (mMenuButton->HitTest(x, y, this))
 		{
 			mApp->KillAwardScreen();
 			mApp->ShowGameSelector();
@@ -678,4 +680,12 @@ void AwardScreen::AchievementsContinuePressed() {
 			mApp->ShowAwardScreen(AWARD_CREDITS_ZOMBIENOTE, false);
 		}
 	}
+}
+
+const void* AwardScreen::TouchHitTest(int x, int y)
+{
+    if (mStartButton->HitTest(x, y, this)) return mStartButton;
+    if (mMenuButton->HitTest(x, y, this)) return mMenuButton;
+    if (mContinueButton->HitTest(x, y, this)) return mContinueButton;
+    return this;
 }

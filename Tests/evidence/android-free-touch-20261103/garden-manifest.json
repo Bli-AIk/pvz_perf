@@ -1,0 +1,17 @@
+{
+  "date": "2026-11-03",
+  "source": "FREE_3.18.0_Phone/apk_contents/split_config.arm64_v8a/lib/arm64-v8a/libpvz.so",
+  "sha256": "079a0c71a67ae61fa98cd797dbb527e1c16fa0e409fe7f980c459afe1488dff5",
+  "method": "static disassembly, exported function names; not device behavior verification",
+  "functions": {
+    "Board::TouchBegan": "0x19fe3f0: garden mode, existing touch cursor scan, selected-icon cancellation",
+    "Board::ProcessTouchEnded": "0x1a003b0-0x1a00424: source tool rectangle, keep selection on source, dispatch elsewhere",
+    "Board::GetGameObjectFromCursor": "0x19edbd8",
+    "ZenGarden::MouseDownWithTool": "0x1c62ac4",
+    "ZenGarden::MouseDownWithFeedingTool": "0x1c61b68"
+  },
+  "unverified": [
+    "global single-tool ownership across all fingers",
+    "selected frame artwork"
+  ]
+}

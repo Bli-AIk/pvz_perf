@@ -44,6 +44,7 @@ def completed_profile():
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--version", default="current")
     parser.add_argument("--converter", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--perfect-output", type=Path, help="Optional completed-profile-only ZIP")
@@ -89,7 +90,7 @@ def main():
             archive.write(dat, "retail/user1.dat")
             archive.write(source_files["original"], "retail/game1_13.dat")
             archive.writestr("README.txt",
-                "pvz_perf test saves\n\n"
+                f"pvz_perf {args.version} test saves\n\n"
                 "Exit the game. Extract data/ beside pvz_perf.exe in a fresh test directory.\n"
                 "Profile: PerfTest / ID1. This replaces the destination's profile summary.\n"
                 "Completed profile: two adventure completions, all challenge trophies,\n"
@@ -112,7 +113,7 @@ def main():
                 args.perfect_output, "x", zipfile.ZIP_DEFLATED) as archive:
             for name in ("data/users.dat", "data/user1.dat64"):
                 archive.writestr(name, source.read(name))
-            archive.writestr("README.txt", "pvz_perf v3.0 completed test profile\n\n"
+            archive.writestr("README.txt", f"pvz_perf {args.version} completed test profile\n\n"
                 "Exit the game, back up your own data, then extract data/ beside pvz_perf.exe.\n"
                 "Generated PerfTest / ID1 profile; replaces destination profile summary.\n"
                 "All permanent unlocks, two adventure completions, trophies, achievements, ten seed slots.\n"

@@ -106,8 +106,8 @@ D3D_SHADER_MODEL CheckCapabilities(ID3D12Device* device, bool hdr) {
     RequireFormat(device, DXGI_FORMAT_R16G16B16A16_FLOAT,
         renderTarget | uav, typedUav, "RGBA16F");
     if (hdr)
-        RequireFormat(device, DXGI_FORMAT_R10G10B10A2_UNORM,
-            renderTarget, 0, "RGB10A2 HDR10");
+        RequireFormat(device, DXGI_FORMAT_R16G16B16A16_FLOAT,
+            renderTarget, 0, "RGBA16F scRGB");
 
     return shaders.HighestShaderModel;
 }
@@ -238,7 +238,7 @@ struct D3d12Context::Impl {
             }
         }
         throw std::runtime_error(std::string("No hardware adapter satisfies D3D12") +
-            (hdr ? " with PQ HDR10" : "") +
+            (hdr ? " with linear scRGB" : "") +
             (rejected.empty() ? ": no eligible hardware adapters enumerated" : rejected));
     }
 
@@ -338,17 +338,17 @@ struct D3d12Context::Impl {
     }
 
     DXGI_FORMAT SwapchainFormat() const noexcept {
-        return hdr ? DXGI_FORMAT_R10G10B10A2_UNORM : DXGI_FORMAT_B8G8R8A8_UNORM;
+        return hdr ? DXGI_FORMAT_R16G16B16A16_FLOAT : DXGI_FORMAT_B8G8R8A8_UNORM;
     }
 
     void SetColorSpace() {
         const DXGI_COLOR_SPACE_TYPE space = hdr
-            ? DXGI_COLOR_SPACE_RGB_FULL_G2084_NONE_P2020 : DXGI_COLOR_SPACE_RGB_FULL_G22_NONE_P709;
+            ? DXGI_COLOR_SPACE_RGB_FULL_G10_NONE_P709 : DXGI_COLOR_SPACE_RGB_FULL_G22_NONE_P709;
         UINT support = 0;
         Check(swapchain->CheckColorSpaceSupport(space, &support),
             "IDXGISwapChain3::CheckColorSpaceSupport", device.Get());
         if (!(support & DXGI_SWAP_CHAIN_COLOR_SPACE_SUPPORT_FLAG_PRESENT))
-            throw std::runtime_error(hdr ? "PQ HDR10 swapchain presentation unsupported"
+            throw std::runtime_error(hdr ? "linear scRGB swapchain presentation unsupported"
                                          : "SDR swapchain color space unsupported");
         Check(swapchain->SetColorSpace1(space), "IDXGISwapChain3::SetColorSpace1", device.Get());
     }

@@ -53,7 +53,7 @@ public:
     void WaitIdle();
 
     std::string adapterDescription;
-    // SDR: BGRA8 UNORM. HDR: RGB10A2 UNORM, PQ Rec.2020 (HDR10).
+    // SDR: BGRA8 UNORM. HDR: RGBA16F, linear scRGB.
     const bool hdr;
     // Encoded D3D_SHADER_MODEL guaranteed by the SM 6.0 feature query (0x60).
     std::uint32_t shaderModel = 0;

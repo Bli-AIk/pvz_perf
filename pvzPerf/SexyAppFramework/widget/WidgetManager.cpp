@@ -1,5 +1,6 @@
 #include "WidgetManager.h"
 #include "Widget.h"
+#include "WidgetLifetimeHold.h"
 #include "ButtonWidget.h"
 #include "graphics/Graphics.h"
 #include "graphics/Image.h"
@@ -58,6 +59,7 @@ void WidgetManager::FreeResources()
 
 void WidgetManager::DisableWidget(Widget* theWidget)
 {
+    CancelTouches(theWidget);
 	if (mOverWidget == theWidget)
 	{
 		Widget* aOverWidget = mOverWidget;
@@ -130,11 +132,12 @@ void WidgetManager::DoMouseUps()
 
 void WidgetManager::CancelMouseDownState()
 {
-	if (mLastDownWidget != NULL)
-		mLastDownWidget->mIsDown = false;
+    Widget* target = mLastDownWidget;
+	if (target != NULL) target->mIsDown = false;
 	mActualDownButtons = 0;
 	mDownButtons = 0;
 	mLastDownWidget = NULL;
+    if (target && mTouchCount != 0) RefreshPointerState(*target);
 }
 
 void WidgetManager::DeferOverlay(Widget* theWidget, int thePriority)
@@ -214,7 +217,7 @@ void WidgetManager::RemapMouse(int& theX, int& theY)
 
 void WidgetManager::MouseEnter(Widget* theWidget)
 {
-	theWidget->mIsOver = true;
+	theWidget->mIsOver = mMouseHoverEnabled;
 	
 	theWidget->MouseEnter();
 	if (theWidget->mDoFinger)
@@ -223,7 +226,9 @@ void WidgetManager::MouseEnter(Widget* theWidget)
 
 void WidgetManager::MouseLeave(Widget* theWidget)
 {
-	theWidget->mIsOver = false;
+    theWidget->mIsOver = false;
+    if (mTouchCount != 0) RefreshPointerState(*theWidget);
+
 	
 	theWidget->MouseLeave();
 	if (theWidget->mDoFinger)
@@ -232,6 +237,7 @@ void WidgetManager::MouseLeave(Widget* theWidget)
 
 void WidgetManager::SetBaseModal(Widget* theWidget, const FlagsMod& theBelowFlagsMod)
 {
+    CancelTouches();
 	mBaseModalWidget = theWidget;
 	mBelowModalFlagsMod = theBelowFlagsMod;
 	
@@ -323,6 +329,7 @@ void WidgetManager::RemoveBaseModal(Widget* theWidget)
 
 void WidgetManager::Resize(const Rect& theMouseDestRect, const Rect& theMouseSourceRect)
 {	
+    CancelTouches();
     mWidth = mApp->mWidth;
     mHeight = mApp->mHeight;
 	mMouseDestRect = theMouseDestRect;
@@ -361,6 +368,7 @@ void WidgetManager::GotFocus()
 
 void WidgetManager::LostFocus()
 {
+    CancelTouches();
 	if (mHasFocus)
 	{
 		mActualDownButtons = 0;
@@ -592,6 +600,7 @@ void WidgetManager::RehupMouse()
 
 bool WidgetManager::MouseUp(int x, int y, int theClickCount)
 {	
+    NoteMouseInput();
 	mLastInputUpdateCnt = mUpdateCnt;
 	
 	int aMask;
@@ -609,6 +618,7 @@ bool WidgetManager::MouseUp(int x, int y, int theClickCount)
 	if ((mLastDownWidget != NULL) && ((mDownButtons & aMask) != 0))
 	{
 		Widget* aLastDownWidget = mLastDownWidget;
+		WidgetLifetimeHold lifetime(*aLastDownWidget);
 
 		mDownButtons &= ~aMask;		
 		if (mDownButtons == 0)
@@ -616,7 +626,11 @@ bool WidgetManager::MouseUp(int x, int y, int theClickCount)
 
 		Point anAbsPos = aLastDownWidget->GetAbsPos();
 		aLastDownWidget->mIsDown = false;
+        // A release need not be preceded by a motion event. Decide activation
+        // from this release, even when the cached mouse hover is elsewhere.
+        aLastDownWidget->mIsOver = GetWidgetAt(x, y, nullptr, nullptr) == aLastDownWidget;
 		aLastDownWidget->MouseUp(x - anAbsPos.mX, y - anAbsPos.mY, theClickCount);
+        if (mTouchCount != 0) RefreshPointerState(*aLastDownWidget);
 	}	
 	else
 		mDownButtons &= ~aMask;		
@@ -628,6 +642,7 @@ bool WidgetManager::MouseUp(int x, int y, int theClickCount)
 
 bool WidgetManager::MouseDown(int x, int y, int theClickCount) 
 {	
+    NoteMouseInput();
 	mLastInputUpdateCnt = mUpdateCnt;
 
 	if (theClickCount < 0)
@@ -696,6 +711,8 @@ bool WidgetManager::MouseDown(int x, int y, int theClickCount)
 
 bool WidgetManager::MouseMove(int x, int y) 
 {	
+    if (x != mLastMouseX || y != mLastMouseY || !mMouseIn)
+        NoteMouseInput();
 	mLastInputUpdateCnt = mUpdateCnt;
 
 	if (mDownButtons)
@@ -772,6 +789,7 @@ bool WidgetManager::MouseExit(int x, int y)
 
 void WidgetManager::MouseWheel(int theDelta)
 {
+    NoteMouseInput();
 	mLastInputUpdateCnt = mUpdateCnt;
 
 	if (mFocusWidget != NULL)

@@ -72,6 +72,7 @@ public:
 	void						GetZombiePosition(ZombieType theZombieType, int& x, int& y);
 	ZombieType					ZombieHitTest(int x, int y);
 	virtual void				MouseUp(int x, int y, int theClickCount);
+    const void* TouchHitTest(int x, int y) override;
 	virtual void				MouseDown(int x, int y, int theClickCount);
 	virtual void				MouseDrag(int x, int y);
 	virtual void				MouseWheel(int theDelta);

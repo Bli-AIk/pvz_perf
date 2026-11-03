@@ -20,13 +20,14 @@ $project = Join-Path $root 'android'
 $assetDir = Join-Path $project 'app\src\main\assets'
 $jniDir = Join-Path $project 'app\src\main\jniLibs\arm64-v8a'
 $shaderSource = Join-Path $build 'Release\shaders'
-$shaderFiles = @(Get-ChildItem -LiteralPath $shaderSource -Filter '*.spv' -File -ErrorAction Stop)
+$shaderFiles = @(Get-ChildItem -LiteralPath $shaderSource -Filter '*.spv' -File -ErrorAction Stop | Where-Object { $_.Name -notin @('game_hdr_ps.spv','game_hdr_linear_ps.spv') })
 foreach ($required in @('game_vs.spv', 'game_ps.spv', 'game_sprite_ps.spv', 'game_sprite_mixed_ps.spv')) {
     if (!(Test-Path -LiteralPath (Join-Path $shaderSource $required))) {
         throw "Required Vulkan shader is missing: $required"
     }
 }
 New-Item -ItemType Directory -Force -Path $assetDir | Out-Null
+Copy-Item -LiteralPath (Join-Path $root 'pvzPerf/SexyAppFramework/platform/android/default-scale.json') -Destination (Join-Path $assetDir 'scale.json') -Force
 New-Item -ItemType Directory -Force -Path $jniDir | Out-Null
 $shaderAssets = Join-Path $assetDir 'shaders'
 New-Item -ItemType Directory -Force -Path $shaderAssets | Out-Null

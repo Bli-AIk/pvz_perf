@@ -1352,8 +1352,13 @@ void SexyAppBase::WriteToRegistry()
 	JsonDoc aDoc;
 	aDoc.SetInt("targetFps", mFrameTiming.mTargetFps);
 	aDoc.SetBool("autoDetectFrameRate",mAutoDetectFrameRate);
-	aDoc.SetInt("musicVolume", (long long)(mMusicVolume * 100));
-	aDoc.SetInt("sfxVolume", (long long)(mSfxVolume * 100));
+#if defined(__ANDROID__)
+    aDoc.SetBool("hdr", false);
+#endif
+    // Persist slider percentages, not mixer gain. The original SFX slider's
+    // full-scale gain is 0.65; both JSON fields still range from 0 to 100.
+    aDoc.SetInt("musicVolume", std::llround(std::clamp(mMusicVolume, 0.0f, 1.0f) * 100.0));
+    aDoc.SetInt("sfxVolume", std::llround(std::clamp(mSfxVolume / 0.65, 0.0, 1.0) * 100.0));
 	aDoc.SetInt("muted", (mMuteCount - mAutoMuteCount > 0) ? 1 : 0);
 	aDoc.SetString("screenMode", mIsWindowed ? "windowed" : "fullscreen");
 	aDoc.SetInt("preferredX", mPreferredX);
@@ -1732,10 +1737,16 @@ void SexyAppBase::ReadFromRegistry()
 			settingsChanged=true;
 		}
 	}
+#if defined(__ANDROID__)
+    if (aDoc.GetBool("hdr", false)) {
+        aDoc.SetBool("hdr", false);
+        settingsChanged = true;
+    }
+#endif
 	if (aDoc.Has("musicVolume"))
-		mMusicVolume = aDoc.GetInt("musicVolume", 0) / 100.0f;
+        mMusicVolume = static_cast<float>(std::clamp(aDoc.GetInt("musicVolume", 0), 0LL, 100LL)) / 100.0f;
 	if (aDoc.Has("sfxVolume"))
-		mSfxVolume = aDoc.GetInt("sfxVolume", 0) / 100.0;
+        mSfxVolume = std::clamp(aDoc.GetInt("sfxVolume", 0), 0LL, 100LL) / 100.0 * 0.65;
 	if (aDoc.Has("muted"))
 		mMuteCount = (int)aDoc.GetInt("muted", 0);
 	if (aDoc.Has("screenMode"))
@@ -2439,7 +2450,7 @@ bool SexyAppBase::DrawDirtyStuff()
 	}
 
 	mIsDrawing = true;
-	bool drewScreen = mWidgetManager->DrawScreen();
+    bool drewScreen = mWidgetManager->DrawScreen();
 	mIsDrawing = false;
     if (render->mScreenDrawDeferred)
     {
@@ -4931,6 +4942,9 @@ void SexyAppBase::ResolveHDRAutoParams()
     mScaleHDREnabled = false;
 #elif defined(_WIN32)
     ResolveWindowsHdr(mNativeHdrState, *this, mScaleHDREnabled ? TargetMonitor() : nullptr);
+#elif defined(__ANDROID__)
+    // v3.3 ships Android in SDR until device HDR calibration is validated.
+    mScaleHDREnabled = false;
 #else
 	if (mScaleHDREnabled) throw std::runtime_error("Linux HDR output is not implemented");
 #endif

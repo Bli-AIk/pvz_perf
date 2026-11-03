@@ -1,0 +1,48 @@
+{
+  "date": "2026-11-03",
+  "scope": "production-object field-card touch tests; current actual PAK; no simulated copy of command handlers",
+  "source_sha256": {
+    "pvzPerf/Lawn/BoardTouch.cpp": "a688360785b5fd583c1fd3c468da67a2b79b1058b4a74e074b021bcf8e1a2538",
+    "pvzPerf/Lawn/BoardTouch.h": "4b1fad89778540ce1bbd6020034f11885a3bd9cde41994b68954ac8bca4170f9",
+    "Tests/native/ImageRuntimeTests.cpp": "8b08956d27c19da911640a5273bf1478b229aa4dc5678967780cace9655d9ab4"
+  },
+  "windows": {
+    "exe_sha256": "4b852b400f01250fdd95df929a020653c4db20e657d608ffabd6f271596ccaf7",
+    "pak_sha256": "d8087bd5c870f428d2e4f4c5d39b6f78b22524353ca5a718d649fecfd49f36ea",
+    "fixture_sha256": "1bd239e667f1bc04552c9dcac9755adf48658e70775fccba6e2eec099a532b4b",
+    "result": "PASS",
+    "flags": [
+      "Release",
+      "/GL",
+      "/LTCG"
+    ]
+  },
+  "save_format": "DAT64 v4 unchanged; actual retained-field-card save/load tested",
+  "evidence_sha256": {
+    "native-tests.log": "47386acad4a8fba9fd68a0baac0c4a760256654bc078d01938b1d0d9b24b839e",
+    "README.md": "8a44f8216793bc9a2d77d10efb3e3bdb6665f7e60e26a7add890ee168aaa664d",
+    "touch-field-card-11-1400.png": "932d69f74db8b1df76527dd1d41e4a95ffd7c762940381f0cab4472f377327bc",
+    "touch-field-card-11-800.png": "448b16f43e8cbfb84e1005bc66bfe6d3549e81a3f8b104034b7aa3b5d95a6d4e",
+    "touch-field-card-46-1400.png": "932d69f74db8b1df76527dd1d41e4a95ffd7c762940381f0cab4472f377327bc",
+    "touch-field-card-46-800.png": "448b16f43e8cbfb84e1005bc66bfe6d3549e81a3f8b104034b7aa3b5d95a6d4e",
+    "touch-input.log": "0051daa5986ea1774afddd512b3d44915043777b53afbfcf5228c267e13f34fd"
+  },
+  "android": {
+    "native_sha256": "b2e17f971f4368df97a72d4952f44a8c578680632fa704752c93ff31ef465107",
+    "pak_sha256": "dcfce15ad3cccf0701bbea3f5a190bf22ba159093035d598871249fabaa8d427",
+    "result": "Full LTO cross-build PASS",
+    "apk": "out/arm64-android14-vulkan1.3/pvz_perf-v3.2.5-touch-field-cards-arm64-android14-vulkan1.3.apk",
+    "apk_sha256": "dd5f0a810af990b99af1448a3e401bb713ce74dd34635f008c7b58b43da0fa0f",
+    "pairing": "native, PAK and all SPIR-V byte-identical to this Android tree",
+    "signature": "v2/v3 verified",
+    "alignment": "zipalign -P 16 4 verified",
+    "device": {
+      "serial": "FY241471004E",
+      "model": "NX769J / nubia Z60 Ultra",
+      "install": "adb install -r: Success; game not running before install",
+      "launch": "PerfActivity COLD Status ok; PID 14694",
+      "user_data": "17 external media files: identical SHA256 sets immediately before/after install; no replacement",
+      "manual_acceptance": "pending user touch trial"
+    }
+  }
+}

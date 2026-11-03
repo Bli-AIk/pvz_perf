@@ -58,7 +58,12 @@ NewOptionsDialog::NewOptionsDialog(LawnApp* theApp, bool theFromGameSelector) :
     mSfxVolumeSlider = new Slider(IMAGE_OPTIONS_SLIDERSLOT, IMAGE_OPTIONS_SLIDERKNOB2, NewOptionsDialog::NewOptionsDialog_SoundVolume, this);
     mSfxVolumeSlider->SetValue(theApp->mSfxVolume / 0.65);
 
+#if defined(__ANDROID__)
+    mFullscreenCheckbox = MakeNewCheckbox(NewOptionsDialog::NewOptionsDialog_Fullscreen, this, false);
+    mFullscreenCheckbox->mDisabled = true;
+#else
     mFullscreenCheckbox = MakeNewCheckbox(NewOptionsDialog::NewOptionsDialog_Fullscreen, this, !theApp->mIsWindowed);
+#endif
     // 3D (D3D9) acceleration is always on. This checkbox now controls custom
     // scaling (scale.json): OFF = native 800x600, ON = config-driven.
     mScaleCheckbox = MakeNewCheckbox(NewOptionsDialog::NewOptionsDialog_Scale, this, theApp->mUseCustomScale);
@@ -193,7 +198,7 @@ void NewOptionsDialog::Draw(Sexy::Graphics* g)
     TodDrawString(g, ("Music"), 186, 140 + aMusicOffset, FONT_DWARVENTODCRAFT18, aTextColor, DrawStringJustification::DS_ALIGN_RIGHT);
     TodDrawString(g, ("Sound FX"), 186, 167 + aSfxOffset, FONT_DWARVENTODCRAFT18, aTextColor, DrawStringJustification::DS_ALIGN_RIGHT);
     TodDrawString(g, ("Custom Scale"), 274, 197 + a3DAccelOffset, FONT_DWARVENTODCRAFT18, aTextColor, DrawStringJustification::DS_ALIGN_RIGHT);
-    TodDrawString(g, ("Full Screen"), 274, 229 + aFullScreenOffset, FONT_DWARVENTODCRAFT18, aTextColor, DrawStringJustification::DS_ALIGN_RIGHT);
+    TodDrawString(g, gStr.OPTIONS_DISPLAY_MODE, 274, 229 + aFullScreenOffset, FONT_DWARVENTODCRAFT18, aTextColor, DrawStringJustification::DS_ALIGN_RIGHT);
 }
 
 //0x45CF50
@@ -223,6 +228,10 @@ void NewOptionsDialog::CheckboxChecked(int theId, bool checked)
     switch (theId)
     {
     case NewOptionsDialog::NewOptionsDialog_Fullscreen:
+#if defined(__ANDROID__)
+        // This widget is HDR on Android. Never feed it into windowed/fullscreen.
+        break;
+#else
         if (!checked && mApp->mForceFullscreen)
         {
             mApp->DoDialog(
@@ -239,6 +248,7 @@ void NewOptionsDialog::CheckboxChecked(int theId, bool checked)
             mFullscreenCheckbox->SetChecked(true, false);
         }
         break;
+#endif
 
     case NewOptionsDialog::NewOptionsDialog_Scale:
         // The 2x scale selection is applied when the dialog is closed

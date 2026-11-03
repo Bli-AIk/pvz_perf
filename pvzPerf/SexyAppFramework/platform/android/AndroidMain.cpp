@@ -219,7 +219,7 @@ void android_main(android_app* state) {
                     if (!fs2::exists(to)) fs2::copy_file(entry.path(), to);
                 }
                 // Publish the profile index only after its records are present.
-                for (const char* name : {"settings.json", "users.dat"}) {
+                for (const char* name : {"settings.json", "scale.json", "users.dat"}) {
                     const auto from = source / name, to = settingsDirectory / name;
                     if (!fs2::exists(to) && fs2::is_regular_file(from)) fs2::copy_file(from, to);
                 }
@@ -246,6 +246,13 @@ void android_main(android_app* state) {
         // replacing an established profile or a consumed level save.
         const char* dataPath = std::getenv("PVZ_APPDATA_DIR");
         const std::filesystem::path userDirectory(dataPath ? dataPath : state->activity->internalDataPath);
+        const auto scalePath = userDirectory / "scale.json";
+        if (!std::filesystem::exists(scalePath)) {
+            const auto temporary = userDirectory / "scale.json.tmp";
+            ExtractAsset(state->activity->assetManager, "scale.json", temporary);
+            std::filesystem::rename(temporary, scalePath);
+        }
+        setenv("PVZ_SCALE_CONFIG_FILE", scalePath.string().c_str(), 1);
         if (!std::filesystem::exists(userDirectory / "users.dat")) {
             for (const char* name : {"user1.dat64", "game1_58.dat64", "users.dat"}) {
                 const std::string asset = std::string("bundled-saves/") + name;

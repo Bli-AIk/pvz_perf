@@ -1,0 +1,132 @@
+{
+  "date": "2026-11-03T02:13:20.6590241+08:00",
+  "baseCommit": "21c5ff48042304f5a17f45d6c55c947e90f6b514",
+  "platform": "Windows x64 Vulkan Release /GL /LTCG",
+  "dat64": "v4.0 unchanged",
+  "results": {
+    "time_counter_save": "PASS",
+    "touch_input": "PASS",
+    "v7_save_schema": "PASS",
+    "ui_rules": "PASS"
+  },
+  "sources": [
+    {
+      "path": "pvzPerf/Lawn/Board.cpp",
+      "sha256": "e4f433ba1bb160a517048ffa604bd4cee8cec567c2776c657d283105726638e7"
+    },
+    {
+      "path": "pvzPerf/Lawn/Board.h",
+      "sha256": "9b6db2dc37017859fa98dc6ef013c2b097c66693a0cf758e4ed9795c4c33bead"
+    },
+    {
+      "path": "pvzPerf/Lawn/BoardTouch.cpp",
+      "sha256": "cabad1763023ca6f6ddab9139aad21b2967896f83436a0414f8750240735206b"
+    },
+    {
+      "path": "pvzPerf/Lawn/BoardTouch.h",
+      "sha256": "07174c9da269b9f2e7327cda42e22586ca177966b3faf50da33f8abdfeea2854"
+    },
+    {
+      "path": "pvzPerf/Lawn/CursorObject.cpp",
+      "sha256": "c438c5e69af2480d0bbfd7d1d4723a783581fcaf5082db2477e1a9d32db7f919"
+    },
+    {
+      "path": "pvzPerf/Lawn/CursorObject.h",
+      "sha256": "8b7360f38b3fa47b45c0dbd98f2497c4b5bb8ac5fc6ce513107474e3084687e3"
+    },
+    {
+      "path": "pvzPerf/Lawn/SeedPacket.cpp",
+      "sha256": "303e8a17e77b226fec7cb689eb37778af85dd30816ab4974630c356fe8dfea67"
+    },
+    {
+      "path": "pvzPerf/Lawn/System/SaveGame.cpp",
+      "sha256": "0819f5e91067afff374a92b36610669a866b8ad7101c4d7dd7b9afa0a01aa38a"
+    },
+    {
+      "path": "pvzPerf/Lawn/Widget/GameButton.cpp",
+      "sha256": "ec5efdf26e08c63f2c8826e44ae1c2db799d3e58c1003063559a096969f40a39"
+    },
+    {
+      "path": "pvzPerf/SexyAppFramework/platform/windows/Win32App.cpp",
+      "sha256": "198f023f22de8b280c4da134eb0bb285155fdf81e7c664e85a29dfc49c4cad95"
+    },
+    {
+      "path": "pvzPerf/SexyAppFramework/SexyAppBase.h",
+      "sha256": "2c5159e1aba09652fb96294c7204fcc5239393b1772f2469a8a75b21933ea90b"
+    },
+    {
+      "path": "pvzPerf/SexyAppFramework/widget/TouchEvent.h",
+      "sha256": "848ff52caa76a8ba11d92cb3b09ed916b15d0a13a84bdf77d86147d592de9555"
+    },
+    {
+      "path": "pvzPerf/SexyAppFramework/widget/Widget.cpp",
+      "sha256": "0d3c9e54c0965d19602a80fa8e9df9a7dedd3ae60eeba8c60bdd79464d38179a"
+    },
+    {
+      "path": "pvzPerf/SexyAppFramework/widget/Widget.h",
+      "sha256": "b44111910434e7e92a26bc2a8bd25c90b0c6a8a7c8d0c6453051fd39360079df"
+    },
+    {
+      "path": "pvzPerf/SexyAppFramework/widget/WidgetTouch.cpp",
+      "sha256": "97fd0c3e71d200ba1dd28324a8880bb303bd888616c6c3cf7053a80e008d7ce8"
+    },
+    {
+      "path": "pvzPerf/SexyAppFramework/widget/WidgetManager.cpp",
+      "sha256": "2ec03e7f7af516aa5c69f817eafa8c97405818748b39f3468df4ecfeb09d5735"
+    },
+    {
+      "path": "pvzPerf/SexyAppFramework/widget/WidgetManager.h",
+      "sha256": "020475385ae515c84a7d8a31d370771c7d9e334506433ea88c17a1aa4c2d8a5b"
+    },
+    {
+      "path": "pvzPerf/SexyAppFramework/widget/Slider.cpp",
+      "sha256": "0b10fdfe2d7459cb144cdc05d7c3dce21db6fa539b1224e6d095338988682f62"
+    },
+    {
+      "path": "pvzPerf/SexyAppFramework/widget/Slider.h",
+      "sha256": "9f93274a79628ce72ab338028f9b5b86aa8c4b2964ae9e605e02b341afe152b3"
+    },
+    {
+      "path": "pvzPerf/SexyAppFramework/widget/ScrollbarWidget.cpp",
+      "sha256": "20f633d0bc60944ea5148008bf4eb961fefd6c400636da0331dd5554b651968a"
+    },
+    {
+      "path": "pvzPerf/SexyAppFramework/widget/ScrollbarWidget.h",
+      "sha256": "683779b270c366ba446dc989792409e989b313137a9d302a158933c136fd8b07"
+    },
+    {
+      "path": "pvzPerf/SexyAppFramework/CMakeLists.txt",
+      "sha256": "a1a0895cc351f76bfc0d2f3c0e326145d235b1364761c4413e05ff8ffe7ce131"
+    },
+    {
+      "path": "pvzPerf/SexyAppFramework/widget/CMakeLists.txt",
+      "sha256": "d332228ff1cbf33ff537fa2135cc3f92f670f869793af0bd6fc894cd09e32754"
+    },
+    {
+      "path": "Tests/native/ImageRuntimeTests.cpp",
+      "sha256": "d70340d63e29458220ae44902ec5e284f2eb8cc537709ce6a8678aa688b414e2"
+    },
+    {
+      "path": "tools/test-image-runtime.ps1",
+      "sha256": "65264f495437b30a8f5db23c9edbd0a851f1f6fe696868339bb889405f2d96d1"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "out/x64-win32-vulkan/Release/pvz_perf.exe",
+      "sha256": "16ab86eea65a4a2ddf8883f33b4ab4b2a653651c69cead9047bde3f40545f0d8"
+    },
+    {
+      "path": "out/x64-win32-vulkan/Release/main.pak64",
+      "sha256": "5bdd71c632d945304ae3752bfed61941bb8c7e4351e616e1ff6fbceab1431545"
+    },
+    {
+      "path": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp/pvz-touch-runtime-20261103/image_runtime_tests.exe",
+      "sha256": "60ec6514466d1177af072a7944ae2cf1774f375279f6fc1a80765ac85e84071e"
+    }
+  ],
+  "uiCoverage": {
+    "almanacPreviews": 1200,
+    "awardRoutes": 400
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "executable_sha256": "c4f0fb62d68d5c2428bf5d94e4426d9269d852db5dc2f92f911e6b47ad4fa5fd",
+  "pak_sha256": "b472ceb365211ba6e1de9f8f4fb4d9b799609ef3aeac5109165f5d270240553c",
+  "affinity": "LP14 / 0x4000",
+  "cpu_multiplier": "11x, user controlled",
+  "target_fps": 240,
+  "source_git": "21c5ff48042304f5a17f45d6c55c947e90f6b514",
+  "zombie_cpp_sha256": "acc109375f29486a247631d06a9a5627c6d6b42083685cadf2a9789518c8c744",
+  "diagnostic_cpp_sha256": "f9ec8125080d4fab79439cec9a3cfe03abfb386dd894d1f4bc5b3cffb9771456",
+  "requested_hdr": false,
+  "custom_scale": 0,
+  "until_exit": true,
+  "note": "Actual HDR, dimensions and present mode are recorded in frame-phases.csv; instrumented sample, not a clean release baseline."
+}

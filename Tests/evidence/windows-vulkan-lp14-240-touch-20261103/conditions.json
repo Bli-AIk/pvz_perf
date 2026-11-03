@@ -1,0 +1,16 @@
+{
+  "date": "2026-11-03",
+  "executable": "C:\\Users\\Administrator\\CLionProjects\\codex\\PlantsVsZombiesModern\\out\\x64-win32-vulkan\\Release\\pvz_perf.exe",
+  "executable_sha256": "adf2cfa165986ff69c20fb84595e695027431fd187589b7e0a8ebc9f58f5b486",
+  "pak_sha256": "d8087bd5c870f428d2e4f4c5d39b6f78b22524353ca5a718d649fecfd49f36ea",
+  "canonical_source_sha256": "a1bbc2f43a129b655f0068de8f28a731f1ef6814170419d3f4ec406436437cf1",
+  "converted_sha256": "cb18bdbe8a5104ac16a7aa923bbd350b7780e48f4c26a78c8e690b47adc86541",
+  "profile": "PerfTest / ID1; select manually in game",
+  "affinity": "0x4000 / LP14",
+  "cpu_multiplier": "11x, user controlled",
+  "target_fps": 240,
+  "auto_detect_frame_rate": false,
+  "vsync": 0,
+  "sampling": "Enter to start, 3s preroll, Quit to stop, external read-only sampling",
+  "baseline_comparison": "Tests/evidence/windows-vulkan-lp14-240-20261101"
+}

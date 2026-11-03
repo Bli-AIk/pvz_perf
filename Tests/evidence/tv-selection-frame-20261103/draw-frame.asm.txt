@@ -1,0 +1,440 @@
+
+C:\Users\ADMINI~1\AppData\Local\Temp/pvz-tv-draw-order-20261104/libGameMain.so:	file format elf32-littlearm
+
+Disassembly of section .text:
+
+001c093c <BaseGamepadControls::DrawFrame(Sexy::Graphics*, BaseGamepadControls::FrameRenderPhase)>:
+  1c093c:      	ldr.w	r3, [r0, #0x98]
+  1c0940:      	push.w	{r4, r5, r6, r7, r8, r9, r10, r11, lr}
+  1c0944:      	mov	r4, r0
+  1c0946:      	ldr	r6, [pc, #0x30]         @ 0x1c0978 <BaseGamepadControls::DrawFrame(Sexy::Graphics*, BaseGamepadControls::FrameRenderPhase)+0x3c>
+  1c0948:      	mov	r5, r1
+  1c094a:      	adds	r3, #0x1
+  1c094c:      	vpush	{d8, d9}
+  1c0950:      	subw	sp, sp, #0x4fc
+  1c0954:      	add	r6, pc
+  1c0956:      	str	r2, [sp, #0x24]
+  1c0958:      	beq	0x1c096c <BaseGamepadControls::DrawFrame(Sexy::Graphics*, BaseGamepadControls::FrameRenderPhase)+0x30> @ imm = #0x10
+  1c095a:      	ldr	r0, [r0, #0x38]
+  1c095c:      	ldr.w	r3, [r0, #0x114]
+  1c0960:      	ldr.w	r3, [r3, #0x900]
+  1c0964:      	cmp	r3, #0x19
+  1c0966:      	it	ne
+  1c0968:      	cmpne	r3, #0x14
+  1c096a:      	bne	0x1c0984 <BaseGamepadControls::DrawFrame(Sexy::Graphics*, BaseGamepadControls::FrameRenderPhase)+0x48> @ imm = #0x16
+  1c096c:      	addw	sp, sp, #0x4fc
+  1c0970:      	vpop	{d8, d9}
+  1c0974:      	pop.w	{r4, r5, r6, r7, r8, r9, r10, r11, pc}
+  1c0978:      	vhadd.s8	q8, q0, q6
+  1c097c:      	movs	r0, r0
+  1c097e:      	tst	r4, r0
+  1c0980:      	movs	r0, r0
+  1c0982:      	movs	r0, r0
+  1c0984:      	ldrb.w	r3, [r4, #0x3c]
+  1c0988:      	cmp	r3, #0x0
+  1c098a:      	beq	0x1c096c <BaseGamepadControls::DrawFrame(Sexy::Graphics*, BaseGamepadControls::FrameRenderPhase)+0x30> @ imm = #-0x22
+  1c098c:      	ldr.w	r3, [r4, #0x94]
+  1c0990:      	adds	r3, #0x8e
+  1c0992:      	ldr.w	r3, [r0, r3, lsl #2]
+  1c0996:      	ldr	r2, [r3, #0x40]
+  1c0998:      	cmp	r2, #0x7
+  1c099a:      	beq.w	0x1c0e84 <BaseGamepadControls::DrawFrame(Sexy::Graphics*, BaseGamepadControls::FrameRenderPhase)+0x548> @ imm = #0x4e6
+  1c099e:      	vldr	s14, [r4, #108]
+  1c09a2:      	add	r7, sp, #0x40
+  1c09a4:      	vldr	s15, [r4, #112]
+  1c09a8:      	add.w	r11, sp, #0x38
+  1c09ac:      	vmov.f32	s17, #5.000000e+00
+  1c09b0:      	add.w	r9, sp, #0x58
+  1c09b4:      	vmov.f32	s19, #2.000000e+00
+  1c09b8:      	add.w	r10, sp, #0x60
+  1c09bc:      	vcvt.s32.f32	s14, s14
+  1c09c0:      	add.w	r8, sp, #0x70
+  1c09c4:      	vcvt.s32.f32	s15, s15
+  1c09c8:      	vldr	s16, [pc, #-76]         @ 0x1c0980 <BaseGamepadControls::DrawFrame(Sexy::Graphics*, BaseGamepadControls::FrameRenderPhase)+0x44>
+  1c09cc:      	vmov	r1, s14
+  1c09d0:      	vmov	r2, s15
+  1c09d4:      	bl	0x15670c <Board::PixelToGridXKeepOnBoard(int, int)> @ imm = #-0x6a2cc
+  1c09d8:      	vldr	s14, [r4, #108]
+  1c09dc:      	mov	r3, r0
+  1c09de:      	vldr	s15, [r4, #112]
+  1c09e2:      	ldr	r0, [r4, #0x38]
+  1c09e4:      	str	r3, [sp, #0x28]
+  1c09e6:      	vcvt.s32.f32	s14, s14
+  1c09ea:      	vcvt.s32.f32	s15, s15
+  1c09ee:      	vmov	r1, s14
+  1c09f2:      	vmov	r2, s15
+  1c09f6:      	bl	0x156824 <Board::PixelToGridYKeepOnBoard(int, int)> @ imm = #-0x6a1d6
+  1c09fa:      	ldr	r1, [r4, #0x14]
+  1c09fc:      	add.w	r12, sp, #0x48
+  1c0a00:      	vldr	s15, [r4, #156]
+  1c0a04:      	mov	r2, r0
+  1c0a06:      	str	r7, [sp, #0x2c]
+  1c0a08:      	add	r7, sp, #0x50
+  1c0a0a:      	ldr.w	r1, [r1, #0x900]
+  1c0a0e:      	str	r7, [sp, #0x30]
+  1c0a10:      	add	r7, sp, #0x68
+  1c0a12:      	ldr	r3, [sp, #0x28]
+  1c0a14:      	cmp	r1, #0x2c
+  1c0a16:      	vsub.f32	s17, s15, s17
+  1c0a1a:      	vsub.f32	s19, s19, s15
+  1c0a1e:      	str	r7, [sp, #0x34]
+  1c0a20:      	add	r7, sp, #0x40
+  1c0a22:      	it	eq
+  1c0a24:      	vldreq	s15, [pc, #-172]        @ 0x1c097c <BaseGamepadControls::DrawFrame(Sexy::Graphics*, BaseGamepadControls::FrameRenderPhase)+0x40>
+  1c0a28:      	mov	r1, r3
+  1c0a2a:      	ldr	r0, [r4, #0x38]
+  1c0a2c:      	mov	r3, r11
+  1c0a2e:      	stm.w	sp, {r7, r12}
+  1c0a32:      	add	r7, sp, #0x50
+  1c0a34:      	str	r7, [sp, #0x8]
+  1c0a36:      	add	r7, sp, #0x68
+  1c0a38:      	str	r7, [sp, #0x14]
+  1c0a3a:      	str.w	r9, [sp, #0xc]
+  1c0a3e:      	str.w	r10, [sp, #0x10]
+  1c0a42:      	str.w	r8, [sp, #0x18]
+  1c0a46:      	vstr	s16, [r11]
+  1c0a4a:      	vstr	s16, [r11, #4]
+  1c0a4e:      	vstr	s16, [r9]
+  1c0a52:      	vstr	s16, [r9, #4]
+  1c0a56:      	vstr	s16, [r10]
+  1c0a5a:      	vstr	s16, [r10, #4]
+  1c0a5e:      	vstr	s16, [r8]
+  1c0a62:      	vstr	s16, [r8, #4]
+  1c0a66:      	it	eq
+  1c0a68:      	vmoveq.f32	s18, #-3.000000e+00
+  1c0a6c:      	str.w	r12, [sp, #0x28]
+  1c0a70:      	ite	eq
+  1c0a72:      	vaddeq.f32	s17, s17, s15
+  1c0a76:      	vmovne.f32	s18, #-8.000000e+00
+  1c0a7a:      	vstr	s16, [sp, #64]
+  1c0a7e:      	vstr	s16, [sp, #68]
+  1c0a82:      	vstr	s16, [sp, #72]
+  1c0a86:      	vstr	s16, [sp, #76]
+  1c0a8a:      	vstr	s16, [sp, #80]
+  1c0a8e:      	vstr	s16, [sp, #84]
+  1c0a92:      	vstr	s16, [sp, #104]
+  1c0a96:      	vstr	s16, [sp, #108]
+  1c0a9a:      	bl	0x1574d4 <Board::GridCellBounds(int, int, Sexy::SexyVector2&, Sexy::SexyVector2&, Sexy::SexyVector2&, Sexy::SexyVector2&, Sexy::SexyVector2&, Sexy::SexyVector2&, Sexy::SexyVector2&, Sexy::SexyVector2&)> @ imm = #-0x695ca
+  1c0a9e:      	ldr	r7, [sp, #0x24]
+  1c0aa0:      	ldr.w	r12, [sp, #0x28]
+  1c0aa4:      	cmp	r7, #0x0
+  1c0aa6:      	bne.w	0x1c0db6 <BaseGamepadControls::DrawFrame(Sexy::Graphics*, BaseGamepadControls::FrameRenderPhase)+0x47a> @ imm = #0x30c
+  1c0aaa:      	vldr	s8, [r11, #4]
+  1c0aae:      	vldr	s6, [r12, #4]
+  1c0ab2:      	vldr	s11, [sp, #68]
+  1c0ab6:      	vldr	s7, [sp, #84]
+  1c0aba:      	vmov.f32	s15, #5.000000e-01
+  1c0abe:      	vsub.f32	s6, s6, s8
+  1c0ac2:      	vmov.f32	s4, s8
+  1c0ac6:      	vsub.f32	s7, s7, s11
+  1c0aca:      	vldr	s9, [r9, #4]
+  1c0ace:      	vmla.f32	s4, s6, s15
+  1c0ad2:      	vmov.f32	s6, s11
+  1c0ad6:      	vldr	s13, [r10, #4]
+  1c0ada:      	vmla.f32	s6, s7, s15
+  1c0ade:      	vldr	s10, [sp, #108]
+  1c0ae2:      	vldr	s14, [r8, #4]
+  1c0ae6:      	vsub.f32	s13, s13, s9
+  1c0aea:      	vmov.f32	s5, s9
+  1c0aee:      	vsub.f32	s14, s14, s10
+  1c0af2:      	vmov.f32	s7, s6
+  1c0af6:      	vmov.f32	s6, s10
+  1c0afa:      	vmla.f32	s5, s13, s15
+  1c0afe:      	vmla.f32	s6, s14, s15
+  1c0b02:      	vmov.f32	s12, s15
+  1c0b06:      	vstr	s4, [r12, #4]
+  1c0b0a:      	vstr	s7, [sp, #84]
+  1c0b0e:      	vstr	s5, [r10, #4]
+  1c0b12:      	vstr	s6, [r8, #4]
+  1c0b16:      	vldr	s13, [pc, #-408]        @ 0x1c0980 <BaseGamepadControls::DrawFrame(Sexy::Graphics*, BaseGamepadControls::FrameRenderPhase)+0x44>
+  1c0b1a:      	add	r3, sp, #0x98
+  1c0b1c:      	add.w	r7, sp, #0x518
+  1c0b20:      	movs	r2, #0x0
+  1c0b22:      	vmov.f32	s14, #1.000000e+00
+  1c0b26:      	add.w	r0, r3, #0x60
+  1c0b2a:      	vstr	s13, [r3, #-24]
+  1c0b2e:      	adds	r3, #0x20
+  1c0b30:      	vstr	s14, [r3, #-52]
+  1c0b34:      	movs	r1, #0x0
+  1c0b36:      	str	r2, [r3, #-48]
+  1c0b3a:      	mov.w	lr, #0x3f800000
+  1c0b3e:      	str	r2, [r3, #-44]
+  1c0b42:      	cmp	r3, r0
+  1c0b44:      	vldr	s15, [pc, #-456]        @ 0x1c0980 <BaseGamepadControls::DrawFrame(Sexy::Graphics*, BaseGamepadControls::FrameRenderPhase)+0x44>
+  1c0b48:      	bne	0x1c0b2a <BaseGamepadControls::DrawFrame(Sexy::Graphics*, BaseGamepadControls::FrameRenderPhase)+0x1ee> @ imm = #-0x22
+  1c0b4a:      	cmp	r3, r7
+  1c0b4c:      	bne	0x1c0b26 <BaseGamepadControls::DrawFrame(Sexy::Graphics*, BaseGamepadControls::FrameRenderPhase)+0x1ea> @ imm = #-0x2a
+  1c0b4e:      	vldr	s13, [r10]
+  1c0b52:      	add	r7, sp, #0x78
+  1c0b54:      	vldr	s3, [r12]
+  1c0b58:      	mov.w	r3, #0x3f000000
+  1c0b5c:      	vldr	s14, [r11]
+  1c0b60:      	mov	r0, r5
+  1c0b62:      	vadd.f32	s5, s5, s17
+  1c0b66:      	vadd.f32	s13, s18, s13
+  1c0b6a:      	vadd.f32	s4, s4, s17
+  1c0b6e:      	vadd.f32	s14, s18, s14
+  1c0b72:      	vadd.f32	s8, s8, s17
+  1c0b76:      	vadd.f32	s3, s18, s3
+  1c0b7a:      	str	r3, [r7, #0x58]
+  1c0b7c:      	vstr	s4, [r7, #36]
+  1c0b80:      	vstr	s8, [r7, #4]
+  1c0b84:      	vstr	s15, [r7, #8]
+  1c0b88:      	str.w	lr, [r7, #0xc]
+  1c0b8c:      	str	r1, [r7, #0x10]
+  1c0b8e:      	str	r1, [r7, #0x14]
+  1c0b90:      	vstr	s15, [r7, #24]
+  1c0b94:      	vstr	s15, [r7, #40]
+  1c0b98:      	str.w	lr, [r7, #0x2c]
+  1c0b9c:      	str	r1, [r7, #0x30]
+  1c0b9e:      	str	r1, [r7, #0x34]
+  1c0ba0:      	vstr	s15, [r7, #56]
+  1c0ba4:      	vstr	s12, [r7, #60]
+  1c0ba8:      	vstr	s5, [r7, #68]
+  1c0bac:      	vstr	s15, [r7, #72]
+  1c0bb0:      	str.w	lr, [r7, #0x4c]
+  1c0bb4:      	str	r1, [r7, #0x50]
+  1c0bb6:      	str	r1, [r7, #0x54]
+  1c0bb8:      	vstr	s12, [r7, #92]
+  1c0bbc:      	vstr	s5, [r7, #100]
+  1c0bc0:      	vstr	s15, [r7, #104]
+  1c0bc4:      	str.w	lr, [r7, #0x6c]
+  1c0bc8:      	str	r1, [r7, #0x70]
+  1c0bca:      	str	r1, [r7, #0x74]
+  1c0bcc:      	vstr	s3, [r7, #32]
+  1c0bd0:      	vstr	s14, [r7]
+  1c0bd4:      	vstr	s13, [r7, #64]
+  1c0bd8:      	vstr	s13, [r7, #96]
+  1c0bdc:      	vstr	s16, [r7, #28]
+  1c0be0:      	str	r3, [r7, #0x78]
+  1c0be2:      	vldr	s5, [r8]
+  1c0be6:      	vldr	s4, [r9]
+  1c0bea:      	vldr	s13, [sp, #104]
+  1c0bee:      	vadd.f32	s9, s9, s17
+  1c0bf2:      	vadd.f32	s10, s10, s17
+  1c0bf6:      	vadd.f32	s4, s18, s4
+  1c0bfa:      	vadd.f32	s13, s18, s13
+  1c0bfe:      	vadd.f32	s5, s18, s5
+  1c0c02:      	vadd.f32	s6, s6, s17
+  1c0c06:      	str.w	r3, [r7, #0x98]
+  1c0c0a:      	str.w	r3, [r7, #0xd8]
+  1c0c0e:      	vstr	s14, [r7, #160]
+  1c0c12:      	vstr	s12, [r7, #124]
+  1c0c16:      	vstr	s9, [r7, #132]
+  1c0c1a:      	vstr	s15, [r7, #136]
+  1c0c1e:      	str.w	lr, [r7, #0x8c]
+  1c0c22:      	str.w	r1, [r7, #0x90]
+  1c0c26:      	str.w	r1, [r7, #0x94]
+  1c0c2a:      	vstr	s8, [r7, #164]
+  1c0c2e:      	vstr	s15, [r7, #168]
+  1c0c32:      	str.w	lr, [r7, #0xac]
+  1c0c36:      	str.w	r1, [r7, #0xb0]
+  1c0c3a:      	str.w	r1, [r7, #0xb4]
+  1c0c3e:      	vstr	s15, [r7, #184]
+  1c0c42:      	vstr	s10, [r7, #196]
+  1c0c46:      	vstr	s15, [r7, #200]
+  1c0c4a:      	str.w	lr, [r7, #0xcc]
+  1c0c4e:      	str.w	r1, [r7, #0xd0]
+  1c0c52:      	str.w	r1, [r7, #0xd4]
+  1c0c56:      	vstr	s6, [r7, #228]
+  1c0c5a:      	vstr	s15, [r7, #232]
+  1c0c5e:      	str.w	lr, [r7, #0xec]
+  1c0c62:      	str.w	r1, [r7, #0xf0]
+  1c0c66:      	vstr	s4, [r7, #128]
+  1c0c6a:      	vstr	s5, [r7, #224]
+  1c0c6e:      	vstr	s13, [r7, #192]
+  1c0c72:      	vstr	s16, [r7, #156]
+  1c0c76:      	vstr	s16, [r7, #188]
+  1c0c7a:      	vstr	s16, [r7, #220]
+  1c0c7e:      	str.w	r1, [r7, #0xf4]
+  1c0c82:      	vldr	s8, [sp, #80]
+  1c0c86:      	vldr	s9, [sp, #64]
+  1c0c8a:      	vadd.f32	s14, s7, s17
+  1c0c8e:      	vadd.f32	s11, s11, s17
+  1c0c92:      	str.w	r3, [r7, #0xf8]
+  1c0c96:      	vadd.f32	s9, s18, s9
+  1c0c9a:      	vadd.f32	s18, s18, s8
+  1c0c9e:      	vstr	s13, [r7, #352]
+  1c0ca2:      	vstr	s12, [r7, #252]
+  1c0ca6:      	vstr	s14, [r7, #260]
+  1c0caa:      	vstr	s15, [r7, #264]
+  1c0cae:      	str.w	lr, [r7, #0x10c]
+  1c0cb2:      	str.w	r1, [r7, #0x110]
+  1c0cb6:      	str.w	r1, [r7, #0x114]
+  1c0cba:      	str.w	lr, [r7, #0x118]
+  1c0cbe:      	vstr	s12, [r7, #284]
+  1c0cc2:      	vstr	s14, [r7, #292]
+  1c0cc6:      	vstr	s15, [r7, #296]
+  1c0cca:      	str.w	lr, [r7, #0x12c]
+  1c0cce:      	str.w	r1, [r7, #0x130]
+  1c0cd2:      	str.w	r1, [r7, #0x134]
+  1c0cd6:      	str.w	lr, [r7, #0x138]
+  1c0cda:      	vstr	s12, [r7, #316]
+  1c0cde:      	vstr	s11, [r7, #324]
+  1c0ce2:      	vstr	s15, [r7, #328]
+  1c0ce6:      	str.w	lr, [r7, #0x14c]
+  1c0cea:      	str.w	r1, [r7, #0x150]
+  1c0cee:      	str.w	r1, [r7, #0x154]
+  1c0cf2:      	str.w	lr, [r7, #0x158]
+  1c0cf6:      	vstr	s10, [r7, #356]
+  1c0cfa:      	vstr	s15, [r7, #360]
+  1c0cfe:      	str.w	lr, [r7, #0x16c]
+  1c0d02:      	str.w	r1, [r7, #0x170]
+  1c0d06:      	vstr	s9, [r7, #320]
+  1c0d0a:      	vstr	s16, [r7, #348]
+  1c0d0e:      	vstr	s18, [r7, #256]
+  1c0d12:      	vstr	s18, [r7, #288]
+  1c0d16:      	str.w	r1, [r7, #0x174]
+  1c0d1a:      	str.w	r3, [r7, #0x178]
+  1c0d1e:      	vstr	s16, [r7, #380]
+  1c0d22:      	bl	0x30bdf4 <Sexy::Graphics::Get3D()> @ imm = #0x14b0ce
+  1c0d26:      	ldr	r3, [r4, #0x14]
+  1c0d28:      	mov	r8, r0
+  1c0d2a:      	ldr.w	r3, [r3, #0x900]
+  1c0d2e:      	cmp	r3, #0x15
+  1c0d30:      	beq	0x1c0e14 <BaseGamepadControls::DrawFrame(Sexy::Graphics*, BaseGamepadControls::FrameRenderPhase)+0x4d8> @ imm = #0xe0
+  1c0d32:      	ldr	r2, [r4, #0x60]
+  1c0d34:      	cmp	r2, #0x4
+  1c0d36:      	beq	0x1c0e1c <BaseGamepadControls::DrawFrame(Sexy::Graphics*, BaseGamepadControls::FrameRenderPhase)+0x4e0> @ imm = #0xe2
+  1c0d38:      	cmp	r3, #0x18
+  1c0d3a:      	beq.w	0x1c096c <BaseGamepadControls::DrawFrame(Sexy::Graphics*, BaseGamepadControls::FrameRenderPhase)+0x30> @ imm = #-0x3d2
+  1c0d3e:      	ldr	r1, [pc, #0x194]        @ 0x1c0ed4 <BaseGamepadControls::DrawFrame(Sexy::Graphics*, BaseGamepadControls::FrameRenderPhase)+0x598>
+  1c0d40:      	mov	r0, r5
+  1c0d42:      	vldr	s14, [r5, #8]
+  1c0d46:      	mov	r2, r7
+  1c0d48:      	vldr	s15, [r5, #12]
+  1c0d4c:      	movs	r3, #0x4
+  1c0d4e:      	ldr	r1, [r6, r1]
+  1c0d50:      	vadd.f32	s14, s14, s19
+  1c0d54:      	vadd.f32	s15, s15, s19
+  1c0d58:      	ldr.w	r9, [r1]
+  1c0d5c:      	vstr	s14, [r5, #8]
+  1c0d60:      	vstr	s15, [r5, #12]
+  1c0d64:      	mov	r1, r9
+  1c0d66:      	bl	0x31172c <Sexy::Graphics::DrawTrianglesTex(Sexy::Image*, Sexy::SexyVertex2D const (*) [3], int)> @ imm = #0x1509c2
+  1c0d6a:      	vldr	s15, [r5, #8]
+  1c0d6e:      	vldr	s14, [r5, #12]
+  1c0d72:      	vsub.f32	s15, s15, s19
+  1c0d76:      	vsub.f32	s19, s14, s19
+  1c0d7a:      	vstr	s15, [r5, #8]
+  1c0d7e:      	vstr	s19, [r5, #12]
+  1c0d82:      	cmp.w	r8, #0x0
+  1c0d86:      	beq.w	0x1c0ec2 <BaseGamepadControls::DrawFrame(Sexy::Graphics*, BaseGamepadControls::FrameRenderPhase)+0x586> @ imm = #0x138
+  1c0d8a:      	ldr.w	r3, [r4, #0x94]
+  1c0d8e:      	cmp	r3, #0x1
+  1c0d90:      	beq	0x1c0e92 <BaseGamepadControls::DrawFrame(Sexy::Graphics*, BaseGamepadControls::FrameRenderPhase)+0x556> @ imm = #0xfe
+  1c0d92:      	ldr	r3, [pc, #0x144]        @ 0x1c0ed8 <BaseGamepadControls::DrawFrame(Sexy::Graphics*, BaseGamepadControls::FrameRenderPhase)+0x59c>
+  1c0d94:      	ldr	r3, [r6, r3]
+  1c0d96:      	ldr	r1, [r3]
+  1c0d98:      	mov	r2, r7
+  1c0d9a:      	mov	r0, r5
+  1c0d9c:      	movs	r3, #0x4
+  1c0d9e:      	bl	0x31172c <Sexy::Graphics::DrawTrianglesTex(Sexy::Image*, Sexy::SexyVertex2D const (*) [3], int)> @ imm = #0x15098a
+  1c0da2:      	mov	r0, r5
+  1c0da4:      	movs	r1, #0x0
+  1c0da6:      	bl	0x30bf9c <Sexy::Graphics::SetDrawMode(int)> @ imm = #0x14b1f2
+  1c0daa:      	addw	sp, sp, #0x4fc
+  1c0dae:      	vpop	{d8, d9}
+  1c0db2:      	pop.w	{r4, r5, r6, r7, r8, r9, r10, r11, pc}
+  1c0db6:      	vldr	s8, [r11, #4]
+  1c0dba:      	vldr	s11, [sp, #68]
+  1c0dbe:      	vldr	s9, [r9, #4]
+  1c0dc2:      	vldr	s10, [sp, #108]
+  1c0dc6:      	vldr	s4, [r12, #4]
+  1c0dca:      	vldr	s7, [sp, #84]
+  1c0dce:      	vldr	s5, [r10, #4]
+  1c0dd2:      	vldr	s6, [r8, #4]
+  1c0dd6:      	vsub.f32	s3, s4, s8
+  1c0dda:      	vsub.f32	s12, s7, s11
+  1c0dde:      	vsub.f32	s13, s5, s9
+  1c0de2:      	vsub.f32	s14, s6, s10
+  1c0de6:      	vmov.f32	s15, #5.000000e-01
+  1c0dea:      	vmov.f32	s16, s15
+  1c0dee:      	vmla.f32	s11, s12, s15
+  1c0df2:      	vmla.f32	s8, s3, s15
+  1c0df6:      	vmla.f32	s9, s13, s15
+  1c0dfa:      	vmla.f32	s10, s14, s15
+  1c0dfe:      	vmov.f32	s12, #1.000000e+00
+  1c0e02:      	vstr	s8, [r11, #4]
+  1c0e06:      	vstr	s11, [sp, #68]
+  1c0e0a:      	vstr	s9, [r9, #4]
+  1c0e0e:      	vstr	s10, [sp, #108]
+  1c0e12:      	b	0x1c0b16 <BaseGamepadControls::DrawFrame(Sexy::Graphics*, BaseGamepadControls::FrameRenderPhase)+0x1da> @ imm = #-0x300
+  1c0e14:      	ldr	r3, [r4, #0x60]
+  1c0e16:      	subs	r3, #0x3
+  1c0e18:      	cmp	r3, #0x1
+  1c0e1a:      	bhi	0x1c0d3e <BaseGamepadControls::DrawFrame(Sexy::Graphics*, BaseGamepadControls::FrameRenderPhase)+0x402> @ imm = #-0xe0
+  1c0e1c:      	vldr	s14, [r5, #8]
+  1c0e20:      	mov	r0, r5
+  1c0e22:      	vldr	s15, [r5, #12]
+  1c0e26:      	mov	r2, r7
+  1c0e28:      	ldr	r1, [pc, #0xb0]         @ 0x1c0edc <BaseGamepadControls::DrawFrame(Sexy::Graphics*, BaseGamepadControls::FrameRenderPhase)+0x5a0>
+  1c0e2a:      	movs	r3, #0x4
+  1c0e2c:      	vadd.f32	s14, s14, s19
+  1c0e30:      	vadd.f32	s15, s15, s19
+  1c0e34:      	ldr	r1, [r6, r1]
+  1c0e36:      	vstr	s14, [r5, #8]
+  1c0e3a:      	ldr	r1, [r1]
+  1c0e3c:      	vstr	s15, [r5, #12]
+  1c0e40:      	bl	0x31172c <Sexy::Graphics::DrawTrianglesTex(Sexy::Image*, Sexy::SexyVertex2D const (*) [3], int)> @ imm = #0x1508e8
+  1c0e44:      	vldr	s15, [r5, #8]
+  1c0e48:      	mov	r2, r7
+  1c0e4a:      	vldr	s14, [r5, #12]
+  1c0e4e:      	mov	r0, r5
+  1c0e50:      	ldr	r1, [pc, #0x8c]         @ 0x1c0ee0 <BaseGamepadControls::DrawFrame(Sexy::Graphics*, BaseGamepadControls::FrameRenderPhase)+0x5a4>
+  1c0e52:      	movs	r3, #0x4
+  1c0e54:      	vsub.f32	s15, s15, s19
+  1c0e58:      	vsub.f32	s19, s14, s19
+  1c0e5c:      	vstr	s15, [r5, #8]
+  1c0e60:      	vstr	s19, [r5, #12]
+  1c0e64:      	ldr	r1, [r6, r1]
+  1c0e66:      	ldr	r4, [r1]
+  1c0e68:      	mov	r1, r4
+  1c0e6a:      	bl	0x31172c <Sexy::Graphics::DrawTrianglesTex(Sexy::Image*, Sexy::SexyVertex2D const (*) [3], int)> @ imm = #0x1508be
+  1c0e6e:      	cmp.w	r8, #0x0
+  1c0e72:      	bne	0x1c0da2 <BaseGamepadControls::DrawFrame(Sexy::Graphics*, BaseGamepadControls::FrameRenderPhase)+0x466> @ imm = #-0xd4
+  1c0e74:      	ldr	r3, [r4]
+  1c0e76:      	mov	r1, r8
+  1c0e78:      	mov	r2, r8
+  1c0e7a:      	mov	r0, r4
+  1c0e7c:      	ldr.w	r3, [r3, #0x94]
+  1c0e80:      	blx	r3
+  1c0e82:      	b	0x1c0da2 <BaseGamepadControls::DrawFrame(Sexy::Graphics*, BaseGamepadControls::FrameRenderPhase)+0x466> @ imm = #-0xe4
+  1c0e84:      	ldr	r2, [r3]
+  1c0e86:      	mov	r0, r3
+  1c0e88:      	ldr	r3, [r2, #0x8]
+  1c0e8a:      	blx	r3
+  1c0e8c:      	cbnz	r0, 0x1c0e9a <BaseGamepadControls::DrawFrame(Sexy::Graphics*, BaseGamepadControls::FrameRenderPhase)+0x55e> @ imm = #0xa
+  1c0e8e:      	ldr	r0, [r4, #0x38]
+  1c0e90:      	b	0x1c099e <BaseGamepadControls::DrawFrame(Sexy::Graphics*, BaseGamepadControls::FrameRenderPhase)+0x62> @ imm = #-0x4f6
+  1c0e92:      	ldr	r3, [pc, #0x50]         @ 0x1c0ee4 <BaseGamepadControls::DrawFrame(Sexy::Graphics*, BaseGamepadControls::FrameRenderPhase)+0x5a8>
+  1c0e94:      	ldr	r3, [r6, r3]
+  1c0e96:      	ldr	r1, [r3]
+  1c0e98:      	b	0x1c0d98 <BaseGamepadControls::DrawFrame(Sexy::Graphics*, BaseGamepadControls::FrameRenderPhase)+0x45c> @ imm = #-0x104
+  1c0e9a:      	ldr.w	r2, [r4, #0x94]
+  1c0e9e:      	mov	r1, r5
+  1c0ea0:      	ldr	r3, [r4, #0x38]
+  1c0ea2:      	adds	r2, #0x8e
+  1c0ea4:      	ldr.w	r0, [r3, r2, lsl #2]
+  1c0ea8:      	bl	0x13ddf8 <CursorObject::Draw(Sexy::Graphics*)> @ imm = #-0x830b4
+  1c0eac:      	ldr.w	r2, [r4, #0x94]
+  1c0eb0:      	mov	r1, r5
+  1c0eb2:      	ldr	r3, [r4, #0x38]
+  1c0eb4:      	adds	r2, #0x8e
+  1c0eb6:      	ldr.w	r0, [r3, r2, lsl #2]
+  1c0eba:      	ldr	r3, [r0]
+  1c0ebc:      	ldr	r3, [r3, #0xc]
+  1c0ebe:      	blx	r3
+  1c0ec0:      	b	0x1c0e8e <BaseGamepadControls::DrawFrame(Sexy::Graphics*, BaseGamepadControls::FrameRenderPhase)+0x552> @ imm = #-0x36
+  1c0ec2:      	ldr.w	r3, [r9]
+  1c0ec6:      	mov	r1, r8
+  1c0ec8:      	mov	r2, r8
+  1c0eca:      	mov	r0, r9
+  1c0ecc:      	ldr.w	r3, [r3, #0x94]
+  1c0ed0:      	blx	r3
+  1c0ed2:      	b	0x1c0d8a <BaseGamepadControls::DrawFrame(Sexy::Graphics*, BaseGamepadControls::FrameRenderPhase)+0x44e> @ imm = #-0x14c
+  1c0ed4:      	<unknown>
+  1c0ed8:      	<unknown>
+  1c0edc:      	<unknown>
+  1c0ee0:      	<unknown>
+  1c0ee4:      	<unknown>

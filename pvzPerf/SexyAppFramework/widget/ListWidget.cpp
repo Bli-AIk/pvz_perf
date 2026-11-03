@@ -459,9 +459,13 @@ void ListWidget::MouseMove(int x, int y)
 	
 void ListWidget::MouseDown(int x, int y, int theBtnNum, int theClickCount) 
 {
-	(void)x;(void)y;(void)theBtnNum;
-	if ((mHiliteIdx != -1) && (mListListener != NULL))
-		mListListener->ListClicked(mId, mHiliteIdx, theClickCount);
+	(void)x;(void)theBtnNum;
+	// A touch has no preceding mouse hover. Select from this press, not from
+	// the item highlighted by another pointer.
+	const int anItemHeight = (mItemHeight != -1) ? mItemHeight : mFont->mHeight;
+	const int anItemIdx = int(((y - 4) / double(anItemHeight)) + mPosition);
+	if (anItemIdx >= 0 && anItemIdx < int(mLines.size()) && mListListener != NULL)
+		mListListener->ListClicked(mId, anItemIdx, theClickCount);
 }
 	
 void ListWidget::MouseLeave() 

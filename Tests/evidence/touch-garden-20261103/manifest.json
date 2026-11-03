@@ -1,0 +1,43 @@
+{
+  "date": "2026-11-03",
+  "source_sha256": {
+    "pvzPerf/Lawn/BoardTouch.cpp": "c64dfd29f61bd3bbb66f80a9527cc560e6854bf277e619665bd6b8075ba6a5b8",
+    "Tests/native/ImageRuntimeTests.cpp": "8ce379f5b9c27ac6ac1e8f55a2867f3198905f883e553b442f40b4d74c7ee36b"
+  },
+  "windows": {
+    "exe_sha256": "adf2cfa165986ff69c20fb84595e695027431fd187589b7e0a8ebc9f58f5b486",
+    "pak_sha256": "d8087bd5c870f428d2e4f4c5d39b6f78b22524353ca5a718d649fecfd49f36ea",
+    "fixture_sha256": "7217a5f0bb21a034502bfd37b5e178a267b058630fe3e7c0e4353e6d6e107156",
+    "result": "PASS",
+    "flags": [
+      "Release",
+      "/GL",
+      "/LTCG"
+    ]
+  },
+  "android": {
+    "apk_path": "C:\\Users\\Administrator\\CLionProjects\\codex\\PlantsVsZombiesModern\\out\\arm64-android14-vulkan1.3\\pvz_perf-v3.2.5-touch-garden-arm64-android14-vulkan1.3.apk",
+    "apk_sha256": "2322b5dd33cb465bd735a334d740b004fcda804d50ba346342fb9a4ed1ae6a91",
+    "aligned": "16KiB",
+    "signature": "v2+v3 verified",
+    "paired_entries": {
+      "lib/arm64-v8a/libpvz_perf.so": "37f38f2c7dda20a92738c956216a3d46fec189956310e42c65c2d78e4037e392",
+      "assets/main.pak64": "dcfce15ad3cccf0701bbea3f5a190bf22ba159093035d598871249fabaa8d427",
+      "assets/shaders/game_alpha_cs.spv": "1837ec72598c416d6278b7d316582cb618fa7c93352db16e266e652dd2e06d49",
+      "assets/shaders/game_caustic_cs.spv": "314028b7603ba5041641adacf760d6287d5ae0bc92c6d810f40270ba13593f22",
+      "assets/shaders/game_color_cs.spv": "e2ffb92f86ea69f638df004c88c81f56ceef4fb3849f76c0bf8e6fecfc9af388",
+      "assets/shaders/game_coverage_ps.spv": "a9e8e938f7f3d19ff00e1ee11d042044c5a9b8b0545efec9e1cc355bdce07ad1",
+      "assets/shaders/game_font_cs.spv": "29da17ed7bf7a407fb81d6aa9d34e5cfeabfd1c66f73aba6b08cd44b7168a0bb",
+      "assets/shaders/game_hdr_ps.spv": "f4b30b9d7b06c8adcd59e4644f4a6f0ef9d6c8cb4ff2b05da1ef39098e9e07b6",
+      "assets/shaders/game_pool_vs.spv": "31237e2810fff1bc2c3b6ed3a721eaf879113439692456264a9b10fd570a55cf",
+      "assets/shaders/game_ps.spv": "ac50db4c196f8d8145cdeb05f3c266f57d3972a059e36a2942522a342ef15a90",
+      "assets/shaders/game_sprite_mixed_ps.spv": "eb37901ddde0897644729f96a8b0df5eeac89d72380c6782e5ceae85e50b6aa1",
+      "assets/shaders/game_sprite_ps.spv": "8592d82afcae3d7c1152aa29906c0792b07148be1eadfa08898c599829210d2c",
+      "assets/shaders/game_vs.spv": "3802746bbef59b8b2b4ca716a96cee1d559135eb3e09cf74df1c64664157fd7c"
+    },
+    "device": "FY241471004E / NX769J: installed, cold launch OK; interactive validation pending",
+    "external_user_data": "18 file hashes identical before/after install, checked before launch"
+  },
+  "save_format": "DAT64 v4 unchanged",
+  "touch_state": "no new fields"
+}

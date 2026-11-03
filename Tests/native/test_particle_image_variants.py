@@ -337,9 +337,8 @@ class ParticleVariantPackageTests(unittest.TestCase):
         self.assertEqual(set(self.runtime), expected_runtime)
         self.assertEqual(len(self.runtime), 106)
         self.assertEqual(list((self.generated / "definitions").glob("ParticleData*.cpp")), [])
-        self.assertEqual({name.replace("compiled/particle-runtime/", "compiled/gpu-particle/")
-                          for name in self.runtime},
-                         {name for name in self.index if name.startswith("compiled/gpu-particle/")})
+        # GPU particle evaluation was retired; only CPU behavior records ship.
+        self.assertFalse({name for name in self.index if name.startswith("compiled/gpu-particle/")})
 
     def test_every_variant_region_matches_the_declared_source_image_pixels(self):
         files = runtime_asset_sources.inventory(ROOT)

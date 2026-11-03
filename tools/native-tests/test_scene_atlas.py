@@ -231,10 +231,14 @@ class SceneAtlasTests(unittest.TestCase):
         self.assertNotIn("SceneAtlasBindings.h", header + native)
         self.assertEqual(scene.generate(dict(reversed(list(reports.items())))), generated)
 
-    def test_fixed_ui_is_exactly_six_buttons_thirteen_dialog_parts_and_five_states(self):
+    def test_fixed_ui_includes_four_original_touch_frame_corners(self):
         names = [row["name"] for row in scene.fixed_ui()["sprites"]]
-        self.assertEqual(len(names), 24)
-        self.assertEqual(len(set(names)), 24)
+        self.assertEqual(len(names), 28)
+        self.assertEqual(len(set(names)), 28)
+        corners = scene.fixed_ui()["sprites"][-4:]
+        self.assertEqual([row["rect"] for row in corners],
+                         [[0, 0, 42, 36], [62, 0, 42, 36], [0, 108, 42, 36], [62, 108, 42, 36]])
+        self.assertTrue(all(row["image"] == "IMAGE_TOUCH_SELECTION_FRAME_BLUE" for row in corners))
         self.assertEqual(sum(name.startswith("BUTTON_") for name in names), 6)
         self.assertEqual(sum(name.startswith("DIALOG_") for name in names), 13)
         self.assertEqual(sum(name.startswith("SEEDCHOOSER_BUTTON") for name in names), 5)

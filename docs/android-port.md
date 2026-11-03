@@ -10,6 +10,27 @@ with `vkCreateAndroidSurfaceKHR`, and the drawable size is read from
 swapchain at the drawable aspect ratio (subject to surface limits), leaving
 physical touch coordinates unchanged. SurfaceFlinger scales the presented layer.
 
+## HDR output and scaling
+
+Android HDR is not exposed in v3.3. The Options row is disabled and labeled
+HDR (disabled); a retained hdr=true setting is silently normalized to false.
+The release uses its validated SDR swapchain. Device support for FP16 scRGB was
+confirmed, but screen grayness/brightness calibration did not pass visual
+validation; no experimental paper-white or normalization path is shipped.
+Windows Vulkan/DX12 HDR uses linear RGBA16F, with output math and desktop WSI
+validated. The retired PQ equations remain only in test reference probes.
+
+Android currently supports built-in presentation resizing only. HLSL/compute
+scale-effect chains are deliberately unsupported; nonempty effects arrays are
+rejected by the Android configuration reader. Do not equate ordinary bilinear
+presentation/system scaling with an additional super-resolution effect chain.
+The APK includes an empty scale.json template (multiplier 1, no effects). On
+first launch it is created beside settings.json in the selected user-data
+directory, normally Android/media/com.openpvz.perf; existing files are retained.
+The native reader uses this external file. No load-time super-resolution, disk
+scale cache or native high-resolution assets are implemented here; the template
+preserves the configuration boundary for that future work.
+
 Android Studio is not required. Install the Android command-line tools, an NDK,
 the SDK platform and CMake, then configure with the NDK toolchain:
 

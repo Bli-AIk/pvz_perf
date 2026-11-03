@@ -1,0 +1,219 @@
+
+..\tv_assets\FREE_3.18.0_Phone\apk_contents\split_config.arm64_v8a\lib\arm64-v8a\libpvz.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000161c794 <EA::PlantsVsZombies::PvZApplication::OnPointerDown(void*, unsigned int, float, float)>:
+ 161c794:      	sub	sp, sp, #0x100
+ 161c798:      	stp	x29, x30, [sp, #0xf0]
+ 161c79c:      	add	x29, sp, #0xf0
+ 161c7a0:      	sub	x8, x29, #0x38
+ 161c7a4:      	str	x8, [sp, #0x38]
+ 161c7a8:      	mrs	x8, TPIDR_EL0
+ 161c7ac:      	ldr	x8, [x8, #0x28]
+ 161c7b0:      	stur	x8, [x29, #-0x8]
+ 161c7b4:      	str	x0, [sp, #0x70]
+ 161c7b8:      	str	x1, [sp, #0x68]
+ 161c7bc:      	stur	w2, [x29, #-0x3c]
+ 161c7c0:      	str	s0, [sp, #0x64]
+ 161c7c4:      	str	s1, [sp, #0x60]
+ 161c7c8:      	ldr	x8, [sp, #0x70]
+ 161c7cc:      	str	x8, [sp, #0x40]
+ 161c7d0:      	ldr	s0, [sp, #0x64]
+ 161c7d4:      	ldr	s1, [sp, #0x60]
+ 161c7d8:      	sub	x0, x29, #0x48
+ 161c7dc:      	bl	0x2d6c590 <_ZN4Sexy6TPointIfEC2Eff@plt>
+ 161c7e0:      	sub	x0, x29, #0x60
+ 161c7e4:      	fmov	s3, #1.00000000
+ 161c7e8:      	movi	d5, #0000000000000000
+ 161c7ec:      	fmov	s0, s3
+ 161c7f0:      	fmov	s1, s5
+ 161c7f4:      	fmov	s2, s5
+ 161c7f8:      	fmov	s4, s5
+ 161c7fc:      	bl	0x2d6c5a0 <_ZN4Sexy12SimpleMatrixC2Effffff@plt>
+ 161c800:      	mov	w8, wzr
+ 161c804:      	str	w8, [sp, #0x5c]
+ 161c808:      	str	w8, [sp, #0x58]
+ 161c80c:      	adrp	x8, 0x2f23000
+ 161c810:      	ldr	x8, [x8, #0xdf0]
+ 161c814:      	ldr	x8, [x8]
+ 161c818:      	ldr	w8, [x8, #0x12c]
+ 161c81c:      	subs	w8, w8, #0x3bf
+ 161c820:      	b.gt	0x161c83c <EA::PlantsVsZombies::PvZApplication::OnPointerDown(void*, unsigned int, float, float)+0xa8>
+ 161c824:      	b	0x161c828 <EA::PlantsVsZombies::PvZApplication::OnPointerDown(void*, unsigned int, float, float)+0x94>
+ 161c828:      	mov	w8, #0x43f00000         // =1139802112
+ 161c82c:      	str	w8, [sp, #0x5c]
+ 161c830:      	mov	w8, #0x43a00000         // =1134559232
+ 161c834:      	str	w8, [sp, #0x58]
+ 161c838:      	b	0x161c864 <EA::PlantsVsZombies::PvZApplication::OnPointerDown(void*, unsigned int, float, float)+0xd0>
+ 161c83c:      	adrp	x8, 0x2f23000
+ 161c840:      	ldr	x8, [x8, #0xe48]
+ 161c844:      	ldr	w8, [x8]
+ 161c848:      	lsl	w8, w8, #1
+ 161c84c:      	add	w8, w8, #0x3c0
+ 161c850:      	scvtf	s0, w8
+ 161c854:      	str	s0, [sp, #0x5c]
+ 161c858:      	mov	w8, #0x44200000         // =1142947840
+ 161c85c:      	str	w8, [sp, #0x58]
+ 161c860:      	b	0x161c864 <EA::PlantsVsZombies::PvZApplication::OnPointerDown(void*, unsigned int, float, float)+0xd0>
+ 161c864:      	adrp	x8, 0x2f23000
+ 161c868:      	ldr	x8, [x8, #0xdf0]
+ 161c86c:      	ldr	x9, [x8]
+ 161c870:      	ldr	x9, [x9, #0x18]
+ 161c874:      	ldr	s0, [x9, #0xa4]
+ 161c878:      	scvtf	s0, s0
+ 161c87c:      	str	s0, [sp, #0x54]
+ 161c880:      	ldr	x8, [x8]
+ 161c884:      	ldr	x8, [x8, #0x18]
+ 161c888:      	ldr	s0, [x8, #0xa0]
+ 161c88c:      	scvtf	s0, s0
+ 161c890:      	str	s0, [sp, #0x50]
+ 161c894:      	ldr	s0, [sp, #0x5c]
+ 161c898:      	ldr	s1, [sp, #0x54]
+ 161c89c:      	fdiv	s0, s0, s1
+ 161c8a0:      	ldr	s1, [sp, #0x58]
+ 161c8a4:      	ldr	s2, [sp, #0x50]
+ 161c8a8:      	fdiv	s1, s1, s2
+ 161c8ac:      	sub	x0, x29, #0x60
+ 161c8b0:      	bl	0x2d6c5b0 <_ZN4Sexy12SimpleMatrix5ScaleEff@plt>
+ 161c8b4:      	bl	0x2d6c5c0 <_ZN4Sexy33SexyAppBridge_IsMultitouchEnabledEv@plt>
+ 161c8b8:      	tbnz	w0, #0x0, 0x161c8e4 <EA::PlantsVsZombies::PvZApplication::OnPointerDown(void*, unsigned int, float, float)+0x150>
+ 161c8bc:      	b	0x161c8c0 <EA::PlantsVsZombies::PvZApplication::OnPointerDown(void*, unsigned int, float, float)+0x12c>
+ 161c8c0:      	ldr	x8, [sp, #0x40]
+ 161c8c4:      	ldr	x0, [x8, #0xc8]
+ 161c8c8:      	ldr	x8, [x0]
+ 161c8cc:      	ldr	x8, [x8, #0x80]
+ 161c8d0:      	blr	x8
+ 161c8d4:      	subs	w8, w0, #0x2
+ 161c8d8:      	b.lo	0x161c8e4 <EA::PlantsVsZombies::PvZApplication::OnPointerDown(void*, unsigned int, float, float)+0x150>
+ 161c8dc:      	b	0x161c8e0 <EA::PlantsVsZombies::PvZApplication::OnPointerDown(void*, unsigned int, float, float)+0x14c>
+ 161c8e0:      	b	0x161cac0 <EA::PlantsVsZombies::PvZApplication::OnPointerDown(void*, unsigned int, float, float)+0x32c>
+ 161c8e4:      	bl	0x2d6bf50 <_ZN7cocos2d9PvZCocos_11getInstanceEv@plt>
+ 161c8e8:      	ldur	w8, [x29, #-0x3c]
+ 161c8ec:      	mov	w1, w8
+ 161c8f0:      	ldur	s0, [x29, #-0x48]
+ 161c8f4:      	ldur	s1, [x29, #-0x44]
+ 161c8f8:      	bl	0x2d6c5d0 <_ZN7cocos2d9PvZCocos_10touchBeganElff@plt>
+ 161c8fc:      	tbnz	w0, #0x0, 0x161cac0 <EA::PlantsVsZombies::PvZApplication::OnPointerDown(void*, unsigned int, float, float)+0x32c>
+ 161c900:      	b	0x161c904 <EA::PlantsVsZombies::PvZApplication::OnPointerDown(void*, unsigned int, float, float)+0x170>
+ 161c904:      	bl	0x2d6bf50 <_ZN7cocos2d9PvZCocos_11getInstanceEv@plt>
+ 161c908:      	bl	0x2d6c5e0 <_ZNK7cocos2d15PvZCocosAndroid13isNotchDeviceEv@plt>
+ 161c90c:      	tbz	w0, #0x0, 0x161c950 <EA::PlantsVsZombies::PvZApplication::OnPointerDown(void*, unsigned int, float, float)+0x1bc>
+ 161c910:      	b	0x161c914 <EA::PlantsVsZombies::PvZApplication::OnPointerDown(void*, unsigned int, float, float)+0x180>
+ 161c914:      	adrp	x8, 0x2f23000
+ 161c918:      	ldr	x8, [x8, #0xe48]
+ 161c91c:      	ldr	w8, [x8]
+ 161c920:      	str	w8, [sp, #0x34]
+ 161c924:      	adrp	x8, 0x2f23000
+ 161c928:      	ldr	x8, [x8, #0xdf0]
+ 161c92c:      	ldr	x0, [x8]
+ 161c930:      	bl	0x2d6c5f0 <_ZN7LawnApp20phoneNotchAdjustmentEv@plt>
+ 161c934:      	ldr	w8, [sp, #0x34]
+ 161c938:      	add	w8, w8, w0
+ 161c93c:      	scvtf	s1, w8
+ 161c940:      	ldr	s0, [sp, #0x64]
+ 161c944:      	fsub	s0, s0, s1
+ 161c948:      	str	s0, [sp, #0x64]
+ 161c94c:      	b	0x161c998 <EA::PlantsVsZombies::PvZApplication::OnPointerDown(void*, unsigned int, float, float)+0x204>
+ 161c950:      	ldr	s0, [sp, #0x54]
+ 161c954:      	adrp	x8, 0x2f23000
+ 161c958:      	ldr	x8, [x8, #0xe48]
+ 161c95c:      	ldr	s1, [x8]
+ 161c960:      	scvtf	s1, s1
+ 161c964:      	fmul	s0, s0, s1
+ 161c968:      	mov	w8, #0x45070000         // =1158086656
+ 161c96c:      	fmov	s1, w8
+ 161c970:      	fdiv	s0, s0, s1
+ 161c974:      	str	s0, [sp, #0x4c]
+ 161c978:      	ldr	s0, [sp, #0x4c]
+ 161c97c:      	fcvtzs	w8, s0
+ 161c980:      	lsl	w8, w8, #1
+ 161c984:      	scvtf	s1, w8
+ 161c988:      	ldr	s0, [sp, #0x64]
+ 161c98c:      	fsub	s0, s0, s1
+ 161c990:      	str	s0, [sp, #0x64]
+ 161c994:      	b	0x161c998 <EA::PlantsVsZombies::PvZApplication::OnPointerDown(void*, unsigned int, float, float)+0x204>
+ 161c998:      	ldr	s0, [sp, #0x64]
+ 161c99c:      	ldr	s1, [sp, #0x60]
+ 161c9a0:      	sub	x0, x29, #0x70
+ 161c9a4:      	str	x0, [sp, #0x28]
+ 161c9a8:      	bl	0x2d6c590 <_ZN4Sexy6TPointIfEC2Eff@plt>
+ 161c9ac:      	ldr	x1, [sp, #0x28]
+ 161c9b0:      	sub	x8, x29, #0x68
+ 161c9b4:      	sub	x0, x29, #0x60
+ 161c9b8:      	bl	0x2d6c600 <_ZN4Sexy12SimpleMatrix14TransformPointERKNS_6TPointIfEE@plt>
+ 161c9bc:      	ldur	x8, [x29, #-0x68]
+ 161c9c0:      	stur	x8, [x29, #-0x48]
+ 161c9c4:      	bl	0x2d6c5c0 <_ZN4Sexy33SexyAppBridge_IsMultitouchEnabledEv@plt>
+ 161c9c8:      	tbnz	w0, #0x0, 0x161c9e4 <EA::PlantsVsZombies::PvZApplication::OnPointerDown(void*, unsigned int, float, float)+0x250>
+ 161c9cc:      	b	0x161c9d0 <EA::PlantsVsZombies::PvZApplication::OnPointerDown(void*, unsigned int, float, float)+0x23c>
+ 161c9d0:      	ldr	x8, [sp, #0x40]
+ 161c9d4:      	add	x0, x8, #0xf0
+ 161c9d8:      	bl	0x2d6c610 <_ZNK5eastl6rbtreeIjNS_4pairIKjNS1_IffEEEENS_4lessIjEENS_20fixed_node_allocatorILm48ELm16ELm4ELm0ELb1ENS_9allocatorEEENS_9use_firstIS4_EELb1ELb1EE5emptyEv@plt>
+ 161c9dc:      	tbz	w0, #0x0, 0x161cabc <EA::PlantsVsZombies::PvZApplication::OnPointerDown(void*, unsigned int, float, float)+0x328>
+ 161c9e0:      	b	0x161c9e4 <EA::PlantsVsZombies::PvZApplication::OnPointerDown(void*, unsigned int, float, float)+0x250>
+ 161c9e4:      	sub	x0, x29, #0x38
+ 161c9e8:      	str	x0, [sp, #0x8]
+ 161c9ec:      	bl	0x2d6c620 <_ZN4Sexy5TouchC2Ev@plt>
+ 161c9f0:      	ldr	x0, [sp, #0x40]
+ 161c9f4:      	ldur	w8, [x29, #-0x3c]
+ 161c9f8:      	stur	x8, [x29, #-0x38]
+ 161c9fc:      	ldur	s0, [x29, #-0x48]
+ 161ca00:      	fcvtzs	w8, s0
+ 161ca04:      	stur	w8, [x29, #-0x30]
+ 161ca08:      	sub	x8, x29, #0x48
+ 161ca0c:      	str	x8, [sp, #0x10]
+ 161ca10:      	orr	x8, x8, #0x4
+ 161ca14:      	str	x8, [sp, #0x18]
+ 161ca18:      	ldur	s0, [x29, #-0x44]
+ 161ca1c:      	fcvtzs	w8, s0
+ 161ca20:      	stur	w8, [x29, #-0x2c]
+ 161ca24:      	mov	w8, wzr
+ 161ca28:      	str	w8, [sp, #0x4]
+ 161ca2c:      	stur	w8, [x29, #-0x28]
+ 161ca30:      	stur	w8, [x29, #-0x24]
+ 161ca34:      	mov	w8, #0x1                // =1
+ 161ca38:      	stur	w8, [x29, #-0x20]
+ 161ca3c:      	mov	x9, x0
+ 161ca40:      	ldr	x8, [x9], #0xf0
+ 161ca44:      	str	x9, [sp, #0x20]
+ 161ca48:      	ldr	x8, [x8, #0x98]
+ 161ca4c:      	blr	x8
+ 161ca50:      	ldr	x9, [sp, #0x38]
+ 161ca54:      	ldr	w8, [sp, #0x4]
+ 161ca58:      	ldr	x1, [sp, #0x8]
+ 161ca5c:      	ucvtf	s0, x0
+ 161ca60:      	mov	w10, #0x6b28            // =27432
+ 161ca64:      	movk	w10, #0x4e6e, lsl #16
+ 161ca68:      	fmov	s1, w10
+ 161ca6c:      	fdiv	s0, s0, s1
+ 161ca70:      	fcvt	d0, s0
+ 161ca74:      	str	d0, [x9, #0x20]
+ 161ca78:      	stur	w8, [x29, #-0x10]
+ 161ca7c:      	adrp	x8, 0x2f23000
+ 161ca80:      	ldr	x8, [x8, #0xdf0]
+ 161ca84:      	ldr	x8, [x8]
+ 161ca88:      	ldr	x0, [x8, #0x18]
+ 161ca8c:      	bl	0x2d6c630 <_ZN4Sexy13EAMTAppDriver10TouchBeganEPNS_5TouchE@plt>
+ 161ca90:      	ldr	x0, [sp, #0x10]
+ 161ca94:      	ldr	x1, [sp, #0x18]
+ 161ca98:      	bl	0x2d6c640 <_ZN5eastl9make_pairIRfS1_EENS_4pairINS_24remove_reference_wrapperINS_5decayIT_E4typeEE4typeENS3_INS4_IT0_E4typeEE4typeEEEOS5_OSA_@plt>
+ 161ca9c:      	ldr	x0, [sp, #0x20]
+ 161caa0:      	str	s0, [sp, #0x78]
+ 161caa4:      	str	s1, [sp, #0x7c]
+ 161caa8:      	sub	x1, x29, #0x3c
+ 161caac:      	bl	0x2d6c650 <_ZN5eastl3mapIjNS_4pairIffEENS_4lessIjEENS_20fixed_node_allocatorILm48ELm16ELm4ELm0ELb1ENS_9allocatorEEEEixERKj@plt>
+ 161cab0:      	ldr	x8, [sp, #0x78]
+ 161cab4:      	str	x8, [x0]
+ 161cab8:      	b	0x161cabc <EA::PlantsVsZombies::PvZApplication::OnPointerDown(void*, unsigned int, float, float)+0x328>
+ 161cabc:      	b	0x161cac0 <EA::PlantsVsZombies::PvZApplication::OnPointerDown(void*, unsigned int, float, float)+0x32c>
+ 161cac0:      	mrs	x8, TPIDR_EL0
+ 161cac4:      	ldr	x8, [x8, #0x28]
+ 161cac8:      	ldur	x9, [x29, #-0x8]
+ 161cacc:      	subs	x8, x8, x9
+ 161cad0:      	b.ne	0x161cae4 <EA::PlantsVsZombies::PvZApplication::OnPointerDown(void*, unsigned int, float, float)+0x350>
+ 161cad4:      	b	0x161cad8 <EA::PlantsVsZombies::PvZApplication::OnPointerDown(void*, unsigned int, float, float)+0x344>
+ 161cad8:      	ldp	x29, x30, [sp, #0xf0]
+ 161cadc:      	add	sp, sp, #0x100
+ 161cae0:      	ret
+ 161cae4:      	bl	0x2d6af80 <__stack_chk_fail@plt>

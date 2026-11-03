@@ -33,6 +33,7 @@ public:
 	virtual void			MouseDown(int x, int y, int theClickCount);
 	virtual void			MouseDrag(int x, int y);
 	virtual void			MouseUp(int x, int y);
+    void TouchCanceled(const TouchEvent& event) override;
 	virtual void			MouseLeave();
 };
 

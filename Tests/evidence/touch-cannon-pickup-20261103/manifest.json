@@ -1,0 +1,32 @@
+{
+  "date": "2026-11-03",
+  "scope": "Windows production-object functional tests; Android native cross-build only; no phone operation",
+  "source_sha256": {
+    "pvzPerf/Lawn/BoardTouch.cpp": "214c8f89e5eff59cb70be0a935a361cf34404a8e5bf53e75662da15e6a95f213",
+    "pvzPerf/Lawn/BoardTouch.h": "9c7fb94ecf8be643759ba20f43796185cc3ad964672d805e62e1e10614152464",
+    "pvzPerf/Lawn/Board.cpp": "bc0ec5682164e756c7d28aebc6b5023acfaab5bc879fef21567ea84ebc48c2ab",
+    "pvzPerf/Lawn/Coin.cpp": "0418a95183924ad0d63457236c0e9ecafcef7e22bcf185a3a828c421887c9022",
+    "pvzPerf/Lawn/Coin.h": "cbf8311afbdb6ad10d7d59c7c3f41ef9377da706630f80fff090e6bedc8bba19",
+    "pvzPerf/Lawn/System/SaveGame.cpp": "06c71f9ede7230f51392c234de3c4d4dc533ce716cd9557d5f9649b3d790dad8",
+    "Tests/native/ImageRuntimeTests.cpp": "6061ecf1819662e6e9e3d789763ab4d8547d33aa253289622d9fb16069398453"
+  },
+  "windows": {
+    "exe_sha256": "b2bcd8ad42e8d3d77fee9d528725c32f8958035a8a251ee0031d3df841d979ba",
+    "pak_sha256": "5bdd71c632d945304ae3752bfed61941bb8c7e4351e616e1ff6fbceab1431545",
+    "fixture_sha256": "134c587eeac683b0dc10c08598b0e179ebf25ec7eed82504841dc67e306b0555",
+    "flags": [
+      "Release",
+      "/GL",
+      "/LTCG"
+    ],
+    "result": "PASS"
+  },
+  "android_native": {
+    "library_sha256": "e425862bedcefa9d6de20cbe0625ad31f644caae2ceff704006b02be49ea2708",
+    "pak_sha256": "eb36a5fd51020bb4d69733ab93568f3e988625adcdbd61d8ea9898e5d0fa67a9",
+    "result": "cross-build PASS; not installed or tested on phone"
+  },
+  "save_format": "DAT64 v4 unchanged",
+  "save_while_aiming": "actual LawnSaveGame cancels both cannon gestures without firing",
+  "tv_ui": "investigation only; source assets copied as evidence, no game resource integration"
+}

@@ -13,6 +13,7 @@ import zipfile
 import sys
 
 from PIL import Image
+from atlas_uv_assertions import regions as uv_regions, assert_regions, REGION
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -38,13 +39,14 @@ class DefinitionAtlasCorpusTests(unittest.TestCase):
         variant_bindings = pak.read_definition_image_binding_rows(ROOT)
         checked_regions = set()
         generated = ROOT / "pvzPerf/Sexy.TodLib/generated"
+        from test_particle_image_variants import ParticleVariantPackageTests
+        ParticleVariantPackageTests.setUpClass()
         source_rectangles = {}
         for path in (generated / "definitions").glob("*Data*.cpp"):
             text = path.read_text(encoding="utf-8")
             for label, size, body in re.findall(
-                    r"constinit const Sexy::Rect (\w+)\[(\d+)\] = \{\n(.*?)\n\};", text, re.S):
-                rectangles = [tuple(map(int, row)) for row in
-                              re.findall(r"\{(-?\d+),\s*(-?\d+),\s*(-?\d+),\s*(-?\d+)\}", body)]
+                    r"constinit const Sexy::TextureRegion (\w+)\[(\d+)\] = \{\n(.*?)\n\};", text, re.S):
+                rectangles = uv_regions(body)
                 self.assertEqual(len(rectangles), int(size), label)
                 self.assertNotIn(label, source_rectangles)
                 source_rectangles[label] = rectangles
@@ -52,9 +54,16 @@ class DefinitionAtlasCorpusTests(unittest.TestCase):
                                           ("particle", "particles", "Particle")):
             for index_, (_, name) in enumerate(config.definition_orders[kind]):
                 definition = definitions[f"compiled/{directory}/{name.casefold()}.compiled"]
-                rectangles = [tuple(rect) for row in definition["variants"]
-                              for rect in row["frame_rectangles"]]
-                self.assertEqual(source_rectangles.get(f"{prefix}{index_}Rects", []), rectangles)
+                expected_uv = [(rect, row["atlas_width"], row["atlas_height"])
+                               for row in definition["variants"] for rect in row["frame_rectangles"]]
+                if kind == "particle":
+                    runtime_path = f"compiled/particle-runtime/{name.casefold()}.compiled"
+                    _, rows = ParticleVariantPackageTests.runtime[runtime_path]
+                    actual_uv = [uv for _,_,_,rects in rows for uv in rects]
+                    self.assertNotIn(f"{prefix}{index_}Rects", source_rectangles)
+                else:
+                    actual_uv = source_rectangles.get(f"{prefix}{index_}Rects", [])
+                assert_regions(self, actual_uv, expected_uv)
                 self.assertTrue(all(len(row["frame_rectangles"]) == definition["slot_count"]
                                     for row in definition["variants"]))
         projectile_source = re.search(
@@ -63,25 +72,18 @@ class DefinitionAtlasCorpusTests(unittest.TestCase):
         self.assertIsNotNone(projectile_source)
         projectile_lines = projectile_source[1].splitlines()
         projectile_report = definitions["compiled/projectiles/projectiles.compiled"]
-        self.assertEqual(tuple(map(int, re.findall(r"\d+", projectile_lines[0]))),
-                         (projectile_report["atlas_width"], projectile_report["atlas_height"]))
-        visuals = re.findall(
-            r"\{\{(-?\d+),(-?\d+),(-?\d+),(-?\d+)\},([-+.\deE]+)f\}",
-            projectile_lines[1])
+        visuals = re.findall(r"\{(" + REGION + r"),([-+.\deE]+)f\}", projectile_lines[0])
         self.assertEqual(len(visuals), len(projectile_report["projectiles"]))
         for actual, expected_visual in zip(visuals, projectile_report["projectiles"]):
-            self.assertEqual(tuple(map(int, actual[:4])), tuple(expected_visual["rect"]))
-            self.assertEqual(struct.pack("<f", float(actual[4])),
-                             struct.pack("<f", expected_visual["scale"]))
-        self.assertEqual([tuple(map(int, rect)) for rect in re.findall(
-            r"\{(-?\d+),(-?\d+),(-?\d+),(-?\d+)\}", projectile_lines[2])],
-            [tuple(row["rect"]) for row in projectile_report["shadows"]])
+            assert_regions(self, uv_regions(actual[0]), [(expected_visual["rect"], projectile_report["atlas_width"], projectile_report["atlas_height"])])
+            self.assertEqual(struct.pack("<f", float(actual[-1])), struct.pack("<f", expected_visual["scale"]))
+        assert_regions(self, uv_regions(projectile_lines[1]), [(row["rect"], projectile_report["atlas_width"], projectile_report["atlas_height"])
+                       for row in projectile_report["shadows"]])
         zombatar_report = definitions["compiled/zombatar/zombatar.compiled"]
         self.assertEqual(zombatar_report["region_count"], 209)
         zombatar_source = (generated / "ZombatarAtlasData.cpp").read_text("utf-8")
-        self.assertEqual([tuple(map(int, rect)) for rect in re.findall(
-            r"\{(-?\d+),\s*(-?\d+),\s*(-?\d+),\s*(-?\d+)\}", zombatar_source)],
-            [tuple(row["region"][:4]) for row in zombatar_report["images"]])
+        assert_regions(self, uv_regions(zombatar_source), [(row["region"][:4], zombatar_report["atlas_width"], zombatar_report["atlas_height"])
+                       for row in zombatar_report["images"]])
         atlas_images, owner_dimensions, shared_sources, source_metadata, owner_regions = {}, {}, {}, {}, {}
         with zipfile.ZipFile(PACKAGE) as archive:
             index = pak.archive_index(archive)

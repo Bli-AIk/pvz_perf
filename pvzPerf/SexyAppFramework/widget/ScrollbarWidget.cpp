@@ -350,3 +350,9 @@ void ScrollbarWidget::MouseDrag(int x, int y)
 	mLastMouseX = x;
 	mLastMouseY = y;
 }
+
+void ScrollbarWidget::TouchCanceled(const TouchEvent&)
+{
+    mUpdateMode = 0;
+    mPressedOnThumb = false;
+}

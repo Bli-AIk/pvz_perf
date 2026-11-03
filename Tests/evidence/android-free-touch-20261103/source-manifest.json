@@ -1,0 +1,209 @@
+{
+  "date": "2026-11-03",
+  "analysis": "static ELF symbol and instruction inspection; DEX method declarations and disassembly; no APK installed or executed",
+  "samples": {
+    "free_3_18_0": {
+      "package": "com.ea.game.pvzfree_row",
+      "apk_version": "3.18.0",
+      "native_bytes": 50117680,
+      "native_sha256": "079a0c71a67ae61fa98cd797dbb527e1c16fa0e409fe7f980c459afe1488dff5",
+      "base_apk_sha256": "d90d1db0d7e94019168b290d85709f2a06ed8bdc1dae1303b3801af4ff39a6c5",
+      "abi_apk_sha256": "972210db7c79134b27525afbb29bbf65cab1ebf6f1147d2609b31429f20f7653"
+    },
+    "free_hd": {
+      "manifest_version": "26.10.7",
+      "apk_sha256": "e61750680bfdc10b3f8a2f88e3c6851367d568e8af4b7a28292eabd3982fbedd",
+      "modified_wrapper": true,
+      "native_bytes": 29288968,
+      "native_sha256": "2a943277d870da9acf6e9ae0a4a5e60be40c254930fbd74ad5f64e94e226ab66"
+    }
+  },
+  "functions": [
+    {
+      "address": "0x161c794",
+      "size": 852,
+      "name": "EA::PlantsVsZombies::PvZApplication::OnPointerDown(void*, unsigned int, float, float)",
+      "file": "EA_PlantsVsZombies_PvZApplication_OnPointerDown.asm.txt"
+    },
+    {
+      "address": "0x2056258",
+      "size": 432,
+      "name": "Sexy::WidgetManager::TouchBegan(Sexy::Touch*)",
+      "file": "Sexy_WidgetManager_TouchBegan.asm.txt"
+    },
+    {
+      "address": "0x2056408",
+      "size": 432,
+      "name": "Sexy::WidgetManager::TouchMoved(Sexy::Touch*)",
+      "file": "Sexy_WidgetManager_TouchMoved.asm.txt"
+    },
+    {
+      "address": "0x20565b8",
+      "size": 392,
+      "name": "Sexy::WidgetManager::TouchEnded(Sexy::Touch*)",
+      "file": "Sexy_WidgetManager_TouchEnded.asm.txt"
+    },
+    {
+      "address": "0x2075050",
+      "size": 88,
+      "name": "Sexy::EAMTAppDriver::TouchBegan(Sexy::Touch*)",
+      "file": "Sexy_EAMTAppDriver_TouchBegan.asm.txt"
+    },
+    {
+      "address": "0x19fe3ac",
+      "size": 2628,
+      "name": "Board::TouchBegan(Sexy::Touch*)",
+      "file": "Board_TouchBegan.asm.txt"
+    },
+    {
+      "address": "0x1a00ac8",
+      "size": 240,
+      "name": "Board::TouchMoved(Sexy::Touch*)",
+      "file": "Board_TouchMoved.asm.txt"
+    },
+    {
+      "address": "0x19ff6d4",
+      "size": 212,
+      "name": "Board::TouchEnded(Sexy::Touch*)",
+      "file": "Board_TouchEnded.asm.txt"
+    },
+    {
+      "address": "0x19fedf0",
+      "size": 64,
+      "name": "Board::TouchesCanceled()",
+      "file": "Board_TouchesCanceled.asm.txt"
+    },
+    {
+      "address": "0x19ff7a8",
+      "size": 4532,
+      "name": "Board::ProcessTouchEnded(Sexy::Touch*)",
+      "file": "Board_ProcessTouchEnded.asm.txt"
+    },
+    {
+      "address": "0x19e8100",
+      "size": 164,
+      "name": "Board::GameModeSupportsMultiTouch()",
+      "file": "Board_GameModeSupportsMultiTouch.asm.txt"
+    },
+    {
+      "address": "0x19e81a4",
+      "size": 68,
+      "name": "Board::EnableMutiTouch(bool)",
+      "file": "Board_EnableMutiTouch.asm.txt"
+    },
+    {
+      "address": "0x19fe13c",
+      "size": 192,
+      "name": "Board::NewTouchInfo(Sexy::Touch*)",
+      "file": "Board_NewTouchInfo.asm.txt"
+    },
+    {
+      "address": "0x19fe1fc",
+      "size": 164,
+      "name": "Board::GetTouchInfo(Sexy::Touch*)",
+      "file": "Board_GetTouchInfo.asm.txt"
+    },
+    {
+      "address": "0x19e731c",
+      "size": 108,
+      "name": "Board::InitTouches()",
+      "file": "Board_InitTouches.asm.txt"
+    },
+    {
+      "address": "0x19e5054",
+      "size": 200,
+      "name": "TouchInfo::Init()",
+      "file": "TouchInfo_Init.asm.txt"
+    },
+    {
+      "address": "0x19fe2a0",
+      "size": 164,
+      "name": "Board::RemoveTouch(Sexy::Touch*)",
+      "file": "Board_RemoveTouch.asm.txt"
+    },
+    {
+      "address": "0x19fe344",
+      "size": 104,
+      "name": "Board::RemoveAllTouches()",
+      "file": "Board_RemoveAllTouches.asm.txt"
+    }
+  ],
+  "evidence": [
+    {
+      "file": "EA_PlantsVsZombies_PvZApplication_OnPointerDown.asm.txt",
+      "sha256": "69d45954bb7b4d202df036b490195bbec6e43039cbdaa90eb07f8563032af03e"
+    },
+    {
+      "file": "Sexy_WidgetManager_TouchBegan.asm.txt",
+      "sha256": "f46dd11fce524c2831430f431a2c9504dc38cd6a9a10de5f633cf5d1badbd690"
+    },
+    {
+      "file": "Sexy_WidgetManager_TouchMoved.asm.txt",
+      "sha256": "ff0548801c4fe32cdc9d0df61ad133346438d40fc74ad787d62a757915b8034c"
+    },
+    {
+      "file": "Sexy_WidgetManager_TouchEnded.asm.txt",
+      "sha256": "c7d9ee75ebf1c0ca918b70024a60849ac3920dfdfad583233be1815f494082c0"
+    },
+    {
+      "file": "Sexy_EAMTAppDriver_TouchBegan.asm.txt",
+      "sha256": "80b7b015a7f1e73253089b0b70b84e59733a97464b6d50f869056017a69628de"
+    },
+    {
+      "file": "Board_TouchBegan.asm.txt",
+      "sha256": "5d6b768aa3edde0ec55f46416b0fce32d28f88f762dd7284ed1649b955f97ef1"
+    },
+    {
+      "file": "Board_TouchMoved.asm.txt",
+      "sha256": "f9efad0551922edc84dac97888d3af557692b5bb3f28772601d89117fc0d1ec5"
+    },
+    {
+      "file": "Board_TouchEnded.asm.txt",
+      "sha256": "9bda9cd7707ab64aadef7b129bea2d37110f26fba3ab4d36232dbc4c40b24484"
+    },
+    {
+      "file": "Board_TouchesCanceled.asm.txt",
+      "sha256": "7c76d42b23729a8f6aae5050ddb5608107212ba77fc18b1578ae6aa3b9648543"
+    },
+    {
+      "file": "Board_ProcessTouchEnded.asm.txt",
+      "sha256": "c102c1f9e72bb0f0b71d55e4abc4dd01f9e6dffc1f58912ff53afb9fafd0d7ef"
+    },
+    {
+      "file": "Board_GameModeSupportsMultiTouch.asm.txt",
+      "sha256": "232ee5901f6efc2901d72e8ddd39671fd09376667f882dd92aa42edc56c16538"
+    },
+    {
+      "file": "Board_EnableMutiTouch.asm.txt",
+      "sha256": "bbe276c67ab249ba3940edc4ea7d691f17e235fbe26c7c53962ae355b858bf79"
+    },
+    {
+      "file": "Board_NewTouchInfo.asm.txt",
+      "sha256": "eab0c7aa8a5297159cbdd8abcce977866c1bcb22831afa6347162259cbc59bdc"
+    },
+    {
+      "file": "Board_GetTouchInfo.asm.txt",
+      "sha256": "6cf4a47511c4a446a51a0d7e53b20b43bb8b8964044506fe73a65a83a5cfa627"
+    },
+    {
+      "file": "Board_InitTouches.asm.txt",
+      "sha256": "ca390f22b9c009ac7281cdc6cadda09403e97c946cfa5bc5314c66c14ceaf55f"
+    },
+    {
+      "file": "TouchInfo_Init.asm.txt",
+      "sha256": "ae78ead0e8cae28d231b137284cd4b0649f897ca7b0d11b50db93ad18e65c205"
+    },
+    {
+      "file": "Board_RemoveTouch.asm.txt",
+      "sha256": "6d3107509e9f0dbf4dbbb88a8b9702d5fdcc0655d498a4bd2af5d201235fd202"
+    },
+    {
+      "file": "Board_RemoveAllTouches.asm.txt",
+      "sha256": "f83ebae4928adc23839875b9948c3da613eca7f7fb74f70b251a2d0848a992bb"
+    },
+    {
+      "file": "freehd-TouchSurfaceAndroid-dexdump.txt",
+      "sha256": "62c7b84ad74e7536f303eff83434a6bc11d7d8d57dac64fa2ff9d10702203fc3"
+    }
+  ]
+}

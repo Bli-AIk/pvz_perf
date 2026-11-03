@@ -56,6 +56,7 @@ bool ZombatarButton::IsButtonDown() const
 
 bool ZombatarButton::IsMouseOver() const
 {
+    if (!mApp->mWidgetManager->mMouseHoverEnabled) return false;
 	if (mDisabled || mBtnNoDraw)
 		return false;
 	WidgetManager* aManager = mApp->mWidgetManager;
@@ -88,8 +89,14 @@ void ZombatarButton::Update()
 	if ((aManager->mFocusWidget && aManager->mFocusWidget == mParentWidget) ||
 		mApp->GetDialogCount() <= 0)
 	{
-		mIsOver = Rect(mX, mY, mWidth, mHeight).Contains(aMouseX, aMouseY);
+		mIsOver = aManager->mMouseHoverEnabled && Rect(mX, mY, mWidth, mHeight).Contains(aMouseX, aMouseY);
 		mIsDown = (aManager->mDownButtons & 5) != 0;
+        if (aManager->mTouchCount)
+            for (const auto& contact : aManager->mTouches)
+                if (contact.widget == mParentWidget && contact.pressedTarget == this &&
+                    Rect(mX, mY, mWidth, mHeight).Contains(contact.event.x - mParentWidget->GetAbsPos().mX,
+                        contact.event.y - mParentWidget->GetAbsPos().mY))
+                {mIsOver = mIsDown = true;break;}
 	}
 	else
 		mIsOver = mIsDown = false;
@@ -100,7 +107,7 @@ void ZombatarButton::Draw(Graphics* g)
 	if (mBtnNoDraw)
 		return;
 	const bool isDown = IsButtonDown();
-	const bool isHighlighted = IsMouseOver();
+	const bool isHighlighted = mIsOver || IsMouseOver();
 	const float parentTransX = g->mTransX, parentTransY = g->mTransY;
 	g->mTransX = parentTransX + mX;
 	g->mTransY = parentTransY + mY;
@@ -1929,4 +1936,10 @@ bool ZombatarItems::HasVisualSelectionChanged() const
 {
 	return mSelectionChangedLastFrame ||
 		(mColors && mColors->mSelectionChangedLastFrame);
+}
+
+const void* ZombatarItems::TouchHitTest(int x, int y)
+{
+    if (auto* button = HitTestButton(x, y)) return button;
+    return this;
 }

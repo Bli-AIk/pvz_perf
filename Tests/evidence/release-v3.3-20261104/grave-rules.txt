@@ -1,0 +1,121 @@
+PASS pure wrapped text measurement: wrapping, newlines, color tags, no glyph draws and empty fill
+pool GPU day-normal-nearest: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU night-normal-linear: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU day-additive-partial-fractional: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU night-additive-phase-wrap: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU day-opaque-partial-fractional: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU night-opaque-large-counter: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU feedback-float-source-pending-batch: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+PASS production GPU pool vs independent legacy CPU mesh: day/night, normal/additive/opaque, nearest/linear/repeat, phase wrap, destination scissor, fractional translation, ordinary painter order and float target feedback
+PASS precomputed transparent edges: alpha, visible RGB, idempotency, nearest/linear, upload-discard
+PASS public font upload: deferred alpha, upload-and-discard, texture reuse, independent copies
+PASS nonzero source rectangles and repacked whole-sheet atlas views: translation, scale origins, clipping, tint, additive, local-source views and floating scales
+PASS necessary local-clip contract: independent full-pixel rect/image/source/mirror/matrix/particle/convex oracles, disjoint/partial/empty clips and negative framebuffer crossings
+PASS actual TitleScreen grass reveal: widths 0/1/157/313/314/400, translated draw and unrevealed black pixels
+PASS actual GameButton atlas states: normal, hover, press/fallbacks, disabled, overAlpha, additive glow, translation/offsets and hidden state match independent images
+PASS direct shared-image snapshots and reference lifetime
+PASS actual boss back-arm drawing: four attack offsets, reference pixels, 1024 exact shared-animation translation restorations
+PASS reanimation appearances: independent options, image slots, atlas dimensions, original centers and actual AttachmentDraw visibility pixels
+PASS fullscreen reanimation: destination fill pixels, hidden/zero alpha, color modulation, both blend modes, translation and effective clip without track matrices
+Store clock fixture: initialize
+Grave wave mode=0 level=11 Hz=100 initial=4 final=4 limit=0 ok=1
+Grave wave mode=0 level=14 Hz=100 initial=7 final=7 limit=0 ok=1
+Grave wave mode=0 level=16 Hz=100 initial=7 final=7 limit=0 ok=1
+Grave wave mode=0 level=20 Hz=100 initial=13 final=13 limit=0 ok=1
+Grave wave mode=0 level=11 Hz=30 initial=4 final=4 limit=0 ok=1
+Grave wave mode=0 level=14 Hz=30 initial=7 final=7 limit=0 ok=1
+Grave wave mode=0 level=16 Hz=30 initial=7 final=7 limit=0 ok=1
+Grave wave mode=0 level=20 Hz=30 initial=13 final=13 limit=0 ok=1
+Grave wave mode=0 level=11 Hz=240 initial=4 final=4 limit=0 ok=1
+Grave wave mode=0 level=14 Hz=240 initial=7 final=7 limit=0 ok=1
+Grave wave mode=0 level=16 Hz=240 initial=7 final=7 limit=0 ok=1
+Grave wave mode=0 level=20 Hz=240 initial=13 final=13 limit=0 ok=1
+Grave wave mode=0 level=11 Hz=0 initial=4 final=4 limit=0 ok=1
+Grave wave mode=0 level=14 Hz=0 initial=7 final=7 limit=0 ok=1
+Grave wave mode=0 level=16 Hz=0 initial=7 final=7 limit=0 ok=1
+Grave wave mode=0 level=20 Hz=0 initial=13 final=13 limit=0 ok=1
+Grave wave mode=67 level=11 Hz=100 initial=0 final=1 limit=8 ok=1
+Grave wave mode=67 level=11 Hz=100 initial=7 final=8 limit=8 ok=1
+Grave wave mode=67 level=11 Hz=100 initial=8 final=8 limit=8 ok=1
+Grave wave mode=67 level=11 Hz=30 initial=0 final=1 limit=8 ok=1
+Grave wave mode=67 level=11 Hz=30 initial=7 final=8 limit=8 ok=1
+Grave wave mode=67 level=11 Hz=30 initial=8 final=8 limit=8 ok=1
+Grave wave mode=67 level=11 Hz=240 initial=0 final=1 limit=8 ok=1
+Grave wave mode=67 level=11 Hz=240 initial=7 final=8 limit=8 ok=1
+Grave wave mode=67 level=11 Hz=240 initial=8 final=8 limit=8 ok=1
+Grave wave mode=67 level=11 Hz=0 initial=0 final=1 limit=8 ok=1
+Grave wave mode=67 level=11 Hz=0 initial=7 final=8 limit=8 ok=1
+Grave wave mode=67 level=11 Hz=0 initial=8 final=8 limit=8 ok=1
+Grave wave mode=62 level=11 Hz=100 initial=0 final=1 limit=12 ok=1
+Grave wave mode=62 level=11 Hz=100 initial=11 final=12 limit=12 ok=1
+Grave wave mode=62 level=11 Hz=100 initial=12 final=12 limit=12 ok=1
+Grave wave mode=62 level=11 Hz=30 initial=0 final=1 limit=12 ok=1
+Grave wave mode=62 level=11 Hz=30 initial=11 final=12 limit=12 ok=1
+Grave wave mode=62 level=11 Hz=30 initial=12 final=12 limit=12 ok=1
+Grave wave mode=62 level=11 Hz=240 initial=0 final=1 limit=12 ok=1
+Grave wave mode=62 level=11 Hz=240 initial=11 final=12 limit=12 ok=1
+Grave wave mode=62 level=11 Hz=240 initial=12 final=12 limit=12 ok=1
+Grave wave mode=62 level=11 Hz=0 initial=0 final=1 limit=12 ok=1
+Grave wave mode=62 level=11 Hz=0 initial=11 final=12 limit=12 ok=1
+Grave wave mode=62 level=11 Hz=0 initial=12 final=12 limit=12 ok=1
+Grave wave mode=57 level=11 Hz=100 initial=0 final=1 limit=12 ok=1
+Grave wave mode=57 level=11 Hz=100 initial=11 final=12 limit=12 ok=1
+Grave wave mode=57 level=11 Hz=100 initial=12 final=12 limit=12 ok=1
+Grave wave mode=57 level=11 Hz=30 initial=0 final=1 limit=12 ok=1
+Grave wave mode=57 level=11 Hz=30 initial=11 final=12 limit=12 ok=1
+Grave wave mode=57 level=11 Hz=30 initial=12 final=12 limit=12 ok=1
+Grave wave mode=57 level=11 Hz=240 initial=0 final=1 limit=12 ok=1
+Grave wave mode=57 level=11 Hz=240 initial=11 final=12 limit=12 ok=1
+Grave wave mode=57 level=11 Hz=240 initial=12 final=12 limit=12 ok=1
+Grave wave mode=57 level=11 Hz=0 initial=0 final=1 limit=12 ok=1
+Grave wave mode=57 level=11 Hz=0 initial=11 final=12 limit=12 ok=1
+Grave wave mode=57 level=11 Hz=0 initial=12 final=12 limit=12 ok=1
+Grave whack mode=0 Hz=100 depleted=0 event=0 timeNs=21000000000 count=10 ok=1
+Grave whack mode=0 Hz=100 depleted=0 event=1 timeNs=41000000000 count=11 ok=1
+Grave whack mode=0 Hz=100 depleted=0 event=2 timeNs=61000000000 count=12 ok=1
+Grave whack mode=0 Hz=100 depleted=1 event=0 timeNs=21000000000 count=5 ok=1
+Grave whack mode=0 Hz=100 depleted=1 event=1 timeNs=41000000000 count=6 ok=1
+Grave whack mode=0 Hz=100 depleted=1 event=2 timeNs=61000000000 count=7 ok=1
+Grave whack mode=0 Hz=30 depleted=0 event=0 timeNs=21066666456 count=10 ok=1
+Grave whack mode=0 Hz=30 depleted=0 event=1 timeNs=41099999589 count=11 ok=1
+Grave whack mode=0 Hz=30 depleted=0 event=2 timeNs=61133332722 count=12 ok=1
+Grave whack mode=0 Hz=30 depleted=1 event=0 timeNs=21066666456 count=5 ok=1
+Grave whack mode=0 Hz=30 depleted=1 event=1 timeNs=41099999589 count=6 ok=1
+Grave whack mode=0 Hz=30 depleted=1 event=2 timeNs=61133332722 count=7 ok=1
+Grave whack mode=0 Hz=240 depleted=0 event=0 timeNs=21008329972 count=10 ok=1
+Grave whack mode=0 Hz=240 depleted=0 event=1 timeNs=41012493438 count=11 ok=1
+Grave whack mode=0 Hz=240 depleted=0 event=2 timeNs=61016656904 count=12 ok=1
+Grave whack mode=0 Hz=240 depleted=1 event=0 timeNs=21008329972 count=5 ok=1
+Grave whack mode=0 Hz=240 depleted=1 event=1 timeNs=41012493438 count=6 ok=1
+Grave whack mode=0 Hz=240 depleted=1 event=2 timeNs=61016656904 count=7 ok=1
+Grave whack mode=0 Hz=0 depleted=0 event=0 timeNs=21019567420 count=10 ok=1
+Grave whack mode=0 Hz=0 depleted=0 event=1 timeNs=41029924036 count=11 ok=1
+Grave whack mode=0 Hz=0 depleted=0 event=2 timeNs=61060280652 count=12 ok=1
+Grave whack mode=0 Hz=0 depleted=1 event=0 timeNs=21019567420 count=5 ok=1
+Grave whack mode=0 Hz=0 depleted=1 event=1 timeNs=41029924036 count=6 ok=1
+Grave whack mode=0 Hz=0 depleted=1 event=2 timeNs=61060280652 count=7 ok=1
+Grave whack mode=19 Hz=100 depleted=0 event=0 timeNs=21000000000 count=10 ok=1
+Grave whack mode=19 Hz=100 depleted=0 event=1 timeNs=41000000000 count=11 ok=1
+Grave whack mode=19 Hz=100 depleted=0 event=2 timeNs=61000000000 count=12 ok=1
+Grave whack mode=19 Hz=100 depleted=1 event=0 timeNs=21000000000 count=5 ok=1
+Grave whack mode=19 Hz=100 depleted=1 event=1 timeNs=41000000000 count=6 ok=1
+Grave whack mode=19 Hz=100 depleted=1 event=2 timeNs=61000000000 count=7 ok=1
+Grave whack mode=19 Hz=30 depleted=0 event=0 timeNs=21066666456 count=10 ok=1
+Grave whack mode=19 Hz=30 depleted=0 event=1 timeNs=41099999589 count=11 ok=1
+Grave whack mode=19 Hz=30 depleted=0 event=2 timeNs=61133332722 count=12 ok=1
+Grave whack mode=19 Hz=30 depleted=1 event=0 timeNs=21066666456 count=5 ok=1
+Grave whack mode=19 Hz=30 depleted=1 event=1 timeNs=41099999589 count=6 ok=1
+Grave whack mode=19 Hz=30 depleted=1 event=2 timeNs=61133332722 count=7 ok=1
+Grave whack mode=19 Hz=240 depleted=0 event=0 timeNs=21008329972 count=10 ok=1
+Grave whack mode=19 Hz=240 depleted=0 event=1 timeNs=41012493438 count=11 ok=1
+Grave whack mode=19 Hz=240 depleted=0 event=2 timeNs=61016656904 count=12 ok=1
+Grave whack mode=19 Hz=240 depleted=1 event=0 timeNs=21008329972 count=5 ok=1
+Grave whack mode=19 Hz=240 depleted=1 event=1 timeNs=41012493438 count=6 ok=1
+Grave whack mode=19 Hz=240 depleted=1 event=2 timeNs=61016656904 count=7 ok=1
+Grave whack mode=19 Hz=0 depleted=0 event=0 timeNs=21019567420 count=10 ok=1
+Grave whack mode=19 Hz=0 depleted=0 event=1 timeNs=41029924036 count=11 ok=1
+Grave whack mode=19 Hz=0 depleted=0 event=2 timeNs=61060280652 count=12 ok=1
+Grave whack mode=19 Hz=0 depleted=1 event=0 timeNs=21019567420 count=5 ok=1
+Grave whack mode=19 Hz=0 depleted=1 event=1 timeNs=41029924036 count=6 ok=1
+Grave whack mode=19 Hz=0 depleted=1 event=2 timeNs=61060280652 count=7 ok=1
+PASS actual grave generation: 52 night wave boundaries and 16 Whack 62-second timelines at four schedules

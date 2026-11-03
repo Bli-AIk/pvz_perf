@@ -18,6 +18,7 @@
 
 struct LawnStrings
 {
+	static const std::string OPTIONS_DISPLAY_MODE;
 	std::string PEASHOOTER;
 	std::string PEASHOOTER_TOOLTIP;
 	std::string SUNFLOWER;

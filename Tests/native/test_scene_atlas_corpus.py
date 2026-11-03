@@ -12,6 +12,7 @@ import unittest
 import zipfile
 
 from PIL import Image
+from atlas_uv_assertions import regions, assert_regions
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
@@ -89,13 +90,12 @@ class SceneAtlasCorpusTests(unittest.TestCase):
                 r"namespace " + document["name"] + r"Atlas \{(.*?)"
                 r"(?=\nnamespace \w+Atlas \{|\nvoid LoadSceneAtlases\()", native, re.S)
             self.assertIsNotNone(block)
-            array = re.search(r"const Sexy::Rect Images\[Count\] = \{(.*?)\n\};", block[1], re.S)
+            array = re.search(r"const Sexy::TextureRegion Images\[Count\] = \{(.*?)\n\};", block[1], re.S)
             self.assertIsNotNone(array)
-            rectangles = [list(map(int, row)) for row in re.findall(
-                r"\{(\d+),\s*(\d+),\s*(\d+),\s*(\d+)\}", array[1])]
-            self.assertEqual(rectangles, [row["region"] for row in report["sprites"]])
+            assert_regions(self, regions(array[1]), [(row["region"], report["atlas_width"],
+                           report["atlas_height"]) for row in report["sprites"]])
             self.assertIn(report["atlas_path"], block[1])
-            self.assertIn("DefinitionBindAtlasPath(Texture, Width, Height", block[1])
+            self.assertIn(f"DefinitionBindAtlasPath(Texture, {report['atlas_width']}, {report['atlas_height']}", block[1])
             self.assertIn("DefinitionUnbindAtlas(Texture)", block[1])
         self.assertNotRegex(header + native, r"ImageSymbolId|mNumRows|mNumCols|GetCel|\.compiled")
         self.assertEqual([path.name for path in self.config.sources["scene"]],

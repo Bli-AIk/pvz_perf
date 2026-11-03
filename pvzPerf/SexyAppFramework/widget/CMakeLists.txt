@@ -37,4 +37,6 @@ target_sources(${PROJECT_NAME} PRIVATE
 #    "WidgetBuildBase.cpp"
     "WidgetContainer.cpp"
     "WidgetManager.cpp"
+    "WidgetTouch.cpp"
+    "TouchEvent.h"
 )

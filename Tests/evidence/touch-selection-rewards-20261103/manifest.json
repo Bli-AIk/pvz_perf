@@ -1,0 +1,69 @@
+{
+  "date": "2026-11-03",
+  "scope": "Windows production-object touch tests and pixel readback; Android native cross-build; device validation separate",
+  "source_sha256": {
+    "pvzPerf/Lawn/BoardTouch.cpp": "a104af3b3f8d8720a79b6f3ba4431734d721c571b1f07ec45a30a467c086c9da",
+    "pvzPerf/Lawn/BoardTouch.h": "a298f73d046317496c4ffa56fdd2c977fdd0c4de1c508506ef8010c1b90307ba",
+    "pvzPerf/Lawn/Board.cpp": "7c1918ec9dfa146b58f935cfaf28e68d9503948ee3815f25d3f95ac0cb3ba896",
+    "pvzPerf/Lawn/Board.h": "eccd22e033612d1e779b84449079ba42eb8f302831a9603da96ddf6fec22ec3e",
+    "pvzPerf/Lawn/Coin.cpp": "ee6b5d6bd8ed068f9765b8ac4bb080642995f15c4cb38008235f2b9adc665b24",
+    "pvzPerf/Lawn/System/SaveGame.cpp": "06c71f9ede7230f51392c234de3c4d4dc533ce716cd9557d5f9649b3d790dad8",
+    "pvzPerf/Resources.cpp": "ebee2be15f1eed63baeddac02aaa93c8f30beb88d661e1f8400d86d3fb2623cc",
+    "pvzPerf/Resources.h": "0dd4ef11cbbd060424b28ebf0c74f6c4ad748aff829d5dc58c19833b1264da87",
+    "assets/definitions/resources.json": "4cb6efda24a165ea12821799b80cd0ff7312fa7aee1a4ca8267ed3d95511538f",
+    "assets/runtime/images/touch_selection_frame_blue.png": "bb07bc7cb0edacc0de5088ee6a105cb501340d5a15e3d02ecbda2d170809a20e",
+    "Tests/native/ImageRuntimeTests.cpp": "8c1cc12b8ec81d446a12d2b78e8818f244cd1db684ac58dbcdf12af7e188ff68",
+    "pvzPerf/Sexy.TodLib/generated/NumericResourceBindings.h": "90d432959d0234f3e99ba12c817e5d81ea803b36b094fe31f79ea9159ec4a2e2",
+    "pvzPerf/Sexy.TodLib/generated/ResourceLoadBindings.inc": "8ad94ffc7269fb2db3a63230c9250a30eef38a2d599900bed67b1f9b44c9b595"
+  },
+  "windows": {
+    "exe_sha256": "257a40d9ddd22a49d9dd74ea5a12f1dd82bd7cdcff6908d0b18cfcac561c9d49",
+    "pak_sha256": "d8087bd5c870f428d2e4f4c5d39b6f78b22524353ca5a718d649fecfd49f36ea",
+    "fixture_sha256": "61772d0a99770faebc410d4fd61df410162f755f161dfbdc4e70c8bfb655b0da",
+    "result": "PASS",
+    "flags": [
+      "Release",
+      "/GL",
+      "/LTCG"
+    ]
+  },
+  "android_native": {
+    "library_sha256": "455ad3f9e1678ce12d5e60e2db06efd376f7258f6efe05b1c35e747a57ef1864",
+    "pak_sha256": "dcfce15ad3cccf0701bbea3f5a190bf22ba159093035d598871249fabaa8d427",
+    "result": "Full LTO cross-build PASS"
+  },
+  "save_format": "DAT64 v4 unchanged",
+  "blue_frame": "standalone PNG, not packed into any atlas",
+  "evidence_sha256": {
+    "free-DrawCelHighlight.asm.txt": "5da39e4bad4ac9343330b1a42a61206387c62549df9d87685b77e2d4dae81509",
+    "highlight-sources.json": "e277f831349d66388ec72fb43a900770364a002ce6999a500dfa38cf139ede15",
+    "native-tests.log": "7189db5111e6aa24e886cdc72f13e79a5ddc95f57a03356edc2dfc33ac281b8b",
+    "README.md": "a372c864756e70910281d0a65d1c25683f2ad2a01ea33c57850f2dd1f590e0bf",
+    "touch-frame-1400-card.png": "e97f3ec49d92f6c48c4b1ca68864303656ba4c2f4276cd854146efe322b92005",
+    "touch-frame-1400-shovel.png": "35d7bb887437b13f0e05a95c0ebf346a882732b8ea6757abef9f2501dd5e4ff7",
+    "touch-frame-800-card.png": "d43f39dc1bfe43d7de949bead2ea5cad3cc614653197fc82bc01903d41d63a3c",
+    "touch-frame-800-shovel.png": "a1457c2b56ac1f524c4b3c7efc417041bed61d2e84d929068ce599ccf6d4641d",
+    "touch-guides-0.png": "d8a2f50ba802858b0f64dd245a1fe788816078ef94b48e7fb0f69ed77d3ad057",
+    "touch-guides-2.png": "70aebce1c79c9a0243da49534fc6ea4f71b2f1bca8dea5cad398222e96311981",
+    "touch-guides-4.png": "b6818345d300083fa1aecfee90427451e591d273c9d291c68cb9eb004bd17b74",
+    "touch-input.log": "a56ae548146975221de9122e1cd5a9c711f07aa8d61f77a9c3600b7ada2b2140"
+  },
+  "apk": {
+    "path": "out/arm64-android14-vulkan1.3/pvz_perf-v3.2.5-touch-ui-arm64-android14-vulkan1.3.apk",
+    "sha256": "2da274124ac2ee9d3b45383eca8d19e37b190a2e3586e63190d39926f68f1049",
+    "pairing": "native library, PAK and all SPIR-V byte-identical to the same Android build",
+    "signature": "v2/v3 verified",
+    "alignment": "zipalign -P 16 4 verified"
+  },
+  "device": {
+    "serial": "FY241471004E",
+    "model": "NX769J / nubia Z60 Ultra",
+    "package": "com.openpvz.perf",
+    "versionName": "3.2.5",
+    "versionCode": 11,
+    "install": "adb install -r: Success; game was not running",
+    "launch": "PerfActivity launched; PID 7308 observed alive with visible gameplay",
+    "external_data": "17 media files: identical SHA256 sets immediately before/after install; no settings/save replacement",
+    "manual_acceptance": "pending user trial of touch frame, guide bands, target glow, reward sweep and cannon drag rules"
+  }
+}

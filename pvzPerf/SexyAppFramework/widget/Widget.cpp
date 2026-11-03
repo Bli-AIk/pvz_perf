@@ -10,6 +10,31 @@ using namespace Sexy;
 
 bool Widget::mWriteColoredString = true;
 
+void Widget::TouchBegan(const TouchEvent& event)
+{
+    MouseDown(event.x, event.y, 1);
+}
+
+void Widget::TouchMoved(const TouchEvent& event)
+{
+    MouseDrag(event.x, event.y);
+}
+
+void Widget::TouchEnded(const TouchEvent& event)
+{
+    MouseUp(event.x, event.y, 1);
+}
+
+void Widget::TouchCanceled(const TouchEvent&)
+{
+    // Cancellation must never activate a button through its MouseUp callback.
+}
+
+const void* Widget::TouchHitTest(int, int)
+{
+    return this;
+}
+
 Widget::Widget()
 {
 	mWidgetManager = NULL;	

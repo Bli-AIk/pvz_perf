@@ -1,0 +1,412 @@
+
+C:/Users/Administrator/CLionProjects/codex/tv_assets/FREE_3.18.0_Phone/apk_contents/split_config.arm64_v8a/lib/arm64-v8a/libpvz.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+0000000001a0eed8 <Board::DrawCelHighlight(Sexy::Graphics*, int, int, bool)>:
+ 1a0eed8: d10403ff     	sub	sp, sp, #0x100
+ 1a0eedc: a90f7bfd     	stp	x29, x30, [sp, #0xf0]
+ 1a0eee0: 9103c3fd     	add	x29, sp, #0xf0
+ 1a0eee4: d53bd048     	mrs	x8, TPIDR_EL0
+ 1a0eee8: f9401508     	ldr	x8, [x8, #0x28]
+ 1a0eeec: f81f83a8     	stur	x8, [x29, #-0x8]
+ 1a0eef0: f9003fe0     	str	x0, [sp, #0x78]
+ 1a0eef4: f9003be1     	str	x1, [sp, #0x70]
+ 1a0eef8: b9006fe2     	str	w2, [sp, #0x6c]
+ 1a0eefc: b9006be3     	str	w3, [sp, #0x68]
+ 1a0ef00: 39019fe4     	strb	w4, [sp, #0x67]
+ 1a0ef04: f9403fe8     	ldr	x8, [sp, #0x78]
+ 1a0ef08: f90023e8     	str	x8, [sp, #0x40]
+ 1a0ef0c: b9406be8     	ldr	w8, [sp, #0x68]
+ 1a0ef10: 0b080d08     	add	w8, w8, w8, lsl #3
+ 1a0ef14: b9406fe9     	ldr	w9, [sp, #0x6c]
+ 1a0ef18: 0b090108     	add	w8, w8, w9
+ 1a0ef1c: b90063e8     	str	w8, [sp, #0x60]
+ 1a0ef20: 39419fe8     	ldrb	w8, [sp, #0x67]
+ 1a0ef24: 37000128     	tbnz	w8, #0x0, 0x1a0ef48 <Board::DrawCelHighlight(Sexy::Graphics*, int, int, bool)+0x70>
+ 1a0ef28: 14000001     	b	0x1a0ef2c <Board::DrawCelHighlight(Sexy::Graphics*, int, int, bool)+0x54>
+ 1a0ef2c: f94023e8     	ldr	x8, [sp, #0x40]
+ 1a0ef30: f9426108     	ldr	x8, [x8, #0x4c0]
+ 1a0ef34: b94063e9     	ldr	w9, [sp, #0x60]
+ 1a0ef38: 9ac92508     	lsr	x8, x8, x9
+ 1a0ef3c: 36000068     	tbz	w8, #0x0, 0x1a0ef48 <Board::DrawCelHighlight(Sexy::Graphics*, int, int, bool)+0x70>
+ 1a0ef40: 14000001     	b	0x1a0ef44 <Board::DrawCelHighlight(Sexy::Graphics*, int, int, bool)+0x6c>
+ 1a0ef44: 14000170     	b	0x1a0f504 <Board::DrawCelHighlight(Sexy::Graphics*, int, int, bool)+0x62c>
+ 1a0ef48: f94023e9     	ldr	x9, [sp, #0x40]
+ 1a0ef4c: b94063e8     	ldr	w8, [sp, #0x60]
+ 1a0ef50: 2a0803ea     	mov	w10, w8
+ 1a0ef54: 52800028     	mov	w8, #0x1                // =1
+ 1a0ef58: 9aca210a     	lsl	x10, x8, x10
+ 1a0ef5c: f9426128     	ldr	x8, [x9, #0x4c0]
+ 1a0ef60: aa0a0108     	orr	x8, x8, x10
+ 1a0ef64: f9026128     	str	x8, [x9, #0x4c0]
+ 1a0ef68: 14000001     	b	0x1a0ef6c <Board::DrawCelHighlight(Sexy::Graphics*, int, int, bool)+0x94>
+ 1a0ef6c: b000a8a8     	adrp	x8, 0x2f23000
+ 1a0ef70: f9472508     	ldr	x8, [x8, #0xe48]
+ 1a0ef74: bd400100     	ldr	s0, [x8]
+ 1a0ef78: 5e21d801     	scvtf	s1, s0
+ 1a0ef7c: f9403be8     	ldr	x8, [sp, #0x70]
+ 1a0ef80: bd401100     	ldr	s0, [x8, #0x10]
+ 1a0ef84: 1e212800     	fadd	s0, s0, s1
+ 1a0ef88: bd001100     	str	s0, [x8, #0x10]
+ 1a0ef8c: d100a3a9     	sub	x9, x29, #0x28
+ 1a0ef90: aa0903e8     	mov	x8, x9
+ 1a0ef94: 91008129     	add	x9, x9, #0x20
+ 1a0ef98: f9001be9     	str	x9, [sp, #0x30]
+ 1a0ef9c: f9001fe8     	str	x8, [sp, #0x38]
+ 1a0efa0: 14000001     	b	0x1a0efa4 <Board::DrawCelHighlight(Sexy::Graphics*, int, int, bool)+0xcc>
+ 1a0efa4: f9401fe0     	ldr	x0, [sp, #0x38]
+ 1a0efa8: f90017e0     	str	x0, [sp, #0x28]
+ 1a0efac: 944d75ad     	bl	0x2d6c660 <_ZN4Sexy6TPointIiEC2Ev@plt>
+ 1a0efb0: f94017e8     	ldr	x8, [sp, #0x28]
+ 1a0efb4: f9401bea     	ldr	x10, [sp, #0x30]
+ 1a0efb8: 91002109     	add	x9, x8, #0x8
+ 1a0efbc: aa0903e8     	mov	x8, x9
+ 1a0efc0: eb0a0129     	subs	x9, x9, x10
+ 1a0efc4: f9001fe8     	str	x8, [sp, #0x38]
+ 1a0efc8: 54fffee1     	b.ne	0x1a0efa4 <Board::DrawCelHighlight(Sexy::Graphics*, int, int, bool)+0xcc>
+ 1a0efcc: 14000001     	b	0x1a0efd0 <Board::DrawCelHighlight(Sexy::Graphics*, int, int, bool)+0xf8>
+ 1a0efd0: f9403be0     	ldr	x0, [sp, #0x70]
+ 1a0efd4: 52800021     	mov	w1, #0x1                // =1
+ 1a0efd8: 944e1542     	bl	0x2d944e0 <_ZN4Sexy8Graphics11SetDrawModeEi@plt>
+ 1a0efdc: f9403be8     	ldr	x8, [sp, #0x70]
+ 1a0efe0: f9000fe8     	str	x8, [sp, #0x18]
+ 1a0efe4: d101b3a0     	sub	x0, x29, #0x6c
+ 1a0efe8: f90013e0     	str	x0, [sp, #0x20]
+ 1a0efec: 12bfe001     	mov	w1, #0xffffff           // =16777215
+ 1a0eff0: 52800802     	mov	w2, #0x40               // =64
+ 1a0eff4: 944e1b97     	bl	0x2d95e50 <_ZN4Sexy5ColorC1Eii@plt>
+ 1a0eff8: f9400fe0     	ldr	x0, [sp, #0x18]
+ 1a0effc: f94013e1     	ldr	x1, [sp, #0x20]
+ 1a0f000: 944d7a80     	bl	0x2d6da00 <_ZN4Sexy8Graphics8SetColorERKNS_5ColorE@plt>
+ 1a0f004: f94023e0     	ldr	x0, [sp, #0x40]
+ 1a0f008: 944e2216     	bl	0x2d97860 <_ZN5Board13StageHas6RowsEv@plt>
+ 1a0f00c: 2a0003e8     	mov	w8, w0
+ 1a0f010: f94023e0     	ldr	x0, [sp, #0x40]
+ 1a0f014: 72000108     	ands	w8, w8, #0x1
+ 1a0f018: 528000a8     	mov	w8, #0x5                // =5
+ 1a0f01c: 1a880508     	cinc	w8, w8, ne
+ 1a0f020: b9005fe8     	str	w8, [sp, #0x5c]
+ 1a0f024: 944e22e7     	bl	0x2d97bc0 <_ZN5Board12StageHasPoolEv@plt>
+ 1a0f028: 36000800     	tbz	w0, #0x0, 0x1a0f128 <Board::DrawCelHighlight(Sexy::Graphics*, int, int, bool)+0x250>
+ 1a0f02c: 14000001     	b	0x1a0f030 <Board::DrawCelHighlight(Sexy::Graphics*, int, int, bool)+0x158>
+ 1a0f030: f94023e0     	ldr	x0, [sp, #0x40]
+ 1a0f034: f000a8a8     	adrp	x8, 0x2f26000
+ 1a0f038: f9431d08     	ldr	x8, [x8, #0x638]
+ 1a0f03c: b9400109     	ldr	w9, [x8]
+ 1a0f040: 11014129     	add	w9, w9, #0x50
+ 1a0f044: b81bc3a9     	stur	w9, [x29, #-0x44]
+ 1a0f048: b9400109     	ldr	w9, [x8]
+ 1a0f04c: 1102b529     	add	w9, w9, #0xad
+ 1a0f050: b81c03a9     	stur	w9, [x29, #-0x40]
+ 1a0f054: b9400109     	ldr	w9, [x8]
+ 1a0f058: 11042129     	add	w9, w9, #0x108
+ 1a0f05c: b81c43a9     	stur	w9, [x29, #-0x3c]
+ 1a0f060: b9400109     	ldr	w9, [x8]
+ 1a0f064: 11059929     	add	w9, w9, #0x166
+ 1a0f068: b81c83a9     	stur	w9, [x29, #-0x38]
+ 1a0f06c: b9400109     	ldr	w9, [x8]
+ 1a0f070: 1106e129     	add	w9, w9, #0x1b8
+ 1a0f074: b81cc3a9     	stur	w9, [x29, #-0x34]
+ 1a0f078: b9400109     	ldr	w9, [x8]
+ 1a0f07c: 11083129     	add	w9, w9, #0x20c
+ 1a0f080: b81d03a9     	stur	w9, [x29, #-0x30]
+ 1a0f084: b9400108     	ldr	w8, [x8]
+ 1a0f088: 11095908     	add	w8, w8, #0x256
+ 1a0f08c: b81d43a8     	stur	w8, [x29, #-0x2c]
+ 1a0f090: b9406fe1     	ldr	w1, [sp, #0x6c]
+ 1a0f094: b9406be2     	ldr	w2, [sp, #0x68]
+ 1a0f098: 944e21de     	bl	0x2d97810 <_ZN5Board12GridToPixelXEii@plt>
+ 1a0f09c: b81d83a0     	stur	w0, [x29, #-0x28]
+ 1a0f0a0: b9806be9     	ldrsw	x9, [sp, #0x68]
+ 1a0f0a4: d10113a8     	sub	x8, x29, #0x44
+ 1a0f0a8: b8697908     	ldr	w8, [x8, x9, lsl #2]
+ 1a0f0ac: b81dc3a8     	stur	w8, [x29, #-0x24]
+ 1a0f0b0: b9406fe8     	ldr	w8, [sp, #0x6c]
+ 1a0f0b4: 71002108     	subs	w8, w8, #0x8
+ 1a0f0b8: 540000e1     	b.ne	0x1a0f0d4 <Board::DrawCelHighlight(Sexy::Graphics*, int, int, bool)+0x1fc>
+ 1a0f0bc: 14000001     	b	0x1a0f0c0 <Board::DrawCelHighlight(Sexy::Graphics*, int, int, bool)+0x1e8>
+ 1a0f0c0: f000a8a8     	adrp	x8, 0x2f26000
+ 1a0f0c4: f944b508     	ldr	x8, [x8, #0x968]
+ 1a0f0c8: b9400108     	ldr	w8, [x8]
+ 1a0f0cc: b81e03a8     	stur	w8, [x29, #-0x20]
+ 1a0f0d0: 14000005     	b	0x1a0f0e4 <Board::DrawCelHighlight(Sexy::Graphics*, int, int, bool)+0x20c>
+ 1a0f0d4: b85d83a8     	ldur	w8, [x29, #-0x28]
+ 1a0f0d8: 11014108     	add	w8, w8, #0x50
+ 1a0f0dc: b81e03a8     	stur	w8, [x29, #-0x20]
+ 1a0f0e0: 14000001     	b	0x1a0f0e4 <Board::DrawCelHighlight(Sexy::Graphics*, int, int, bool)+0x20c>
+ 1a0f0e4: b9806be9     	ldrsw	x9, [sp, #0x68]
+ 1a0f0e8: d10113a8     	sub	x8, x29, #0x44
+ 1a0f0ec: b8697909     	ldr	w9, [x8, x9, lsl #2]
+ 1a0f0f0: b81e43a9     	stur	w9, [x29, #-0x1c]
+ 1a0f0f4: b85e03a9     	ldur	w9, [x29, #-0x20]
+ 1a0f0f8: b81e83a9     	stur	w9, [x29, #-0x18]
+ 1a0f0fc: b9806be9     	ldrsw	x9, [sp, #0x68]
+ 1a0f100: 8b090909     	add	x9, x8, x9, lsl #2
+ 1a0f104: b9400529     	ldr	w9, [x9, #0x4]
+ 1a0f108: b81ec3a9     	stur	w9, [x29, #-0x14]
+ 1a0f10c: b85d83a9     	ldur	w9, [x29, #-0x28]
+ 1a0f110: b81f03a9     	stur	w9, [x29, #-0x10]
+ 1a0f114: b9806be9     	ldrsw	x9, [sp, #0x68]
+ 1a0f118: 8b090908     	add	x8, x8, x9, lsl #2
+ 1a0f11c: b9400508     	ldr	w8, [x8, #0x4]
+ 1a0f120: b81f43a8     	stur	w8, [x29, #-0xc]
+ 1a0f124: 1400009f     	b	0x1a0f3a0 <Board::DrawCelHighlight(Sexy::Graphics*, int, int, bool)+0x4c8>
+ 1a0f128: f94023e0     	ldr	x0, [sp, #0x40]
+ 1a0f12c: 944e1f41     	bl	0x2d96e30 <_ZN5Board12StageHasRoofEv@plt>
+ 1a0f130: 36000c00     	tbz	w0, #0x0, 0x1a0f2b0 <Board::DrawCelHighlight(Sexy::Graphics*, int, int, bool)+0x3d8>
+ 1a0f134: 14000001     	b	0x1a0f138 <Board::DrawCelHighlight(Sexy::Graphics*, int, int, bool)+0x260>
+ 1a0f138: f94023e0     	ldr	x0, [sp, #0x40]
+ 1a0f13c: 52800288     	mov	w8, #0x14               // =20
+ 1a0f140: b9005be8     	str	w8, [sp, #0x58]
+ 1a0f144: b9406fe1     	ldr	w1, [sp, #0x6c]
+ 1a0f148: b9406be2     	ldr	w2, [sp, #0x68]
+ 1a0f14c: 944e21b1     	bl	0x2d97810 <_ZN5Board12GridToPixelXEii@plt>
+ 1a0f150: 2a0003e8     	mov	w8, w0
+ 1a0f154: f94023e0     	ldr	x0, [sp, #0x40]
+ 1a0f158: b81d83a8     	stur	w8, [x29, #-0x28]
+ 1a0f15c: b9406fe1     	ldr	w1, [sp, #0x6c]
+ 1a0f160: b9406be2     	ldr	w2, [sp, #0x68]
+ 1a0f164: 944e1f37     	bl	0x2d96e40 <_ZN5Board12GridToPixelYEii@plt>
+ 1a0f168: b9405be8     	ldr	w8, [sp, #0x58]
+ 1a0f16c: 0b080008     	add	w8, w0, w8
+ 1a0f170: b81dc3a8     	stur	w8, [x29, #-0x24]
+ 1a0f174: b85d83a8     	ldur	w8, [x29, #-0x28]
+ 1a0f178: 11014108     	add	w8, w8, #0x50
+ 1a0f17c: b81e03a8     	stur	w8, [x29, #-0x20]
+ 1a0f180: b9406fe8     	ldr	w8, [sp, #0x6c]
+ 1a0f184: 71001d08     	subs	w8, w8, #0x7
+ 1a0f188: 540000cc     	b.gt	0x1a0f1a0 <Board::DrawCelHighlight(Sexy::Graphics*, int, int, bool)+0x2c8>
+ 1a0f18c: 14000001     	b	0x1a0f190 <Board::DrawCelHighlight(Sexy::Graphics*, int, int, bool)+0x2b8>
+ 1a0f190: b9406fe8     	ldr	w8, [sp, #0x6c]
+ 1a0f194: 11000500     	add	w0, w8, #0x1
+ 1a0f198: b90017e0     	str	w0, [sp, #0x14]
+ 1a0f19c: 14000004     	b	0x1a0f1ac <Board::DrawCelHighlight(Sexy::Graphics*, int, int, bool)+0x2d4>
+ 1a0f1a0: 52800100     	mov	w0, #0x8                // =8
+ 1a0f1a4: b90017e0     	str	w0, [sp, #0x14]
+ 1a0f1a8: 14000001     	b	0x1a0f1ac <Board::DrawCelHighlight(Sexy::Graphics*, int, int, bool)+0x2d4>
+ 1a0f1ac: f94023e0     	ldr	x0, [sp, #0x40]
+ 1a0f1b0: b94017e1     	ldr	w1, [sp, #0x14]
+ 1a0f1b4: b9406be2     	ldr	w2, [sp, #0x68]
+ 1a0f1b8: 944e1f22     	bl	0x2d96e40 <_ZN5Board12GridToPixelYEii@plt>
+ 1a0f1bc: b9405be8     	ldr	w8, [sp, #0x58]
+ 1a0f1c0: 0b080008     	add	w8, w0, w8
+ 1a0f1c4: b81e43a8     	stur	w8, [x29, #-0x1c]
+ 1a0f1c8: b85e03a8     	ldur	w8, [x29, #-0x20]
+ 1a0f1cc: b81e83a8     	stur	w8, [x29, #-0x18]
+ 1a0f1d0: b9406be8     	ldr	w8, [sp, #0x68]
+ 1a0f1d4: b9405fe9     	ldr	w9, [sp, #0x5c]
+ 1a0f1d8: 71000529     	subs	w9, w9, #0x1
+ 1a0f1dc: 6b090108     	subs	w8, w8, w9
+ 1a0f1e0: 540002ca     	b.ge	0x1a0f238 <Board::DrawCelHighlight(Sexy::Graphics*, int, int, bool)+0x360>
+ 1a0f1e4: 14000001     	b	0x1a0f1e8 <Board::DrawCelHighlight(Sexy::Graphics*, int, int, bool)+0x310>
+ 1a0f1e8: b9406fe8     	ldr	w8, [sp, #0x6c]
+ 1a0f1ec: 71001d08     	subs	w8, w8, #0x7
+ 1a0f1f0: 540000cc     	b.gt	0x1a0f208 <Board::DrawCelHighlight(Sexy::Graphics*, int, int, bool)+0x330>
+ 1a0f1f4: 14000001     	b	0x1a0f1f8 <Board::DrawCelHighlight(Sexy::Graphics*, int, int, bool)+0x320>
+ 1a0f1f8: b9406fe8     	ldr	w8, [sp, #0x6c]
+ 1a0f1fc: 11000500     	add	w0, w8, #0x1
+ 1a0f200: b90013e0     	str	w0, [sp, #0x10]
+ 1a0f204: 14000004     	b	0x1a0f214 <Board::DrawCelHighlight(Sexy::Graphics*, int, int, bool)+0x33c>
+ 1a0f208: 52800100     	mov	w0, #0x8                // =8
+ 1a0f20c: b90013e0     	str	w0, [sp, #0x10]
+ 1a0f210: 14000001     	b	0x1a0f214 <Board::DrawCelHighlight(Sexy::Graphics*, int, int, bool)+0x33c>
+ 1a0f214: f94023e0     	ldr	x0, [sp, #0x40]
+ 1a0f218: b94013e1     	ldr	w1, [sp, #0x10]
+ 1a0f21c: b9406be8     	ldr	w8, [sp, #0x68]
+ 1a0f220: 11000502     	add	w2, w8, #0x1
+ 1a0f224: 944e1f07     	bl	0x2d96e40 <_ZN5Board12GridToPixelYEii@plt>
+ 1a0f228: b9405be8     	ldr	w8, [sp, #0x58]
+ 1a0f22c: 0b080008     	add	w8, w0, w8
+ 1a0f230: b9000fe8     	str	w8, [sp, #0xc]
+ 1a0f234: 14000005     	b	0x1a0f248 <Board::DrawCelHighlight(Sexy::Graphics*, int, int, bool)+0x370>
+ 1a0f238: b85e43a8     	ldur	w8, [x29, #-0x1c]
+ 1a0f23c: 11014108     	add	w8, w8, #0x50
+ 1a0f240: b9000fe8     	str	w8, [sp, #0xc]
+ 1a0f244: 14000001     	b	0x1a0f248 <Board::DrawCelHighlight(Sexy::Graphics*, int, int, bool)+0x370>
+ 1a0f248: b9400fe8     	ldr	w8, [sp, #0xc]
+ 1a0f24c: b81ec3a8     	stur	w8, [x29, #-0x14]
+ 1a0f250: b85d83a8     	ldur	w8, [x29, #-0x28]
+ 1a0f254: b81f03a8     	stur	w8, [x29, #-0x10]
+ 1a0f258: b9406be8     	ldr	w8, [sp, #0x68]
+ 1a0f25c: b9405fe9     	ldr	w9, [sp, #0x5c]
+ 1a0f260: 71000529     	subs	w9, w9, #0x1
+ 1a0f264: 6b090108     	subs	w8, w8, w9
+ 1a0f268: 5400016a     	b.ge	0x1a0f294 <Board::DrawCelHighlight(Sexy::Graphics*, int, int, bool)+0x3bc>
+ 1a0f26c: 14000001     	b	0x1a0f270 <Board::DrawCelHighlight(Sexy::Graphics*, int, int, bool)+0x398>
+ 1a0f270: f94023e0     	ldr	x0, [sp, #0x40]
+ 1a0f274: b9406fe1     	ldr	w1, [sp, #0x6c]
+ 1a0f278: b9406be8     	ldr	w8, [sp, #0x68]
+ 1a0f27c: 11000502     	add	w2, w8, #0x1
+ 1a0f280: 944e1ef0     	bl	0x2d96e40 <_ZN5Board12GridToPixelYEii@plt>
+ 1a0f284: b9405be8     	ldr	w8, [sp, #0x58]
+ 1a0f288: 0b080008     	add	w8, w0, w8
+ 1a0f28c: b9000be8     	str	w8, [sp, #0x8]
+ 1a0f290: 14000005     	b	0x1a0f2a4 <Board::DrawCelHighlight(Sexy::Graphics*, int, int, bool)+0x3cc>
+ 1a0f294: b85dc3a8     	ldur	w8, [x29, #-0x24]
+ 1a0f298: 11014108     	add	w8, w8, #0x50
+ 1a0f29c: b9000be8     	str	w8, [sp, #0x8]
+ 1a0f2a0: 14000001     	b	0x1a0f2a4 <Board::DrawCelHighlight(Sexy::Graphics*, int, int, bool)+0x3cc>
+ 1a0f2a4: b9400be8     	ldr	w8, [sp, #0x8]
+ 1a0f2a8: b81f43a8     	stur	w8, [x29, #-0xc]
+ 1a0f2ac: 1400003c     	b	0x1a0f39c <Board::DrawCelHighlight(Sexy::Graphics*, int, int, bool)+0x4c4>
+ 1a0f2b0: f94023e0     	ldr	x0, [sp, #0x40]
+ 1a0f2b4: f000a8a8     	adrp	x8, 0x2f26000
+ 1a0f2b8: f9431d08     	ldr	x8, [x8, #0x638]
+ 1a0f2bc: b9400109     	ldr	w9, [x8]
+ 1a0f2c0: 1100f129     	add	w9, w9, #0x3c
+ 1a0f2c4: b81a43a9     	stur	w9, [x29, #-0x5c]
+ 1a0f2c8: b9400109     	ldr	w9, [x8]
+ 1a0f2cc: 1102e129     	add	w9, w9, #0xb8
+ 1a0f2d0: b81a83a9     	stur	w9, [x29, #-0x58]
+ 1a0f2d4: b9400109     	ldr	w9, [x8]
+ 1a0f2d8: 11046129     	add	w9, w9, #0x118
+ 1a0f2dc: b81ac3a9     	stur	w9, [x29, #-0x54]
+ 1a0f2e0: b9400109     	ldr	w9, [x8]
+ 1a0f2e4: 11060129     	add	w9, w9, #0x180
+ 1a0f2e8: b81b03a9     	stur	w9, [x29, #-0x50]
+ 1a0f2ec: b9400109     	ldr	w9, [x8]
+ 1a0f2f0: 11075129     	add	w9, w9, #0x1d4
+ 1a0f2f4: b81b43a9     	stur	w9, [x29, #-0x4c]
+ 1a0f2f8: b9400108     	ldr	w8, [x8]
+ 1a0f2fc: 1108e908     	add	w8, w8, #0x23a
+ 1a0f300: b81b83a8     	stur	w8, [x29, #-0x48]
+ 1a0f304: b9406fe1     	ldr	w1, [sp, #0x6c]
+ 1a0f308: b9406be2     	ldr	w2, [sp, #0x68]
+ 1a0f30c: 944e2141     	bl	0x2d97810 <_ZN5Board12GridToPixelXEii@plt>
+ 1a0f310: b81d83a0     	stur	w0, [x29, #-0x28]
+ 1a0f314: b9806be9     	ldrsw	x9, [sp, #0x68]
+ 1a0f318: d10173a8     	sub	x8, x29, #0x5c
+ 1a0f31c: b8697908     	ldr	w8, [x8, x9, lsl #2]
+ 1a0f320: b81dc3a8     	stur	w8, [x29, #-0x24]
+ 1a0f324: b9406fe8     	ldr	w8, [sp, #0x6c]
+ 1a0f328: 71002108     	subs	w8, w8, #0x8
+ 1a0f32c: 540000e1     	b.ne	0x1a0f348 <Board::DrawCelHighlight(Sexy::Graphics*, int, int, bool)+0x470>
+ 1a0f330: 14000001     	b	0x1a0f334 <Board::DrawCelHighlight(Sexy::Graphics*, int, int, bool)+0x45c>
+ 1a0f334: f000a8a8     	adrp	x8, 0x2f26000
+ 1a0f338: f944b508     	ldr	x8, [x8, #0x968]
+ 1a0f33c: b9400108     	ldr	w8, [x8]
+ 1a0f340: b81e03a8     	stur	w8, [x29, #-0x20]
+ 1a0f344: 14000005     	b	0x1a0f358 <Board::DrawCelHighlight(Sexy::Graphics*, int, int, bool)+0x480>
+ 1a0f348: b85d83a8     	ldur	w8, [x29, #-0x28]
+ 1a0f34c: 11014108     	add	w8, w8, #0x50
+ 1a0f350: b81e03a8     	stur	w8, [x29, #-0x20]
+ 1a0f354: 14000001     	b	0x1a0f358 <Board::DrawCelHighlight(Sexy::Graphics*, int, int, bool)+0x480>
+ 1a0f358: b9806be9     	ldrsw	x9, [sp, #0x68]
+ 1a0f35c: d10173a8     	sub	x8, x29, #0x5c
+ 1a0f360: b8697909     	ldr	w9, [x8, x9, lsl #2]
+ 1a0f364: b81e43a9     	stur	w9, [x29, #-0x1c]
+ 1a0f368: b85e03a9     	ldur	w9, [x29, #-0x20]
+ 1a0f36c: b81e83a9     	stur	w9, [x29, #-0x18]
+ 1a0f370: b9806be9     	ldrsw	x9, [sp, #0x68]
+ 1a0f374: 8b090909     	add	x9, x8, x9, lsl #2
+ 1a0f378: b9400529     	ldr	w9, [x9, #0x4]
+ 1a0f37c: b81ec3a9     	stur	w9, [x29, #-0x14]
+ 1a0f380: b85d83a9     	ldur	w9, [x29, #-0x28]
+ 1a0f384: b81f03a9     	stur	w9, [x29, #-0x10]
+ 1a0f388: b9806be9     	ldrsw	x9, [sp, #0x68]
+ 1a0f38c: 8b090908     	add	x8, x8, x9, lsl #2
+ 1a0f390: b9400508     	ldr	w8, [x8, #0x4]
+ 1a0f394: b81f43a8     	stur	w8, [x29, #-0xc]
+ 1a0f398: 14000001     	b	0x1a0f39c <Board::DrawCelHighlight(Sexy::Graphics*, int, int, bool)+0x4c4>
+ 1a0f39c: 14000001     	b	0x1a0f3a0 <Board::DrawCelHighlight(Sexy::Graphics*, int, int, bool)+0x4c8>
+ 1a0f3a0: b85d83a0     	ldur	w0, [x29, #-0x28]
+ 1a0f3a4: 944e2483     	bl	0x2d985b0 <_ZN4Sexy5ScaleEi@plt>
+ 1a0f3a8: b81d83a0     	stur	w0, [x29, #-0x28]
+ 1a0f3ac: b85dc3a0     	ldur	w0, [x29, #-0x24]
+ 1a0f3b0: 944e2480     	bl	0x2d985b0 <_ZN4Sexy5ScaleEi@plt>
+ 1a0f3b4: b81dc3a0     	stur	w0, [x29, #-0x24]
+ 1a0f3b8: b85e03a0     	ldur	w0, [x29, #-0x20]
+ 1a0f3bc: 944e247d     	bl	0x2d985b0 <_ZN4Sexy5ScaleEi@plt>
+ 1a0f3c0: b81e03a0     	stur	w0, [x29, #-0x20]
+ 1a0f3c4: b85e43a0     	ldur	w0, [x29, #-0x1c]
+ 1a0f3c8: 944e247a     	bl	0x2d985b0 <_ZN4Sexy5ScaleEi@plt>
+ 1a0f3cc: b81e43a0     	stur	w0, [x29, #-0x1c]
+ 1a0f3d0: b85e83a0     	ldur	w0, [x29, #-0x18]
+ 1a0f3d4: 944e2477     	bl	0x2d985b0 <_ZN4Sexy5ScaleEi@plt>
+ 1a0f3d8: b81e83a0     	stur	w0, [x29, #-0x18]
+ 1a0f3dc: b85ec3a0     	ldur	w0, [x29, #-0x14]
+ 1a0f3e0: 944e2474     	bl	0x2d985b0 <_ZN4Sexy5ScaleEi@plt>
+ 1a0f3e4: b81ec3a0     	stur	w0, [x29, #-0x14]
+ 1a0f3e8: b85f03a0     	ldur	w0, [x29, #-0x10]
+ 1a0f3ec: 944e2471     	bl	0x2d985b0 <_ZN4Sexy5ScaleEi@plt>
+ 1a0f3f0: b81f03a0     	stur	w0, [x29, #-0x10]
+ 1a0f3f4: b85f43a0     	ldur	w0, [x29, #-0xc]
+ 1a0f3f8: 944e246e     	bl	0x2d985b0 <_ZN4Sexy5ScaleEi@plt>
+ 1a0f3fc: f94023e8     	ldr	x8, [sp, #0x40]
+ 1a0f400: b81f43a0     	stur	w0, [x29, #-0xc]
+ 1a0f404: 2a1f03e9     	mov	w9, wzr
+ 1a0f408: b90057e9     	str	w9, [sp, #0x54]
+ 1a0f40c: b90053e9     	str	w9, [sp, #0x50]
+ 1a0f410: f9408908     	ldr	x8, [x8, #0x110]
+ 1a0f414: f944a108     	ldr	x8, [x8, #0x940]
+ 1a0f418: b9439908     	ldr	w8, [x8, #0x398]
+ 1a0f41c: 710f0108     	subs	w8, w8, #0x3c0
+ 1a0f420: 540000e1     	b.ne	0x1a0f43c <Board::DrawCelHighlight(Sexy::Graphics*, int, int, bool)+0x564>
+ 1a0f424: 14000001     	b	0x1a0f428 <Board::DrawCelHighlight(Sexy::Graphics*, int, int, bool)+0x550>
+ 1a0f428: 52a88e08     	mov	w8, #0x44700000         // =1148190720
+ 1a0f42c: b90057e8     	str	w8, [sp, #0x54]
+ 1a0f430: 52a88408     	mov	w8, #0x44200000         // =1142947840
+ 1a0f434: b90053e8     	str	w8, [sp, #0x50]
+ 1a0f438: 14000006     	b	0x1a0f450 <Board::DrawCelHighlight(Sexy::Graphics*, int, int, bool)+0x578>
+ 1a0f43c: 52a87e08     	mov	w8, #0x43f00000         // =1139802112
+ 1a0f440: b90057e8     	str	w8, [sp, #0x54]
+ 1a0f444: 52a87408     	mov	w8, #0x43a00000         // =1134559232
+ 1a0f448: b90053e8     	str	w8, [sp, #0x50]
+ 1a0f44c: 14000001     	b	0x1a0f450 <Board::DrawCelHighlight(Sexy::Graphics*, int, int, bool)+0x578>
+ 1a0f450: 9000a8a8     	adrp	x8, 0x2f23000
+ 1a0f454: f946f908     	ldr	x8, [x8, #0xdf0]
+ 1a0f458: f9400109     	ldr	x9, [x8]
+ 1a0f45c: bd481520     	ldr	s0, [x9, #0x814]
+ 1a0f460: 5e21d800     	scvtf	s0, s0
+ 1a0f464: bd4057e1     	ldr	s1, [sp, #0x54]
+ 1a0f468: 1e213800     	fsub	s0, s0, s1
+ 1a0f46c: 1e201001     	fmov	s1, #2.00000000
+ 1a0f470: 1e211800     	fdiv	s0, s0, s1
+ 1a0f474: bd004fe0     	str	s0, [sp, #0x4c]
+ 1a0f478: f9400108     	ldr	x8, [x8]
+ 1a0f47c: bd481900     	ldr	s0, [x8, #0x818]
+ 1a0f480: 5e21d800     	scvtf	s0, s0
+ 1a0f484: bd4053e2     	ldr	s2, [sp, #0x50]
+ 1a0f488: 1e223800     	fsub	s0, s0, s2
+ 1a0f48c: 1e211800     	fdiv	s0, s0, s1
+ 1a0f490: bd004be0     	str	s0, [sp, #0x48]
+ 1a0f494: f9403be0     	ldr	x0, [sp, #0x70]
+ 1a0f498: bd404fe0     	ldr	s0, [sp, #0x4c]
+ 1a0f49c: bd404be1     	ldr	s1, [sp, #0x48]
+ 1a0f4a0: 944e26ec     	bl	0x2d99050 <_ZN4Sexy8Graphics10TranslateFEff@plt>
+ 1a0f4a4: f9403be0     	ldr	x0, [sp, #0x70]
+ 1a0f4a8: d100a3a1     	sub	x1, x29, #0x28
+ 1a0f4ac: 52800082     	mov	w2, #0x4                // =4
+ 1a0f4b0: 2a1f03e3     	mov	w3, wzr
+ 1a0f4b4: b90007e3     	str	w3, [sp, #0x4]
+ 1a0f4b8: 944e26ea     	bl	0x2d99060 <_ZN4Sexy8Graphics8PolyFillEPKNS_6TPointIiEEib@plt>
+ 1a0f4bc: f9403be0     	ldr	x0, [sp, #0x70]
+ 1a0f4c0: bd404fe0     	ldr	s0, [sp, #0x4c]
+ 1a0f4c4: 1e214000     	fneg	s0, s0
+ 1a0f4c8: bd404be1     	ldr	s1, [sp, #0x48]
+ 1a0f4cc: 1e214021     	fneg	s1, s1
+ 1a0f4d0: 944e26e0     	bl	0x2d99050 <_ZN4Sexy8Graphics10TranslateFEff@plt>
+ 1a0f4d4: b94007e1     	ldr	w1, [sp, #0x4]
+ 1a0f4d8: f9403be0     	ldr	x0, [sp, #0x70]
+ 1a0f4dc: 944e1401     	bl	0x2d944e0 <_ZN4Sexy8Graphics11SetDrawModeEi@plt>
+ 1a0f4e0: 9000a8a8     	adrp	x8, 0x2f23000
+ 1a0f4e4: f9472508     	ldr	x8, [x8, #0xe48]
+ 1a0f4e8: bd400100     	ldr	s0, [x8]
+ 1a0f4ec: 5e21d801     	scvtf	s1, s0
+ 1a0f4f0: f9403be8     	ldr	x8, [sp, #0x70]
+ 1a0f4f4: bd401100     	ldr	s0, [x8, #0x10]
+ 1a0f4f8: 1e213800     	fsub	s0, s0, s1
+ 1a0f4fc: bd001100     	str	s0, [x8, #0x10]
+ 1a0f500: 14000001     	b	0x1a0f504 <Board::DrawCelHighlight(Sexy::Graphics*, int, int, bool)+0x62c>
+ 1a0f504: d53bd048     	mrs	x8, TPIDR_EL0
+ 1a0f508: f9401508     	ldr	x8, [x8, #0x28]
+ 1a0f50c: f85f83a9     	ldur	x9, [x29, #-0x8]
+ 1a0f510: eb090108     	subs	x8, x8, x9
+ 1a0f514: 540000a1     	b.ne	0x1a0f528 <Board::DrawCelHighlight(Sexy::Graphics*, int, int, bool)+0x650>
+ 1a0f518: 14000001     	b	0x1a0f51c <Board::DrawCelHighlight(Sexy::Graphics*, int, int, bool)+0x644>
+ 1a0f51c: a94f7bfd     	ldp	x29, x30, [sp, #0xf0]
+ 1a0f520: 910403ff     	add	sp, sp, #0x100
+ 1a0f524: d65f03c0     	ret
+ 1a0f528: 944d6e96     	bl	0x2d6af80 <__stack_chk_fail@plt>
+

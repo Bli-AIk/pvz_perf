@@ -1,0 +1,28 @@
+
+..\tv_assets\FREE_3.18.0_Phone\apk_contents\split_config.arm64_v8a\lib\arm64-v8a\libpvz.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+0000000002075050 <Sexy::EAMTAppDriver::TouchBegan(Sexy::Touch*)>:
+ 2075050:      	sub	sp, sp, #0x30
+ 2075054:      	stp	x29, x30, [sp, #0x20]
+ 2075058:      	add	x29, sp, #0x20
+ 207505c:      	stur	x0, [x29, #-0x8]
+ 2075060:      	str	x1, [sp, #0x10]
+ 2075064:      	ldur	x0, [x29, #-0x8]
+ 2075068:      	str	x0, [sp, #0x8]
+ 207506c:      	ldr	x1, [sp, #0x10]
+ 2075070:      	bl	0x2dcceb0 <_ZN4Sexy13EAMTAppDriver14TransformTouchEPNS_5TouchE@plt>
+ 2075074:      	ldr	x8, [sp, #0x8]
+ 2075078:      	ldr	x0, [x8, #0x80]
+ 207507c:      	ldr	x1, [sp, #0x10]
+ 2075080:      	ldr	x8, [x0]
+ 2075084:      	ldr	x8, [x8, #0x340]
+ 2075088:      	blr	x8
+ 207508c:      	ldr	x8, [sp, #0x8]
+ 2075090:      	ldr	x1, [sp, #0x10]
+ 2075094:      	add	x0, x8, #0x140
+ 2075098:      	bl	0x2dccec0 <_ZN5eastl6vectorIN4Sexy5TouchENS_9allocatorEE9push_backERKS2_@plt>
+ 207509c:      	ldp	x29, x30, [sp, #0x20]
+ 20750a0:      	add	sp, sp, #0x30
+ 20750a4:      	ret

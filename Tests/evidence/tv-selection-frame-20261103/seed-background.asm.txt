@@ -1,0 +1,418 @@
+
+C:\Users\ADMINI~1\AppData\Local\Temp/pvz-tv-draw-order-20261104/libGameMain.so:	file format elf32-littlearm
+
+Disassembly of section .text:
+
+00174b50 <SeedPacket::DrawBackground(Sexy::Graphics*)>:
+  174b50:      	push.w	{r4, r5, r6, r7, r8, r9, r10, lr}
+  174b54:      	mov	r4, r0
+  174b56:      	ldrb.w	r3, [r0, #0x58]
+  174b5a:      	mov	r5, r1
+  174b5c:      	ldr.w	r6, [pc, #0x408]        @ 0x174f68 <SeedPacket::DrawBackground(Sexy::Graphics*)+0x418>
+  174b60:      	vpush	{d8}
+  174b64:      	sub	sp, #0x30
+  174b66:      	add	r6, pc
+  174b68:      	cmp	r3, #0x0
+  174b6a:      	bne	0x174c42 <SeedPacket::DrawBackground(Sexy::Graphics*)+0xf2> @ imm = #0xd4
+  174b6c:      	ldr	r3, [r0, #0x38]
+  174b6e:      	vmov.f32	s16, #1.000000e+00
+  174b72:      	cmp	r3, #0x0
+  174b74:      	bne.w	0x174e60 <SeedPacket::DrawBackground(Sexy::Graphics*)+0x310> @ imm = #0x2e8
+  174b78:      	ldr	r3, [r4, #0x4c]
+  174b7a:      	cmp	r3, #0x0
+  174b7c:      	ble	0x174c4c <SeedPacket::DrawBackground(Sexy::Graphics*)+0xfc> @ imm = #0xcc
+  174b7e:      	ldr	r3, [r4, #0x24]
+  174b80:      	mov	r0, r5
+  174b82:      	vldr	s15, [r4, #84]
+  174b86:      	movs	r7, #0x0
+  174b88:      	mov.w	r8, #0x1
+  174b8c:      	mov.w	r10, #0xffffffff
+  174b90:      	rsbs	r3, r3, #0
+  174b92:      	mov.w	r9, #0x80
+  174b96:      	vmov	s16, r3
+  174b9a:      	vcvt.f32.s32	s16, s16
+  174b9e:      	vmul.f32	s16, s16, s15
+  174ba2:      	vmov.f32	s15, #5.000000e-01
+  174ba6:      	vcmpe.f32	s16, #0
+  174baa:      	vmrs	APSR_nzcv, fpscr
+  174bae:      	ite	gt
+  174bb0:      	vaddgt.f32	s16, s16, s15
+  174bb4:      	vsuble.f32	s16, s16, s15
+  174bb8:      	bl	0x311088 <Sexy::Graphics::PushState()> @ imm = #0x19c4cc
+  174bbc:      	ldr	r6, [r4, #0x24]
+  174bbe:      	movs	r1, #0x0
+  174bc0:      	ldr	r3, [r4, #0x20]
+  174bc2:      	mov	r2, r1
+  174bc4:      	vcvt.s32.f32	s16, s16
+  174bc8:      	mov	r0, r5
+  174bca:      	str	r6, [sp]
+  174bcc:      	mov	r6, r1
+  174bce:      	bl	0x30efb0 <Sexy::Graphics::ClipRect(int, int, int, int)> @ imm = #0x19a3de
+  174bd2:      	ldr	r3, [r4, #0x44]
+  174bd4:      	mov	r0, r5
+  174bd6:      	vcvt.f32.s32	s14, s16
+  174bda:      	mov	r1, r7
+  174bdc:      	str	r7, [sp, #0x4]
+  174bde:      	str.w	r10, [sp]
+  174be2:      	str.w	r9, [sp, #0x8]
+  174be6:      	vmov	r2, s14
+  174bea:      	str	r6, [sp, #0xc]
+  174bec:      	str	r6, [sp, #0x10]
+  174bee:      	str	r6, [sp, #0x14]
+  174bf0:      	str.w	r8, [sp, #0x18]
+  174bf4:      	str.w	r8, [sp, #0x1c]
+  174bf8:      	bl	0x173674 <DrawSeedPacket(Sexy::Graphics*, float, float, SeedType, SeedType, float, int, bool, bool, bool, bool, bool)> @ imm = #-0x1588
+  174bfc:      	ldr	r2, [r4, #0x24]
+  174bfe:      	mov	r0, r5
+  174c00:      	vmov	r1, s16
+  174c04:      	ldr	r3, [r4, #0x50]
+  174c06:      	add	r2, r1
+  174c08:      	str.w	r10, [sp]
+  174c0c:      	str	r7, [sp, #0x4]
+  174c0e:      	mov	r1, r7
+  174c10:      	vmov	s7, r2
+  174c14:      	str.w	r9, [sp, #0x8]
+  174c18:      	vcvt.f32.s32	s7, s7
+  174c1c:      	str	r6, [sp, #0xc]
+  174c1e:      	str	r6, [sp, #0x10]
+  174c20:      	str	r6, [sp, #0x14]
+  174c22:      	str.w	r8, [sp, #0x18]
+  174c26:      	str.w	r8, [sp, #0x1c]
+  174c2a:      	vmov	r2, s7
+  174c2e:      	bl	0x173674 <DrawSeedPacket(Sexy::Graphics*, float, float, SeedType, SeedType, float, int, bool, bool, bool, bool, bool)> @ imm = #-0x15be
+  174c32:      	mov	r0, r5
+  174c34:      	add	sp, #0x30
+  174c36:      	vpop	{d8}
+  174c3a:      	pop.w	{r4, r5, r6, r7, r8, r9, r10, lr}
+  174c3e:      	b.w	0x30fd90 <Sexy::Graphics::PopState()> @ imm = #0x19b14e
+  174c42:      	ldr	r3, [r4, #0x4c]
+  174c44:      	vldr	s16, [pc, #780]         @ 0x174f54 <SeedPacket::DrawBackground(Sexy::Graphics*)+0x404>
+  174c48:      	cmp	r3, #0x0
+  174c4a:      	bgt	0x174b7e <SeedPacket::DrawBackground(Sexy::Graphics*)+0x2e> @ imm = #-0xd0
+  174c4c:      	ldr	r7, [r4, #0x44]
+  174c4e:      	cmp	r7, #0x30
+  174c50:      	beq.w	0x174e9a <SeedPacket::DrawBackground(Sexy::Graphics*)+0x34a> @ imm = #0x246
+  174c54:      	ldr	r1, [r4, #0x60]
+  174c56:      	mov	r8, r1
+  174c58:      	cbz	r1, 0x174c5e <SeedPacket::DrawBackground(Sexy::Graphics*)+0x10e> @ imm = #0x2
+  174c5a:      	ldrb.w	r8, [r1, #0x40]
+  174c5e:      	ldr	r0, [r4, #0x14]
+  174c60:      	mov	r1, r8
+  174c62:      	bl	0x155930 <Board::HasConveyorBeltSeedBank(bool)> @ imm = #-0x1f336
+  174c66:      	cmp	r0, #0x0
+  174c68:      	beq.w	0x174e7a <SeedPacket::DrawBackground(Sexy::Graphics*)+0x32a> @ imm = #0x20e
+  174c6c:      	mov.w	r9, #0x0
+  174c70:      	ldr	r0, [r4, #0x14]
+  174c72:      	ldr	r1, [r4, #0x44]
+  174c74:      	ldr	r2, [r4, #0x48]
+  174c76:      	bl	0x15e2dc <Board::GetCurrentPlantCost(SeedType, SeedType)> @ imm = #-0x1699e
+  174c7a:      	mov	r10, r0
+  174c7c:      	ldr	r0, [r4, #0x10]
+  174c7e:      	ldr.w	r3, [r0, #0x900]
+  174c82:      	cmp	r3, #0x15
+  174c84:      	beq.w	0x174e8c <SeedPacket::DrawBackground(Sexy::Graphics*)+0x33c> @ imm = #0x204
+  174c88:      	cmp	r3, #0x19
+  174c8a:      	beq.w	0x174e8c <SeedPacket::DrawBackground(Sexy::Graphics*)+0x33c> @ imm = #0x1fe
+  174c8e:      	ldr.w	r3, [r0, #0x904]
+  174c92:      	cmp	r3, #0x3
+  174c94:      	beq.w	0x174ebe <SeedPacket::DrawBackground(Sexy::Graphics*)+0x36e> @ imm = #0x226
+  174c98:      	ldr	r3, [r4, #0x60]
+  174c9a:      	cmp	r3, #0x0
+  174c9c:      	beq.w	0x174fa2 <SeedPacket::DrawBackground(Sexy::Graphics*)+0x452> @ imm = #0x302
+  174ca0:      	ldr	r7, [r3, #0x38]
+  174ca2:      	vldr	s16, [pc, #688]         @ 0x174f54 <SeedPacket::DrawBackground(Sexy::Graphics*)+0x404>
+  174ca6:      	ldr	r3, [r4, #0x3c]
+  174ca8:      	vldr	s17, [pc, #680]         @ 0x174f54 <SeedPacket::DrawBackground(Sexy::Graphics*)+0x404>
+  174cac:      	cmp	r3, #0xa
+  174cae:      	it	ge
+  174cb0:      	movge	r7, #0xff
+  174cb2:      	it	ge
+  174cb4:      	vmovge.f32	s16, s17
+  174cb8:      	bl	0x2b26dc <LawnApp::IsSlotMachineLevel()> @ imm = #0x13da20
+  174cbc:      	cmp	r0, #0x0
+  174cbe:      	bne	0x174d32 <SeedPacket::DrawBackground(Sexy::Graphics*)+0x1e2> @ imm = #0x70
+  174cc0:      	ldrb.w	r3, [r4, #0x71]
+  174cc4:      	cmp	r3, #0x0
+  174cc6:      	beq.w	0x174f0e <SeedPacket::DrawBackground(Sexy::Graphics*)+0x3be> @ imm = #0x244
+  174cca:      	vldr	s15, [r4, #100]
+  174cce:      	vldr	s14, [pc, #648]         @ 0x174f58 <SeedPacket::DrawBackground(Sexy::Graphics*)+0x408>
+  174cd2:      	vcmpe.f32	s15, s14
+  174cd6:      	vmrs	APSR_nzcv, fpscr
+  174cda:      	ittt	pl
+  174cdc:      	movwpl	r3, #0x999a
+  174ce0:      	movtpl	r3, #0x3f99
+  174ce4:      	strpl	r3, [r4, #0x6c]
+  174ce6:      	bmi.w	0x174f78 <SeedPacket::DrawBackground(Sexy::Graphics*)+0x428> @ imm = #0x28e
+  174cea:      	ldr	r3, [r4, #0x40]
+  174cec:      	mov	r0, r5
+  174cee:      	ldr	r1, [r4, #0x6c]
+  174cf0:      	vldr	s17, [pc, #616]         @ 0x174f5c <SeedPacket::DrawBackground(Sexy::Graphics*)+0x40c>
+  174cf4:      	adds	r3, #0x19
+  174cf6:      	mov	r2, r1
+  174cf8:      	vmov	s14, r3
+  174cfc:      	vstr	s17, [sp]
+  174d00:      	vcvt.f32.s32	s14, s14
+  174d04:      	vmov	r3, s14
+  174d08:      	bl	0x30f09c <Sexy::Graphics::SetScale(float, float, float, float)> @ imm = #0x19a390
+  174d0c:      	vldr	s15, [r4, #108]
+  174d10:      	mov	r0, r5
+  174d12:      	vmov.f32	s13, #1.000000e+00
+  174d16:      	vmov.f32	s14, #2.500000e+01
+  174d1a:      	vsub.f32	s15, s13, s15
+  174d1e:      	vmul.f32	s14, s15, s14
+  174d22:      	vmul.f32	s17, s15, s17
+  174d26:      	vmov	r1, s14
+  174d2a:      	vmov	r2, s17
+  174d2e:      	bl	0x30f078 <Sexy::Graphics::TranslateF(float, float)> @ imm = #0x19a346
+  174d32:      	ldr	r0, [r4, #0x10]
+  174d34:      	bl	0x2b26dc <LawnApp::IsSlotMachineLevel()> @ imm = #0x13d9a4
+  174d38:      	cmp	r0, #0x0
+  174d3a:      	bne	0x174db8 <SeedPacket::DrawBackground(Sexy::Graphics*)+0x268> @ imm = #0x7a
+  174d3c:      	ldrb.w	r3, [r4, #0x71]
+  174d40:      	cbz	r3, 0x174db8 <SeedPacket::DrawBackground(Sexy::Graphics*)+0x268> @ imm = #0x74
+  174d42:      	vldr	s13, [r5, #16]
+  174d46:      	vldr	s14, [r5, #20]
+  174d4a:      	ldrb.w	r3, [r4, #0x70]
+  174d4e:      	vmov.f32	s12, #5.000000e+00
+  174d52:      	vmov.f32	s15, #2.500000e+00
+  174d56:      	vmul.f32	s11, s13, s12
+  174d5a:      	vmla.f32	s15, s14, s12
+  174d5e:      	cmp	r3, #0x0
+  174d60:      	bne.w	0x174eea <SeedPacket::DrawBackground(Sexy::Graphics*)+0x39a> @ imm = #0x186
+  174d64:      	ldr	r3, [pc, #0x204]        @ 0x174f6c <SeedPacket::DrawBackground(Sexy::Graphics*)+0x41c>
+  174d66:      	ldr	r3, [r6, r3]
+  174d68:      	ldr	r1, [r3]
+  174d6a:      	vldr	s7, [r4, #64]
+  174d6e:      	mov	r0, r5
+  174d70:      	vldr	s12, [pc, #492]         @ 0x174f60 <SeedPacket::DrawBackground(Sexy::Graphics*)+0x410>
+  174d74:      	vmov.f32	s10, #-1.000000e+00
+  174d78:      	vldr	s8, [pc, #488]          @ 0x174f64 <SeedPacket::DrawBackground(Sexy::Graphics*)+0x414>
+  174d7c:      	vcvt.f32.s32	s9, s7
+  174d80:      	vmul.f32	s14, s14, s12
+  174d84:      	vneg.f32	s12, s15
+  174d88:      	vmul.f32	s13, s13, s8
+  174d8c:      	vadd.f32	s15, s9, s10
+  174d90:      	vcvt.s32.f32	s14, s14
+  174d94:      	vcvt.s32.f32	s12, s12
+  174d98:      	vcvt.s32.f32	s13, s13
+  174d9c:      	vsub.f32	s15, s15, s11
+  174da0:      	vstr	s14, [sp, #4]
+  174da4:      	vmov	r3, s12
+  174da8:      	vstr	s13, [sp]
+  174dac:      	vcvt.s32.f32	s15, s15
+  174db0:      	vmov	r2, s15
+  174db4:      	bl	0x30dc5c <Sexy::Graphics::DrawImage(Sexy::Image*, int, int, int, int)> @ imm = #0x198ea4
+  174db8:      	ldr	r3, [r4, #0x10]
+  174dba:      	ldr.w	r3, [r3, #0x900]
+  174dbe:      	cmp	r3, #0x4c
+  174dc0:      	it	ne
+  174dc2:      	movne.w	r12, #0x0
+  174dc6:      	beq	0x174eb0 <SeedPacket::DrawBackground(Sexy::Graphics*)+0x360> @ imm = #0xe6
+  174dc8:      	ldr	r1, [r4, #0x40]
+  174dca:      	movs	r2, #0x1
+  174dcc:      	ldr	r0, [r4, #0x48]
+  174dce:      	movs	r6, #0x0
+  174dd0:      	ldr	r3, [r4, #0x44]
+  174dd2:      	str	r2, [sp, #0x10]
+  174dd4:      	vmov	s7, r1
+  174dd8:      	str	r0, [sp]
+  174dda:      	mov	r0, r5
+  174ddc:      	vcvt.f32.s32	s7, s7
+  174de0:      	str	r2, [sp, #0x18]
+  174de2:      	str	r2, [sp, #0x1c]
+  174de4:      	movs	r2, #0x0
+  174de6:      	vstr	s16, [sp, #4]
+  174dea:      	str	r7, [sp, #0x8]
+  174dec:      	str.w	r12, [sp, #0x14]
+  174df0:      	vmov	r1, s7
+  174df4:      	str	r6, [sp, #0xc]
+  174df6:      	bl	0x173674 <DrawSeedPacket(Sexy::Graphics*, float, float, SeedType, SeedType, float, int, bool, bool, bool, bool, bool)> @ imm = #-0x1786
+  174dfa:      	ldr	r0, [r4, #0x10]
+  174dfc:      	bl	0x2b26dc <LawnApp::IsSlotMachineLevel()> @ imm = #0x13d8dc
+  174e00:      	cmp	r0, #0x0
+  174e02:      	bne	0x174ea6 <SeedPacket::DrawBackground(Sexy::Graphics*)+0x356> @ imm = #0xa0
+  174e04:      	ldrb.w	r3, [r4, #0x71]
+  174e08:      	cbnz	r3, 0x174e1c <SeedPacket::DrawBackground(Sexy::Graphics*)+0x2cc> @ imm = #0x10
+  174e0a:      	vldr	s15, [pc, #332]         @ 0x174f58 <SeedPacket::DrawBackground(Sexy::Graphics*)+0x408>
+  174e0e:      	vldr	s14, [r4, #100]
+  174e12:      	vcmpe.f32	s14, s15
+  174e16:      	vmrs	APSR_nzcv, fpscr
+  174e1a:      	bpl	0x174ea6 <SeedPacket::DrawBackground(Sexy::Graphics*)+0x356> @ imm = #0x88
+  174e1c:      	movs	r3, #0x0
+  174e1e:      	mov.w	r1, #0x3f800000
+  174e22:      	mov	r0, r5
+  174e24:      	mov	r2, r1
+  174e26:      	str	r3, [sp]
+  174e28:      	bl	0x30f09c <Sexy::Graphics::SetScale(float, float, float, float)> @ imm = #0x19a270
+  174e2c:      	vldr	s12, [r4, #108]
+  174e30:      	mov	r0, r5
+  174e32:      	vmov.f32	s15, #1.000000e+00
+  174e36:      	vldr	s14, [pc, #292]         @ 0x174f5c <SeedPacket::DrawBackground(Sexy::Graphics*)+0x40c>
+  174e3a:      	vmov.f32	s13, #2.500000e+01
+  174e3e:      	vsub.f32	s15, s12, s15
+  174e42:      	vmul.f32	s13, s15, s13
+  174e46:      	vmul.f32	s14, s15, s14
+  174e4a:      	vmov	r1, s13
+  174e4e:      	vmov	r2, s14
+  174e52:      	add	sp, #0x30
+  174e54:      	vpop	{d8}
+  174e58:      	pop.w	{r4, r5, r6, r7, r8, r9, r10, lr}
+  174e5c:      	b.w	0x30f078 <Sexy::Graphics::TranslateF(float, float)> @ imm = #0x19a218
+  174e60:      	ldr	r2, [r0, #0x34]
+  174e62:      	vmov	s7, r3
+  174e66:      	vcvt.f32.s32	s15, s7
+  174e6a:      	subs	r2, r3, r2
+  174e6c:      	vmov	s16, r2
+  174e70:      	vcvt.f32.s32	s16, s16
+  174e74:      	vdiv.f32	s16, s16, s15
+  174e78:      	b	0x174b78 <SeedPacket::DrawBackground(Sexy::Graphics*)+0x28> @ imm = #-0x304
+  174e7a:      	ldr	r0, [r4, #0x10]
+  174e7c:      	bl	0x2b26dc <LawnApp::IsSlotMachineLevel()> @ imm = #0x13d85c
+  174e80:      	cmp	r0, #0x0
+  174e82:      	bne.w	0x174c6c <SeedPacket::DrawBackground(Sexy::Graphics*)+0x11c> @ imm = #-0x21a
+  174e86:      	mov.w	r9, #0x1
+  174e8a:      	b	0x174c70 <SeedPacket::DrawBackground(Sexy::Graphics*)+0x120> @ imm = #-0x21e
+  174e8c:      	ldrb.w	r3, [r4, #0x58]
+  174e90:      	cmp	r3, #0x0
+  174e92:      	bne.w	0x174c8e <SeedPacket::DrawBackground(Sexy::Graphics*)+0x13e> @ imm = #-0x208
+  174e96:      	movs	r7, #0x40
+  174e98:      	b	0x174ca6 <SeedPacket::DrawBackground(Sexy::Graphics*)+0x156> @ imm = #-0x1f6
+  174e9a:      	ldr	r3, [r4, #0x48]
+  174e9c:      	cmp.w	r3, #0xffffffff
+  174ea0:      	it	ne
+  174ea2:      	movne	r7, r3
+  174ea4:      	b	0x174c54 <SeedPacket::DrawBackground(Sexy::Graphics*)+0x104> @ imm = #-0x254
+  174ea6:      	add	sp, #0x30
+  174ea8:      	vpop	{d8}
+  174eac:      	pop.w	{r4, r5, r6, r7, r8, r9, r10, pc}
+  174eb0:      	ldr	r3, [r4, #0x60]
+  174eb2:      	mov	r12, r3
+  174eb4:      	cmp	r3, #0x0
+  174eb6:      	beq	0x174dc8 <SeedPacket::DrawBackground(Sexy::Graphics*)+0x278> @ imm = #-0xf2
+  174eb8:      	ldrb.w	r12, [r3, #0x40]
+  174ebc:      	b	0x174dc8 <SeedPacket::DrawBackground(Sexy::Graphics*)+0x278> @ imm = #-0xf8
+  174ebe:      	ldr	r2, [r4, #0x14]
+  174ec0:      	add.w	r2, r2, #0x5680
+  174ec4:      	ldr	r3, [r2, #0x20]
+  174ec6:      	cmp	r3, #0x1
+  174ec8:      	beq	0x174ef2 <SeedPacket::DrawBackground(Sexy::Graphics*)+0x3a2> @ imm = #0x26
+  174eca:      	cmp	r3, #0x5
+  174ecc:      	beq	0x174ed4 <SeedPacket::DrawBackground(Sexy::Graphics*)+0x384> @ imm = #0x4
+  174ece:      	cmp	r3, #0x9
+  174ed0:      	bne.w	0x174ff0 <SeedPacket::DrawBackground(Sexy::Graphics*)+0x4a0> @ imm = #0x11c
+  174ed4:      	ldr	r3, [r4, #0x44]
+  174ed6:      	cmp	r3, #0x1
+  174ed8:      	beq	0x174efe <SeedPacket::DrawBackground(Sexy::Graphics*)+0x3ae> @ imm = #0x22
+  174eda:      	ldrb.w	r3, [r0, #0x91c]
+  174ede:      	cmp	r3, #0x0
+  174ee0:      	beq	0x174faa <SeedPacket::DrawBackground(Sexy::Graphics*)+0x45a> @ imm = #0xc6
+  174ee2:      	vldr	s16, [pc, #112]         @ 0x174f54 <SeedPacket::DrawBackground(Sexy::Graphics*)+0x404>
+  174ee6:      	movs	r7, #0xff
+  174ee8:      	b	0x174ca6 <SeedPacket::DrawBackground(Sexy::Graphics*)+0x156> @ imm = #-0x246
+  174eea:      	ldr	r3, [pc, #0x84]         @ 0x174f70 <SeedPacket::DrawBackground(Sexy::Graphics*)+0x420>
+  174eec:      	ldr	r3, [r6, r3]
+  174eee:      	ldr	r1, [r3]
+  174ef0:      	b	0x174d6a <SeedPacket::DrawBackground(Sexy::Graphics*)+0x21a> @ imm = #-0x18a
+  174ef2:      	ldr	r3, [r2, #0x28]
+  174ef4:      	adds	r3, #0x1
+  174ef6:      	bne	0x174eda <SeedPacket::DrawBackground(Sexy::Graphics*)+0x38a> @ imm = #-0x20
+  174ef8:      	ldr	r3, [r4, #0x44]
+  174efa:      	cmp	r3, #0x0
+  174efc:      	bne	0x174eda <SeedPacket::DrawBackground(Sexy::Graphics*)+0x38a> @ imm = #-0x26
+  174efe:      	ldr	r1, [r2, #0x4]
+  174f00:      	add	r0, sp, #0x20
+  174f02:      	movs	r2, #0x4b
+  174f04:      	bl	0x1fa228 <GetFlashingColor(int, int)> @ imm = #0x85320
+  174f08:      	ldr	r7, [sp, #0x20]
+  174f0a:      	ldr	r0, [r4, #0x10]
+  174f0c:      	b	0x174ca6 <SeedPacket::DrawBackground(Sexy::Graphics*)+0x156> @ imm = #-0x26a
+  174f0e:      	movs	r3, #0x3
+  174f10:      	mov.w	r1, #0x3f800000
+  174f14:      	ldr	r2, [r4, #0x64]
+  174f16:      	str	r3, [sp, #0x4]
+  174f18:      	movw	r3, #0x999a
+  174f1c:      	str	r1, [sp]
+  174f1e:      	movw	r1, #0x999a
+  174f22:      	movt	r3, #0x3f99
+  174f26:      	vmov	r0, s17
+  174f2a:      	movt	r1, #0x3e19
+  174f2e:      	bl	0x1f9c20 <TodAnimateCurveFloatTime(float, float, float, float, float, TodCurves)> @ imm = #0x84cee
+  174f32:      	ldrb.w	r3, [r4, #0x71]
+  174f36:      	str	r0, [r4, #0x6c]
+  174f38:      	cmp	r3, #0x0
+  174f3a:      	bne.w	0x174cea <SeedPacket::DrawBackground(Sexy::Graphics*)+0x19a> @ imm = #-0x254
+  174f3e:      	vldr	s15, [pc, #24]          @ 0x174f58 <SeedPacket::DrawBackground(Sexy::Graphics*)+0x408>
+  174f42:      	vldr	s14, [r4, #100]
+  174f46:      	vcmpe.f32	s14, s15
+  174f4a:      	vmrs	APSR_nzcv, fpscr
+  174f4e:      	bpl.w	0x174d32 <SeedPacket::DrawBackground(Sexy::Graphics*)+0x1e2> @ imm = #-0x220
+  174f52:      	b	0x174cea <SeedPacket::DrawBackground(Sexy::Graphics*)+0x19a> @ imm = #-0x26c
+  174f54:      	movs	r0, r0
+  174f56:      	movs	r0, r0
+  174f58:      	ldr	r1, [sp, #0x268]
+  174f5a:      	subs	r6, #0x19
+  174f5c:      	movs	r0, r0
+  174f5e:      	tst	r4, r1
+  174f60:      	movs	r0, r0
+  174f62:      	cmp	r0, r4
+  174f64:      	movs	r0, r0
+  174f66:      	rsbs	r0, r6, #0
+  174f68:      	add	r5, sp, #0xb8
+  174f6a:      	lsls	r1, r2, #0x1
+  174f6c:      	b	0x174f70 <SeedPacket::DrawBackground(Sexy::Graphics*)+0x420> @ imm = #0x0
+  174f6e:      	<unknown>
+  174f72:      	<unknown>
+  174f76:      	movs	r0, r0
+  174f78:      	movw	r2, #0x999a
+  174f7c:      	movs	r3, #0x3
+  174f7e:      	movt	r2, #0x3f99
+  174f82:      	str	r3, [sp, #0x4]
+  174f84:      	str	r2, [sp]
+  174f86:      	mov.w	r3, #0x3f800000
+  174f8a:      	vmov	r0, s17
+  174f8e:      	vmov	r1, s14
+  174f92:      	vmov	r2, s15
+  174f96:      	bl	0x1f9c20 <TodAnimateCurveFloatTime(float, float, float, float, float, TodCurves)> @ imm = #0x84c86
+  174f9a:      	ldrb.w	r3, [r4, #0x71]
+  174f9e:      	str	r0, [r4, #0x6c]
+  174fa0:      	b	0x174f38 <SeedPacket::DrawBackground(Sexy::Graphics*)+0x3e8> @ imm = #-0x6c
+  174fa2:      	movs	r7, #0xff
+  174fa4:      	vldr	s16, [pc, #-52]         @ 0x174f74 <SeedPacket::DrawBackground(Sexy::Graphics*)+0x424>
+  174fa8:      	b	0x174ca6 <SeedPacket::DrawBackground(Sexy::Graphics*)+0x156> @ imm = #-0x306
+  174faa:      	bl	0x2b26dc <LawnApp::IsSlotMachineLevel()> @ imm = #0x13d72e
+  174fae:      	cbnz	r0, 0x174fc0 <SeedPacket::DrawBackground(Sexy::Graphics*)+0x470> @ imm = #0xe
+  174fb0:      	cmp.w	r8, #0x0
+  174fb4:      	beq	0x174fd0 <SeedPacket::DrawBackground(Sexy::Graphics*)+0x480> @ imm = #0x18
+  174fb6:      	mov	r1, r10
+  174fb8:      	ldr	r0, [r4, #0x14]
+  174fba:      	bl	0x1586e8 <Board::CanTakeDeathMoney(int)> @ imm = #-0x1c8d6
+  174fbe:      	cbz	r0, 0x174fe8 <SeedPacket::DrawBackground(Sexy::Graphics*)+0x498> @ imm = #0x26
+  174fc0:      	vcmpe.f32	s16, #0
+  174fc4:      	vmrs	APSR_nzcv, fpscr
+  174fc8:      	ble	0x174ff6 <SeedPacket::DrawBackground(Sexy::Graphics*)+0x4a6> @ imm = #0x2a
+  174fca:      	ldr	r0, [r4, #0x10]
+  174fcc:      	movs	r7, #0x80
+  174fce:      	b	0x174ca6 <SeedPacket::DrawBackground(Sexy::Graphics*)+0x156> @ imm = #-0x32c
+  174fd0:      	ldr.w	r8, [r4, #0x14]
+  174fd4:      	mov	r0, r4
+  174fd6:      	bl	0x174988 <SeedPacket::GetPlayerIndex()> @ imm = #-0x652
+  174fda:      	mov	r1, r10
+  174fdc:      	mov	r2, r0
+  174fde:      	mov	r0, r8
+  174fe0:      	bl	0x158644 <Board::CanTakeSunMoney(int, int)> @ imm = #-0x1c9a0
+  174fe4:      	cmp	r0, #0x0
+  174fe6:      	bne	0x174fc0 <SeedPacket::DrawBackground(Sexy::Graphics*)+0x470> @ imm = #-0x2a
+  174fe8:      	cmp.w	r9, #0x0
+  174fec:      	beq	0x174fc0 <SeedPacket::DrawBackground(Sexy::Graphics*)+0x470> @ imm = #-0x30
+  174fee:      	b	0x174fca <SeedPacket::DrawBackground(Sexy::Graphics*)+0x47a> @ imm = #-0x28
+  174ff0:      	cmp	r3, #0x1d
+  174ff2:      	beq	0x174efe <SeedPacket::DrawBackground(Sexy::Graphics*)+0x3ae> @ imm = #-0xf8
+  174ff4:      	b	0x174eda <SeedPacket::DrawBackground(Sexy::Graphics*)+0x38a> @ imm = #-0x11e
+  174ff6:      	mov	r1, r7
+  174ff8:      	ldr	r0, [r4, #0x14]
+  174ffa:      	bl	0x15c98c <Board::PlantingRequirementsMet(SeedType)> @ imm = #-0x18672
+  174ffe:      	cmp	r0, #0x0
+  175000:      	beq	0x174fca <SeedPacket::DrawBackground(Sexy::Graphics*)+0x47a> @ imm = #-0x3a
+  175002:      	ldr	r0, [r4, #0x10]
+  175004:      	movs	r7, #0xff
+  175006:      	b	0x174ca6 <SeedPacket::DrawBackground(Sexy::Graphics*)+0x156> @ imm = #-0x364

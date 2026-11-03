@@ -1,0 +1,32 @@
+[
+  {
+    "source": "C:\\Users\\Administrator\\CLionProjects\\codex\\tv_assets\\TV_HD_1.3.4_NoBushes\\unpacked\\assets\\files\\images\\board_selector.png",
+    "file": "board_selector.png",
+    "sha256": "b1bcebbd0ca73dd28e63a67e21640f4d4197e261b88a9f24e49895cbf5011057"
+  },
+  {
+    "source": "C:\\Users\\Administrator\\CLionProjects\\codex\\tv_assets\\TV_HD_1.3.4_NoBushes\\unpacked\\assets\\files\\images\\board_selector_BLUE.png",
+    "file": "board_selector_BLUE.png",
+    "sha256": "bb07bc7cb0edacc0de5088ee6a105cb501340d5a15e3d02ecbda2d170809a20e"
+  },
+  {
+    "source": "C:\\Users\\Administrator\\CLionProjects\\codex\\tv_assets\\TV_HD_1.3.4_NoBushes\\sprites\\images\\seed_selector.png",
+    "file": "seed_selector.png",
+    "sha256": "87c1522f7c790fc23d672e07ef099400ad56b0fdbff2a51c948e82b4da7badb5"
+  },
+  {
+    "source": "C:\\Users\\Administrator\\CLionProjects\\codex\\tv_assets\\TV_HD_1.3.4_NoBushes\\sprites\\images\\seed_selector_BLUE.png",
+    "file": "seed_selector_BLUE.png",
+    "sha256": "cee6b35a198313bb0c4f3454f7130130de05d5eeb7595aacfc7e907454bed89f"
+  },
+  {
+    "source": "C:\\Users\\Administrator\\CLionProjects\\codex\\tv_assets\\TV_HD_1.3.4_NoBushes\\unpacked\\assets\\files\\properties\\resources.xml",
+    "sha256": "088106854442694951f943f6b5d091d76d3d729d4e319f159a7373c77e7e7ccc",
+    "declarations_lines": [
+      194,
+      195,
+      206,
+      207
+    ]
+  }
+]

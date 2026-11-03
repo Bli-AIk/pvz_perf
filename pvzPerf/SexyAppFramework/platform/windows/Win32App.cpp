@@ -26,6 +26,12 @@ void SexyAppBase::RequestNativeClose() {
 }
 
 namespace {
+constexpr UINT NativeTouchMessage = WM_APP + 0x305;
+constexpr unsigned int TouchCancel = 0x80000000u;
+constexpr unsigned int TouchCancelAll = 0x40000000u;
+bool TouchPromotedMouse() {
+    return (static_cast<ULONG_PTR>(GetMessageExtraInfo()) & 0xFFFFFF80u) == 0xFF515780u;
+}
 constexpr char MainWindowClass[] = "pvz_perf";
 constexpr char HiddenWindowClass[] = "pvz_perf_hidden";
 [[noreturn]] void WindowFailure(const char* operation) {
@@ -124,10 +130,12 @@ void SexyAppBase::MakeWindow() {
     };
     if(mScaleHDREnabled) {
         init.extraExtensions.push_back(VK_EXT_SWAPCHAIN_COLOR_SPACE_EXTENSION_NAME);
-        swapchain.imageFormat=VK_FORMAT_A2B10G10R10_UNORM_PACK32;
-        swapchain.imageColorSpace=VK_COLOR_SPACE_HDR10_ST2084_EXT;
+        swapchain.imageFormat=VK_FORMAT_R16G16B16A16_SFLOAT;
+        swapchain.imageColorSpace=VK_COLOR_SPACE_EXTENDED_SRGB_LINEAR_EXT;
     }
     mGpuContext=std::make_unique<GpuContext>(init,mHWnd,swapchain);
+    mScaleHDREnabled = mScaleHDREnabled &&
+        mGpuContext->swapchainColorSpace == VK_COLOR_SPACE_EXTENDED_SRGB_LINEAR_EXT;
 #endif
     ResolveHDRAutoParams();
     mUseExternalHWND=false;mExternalHWND=nullptr;mIsPhysWindowed=true;
@@ -139,6 +147,9 @@ void SexyAppBase::MakeWindow() {
     mActive=GetFocus()==mHWnd;
     mPhysMinimized=mMinimized=false;
     mNativeWindowReady=true;
+#if _WIN32_WINNT < 0x0602
+    if (!RegisterTouchWindow(mHWnd, 0)) WindowFailure("RegisterTouchWindow");
+#endif
     RehupFocus();
     EnforceCursor();
 }
@@ -175,6 +186,10 @@ void SexyAppBase::PumpWindowEvents() {
         }
         if(message.hwnd==mHWnd &&
             (message.message==WM_MOUSEMOVE || message.message==WM_MOUSELEAVE)) {
+            if (message.message == WM_MOUSEMOVE && !TouchPromotedMouse()) {
+                mNativeMouseClientPosition = {GET_X_LPARAM(message.lParam), GET_Y_LPARAM(message.lParam)};
+                mNativeMouseMotionPending = true;
+            }
             continue;
         }
         TranslateMessage(&message);
@@ -358,9 +373,9 @@ POINT SexyAppBase::ReadNativeMousePosition() {
 void SexyAppBase::SampleNativeMousePosition() {
     if(mPlayingDemoBuffer || !mActive || mPhysMinimized || mSwitchingScreenMode) return;
     if(!mNativeWindowShown) return;
-    const auto position=[&] {
-        return ReadNativeMousePosition();
-    }();
+    if (mNativeTouchOwnsCursor && !mNativeMouseMotionPending) return;
+    const auto position = mNativeMouseMotionPending ? mNativeMouseClientPosition : ReadNativeMousePosition();
+    mNativeMouseMotionPending = false;
     if(mRecordingDemoBuffer && !mShutdown) {
         const int dx=position.x-mLastDemoMouseX,dy=position.y-mLastDemoMouseY;
         if(std::abs(dx)<32 && std::abs(dy)<32) {
@@ -390,6 +405,7 @@ void SexyAppBase::SampleNativeMousePosition() {
 }
 void SexyAppBase::NativeMouseMove(double x,double y) {
     if(mSwitchingScreenMode) return;
+    mNativeTouchOwnsCursor = false;
     if(mNativeResizePending && !mPhysMinimized) UpdateWindowGeometry();
     const auto pos=LogicalMouse(*this,x,y);
     const auto client=ClientRect(mHWnd);
@@ -407,6 +423,20 @@ void SexyAppBase::NativeMouseMove(double x,double y) {
     if(!inside) mWidgetManager->MouseExit(pos.mX,pos.mY);
     EnforceCursor();
     if(moved) mLastUserInputTick=SexyGetTickCount();
+}
+void SexyAppBase::QueueNativeTouch(unsigned int id, unsigned int flags, double x, double y) {
+    if (!mNativeWindowReady || mSwitchingScreenMode) return;
+    mNativeTouchOwnsCursor = true;
+    const auto point = LogicalMouse(*this, x, y);
+    if ((flags & TOUCHEVENTF_DOWN) && !mScreenBounds.Contains(point.mX, point.mY)) return;
+    MSG message{};
+    message.hwnd = mHWnd;
+    message.message = NativeTouchMessage;
+    message.wParam = WPARAM(id) | (WPARAM(flags) << 32);
+    message.lParam = LPARAM(static_cast<unsigned int>(point.mX)) |
+        LPARAM(static_cast<unsigned long long>(static_cast<unsigned int>(point.mY)) << 32);
+    mDeferredMessages.push_back(message);
+    mNativeTouchOwnsCursor = true;
 }
 void SexyAppBase::NativeMouseLeave() {
     mMouseIn=false;
@@ -457,6 +487,7 @@ void SexyAppBase::NativeFocusChanged(bool focused) {
     mActive=focused;
     if(focused) mHdrTargetPending=true;
     else {
+        mWidgetManager->CancelTouches();
         mWidgetManager->CancelMouseDownState();mNativeLastClickTime.fill(-1000);
         ClearKeysDown();ReleaseCursorClip();NativeMouseLeave();
     }
@@ -874,6 +905,7 @@ static bool ScreenSaverWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 
 LRESULT CALLBACK SexyAppBase::WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+    if (uMsg >= WM_MOUSEFIRST && uMsg <= WM_MOUSELAST && TouchPromotedMouse()) return 0;
 	if (uMsg == WM_MOUSEMOVE || uMsg == WM_MOUSELEAVE)
 		return 0;
 	if (uMsg == WM_SETCURSOR && LOWORD(lParam) == HTCLIENT)
@@ -937,6 +969,60 @@ LRESULT CALLBACK SexyAppBase::WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 	if (!aSexyApp->mNativeWindowReady)
 		return DefWindowProc(hWnd, uMsg, wParam, lParam);
 
+#if _WIN32_WINNT >= 0x0602
+    if (uMsg == WM_POINTERCAPTURECHANGED) {
+        aSexyApp->QueueNativeTouch(GET_POINTERID_WPARAM(wParam), TouchCancel, 0, 0);
+        return 0;
+    }
+    if (uMsg == WM_POINTERDOWN || uMsg == WM_POINTERUPDATE || uMsg == WM_POINTERUP) {
+        const auto id = GET_POINTERID_WPARAM(wParam);
+        POINTER_INPUT_TYPE type{};
+        if (GetPointerType(id, &type) && type == PT_TOUCH) {
+            POINTER_TOUCH_INFO points[32]{};
+            unsigned int count = 32;
+            if (!GetPointerFrameTouchInfo(id, &count, points)) {
+                aSexyApp->QueueNativeTouch(0, TouchCancelAll, 0, 0);
+                return 0;
+            }
+            POINT origin{};
+            if (!ClientToScreen(hWnd, &origin)) {
+                aSexyApp->QueueNativeTouch(0, TouchCancelAll, 0, 0);
+                return 0;
+            }
+            for (unsigned int i = 0; i < count; ++i) {
+                const auto& info = points[i].pointerInfo;
+                unsigned int flags = 0;
+                if (info.pointerFlags & POINTER_FLAG_CANCELED) flags = TouchCancel;
+                else if (info.pointerFlags & POINTER_FLAG_DOWN) flags = TOUCHEVENTF_DOWN;
+                else if (info.pointerFlags & POINTER_FLAG_UP) flags = TOUCHEVENTF_UP;
+                else if (info.pointerFlags & POINTER_FLAG_INCONTACT) flags = TOUCHEVENTF_MOVE;
+                if (!flags) continue;
+                const auto point = info.ptPixelLocation;
+                aSexyApp->QueueNativeTouch(info.pointerId, flags, point.x - origin.x, point.y - origin.y);
+            }
+            SkipPointerFrameMessages(id);
+            return 0;
+        }
+    }
+#else
+    if (uMsg == WM_TOUCH) {
+        const auto handle = reinterpret_cast<HTOUCHINPUT>(lParam);
+        struct CloseTouch { HTOUCHINPUT handle; ~CloseTouch(){CloseTouchInputHandle(handle);} } close{handle};
+        TOUCHINPUT points[32]{};
+        const unsigned int count = LOWORD(wParam);
+        if (count > 32 || !GetTouchInputInfo(handle, count, points, sizeof(TOUCHINPUT))) {
+            aSexyApp->QueueNativeTouch(0, TouchCancelAll, 0, 0);
+            return 0;
+        }
+        POINT origin{};
+        if (!ClientToScreen(hWnd, &origin)) return 0;
+        for (unsigned int i = 0; i < count; ++i)
+            aSexyApp->QueueNativeTouch(points[i].dwID, points[i].dwFlags,
+                points[i].x / 100.0 - origin.x, points[i].y / 100.0 - origin.y);
+        return 0;
+    }
+#endif
+
 	auto deferMessage = [&] {
 		MSG message{};
 		message.hwnd = hWnd; message.message = uMsg;
@@ -959,6 +1045,7 @@ LRESULT CALLBACK SexyAppBase::WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 		// capture. Capture and ClipCursor are independent state machines: the
 		// application is still the active fullscreen foreground window here, so
 		// cancelling capture must not release its visible-game-area confinement.
+        aSexyApp->mWidgetManager->CancelTouches();
 		break;
 	case WM_SETFOCUS:
 		if (aSexyApp != NULL && hWnd == aSexyApp->mHWnd)
@@ -970,7 +1057,9 @@ LRESULT CALLBACK SexyAppBase::WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 		break;
 	case WM_CAPTURECHANGED:
 		if (reinterpret_cast<HWND>(lParam) != hWnd)
+        {
 			aSexyApp->mWidgetManager->CancelMouseDownState();
+        }
 		break;
 	case WM_DPICHANGED:
 		if (!aSexyApp->mNativeFullscreen)
@@ -1413,7 +1502,21 @@ void SexyAppBase::ProcessMessageNow(UINT uMsg, WPARAM wParam, LPARAM lParam, HWN
 		return;
 
 	switch (uMsg)
-	{
+    {
+    case NativeTouchMessage: {
+        const unsigned int flags = static_cast<unsigned int>(wParam >> 32);
+        const TouchEvent event{0x100000000ULL | static_cast<unsigned int>(wParam),
+            static_cast<int>(static_cast<unsigned int>(lParam)),
+            static_cast<int>(static_cast<unsigned long long>(lParam) >> 32)};
+        mNativeTouchOwnsCursor = true;
+        mLastUserInputTick = SexyGetTickCount();
+        if (flags & TouchCancelAll) mWidgetManager->CancelTouches();
+        else if (flags & TouchCancel) mWidgetManager->TouchCanceled(event);
+        else if (flags & TOUCHEVENTF_DOWN) mWidgetManager->TouchBegan(event);
+        else if (flags & TOUCHEVENTF_UP) mWidgetManager->TouchEnded(event);
+        else if (flags & TOUCHEVENTF_MOVE) mWidgetManager->TouchMoved(event);
+        break;
+    }
 	case WM_KILLFOCUS:
 		NativeFocusChanged(false);
 		break;

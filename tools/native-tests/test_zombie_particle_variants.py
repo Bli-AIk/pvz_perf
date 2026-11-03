@@ -117,7 +117,7 @@ class ZombieParticleVariantTests(unittest.TestCase):
         self.assertIn("!mInPool && !TestBit(theDamageFlags, DamageFlags::DAMAGE_DOESNT_LEAVE_BODY)", arm)
         self.assertIn("aBodyReanim->SetVariantOption(", arm)
         self.assertLess(arm.index("GetZombieArmParticleVariant"), arm.index("AddTodParticle"))
-        spit = source.split("void Zombie::BossHeadSpitEffect()", 1)[1].split("\n}\n", 1)[0]
+        spit = source.split("void Zombie::BossHeadSpitEffect(", 1)[1].split("\n}\n", 1)[0]
         self.assertEqual(spit.count("PARTICLE_ZOMBIE_BOSS_FIREBALL"), 2)
         self.assertEqual(spit.count("ParticleVariants::ZombieBossFireball::ZombieBossIceballBurst"), 1)
 

@@ -1,0 +1,99 @@
+{
+  "date": "2026-11-03",
+  "repository": "https://github.com/IsraelDXPP/PvZ-Windows-Phone-decomp",
+  "commit": "26cbb77df48c674dca6cb6b1fa9ad6783903a5c4",
+  "scope": "WP decompilation plus modern MonoGame port; not a binary IL verification of original WP release",
+  "runtime_changes": false,
+  "files": [
+    {
+      "path": "README.md",
+      "url": "https://raw.githubusercontent.com/IsraelDXPP/PvZ-Windows-Phone-decomp/26cbb77df48c674dca6cb6b1fa9ad6783903a5c4/README.md",
+      "bytes": 4891,
+      "sha256": "46b455312f22ebb04f135bce878eb4d3f44a956f1ec6fb62a434a00660af4715"
+    },
+    {
+      "path": "Sexy/Main.cs",
+      "url": "https://raw.githubusercontent.com/IsraelDXPP/PvZ-Windows-Phone-decomp/26cbb77df48c674dca6cb6b1fa9ad6783903a5c4/Sexy/Main.cs",
+      "bytes": 21804,
+      "sha256": "c5c89b95781064d79413c0974c80b06aa30fc3869f4f1ebe990a5edab95bfe87"
+    },
+    {
+      "path": "Sexy/InputController.cs",
+      "url": "https://raw.githubusercontent.com/IsraelDXPP/PvZ-Windows-Phone-decomp/26cbb77df48c674dca6cb6b1fa9ad6783903a5c4/Sexy/InputController.cs",
+      "bytes": 487,
+      "sha256": "863678d9381d8fe99e204e9372055c4685d264547cd243aae0e748d28016d06a"
+    },
+    {
+      "path": "Sexy/_Touch.cs",
+      "url": "https://raw.githubusercontent.com/IsraelDXPP/PvZ-Windows-Phone-decomp/26cbb77df48c674dca6cb6b1fa9ad6783903a5c4/Sexy/_Touch.cs",
+      "bytes": 176,
+      "sha256": "0724711f27ff9eaef18a054ef2e2b417d6aaad383d49f500aa7b7882f0568a63"
+    },
+    {
+      "path": "Sexy/_Phase.cs",
+      "url": "https://raw.githubusercontent.com/IsraelDXPP/PvZ-Windows-Phone-decomp/26cbb77df48c674dca6cb6b1fa9ad6783903a5c4/Sexy/_Phase.cs",
+      "bytes": 118,
+      "sha256": "07193d408c1c6eb8103dce4c6d84d1eb06972d48cb7b2dd8c987975310ac97b0"
+    },
+    {
+      "path": "Sexy/SexyAppBase.cs",
+      "url": "https://raw.githubusercontent.com/IsraelDXPP/PvZ-Windows-Phone-decomp/26cbb77df48c674dca6cb6b1fa9ad6783903a5c4/Sexy/SexyAppBase.cs",
+      "bytes": 19780,
+      "sha256": "0649ebd5e79b2371b6b6da55db4eb5f0c0892128acdb29f0c58f7d45c24fd056"
+    },
+    {
+      "path": "Sexy/WidgetManager.cs",
+      "url": "https://raw.githubusercontent.com/IsraelDXPP/PvZ-Windows-Phone-decomp/26cbb77df48c674dca6cb6b1fa9ad6783903a5c4/Sexy/WidgetManager.cs",
+      "bytes": 16954,
+      "sha256": "6d9b09c5bc09eada74c7383ce4c4af2c68f766a71351b45543164fd101b8a542"
+    },
+    {
+      "path": "Sexy/Widget.cs",
+      "url": "https://raw.githubusercontent.com/IsraelDXPP/PvZ-Windows-Phone-decomp/26cbb77df48c674dca6cb6b1fa9ad6783903a5c4/Sexy/Widget.cs",
+      "bytes": 14439,
+      "sha256": "a61e8c323d2a56f53848d4b0827e3ac33a9a5dc0dc9efbaf5df06efe4ecfcb99"
+    },
+    {
+      "path": "Sexy/ScrollWidget.cs",
+      "url": "https://raw.githubusercontent.com/IsraelDXPP/PvZ-Windows-Phone-decomp/26cbb77df48c674dca6cb6b1fa9ad6783903a5c4/Sexy/ScrollWidget.cs",
+      "bytes": 25170,
+      "sha256": "ab53246abb17de00877bcccc2d5b5b34ad82d720190b5cae38f4bc390cc43e8c"
+    },
+    {
+      "path": "Sexy/Constants.cs",
+      "url": "https://raw.githubusercontent.com/IsraelDXPP/PvZ-Windows-Phone-decomp/26cbb77df48c674dca6cb6b1fa9ad6783903a5c4/Sexy/Constants.cs",
+      "bytes": 68842,
+      "sha256": "f27b66d8a06c810dbe923139e4f8cdcdabad5b62c712c1d5483dac90be39e343"
+    },
+    {
+      "path": "Lawn/Board.cs",
+      "url": "https://raw.githubusercontent.com/IsraelDXPP/PvZ-Windows-Phone-decomp/26cbb77df48c674dca6cb6b1fa9ad6783903a5c4/Lawn/Board.cs",
+      "bytes": 308100,
+      "sha256": "53acb118d5575d476eed1892a306ee1ce888f887e83ce12d1fbc8eb1065d2755"
+    },
+    {
+      "path": "Lawn/SeedBank.cs",
+      "url": "https://raw.githubusercontent.com/IsraelDXPP/PvZ-Windows-Phone-decomp/26cbb77df48c674dca6cb6b1fa9ad6783903a5c4/Lawn/SeedBank.cs",
+      "bytes": 8255,
+      "sha256": "6ea1da497337700c6087f4a6d04ecddb9e9c3af3d18dfb3cf41e343ed74d037a"
+    },
+    {
+      "path": "Lawn/SeedPacket.cs",
+      "url": "https://raw.githubusercontent.com/IsraelDXPP/PvZ-Windows-Phone-decomp/26cbb77df48c674dca6cb6b1fa9ad6783903a5c4/Lawn/SeedPacket.cs",
+      "bytes": 28351,
+      "sha256": "5ae32e6f7ecd1785eb0bf0bb9c09e39716bbc5ee5bc1f5e1b4394974f533523f"
+    },
+    {
+      "path": "Lawn/CursorObject.cs",
+      "url": "https://raw.githubusercontent.com/IsraelDXPP/PvZ-Windows-Phone-decomp/26cbb77df48c674dca6cb6b1fa9ad6783903a5c4/Lawn/CursorObject.cs",
+      "bytes": 5477,
+      "sha256": "4f2bdf438cb86dcbb56762b4531fe8a0c813f28026be41e9841bdd93ac57d797"
+    },
+    {
+      "path": "Lawn/SeedPacketsWidget.cs",
+      "url": "https://raw.githubusercontent.com/IsraelDXPP/PvZ-Windows-Phone-decomp/26cbb77df48c674dca6cb6b1fa9ad6783903a5c4/Lawn/SeedPacketsWidget.cs",
+      "bytes": 4117,
+      "sha256": "f1fef81d7076dbc0b08c6aa7d43d86f30fc04303324b3ec570e3e2fef229cf0e"
+    }
+  ]
+}

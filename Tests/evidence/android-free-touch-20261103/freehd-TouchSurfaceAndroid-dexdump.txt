@@ -1,0 +1,133 @@
+  Class descriptor  : 'Lcom/ea/blast/TouchSurfaceAndroid;'
+  Access flags      : 0x0000 ()
+  Superclass        : 'Ljava/lang/Object;'
+  Interfaces        -
+  Static fields     -
+    #0              : (in Lcom/ea/blast/TouchSurfaceAndroid;)
+      name          : 'kIdRawPointerCancel'
+      type          : 'I'
+      access        : 0x001c (PROTECTED STATIC FINAL)
+    #1              : (in Lcom/ea/blast/TouchSurfaceAndroid;)
+      name          : 'kIdRawPointerDown'
+      type          : 'I'
+      access        : 0x001c (PROTECTED STATIC FINAL)
+    #2              : (in Lcom/ea/blast/TouchSurfaceAndroid;)
+      name          : 'kIdRawPointerMove'
+      type          : 'I'
+      access        : 0x001c (PROTECTED STATIC FINAL)
+    #3              : (in Lcom/ea/blast/TouchSurfaceAndroid;)
+      name          : 'kIdRawPointerUp'
+      type          : 'I'
+      access        : 0x001c (PROTECTED STATIC FINAL)
+    #4              : (in Lcom/ea/blast/TouchSurfaceAndroid;)
+      name          : 'kIdUndefined'
+      type          : 'I'
+      access        : 0x001c (PROTECTED STATIC FINAL)
+  Instance fields   -
+  Direct methods    -
+    #0              : (in Lcom/ea/blast/TouchSurfaceAndroid;)
+      name          : '<clinit>'
+      type          : '()V'
+      access        : 0x10008 (STATIC CONSTRUCTOR)
+      code          -
+      registers     : 1
+      ins           : 0
+      outs          : 0
+      insns size    : 31 16-bit code units
+41b68c:                                        |[41b68c] com.ea.blast.TouchSurfaceAndroid.<clinit>:()V
+41b69c: 7100 134d 0000                         |0000: invoke-static {}, Lcom/ea/blast/TouchSurfaceAndroid;.NativeGetIdUndefined:()I // method@4d13
+41b6a2: 0a00                                   |0003: move-result v0
+41b6a4: 6700 8d2b                              |0004: sput v0, Lcom/ea/blast/TouchSurfaceAndroid;.kIdUndefined:I // field@2b8d
+41b6a8: 7100 0f4d 0000                         |0006: invoke-static {}, Lcom/ea/blast/TouchSurfaceAndroid;.NativeGetIdRawPointerCancel:()I // method@4d0f
+41b6ae: 0a00                                   |0009: move-result v0
+41b6b0: 6700 892b                              |000a: sput v0, Lcom/ea/blast/TouchSurfaceAndroid;.kIdRawPointerCancel:I // field@2b89
+41b6b4: 7100 104d 0000                         |000c: invoke-static {}, Lcom/ea/blast/TouchSurfaceAndroid;.NativeGetIdRawPointerDown:()I // method@4d10
+41b6ba: 0a00                                   |000f: move-result v0
+41b6bc: 6700 8a2b                              |0010: sput v0, Lcom/ea/blast/TouchSurfaceAndroid;.kIdRawPointerDown:I // field@2b8a
+41b6c0: 7100 114d 0000                         |0012: invoke-static {}, Lcom/ea/blast/TouchSurfaceAndroid;.NativeGetIdRawPointerMove:()I // method@4d11
+41b6c6: 0a00                                   |0015: move-result v0
+41b6c8: 6700 8b2b                              |0016: sput v0, Lcom/ea/blast/TouchSurfaceAndroid;.kIdRawPointerMove:I // field@2b8b
+41b6cc: 7100 124d 0000                         |0018: invoke-static {}, Lcom/ea/blast/TouchSurfaceAndroid;.NativeGetIdRawPointerUp:()I // method@4d12
+41b6d2: 0a00                                   |001b: move-result v0
+41b6d4: 6700 8c2b                              |001c: sput v0, Lcom/ea/blast/TouchSurfaceAndroid;.kIdRawPointerUp:I // field@2b8c
+41b6d8: 0e00                                   |001e: return-void
+      catches       : (none)
+      positions     :
+      locals        :
+
+    #1              : (in Lcom/ea/blast/TouchSurfaceAndroid;)
+      name          : '<init>'
+      type          : '()V'
+      access        : 0x10001 (PUBLIC CONSTRUCTOR)
+      code          -
+      registers     : 1
+      ins           : 1
+      outs          : 1
+      insns size    : 4 16-bit code units
+41b6dc:                                        |[41b6dc] com.ea.blast.TouchSurfaceAndroid.<init>:()V
+41b6ec: 7010 0669 0000                         |0000: invoke-direct {v0}, Ljava/lang/Object;.<init>:()V // method@6906
+41b6f2: 0e00                                   |0003: return-void
+      catches       : (none)
+      positions     :
+      locals        :
+
+    #2              : (in Lcom/ea/blast/TouchSurfaceAndroid;)
+      name          : 'IsTouchScreenMultiTouch'
+      type          : '()Z'
+      access        : 0x0009 (PUBLIC STATIC)
+      code          -
+      registers     : 2
+      ins           : 0
+      outs          : 2
+      insns size    : 13 16-bit code units
+41b6f4:                                        |[41b6f4] com.ea.blast.TouchSurfaceAndroid.IsTouchScreenMultiTouch:()Z
+41b704: 6200 372b                              |0000: sget-object v0, Lcom/ea/blast/MainActivity;.instance:Lcom/ea/blast/MainActivity; // field@2b37
+41b708: 6e10 8332 0000                         |0002: invoke-virtual {v0}, Landroid/content/Context;.getPackageManager:()Landroid/content/pm/PackageManager; // method@3283
+41b70e: 0c00                                   |0005: move-result-object v0
+41b710: 1a01 d444                              |0006: const-string v1, "android.hardware.touchscreen.multitouch" // string@44d4
+41b714: 6e20 fb32 1000                         |0008: invoke-virtual {v0, v1}, Landroid/content/pm/PackageManager;.hasSystemFeature:(Ljava/lang/String;)Z // method@32fb
+41b71a: 0a00                                   |000b: move-result v0
+41b71c: 0f00                                   |000c: return v0
+      catches       : (none)
+      positions     :
+      locals        :
+
+    #3              : (in Lcom/ea/blast/TouchSurfaceAndroid;)
+      name          : 'NativeGetIdRawPointerCancel'
+      type          : '()I'
+      access        : 0x0109 (PUBLIC STATIC NATIVE)
+      code          : (none)
+
+    #4              : (in Lcom/ea/blast/TouchSurfaceAndroid;)
+      name          : 'NativeGetIdRawPointerDown'
+      type          : '()I'
+      access        : 0x0109 (PUBLIC STATIC NATIVE)
+      code          : (none)
+
+    #5              : (in Lcom/ea/blast/TouchSurfaceAndroid;)
+      name          : 'NativeGetIdRawPointerMove'
+      type          : '()I'
+      access        : 0x0109 (PUBLIC STATIC NATIVE)
+      code          : (none)
+
+    #6              : (in Lcom/ea/blast/TouchSurfaceAndroid;)
+      name          : 'NativeGetIdRawPointerUp'
+      type          : '()I'
+      access        : 0x0109 (PUBLIC STATIC NATIVE)
+      code          : (none)
+
+    #7              : (in Lcom/ea/blast/TouchSurfaceAndroid;)
+      name          : 'NativeGetIdUndefined'
+      type          : '()I'
+      access        : 0x0109 (PUBLIC STATIC NATIVE)
+      code          : (none)
+
+    #8              : (in Lcom/ea/blast/TouchSurfaceAndroid;)
+      name          : 'NativeOnPointerEvent'
+      type          : '(IIIFF)V'
+      access        : 0x0109 (PUBLIC STATIC NATIVE)
+      code          : (none)
+
+  Virtual methods   -
+  source_file_idx   : 14753 (SourceFile)
+

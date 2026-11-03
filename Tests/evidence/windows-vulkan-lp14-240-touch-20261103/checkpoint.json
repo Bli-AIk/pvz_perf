@@ -1,0 +1,22 @@
+{
+  "pid": 28000,
+  "app": 18072880,
+  "mDrawCount": 19185,
+  "mUpdateCount": 19946,
+  "mGameScene": 3,
+  "mGameMode": 58,
+  "mHWnd": 3345374,
+  "mBoard": 80922960,
+  "mCreditScreen": 0,
+  "mGameSelector": 0,
+  "mTitleScreen": 0,
+  "mPlayerInfo": 80983968,
+  "mAwardScreen": 0,
+  "board": {
+    "paused": true,
+    "counter": 2291960000000,
+    "wave": 0,
+    "waves": 20,
+    "sun": 9990
+  }
+}

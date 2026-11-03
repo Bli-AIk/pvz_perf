@@ -375,7 +375,7 @@ struct D3d12Renderer::Impl {
         if (context.hdr) {
             presentRoot = Root(8, 1, false, true, false);
             presentPipeline = Graphics(presentRoot.Get(), Shader(directory, "game_present_vs"),
-                Shader(directory, "game_present_ps"), DXGI_FORMAT_R10G10B10A2_UNORM,
+                Shader(directory, "game_present_ps"), DXGI_FORMAT_R16G16B16A16_FLOAT,
                 GpuBlend::Opaque, false);
         }
     }
@@ -1123,7 +1123,7 @@ D3d12Renderer::D3d12Renderer(D3d12Context& context, int width, int height,
     if (hdr) {
         hdr->Validate();
         if (!context.hdr)
-            throw std::invalid_argument("HDR parameters require an HDR10 D3D12 context");
+            throw std::invalid_argument("HDR parameters require an linear scRGB D3D12 context");
         impl_->hdr = *hdr;
     }
     impl_->Register(impl_->scene.get());

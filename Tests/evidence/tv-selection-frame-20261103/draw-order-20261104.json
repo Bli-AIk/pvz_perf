@@ -1,0 +1,27 @@
+{
+  "date": "2026-11-04",
+  "method": "Read-only Thumb disassembly and ELF32 PT_LOAD/GOT resolution; samples not executed",
+  "tv134": {
+    "seed_background": "0x174b50",
+    "native_sha256": "9d98c3e6e2d6b7c684bc82ce0139fea47ba65e3d27e65be10756d170541fec45",
+    "seed_bank": "0x1772ec",
+    "selector_blue_target": "0x69bd78",
+    "selector_target": "0x69bd7c",
+    "ui_bottom": "0x1602d4",
+    "got_base": "0x68f898",
+    "selector_literal": "0x174f6c",
+    "selector_blue_literal": "0x174f70"
+  },
+  "tv111": {
+    "seed_background": "0x189278",
+    "native_sha256": "1141dff6c8af15a385406c2bee481ca75facc94201264a1375f64c6350ebf059",
+    "seed_bank": "0x18ba14",
+    "selector_blue_target": "0x6dad78",
+    "selector_target": "0x6dad7c",
+    "ui_bottom": "0x1749f8",
+    "got_base": "0x6ce868",
+    "selector_literal": "0x189694",
+    "selector_blue_literal": "0x189698"
+  },
+  "conclusion": "TV card selector is drawn inside SeedPacket::DrawBackground, via SeedBank::Draw in bottom UI; GAMEPAD_CURSOR_FRAME is a separate board cursor drawn through two FrameRenderPhase render items. Current project draws its adapted four-corner card frame in top UI."
+}

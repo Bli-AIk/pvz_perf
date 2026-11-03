@@ -1,0 +1,283 @@
+
+C:/Users/Administrator/CLionProjects/codex/tv_assets/FREE_3.18.0_Phone/apk_contents/split_config.arm64_v8a/lib/arm64-v8a/libpvz.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+0000000001a462d8 <Coin::MouseHitTest(int, int, HitResult*)>:
+ 1a462d8: d10183ff     	sub	sp, sp, #0x60
+ 1a462dc: a9057bfd     	stp	x29, x30, [sp, #0x50]
+ 1a462e0: 910143fd     	add	x29, sp, #0x50
+ 1a462e4: f81f03a0     	stur	x0, [x29, #-0x10]
+ 1a462e8: b81ec3a1     	stur	w1, [x29, #-0x14]
+ 1a462ec: b81e83a2     	stur	w2, [x29, #-0x18]
+ 1a462f0: f81e03a3     	stur	x3, [x29, #-0x20]
+ 1a462f4: f85f03a8     	ldur	x8, [x29, #-0x10]
+ 1a462f8: f9000be8     	str	x8, [sp, #0x10]
+ 1a462fc: 381df3bf     	sturb	wzr, [x29, #-0x21]
+ 1a46300: b9002bff     	str	wzr, [sp, #0x28]
+ 1a46304: b90027ff     	str	wzr, [sp, #0x24]
+ 1a46308: b90023ff     	str	wzr, [sp, #0x20]
+ 1a4630c: b85ec3a0     	ldur	w0, [x29, #-0x14]
+ 1a46310: 944d4774     	bl	0x2d980e0 <_ZN4Sexy7InverseEi@plt>
+ 1a46314: b81ec3a0     	stur	w0, [x29, #-0x14]
+ 1a46318: b85e83a0     	ldur	w0, [x29, #-0x18]
+ 1a4631c: 944d4771     	bl	0x2d980e0 <_ZN4Sexy7InverseEi@plt>
+ 1a46320: f9400be8     	ldr	x8, [sp, #0x10]
+ 1a46324: b81e83a0     	stur	w0, [x29, #-0x18]
+ 1a46328: b9407508     	ldr	w8, [x8, #0x74]
+ 1a4632c: 71003508     	subs	w8, w8, #0xd
+ 1a46330: 54000160     	b.eq	0x1a4635c <Coin::MouseHitTest(int, int, HitResult*)+0x84>
+ 1a46334: 14000001     	b	0x1a46338 <Coin::MouseHitTest(int, int, HitResult*)+0x60>
+ 1a46338: f9400be8     	ldr	x8, [sp, #0x10]
+ 1a4633c: b9407508     	ldr	w8, [x8, #0x74]
+ 1a46340: 71004908     	subs	w8, w8, #0x12
+ 1a46344: 540000c0     	b.eq	0x1a4635c <Coin::MouseHitTest(int, int, HitResult*)+0x84>
+ 1a46348: 14000001     	b	0x1a4634c <Coin::MouseHitTest(int, int, HitResult*)+0x74>
+ 1a4634c: f9400be0     	ldr	x0, [sp, #0x10]
+ 1a46350: 944d50fc     	bl	0x2d9a740 <_ZN4Coin19IsPresentWithAdviceEv@plt>
+ 1a46354: 36000120     	tbz	w0, #0x0, 0x1a46378 <Coin::MouseHitTest(int, int, HitResult*)+0xa0>
+ 1a46358: 14000001     	b	0x1a4635c <Coin::MouseHitTest(int, int, HitResult*)+0x84>
+ 1a4635c: 9000a708     	adrp	x8, 0x2f26000
+ 1a46360: f9461508     	ldr	x8, [x8, #0xc28]
+ 1a46364: b9400109     	ldr	w9, [x8]
+ 1a46368: 2a1f03e8     	mov	w8, wzr
+ 1a4636c: 6b090108     	subs	w8, w8, w9
+ 1a46370: b9002be8     	str	w8, [sp, #0x28]
+ 1a46374: 14000001     	b	0x1a46378 <Coin::MouseHitTest(int, int, HitResult*)+0xa0>
+ 1a46378: f9400be8     	ldr	x8, [sp, #0x10]
+ 1a4637c: f9400100     	ldr	x0, [x8]
+ 1a46380: 944d4420     	bl	0x2d97400 <_ZN7LawnApp19IsWhackAZombieLevelEv@plt>
+ 1a46384: 360000e0     	tbz	w0, #0x0, 0x1a463a0 <Coin::MouseHitTest(int, int, HitResult*)+0xc8>
+ 1a46388: 14000001     	b	0x1a4638c <Coin::MouseHitTest(int, int, HitResult*)+0xb4>
+ 1a4638c: 528003c8     	mov	w8, #0x1e               // =30
+ 1a46390: b90023e8     	str	w8, [sp, #0x20]
+ 1a46394: 528001e8     	mov	w8, #0xf                // =15
+ 1a46398: b90027e8     	str	w8, [sp, #0x24]
+ 1a4639c: 14000001     	b	0x1a463a0 <Coin::MouseHitTest(int, int, HitResult*)+0xc8>
+ 1a463a0: f9400be8     	ldr	x8, [sp, #0x10]
+ 1a463a4: b9407508     	ldr	w8, [x8, #0x74]
+ 1a463a8: 71007108     	subs	w8, w8, #0x1c
+ 1a463ac: 540000a1     	b.ne	0x1a463c0 <Coin::MouseHitTest(int, int, HitResult*)+0xe8>
+ 1a463b0: 14000001     	b	0x1a463b4 <Coin::MouseHitTest(int, int, HitResult*)+0xdc>
+ 1a463b4: 528003c8     	mov	w8, #0x1e               // =30
+ 1a463b8: b90027e8     	str	w8, [sp, #0x24]
+ 1a463bc: 14000001     	b	0x1a463c0 <Coin::MouseHitTest(int, int, HitResult*)+0xe8>
+ 1a463c0: f9400be0     	ldr	x0, [sp, #0x10]
+ 1a463c4: 944d4be7     	bl	0x2d99360 <_ZN4Coin7IsMoneyEv@plt>
+ 1a463c8: 37000220     	tbnz	w0, #0x0, 0x1a4640c <Coin::MouseHitTest(int, int, HitResult*)+0x134>
+ 1a463cc: 14000001     	b	0x1a463d0 <Coin::MouseHitTest(int, int, HitResult*)+0xf8>
+ 1a463d0: f9400be8     	ldr	x8, [sp, #0x10]
+ 1a463d4: b9407508     	ldr	w8, [x8, #0x74]
+ 1a463d8: 71004508     	subs	w8, w8, #0x11
+ 1a463dc: 54000180     	b.eq	0x1a4640c <Coin::MouseHitTest(int, int, HitResult*)+0x134>
+ 1a463e0: 14000001     	b	0x1a463e4 <Coin::MouseHitTest(int, int, HitResult*)+0x10c>
+ 1a463e4: f9400be8     	ldr	x8, [sp, #0x10]
+ 1a463e8: b9407508     	ldr	w8, [x8, #0x74]
+ 1a463ec: 71004d08     	subs	w8, w8, #0x13
+ 1a463f0: 540000e0     	b.eq	0x1a4640c <Coin::MouseHitTest(int, int, HitResult*)+0x134>
+ 1a463f4: 14000001     	b	0x1a463f8 <Coin::MouseHitTest(int, int, HitResult*)+0x120>
+ 1a463f8: f9400be8     	ldr	x8, [sp, #0x10]
+ 1a463fc: b9407508     	ldr	w8, [x8, #0x74]
+ 1a46400: 71006908     	subs	w8, w8, #0x1a
+ 1a46404: 540000a1     	b.ne	0x1a46418 <Coin::MouseHitTest(int, int, HitResult*)+0x140>
+ 1a46408: 14000001     	b	0x1a4640c <Coin::MouseHitTest(int, int, HitResult*)+0x134>
+ 1a4640c: 52800508     	mov	w8, #0x28               // =40
+ 1a46410: b90027e8     	str	w8, [sp, #0x24]
+ 1a46414: 14000001     	b	0x1a46418 <Coin::MouseHitTest(int, int, HitResult*)+0x140>
+ 1a46418: f9400be8     	ldr	x8, [sp, #0x10]
+ 1a4641c: b9407508     	ldr	w8, [x8, #0x74]
+ 1a46420: 71001108     	subs	w8, w8, #0x4
+ 1a46424: 540000e0     	b.eq	0x1a46440 <Coin::MouseHitTest(int, int, HitResult*)+0x168>
+ 1a46428: 14000001     	b	0x1a4642c <Coin::MouseHitTest(int, int, HitResult*)+0x154>
+ 1a4642c: f9400be8     	ldr	x8, [sp, #0x10]
+ 1a46430: b9407508     	ldr	w8, [x8, #0x74]
+ 1a46434: 71001508     	subs	w8, w8, #0x5
+ 1a46438: 540000a1     	b.ne	0x1a4644c <Coin::MouseHitTest(int, int, HitResult*)+0x174>
+ 1a4643c: 14000001     	b	0x1a46440 <Coin::MouseHitTest(int, int, HitResult*)+0x168>
+ 1a46440: 52800648     	mov	w8, #0x32               // =50
+ 1a46444: b90027e8     	str	w8, [sp, #0x24]
+ 1a46448: 14000001     	b	0x1a4644c <Coin::MouseHitTest(int, int, HitResult*)+0x174>
+ 1a4644c: f9400be8     	ldr	x8, [sp, #0x10]
+ 1a46450: bc5ec3a0     	ldur	s0, [x29, #-0x14]
+ 1a46454: 5e21d800     	scvtf	s0, s0
+ 1a46458: bd403901     	ldr	s1, [x8, #0x38]
+ 1a4645c: bd4027e2     	ldr	s2, [sp, #0x24]
+ 1a46460: 5e21d842     	scvtf	s2, s2
+ 1a46464: 1e223821     	fsub	s1, s1, s2
+ 1a46468: 52800008     	mov	w8, #0x0                // =0
+ 1a4646c: 1e212000     	fcmp	s0, s1
+ 1a46470: b9000fe8     	str	w8, [sp, #0xc]
+ 1a46474: 5400020b     	b.lt	0x1a464b4 <Coin::MouseHitTest(int, int, HitResult*)+0x1dc>
+ 1a46478: 14000001     	b	0x1a4647c <Coin::MouseHitTest(int, int, HitResult*)+0x1a4>
+ 1a4647c: f9400be8     	ldr	x8, [sp, #0x10]
+ 1a46480: bc5ec3a0     	ldur	s0, [x29, #-0x14]
+ 1a46484: 5e21d800     	scvtf	s0, s0
+ 1a46488: bd403901     	ldr	s1, [x8, #0x38]
+ 1a4648c: bd401902     	ldr	s2, [x8, #0x18]
+ 1a46490: 5e21d842     	scvtf	s2, s2
+ 1a46494: 1e222821     	fadd	s1, s1, s2
+ 1a46498: bd4027e2     	ldr	s2, [sp, #0x24]
+ 1a4649c: 5e21d842     	scvtf	s2, s2
+ 1a464a0: 1e222821     	fadd	s1, s1, s2
+ 1a464a4: 1e212000     	fcmp	s0, s1
+ 1a464a8: 1a9f57e8     	cset	w8, mi
+ 1a464ac: b9000fe8     	str	w8, [sp, #0xc]
+ 1a464b0: 14000001     	b	0x1a464b4 <Coin::MouseHitTest(int, int, HitResult*)+0x1dc>
+ 1a464b4: f9400be8     	ldr	x8, [sp, #0x10]
+ 1a464b8: b9400fe9     	ldr	w9, [sp, #0xc]
+ 1a464bc: 12000129     	and	w9, w9, #0x1
+ 1a464c0: 39007fe9     	strb	w9, [sp, #0x1f]
+ 1a464c4: bc5e83a0     	ldur	s0, [x29, #-0x18]
+ 1a464c8: 5e21d800     	scvtf	s0, s0
+ 1a464cc: bd403d01     	ldr	s1, [x8, #0x3c]
+ 1a464d0: bd402be2     	ldr	s2, [sp, #0x28]
+ 1a464d4: 5e21d842     	scvtf	s2, s2
+ 1a464d8: 1e222821     	fadd	s1, s1, s2
+ 1a464dc: bd4027e2     	ldr	s2, [sp, #0x24]
+ 1a464e0: 5e21d842     	scvtf	s2, s2
+ 1a464e4: 1e223821     	fsub	s1, s1, s2
+ 1a464e8: 52800008     	mov	w8, #0x0                // =0
+ 1a464ec: 1e212000     	fcmp	s0, s1
+ 1a464f0: b9000be8     	str	w8, [sp, #0x8]
+ 1a464f4: 540002cb     	b.lt	0x1a4654c <Coin::MouseHitTest(int, int, HitResult*)+0x274>
+ 1a464f8: 14000001     	b	0x1a464fc <Coin::MouseHitTest(int, int, HitResult*)+0x224>
+ 1a464fc: f9400be8     	ldr	x8, [sp, #0x10]
+ 1a46500: bc5e83a0     	ldur	s0, [x29, #-0x18]
+ 1a46504: 5e21d800     	scvtf	s0, s0
+ 1a46508: bd403d01     	ldr	s1, [x8, #0x3c]
+ 1a4650c: bd401d02     	ldr	s2, [x8, #0x1c]
+ 1a46510: 5e21d842     	scvtf	s2, s2
+ 1a46514: 1e222821     	fadd	s1, s1, s2
+ 1a46518: bd402be2     	ldr	s2, [sp, #0x28]
+ 1a4651c: 5e21d842     	scvtf	s2, s2
+ 1a46520: 1e222821     	fadd	s1, s1, s2
+ 1a46524: bd4027e2     	ldr	s2, [sp, #0x24]
+ 1a46528: 5e21d842     	scvtf	s2, s2
+ 1a4652c: 1e222821     	fadd	s1, s1, s2
+ 1a46530: bd4023e2     	ldr	s2, [sp, #0x20]
+ 1a46534: 5e21d842     	scvtf	s2, s2
+ 1a46538: 1e222821     	fadd	s1, s1, s2
+ 1a4653c: 1e212000     	fcmp	s0, s1
+ 1a46540: 1a9f57e8     	cset	w8, mi
+ 1a46544: b9000be8     	str	w8, [sp, #0x8]
+ 1a46548: 14000001     	b	0x1a4654c <Coin::MouseHitTest(int, int, HitResult*)+0x274>
+ 1a4654c: f9400be8     	ldr	x8, [sp, #0x10]
+ 1a46550: b9400be9     	ldr	w9, [sp, #0x8]
+ 1a46554: 5280002a     	mov	w10, #0x1               // =1
+ 1a46558: 0a0a0129     	and	w9, w9, w10
+ 1a4655c: 39007be9     	strb	w9, [sp, #0x1e]
+ 1a46560: 39413108     	ldrb	w8, [x8, #0x4c]
+ 1a46564: 36000088     	tbz	w8, #0x0, 0x1a46574 <Coin::MouseHitTest(int, int, HitResult*)+0x29c>
+ 1a46568: 14000001     	b	0x1a4656c <Coin::MouseHitTest(int, int, HitResult*)+0x294>
+ 1a4656c: 381df3bf     	sturb	wzr, [x29, #-0x21]
+ 1a46570: 14000053     	b	0x1a466bc <Coin::MouseHitTest(int, int, HitResult*)+0x3e4>
+ 1a46574: f9400be8     	ldr	x8, [sp, #0x10]
+ 1a46578: 3941b108     	ldrb	w8, [x8, #0x6c]
+ 1a4657c: 360002a8     	tbz	w8, #0x0, 0x1a465d0 <Coin::MouseHitTest(int, int, HitResult*)+0x2f8>
+ 1a46580: 14000001     	b	0x1a46584 <Coin::MouseHitTest(int, int, HitResult*)+0x2ac>
+ 1a46584: f9400be8     	ldr	x8, [sp, #0x10]
+ 1a46588: f9400100     	ldr	x0, [x8]
+ 1a4658c: 944d47e1     	bl	0x2d98510 <_ZN7LawnApp22IsPlantsFromCoinsLevelEv@plt>
+ 1a46590: 36000200     	tbz	w0, #0x0, 0x1a465d0 <Coin::MouseHitTest(int, int, HitResult*)+0x2f8>
+ 1a46594: 14000001     	b	0x1a46598 <Coin::MouseHitTest(int, int, HitResult*)+0x2c0>
+ 1a46598: f9400be8     	ldr	x8, [sp, #0x10]
+ 1a4659c: b9407508     	ldr	w8, [x8, #0x74]
+ 1a465a0: 71004108     	subs	w8, w8, #0x10
+ 1a465a4: 54000161     	b.ne	0x1a465d0 <Coin::MouseHitTest(int, int, HitResult*)+0x2f8>
+ 1a465a8: 14000001     	b	0x1a465ac <Coin::MouseHitTest(int, int, HitResult*)+0x2d4>
+ 1a465ac: 39407fe8     	ldrb	w8, [sp, #0x1f]
+ 1a465b0: 36000108     	tbz	w8, #0x0, 0x1a465d0 <Coin::MouseHitTest(int, int, HitResult*)+0x2f8>
+ 1a465b4: 14000001     	b	0x1a465b8 <Coin::MouseHitTest(int, int, HitResult*)+0x2e0>
+ 1a465b8: 39407be8     	ldrb	w8, [sp, #0x1e]
+ 1a465bc: 360000a8     	tbz	w8, #0x0, 0x1a465d0 <Coin::MouseHitTest(int, int, HitResult*)+0x2f8>
+ 1a465c0: 14000001     	b	0x1a465c4 <Coin::MouseHitTest(int, int, HitResult*)+0x2ec>
+ 1a465c4: 52800028     	mov	w8, #0x1                // =1
+ 1a465c8: 381df3a8     	sturb	w8, [x29, #-0x21]
+ 1a465cc: 1400003b     	b	0x1a466b8 <Coin::MouseHitTest(int, int, HitResult*)+0x3e0>
+ 1a465d0: f9400be8     	ldr	x8, [sp, #0x10]
+ 1a465d4: b9407508     	ldr	w8, [x8, #0x74]
+ 1a465d8: 71004108     	subs	w8, w8, #0x10
+ 1a465dc: 54000321     	b.ne	0x1a46640 <Coin::MouseHitTest(int, int, HitResult*)+0x368>
+ 1a465e0: 14000001     	b	0x1a465e4 <Coin::MouseHitTest(int, int, HitResult*)+0x30c>
+ 1a465e4: f9400be8     	ldr	x8, [sp, #0x10]
+ 1a465e8: f9400508     	ldr	x8, [x8, #0x8]
+ 1a465ec: b40002a8     	cbz	x8, 0x1a46640 <Coin::MouseHitTest(int, int, HitResult*)+0x368>
+ 1a465f0: 14000001     	b	0x1a465f4 <Coin::MouseHitTest(int, int, HitResult*)+0x31c>
+ 1a465f4: f9400be8     	ldr	x8, [sp, #0x10]
+ 1a465f8: f9400508     	ldr	x8, [x8, #0x8]
+ 1a465fc: f9423908     	ldr	x8, [x8, #0x470]
+ 1a46600: f9400908     	ldr	x8, [x8, #0x10]
+ 1a46604: b9404508     	ldr	w8, [x8, #0x44]
+ 1a46608: 340001c8     	cbz	w8, 0x1a46640 <Coin::MouseHitTest(int, int, HitResult*)+0x368>
+ 1a4660c: 14000001     	b	0x1a46610 <Coin::MouseHitTest(int, int, HitResult*)+0x338>
+ 1a46610: f9400be8     	ldr	x8, [sp, #0x10]
+ 1a46614: f9400100     	ldr	x0, [x8]
+ 1a46618: 944d437a     	bl	0x2d97400 <_ZN7LawnApp19IsWhackAZombieLevelEv@plt>
+ 1a4661c: 37000120     	tbnz	w0, #0x0, 0x1a46640 <Coin::MouseHitTest(int, int, HitResult*)+0x368>
+ 1a46620: 14000001     	b	0x1a46624 <Coin::MouseHitTest(int, int, HitResult*)+0x34c>
+ 1a46624: f9400be8     	ldr	x8, [sp, #0x10]
+ 1a46628: f9400100     	ldr	x0, [x8]
+ 1a4662c: 944d47b9     	bl	0x2d98510 <_ZN7LawnApp22IsPlantsFromCoinsLevelEv@plt>
+ 1a46630: 37000080     	tbnz	w0, #0x0, 0x1a46640 <Coin::MouseHitTest(int, int, HitResult*)+0x368>
+ 1a46634: 14000001     	b	0x1a46638 <Coin::MouseHitTest(int, int, HitResult*)+0x360>
+ 1a46638: 381df3bf     	sturb	wzr, [x29, #-0x21]
+ 1a4663c: 1400001e     	b	0x1a466b4 <Coin::MouseHitTest(int, int, HitResult*)+0x3dc>
+ 1a46640: f9400be8     	ldr	x8, [sp, #0x10]
+ 1a46644: b9407508     	ldr	w8, [x8, #0x74]
+ 1a46648: 71001108     	subs	w8, w8, #0x4
+ 1a4664c: 540000e0     	b.eq	0x1a46668 <Coin::MouseHitTest(int, int, HitResult*)+0x390>
+ 1a46650: 14000001     	b	0x1a46654 <Coin::MouseHitTest(int, int, HitResult*)+0x37c>
+ 1a46654: f9400be8     	ldr	x8, [sp, #0x10]
+ 1a46658: b9407508     	ldr	w8, [x8, #0x74]
+ 1a4665c: 71001508     	subs	w8, w8, #0x5
+ 1a46660: 54000101     	b.ne	0x1a46680 <Coin::MouseHitTest(int, int, HitResult*)+0x3a8>
+ 1a46664: 14000001     	b	0x1a46668 <Coin::MouseHitTest(int, int, HitResult*)+0x390>
+ 1a46668: f9400be8     	ldr	x8, [sp, #0x10]
+ 1a4666c: 3941b108     	ldrb	w8, [x8, #0x6c]
+ 1a46670: 36000088     	tbz	w8, #0x0, 0x1a46680 <Coin::MouseHitTest(int, int, HitResult*)+0x3a8>
+ 1a46674: 14000001     	b	0x1a46678 <Coin::MouseHitTest(int, int, HitResult*)+0x3a0>
+ 1a46678: 381df3bf     	sturb	wzr, [x29, #-0x21]
+ 1a4667c: 1400000d     	b	0x1a466b0 <Coin::MouseHitTest(int, int, HitResult*)+0x3d8>
+ 1a46680: 39407fe8     	ldrb	w8, [sp, #0x1f]
+ 1a46684: 36000108     	tbz	w8, #0x0, 0x1a466a4 <Coin::MouseHitTest(int, int, HitResult*)+0x3cc>
+ 1a46688: 14000001     	b	0x1a4668c <Coin::MouseHitTest(int, int, HitResult*)+0x3b4>
+ 1a4668c: 39407be8     	ldrb	w8, [sp, #0x1e]
+ 1a46690: 360000a8     	tbz	w8, #0x0, 0x1a466a4 <Coin::MouseHitTest(int, int, HitResult*)+0x3cc>
+ 1a46694: 14000001     	b	0x1a46698 <Coin::MouseHitTest(int, int, HitResult*)+0x3c0>
+ 1a46698: 52800028     	mov	w8, #0x1                // =1
+ 1a4669c: 381df3a8     	sturb	w8, [x29, #-0x21]
+ 1a466a0: 14000003     	b	0x1a466ac <Coin::MouseHitTest(int, int, HitResult*)+0x3d4>
+ 1a466a4: 381df3bf     	sturb	wzr, [x29, #-0x21]
+ 1a466a8: 14000001     	b	0x1a466ac <Coin::MouseHitTest(int, int, HitResult*)+0x3d4>
+ 1a466ac: 14000001     	b	0x1a466b0 <Coin::MouseHitTest(int, int, HitResult*)+0x3d8>
+ 1a466b0: 14000001     	b	0x1a466b4 <Coin::MouseHitTest(int, int, HitResult*)+0x3dc>
+ 1a466b4: 14000001     	b	0x1a466b8 <Coin::MouseHitTest(int, int, HitResult*)+0x3e0>
+ 1a466b8: 14000001     	b	0x1a466bc <Coin::MouseHitTest(int, int, HitResult*)+0x3e4>
+ 1a466bc: 385df3a8     	ldurb	w8, [x29, #-0x21]
+ 1a466c0: 360001a8     	tbz	w8, #0x0, 0x1a466f4 <Coin::MouseHitTest(int, int, HitResult*)+0x41c>
+ 1a466c4: 14000001     	b	0x1a466c8 <Coin::MouseHitTest(int, int, HitResult*)+0x3f0>
+ 1a466c8: f9400be8     	ldr	x8, [sp, #0x10]
+ 1a466cc: f85e03a9     	ldur	x9, [x29, #-0x20]
+ 1a466d0: f9000128     	str	x8, [x9]
+ 1a466d4: f85e03a9     	ldur	x9, [x29, #-0x20]
+ 1a466d8: 52800068     	mov	w8, #0x3                // =3
+ 1a466dc: b9000928     	str	w8, [x9, #0x8]
+ 1a466e0: 52800028     	mov	w8, #0x1                // =1
+ 1a466e4: 12000108     	and	w8, w8, #0x1
+ 1a466e8: 12000108     	and	w8, w8, #0x1
+ 1a466ec: 381ff3a8     	sturb	w8, [x29, #-0x1]
+ 1a466f0: 1400000a     	b	0x1a46718 <Coin::MouseHitTest(int, int, HitResult*)+0x440>
+ 1a466f4: f85e03a8     	ldur	x8, [x29, #-0x20]
+ 1a466f8: f900011f     	str	xzr, [x8]
+ 1a466fc: f85e03a9     	ldur	x9, [x29, #-0x20]
+ 1a46700: 2a1f03e8     	mov	w8, wzr
+ 1a46704: b900093f     	str	wzr, [x9, #0x8]
+ 1a46708: 12000108     	and	w8, w8, #0x1
+ 1a4670c: 12000108     	and	w8, w8, #0x1
+ 1a46710: 381ff3a8     	sturb	w8, [x29, #-0x1]
+ 1a46714: 14000001     	b	0x1a46718 <Coin::MouseHitTest(int, int, HitResult*)+0x440>
+ 1a46718: 385ff3a8     	ldurb	w8, [x29, #-0x1]
+ 1a4671c: 12000100     	and	w0, w8, #0x1
+ 1a46720: a9457bfd     	ldp	x29, x30, [sp, #0x50]
+ 1a46724: 910183ff     	add	sp, sp, #0x60
+ 1a46728: d65f03c0     	ret

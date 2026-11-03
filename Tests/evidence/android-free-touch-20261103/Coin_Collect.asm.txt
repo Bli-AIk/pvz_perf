@@ -1,0 +1,969 @@
+
+C:/Users/Administrator/CLionProjects/codex/tv_assets/FREE_3.18.0_Phone/apk_contents/split_config.arm64_v8a/lib/arm64-v8a/libpvz.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+0000000001a41154 <Coin::Collect()>:
+ 1a41154: d10603ff     	sub	sp, sp, #0x180
+ 1a41158: a9167bfd     	stp	x29, x30, [sp, #0x160]
+ 1a4115c: f900bbfc     	str	x28, [sp, #0x170]
+ 1a41160: 910583fd     	add	x29, sp, #0x160
+ 1a41164: d53bd048     	mrs	x8, TPIDR_EL0
+ 1a41168: f9401508     	ldr	x8, [x8, #0x28]
+ 1a4116c: f81f83a8     	stur	x8, [x29, #-0x8]
+ 1a41170: f81703a0     	stur	x0, [x29, #-0x90]
+ 1a41174: f85703a8     	ldur	x8, [x29, #-0x90]
+ 1a41178: aa0803e9     	mov	x9, x8
+ 1a4117c: f90047e9     	str	x9, [sp, #0x88]
+ 1a41180: 39413108     	ldrb	w8, [x8, #0x4c]
+ 1a41184: 36000068     	tbz	w8, #0x0, 0x1a41190 <Coin::Collect()+0x3c>
+ 1a41188: 14000001     	b	0x1a4118c <Coin::Collect()+0x38>
+ 1a4118c: 140003a0     	b	0x1a4200c <Coin::Collect()+0xeb8>
+ 1a41190: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41194: bd403900     	ldr	s0, [x8, #0x38]
+ 1a41198: bd005900     	str	s0, [x8, #0x58]
+ 1a4119c: bd403d00     	ldr	s0, [x8, #0x3c]
+ 1a411a0: bd005d00     	str	s0, [x8, #0x5c]
+ 1a411a4: 52800029     	mov	w9, #0x1                // =1
+ 1a411a8: 3901b109     	strb	w9, [x8, #0x6c]
+ 1a411ac: 2a1f03e9     	mov	w9, wzr
+ 1a411b0: 3816f3a9     	sturb	w9, [x29, #-0x91]
+ 1a411b4: f9400100     	ldr	x0, [x8]
+ 1a411b8: b94bdc01     	ldr	w1, [x0, #0xbdc]
+ 1a411bc: 944cfdfd     	bl	0x2d809b0 <_ZN7LawnApp16IsEndlessIZombieE8GameMode@plt>
+ 1a411c0: 37000100     	tbnz	w0, #0x0, 0x1a411e0 <Coin::Collect()+0x8c>
+ 1a411c4: 14000001     	b	0x1a411c8 <Coin::Collect()+0x74>
+ 1a411c8: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a411cc: f9400100     	ldr	x0, [x8]
+ 1a411d0: b94bdc01     	ldr	w1, [x0, #0xbdc]
+ 1a411d4: 944cfdf3     	bl	0x2d809a0 <_ZN7LawnApp20IsEndlessScaryPotterE8GameMode@plt>
+ 1a411d8: 36000140     	tbz	w0, #0x0, 0x1a41200 <Coin::Collect()+0xac>
+ 1a411dc: 14000001     	b	0x1a411e0 <Coin::Collect()+0x8c>
+ 1a411e0: f94047e0     	ldr	x0, [sp, #0x88]
+ 1a411e4: 944d656b     	bl	0x2d9a790 <_ZN4Coin12IsLevelAwardEv@plt>
+ 1a411e8: 360000a0     	tbz	w0, #0x0, 0x1a411fc <Coin::Collect()+0xa8>
+ 1a411ec: 14000001     	b	0x1a411f0 <Coin::Collect()+0x9c>
+ 1a411f0: 52800028     	mov	w8, #0x1                // =1
+ 1a411f4: 3816f3a8     	sturb	w8, [x29, #-0x91]
+ 1a411f8: 14000001     	b	0x1a411fc <Coin::Collect()+0xa8>
+ 1a411fc: 14000001     	b	0x1a41200 <Coin::Collect()+0xac>
+ 1a41200: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41204: b9407508     	ldr	w8, [x8, #0x74]
+ 1a41208: 71003508     	subs	w8, w8, #0xd
+ 1a4120c: 540000e0     	b.eq	0x1a41228 <Coin::Collect()+0xd4>
+ 1a41210: 14000001     	b	0x1a41214 <Coin::Collect()+0xc0>
+ 1a41214: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41218: b9407508     	ldr	w8, [x8, #0x74]
+ 1a4121c: 71004908     	subs	w8, w8, #0x12
+ 1a41220: 54000ec1     	b.ne	0x1a413f8 <Coin::Collect()+0x2a4>
+ 1a41224: 14000001     	b	0x1a41228 <Coin::Collect()+0xd4>
+ 1a41228: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a4122c: f9400508     	ldr	x8, [x8, #0x8]
+ 1a41230: b5000068     	cbnz	x8, 0x1a4123c <Coin::Collect()+0xe8>
+ 1a41234: 14000001     	b	0x1a41238 <Coin::Collect()+0xe4>
+ 1a41238: 14000375     	b	0x1a4200c <Coin::Collect()+0xeb8>
+ 1a4123c: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41240: f9400108     	ldr	x8, [x8]
+ 1a41244: f9460100     	ldr	x0, [x8, #0xc00]
+ 1a41248: 2a1f03e1     	mov	w1, wzr
+ 1a4124c: 944d5fdd     	bl	0x2d991c0 <_ZN9ZenGarden15IsZenGardenFullEb@plt>
+ 1a41250: 36000400     	tbz	w0, #0x0, 0x1a412d0 <Coin::Collect()+0x17c>
+ 1a41254: 14000001     	b	0x1a41258 <Coin::Collect()+0x104>
+ 1a41258: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a4125c: f9400508     	ldr	x8, [x8, #0x8]
+ 1a41260: f9003fe8     	str	x8, [sp, #0x78]
+ 1a41264: 90ff9ae1     	adrp	x1, 0xd9d000
+ 1a41268: 913b9821     	add	x1, x1, #0xee6
+ 1a4126c: d10087a0     	sub	x0, x29, #0x21
+ 1a41270: f9003be0     	str	x0, [sp, #0x70]
+ 1a41274: 944ca8af     	bl	0x2d6b530 <_ZN5eastl9allocatorC2EPKc@plt>
+ 1a41278: f9403be2     	ldr	x2, [sp, #0x70]
+ 1a4127c: f0ff9d21     	adrp	x1, 0xde8000 <eastl::memory_order_acquire+0x5722>
+ 1a41280: 91279021     	add	x1, x1, #0x9e4
+ 1a41284: d10083a0     	sub	x0, x29, #0x20
+ 1a41288: f90043e0     	str	x0, [sp, #0x80]
+ 1a4128c: 944cb471     	bl	0x2d6e450 <_ZN5eastl12basic_stringIwNS_9allocatorEEC2EPKwRKS1_@plt>
+ 1a41290: f9403fe0     	ldr	x0, [sp, #0x78]
+ 1a41294: f94043e1     	ldr	x1, [sp, #0x80]
+ 1a41298: 528000e2     	mov	w2, #0x7                // =7
+ 1a4129c: 12800003     	mov	w3, #-0x1               // =-1
+ 1a412a0: aa1f03e4     	mov	x4, xzr
+ 1a412a4: 944d598b     	bl	0x2d978d0 <_ZN5Board13DisplayAdviceERKN5eastl12basic_stringIwNS0_9allocatorEEE12MessageStyle10AdviceTypePN4Sexy5ImageE@plt>
+ 1a412a8: 14000001     	b	0x1a412ac <Coin::Collect()+0x158>
+ 1a412ac: d10083a0     	sub	x0, x29, #0x20
+ 1a412b0: 944cb104     	bl	0x2d6d6c0 <_ZN5eastl12basic_stringIwNS_9allocatorEED2Ev@plt>
+ 1a412b4: 14000040     	b	0x1a413b4 <Coin::Collect()+0x260>
+ 1a412b8: f81603a0     	stur	x0, [x29, #-0xa0]
+ 1a412bc: 2a0103e8     	mov	w8, w1
+ 1a412c0: b815c3a8     	stur	w8, [x29, #-0xa4]
+ 1a412c4: d10083a0     	sub	x0, x29, #0x20
+ 1a412c8: 944cb0fe     	bl	0x2d6d6c0 <_ZN5eastl12basic_stringIwNS_9allocatorEED2Ev@plt>
+ 1a412cc: 1400035a     	b	0x1a42034 <Coin::Collect()+0xee0>
+ 1a412d0: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a412d4: f940050a     	ldr	x10, [x8, #0x8]
+ 1a412d8: 528b6589     	mov	w9, #0x5b2c             // =23340
+ 1a412dc: 2a0903eb     	mov	w11, w9
+ 1a412e0: b86b6949     	ldr	w9, [x10, x11]
+ 1a412e4: 11000529     	add	w9, w9, #0x1
+ 1a412e8: b82b6949     	str	w9, [x10, x11]
+ 1a412ec: f9400508     	ldr	x8, [x8, #0x8]
+ 1a412f0: f90033e8     	str	x8, [sp, #0x60]
+ 1a412f4: 90ff9ae1     	adrp	x1, 0xd9d000
+ 1a412f8: 913b9821     	add	x1, x1, #0xee6
+ 1a412fc: d10107a0     	sub	x0, x29, #0x41
+ 1a41300: f9002fe0     	str	x0, [sp, #0x58]
+ 1a41304: 944ca88b     	bl	0x2d6b530 <_ZN5eastl9allocatorC2EPKc@plt>
+ 1a41308: f9402fe2     	ldr	x2, [sp, #0x58]
+ 1a4130c: 90ff9d21     	adrp	x1, 0xde5000 <eastl::memory_order_acquire+0x2722>
+ 1a41310: 91346021     	add	x1, x1, #0xd18
+ 1a41314: d10103a0     	sub	x0, x29, #0x40
+ 1a41318: f90037e0     	str	x0, [sp, #0x68]
+ 1a4131c: 944cb44d     	bl	0x2d6e450 <_ZN5eastl12basic_stringIwNS_9allocatorEEC2EPKwRKS1_@plt>
+ 1a41320: f94033e0     	ldr	x0, [sp, #0x60]
+ 1a41324: f94037e1     	ldr	x1, [sp, #0x68]
+ 1a41328: 528000e2     	mov	w2, #0x7                // =7
+ 1a4132c: 12800003     	mov	w3, #-0x1               // =-1
+ 1a41330: aa1f03e4     	mov	x4, xzr
+ 1a41334: 944d5967     	bl	0x2d978d0 <_ZN5Board13DisplayAdviceERKN5eastl12basic_stringIwNS0_9allocatorEEE12MessageStyle10AdviceTypePN4Sexy5ImageE@plt>
+ 1a41338: 14000001     	b	0x1a4133c <Coin::Collect()+0x1e8>
+ 1a4133c: d10103a0     	sub	x0, x29, #0x40
+ 1a41340: 944cb0e0     	bl	0x2d6d6c0 <_ZN5eastl12basic_stringIwNS_9allocatorEED2Ev@plt>
+ 1a41344: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41348: f9400100     	ldr	x0, [x8]
+ 1a4134c: bd403900     	ldr	s0, [x8, #0x38]
+ 1a41350: b000a729     	adrp	x9, 0x2f26000
+ 1a41354: f945c129     	ldr	x9, [x9, #0xb80]
+ 1a41358: bd400121     	ldr	s1, [x9]
+ 1a4135c: 5e21d821     	scvtf	s1, s1
+ 1a41360: 1e212800     	fadd	s0, s0, s1
+ 1a41364: bd403d01     	ldr	s1, [x8, #0x3c]
+ 1a41368: bd400522     	ldr	s2, [x9, #0x4]
+ 1a4136c: 5e21d842     	scvtf	s2, s2
+ 1a41370: 1e222821     	fadd	s1, s1, s2
+ 1a41374: b9402908     	ldr	w8, [x8, #0x28]
+ 1a41378: 11000501     	add	w1, w8, #0x1
+ 1a4137c: 528008c2     	mov	w2, #0x46               // =70
+ 1a41380: 944d5a7c     	bl	0x2d97d70 <_ZN7LawnApp14AddTodParticleEffi14ParticleEffect@plt>
+ 1a41384: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41388: f9400109     	ldr	x9, [x8]
+ 1a4138c: f9460120     	ldr	x0, [x9, #0xc00]
+ 1a41390: 91022101     	add	x1, x8, #0x88
+ 1a41394: 944ce80b     	bl	0x2d7b3c0 <_ZN9ZenGarden14AddPottedPlantEP11PottedPlant@plt>
+ 1a41398: 14000007     	b	0x1a413b4 <Coin::Collect()+0x260>
+ 1a4139c: f81603a0     	stur	x0, [x29, #-0xa0]
+ 1a413a0: 2a0103e8     	mov	w8, w1
+ 1a413a4: b815c3a8     	stur	w8, [x29, #-0xa4]
+ 1a413a8: d10103a0     	sub	x0, x29, #0x40
+ 1a413ac: 944cb0c5     	bl	0x2d6d6c0 <_ZN5eastl12basic_stringIwNS_9allocatorEED2Ev@plt>
+ 1a413b0: 14000321     	b	0x1a42034 <Coin::Collect()+0xee0>
+ 1a413b4: f94047e9     	ldr	x9, [sp, #0x88]
+ 1a413b8: 2a1f03e8     	mov	w8, wzr
+ 1a413bc: b9007128     	str	w8, [x9, #0x70]
+ 1a413c0: b9005128     	str	w8, [x9, #0x50]
+ 1a413c4: 3856f3a8     	ldurb	w8, [x29, #-0x91]
+ 1a413c8: 36000168     	tbz	w8, #0x0, 0x1a413f4 <Coin::Collect()+0x2a0>
+ 1a413cc: 14000001     	b	0x1a413d0 <Coin::Collect()+0x27c>
+ 1a413d0: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a413d4: 9101f100     	add	x0, x8, #0x7c
+ 1a413d8: 52800b81     	mov	w1, #0x5c               // =92
+ 1a413dc: aa1f03e2     	mov	x2, xzr
+ 1a413e0: 944d64f0     	bl	0x2d9a7a0 <_Z37AttachmentDetachCrossFadeParticleTypeR12AttachmentID14ParticleEffectPKc@plt>
+ 1a413e4: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a413e8: f9400500     	ldr	x0, [x8, #0x8]
+ 1a413ec: 944d59f9     	bl	0x2d97bd0 <_ZN5Board12FadeOutLevelEv@plt>
+ 1a413f0: 14000001     	b	0x1a413f4 <Coin::Collect()+0x2a0>
+ 1a413f4: 14000306     	b	0x1a4200c <Coin::Collect()+0xeb8>
+ 1a413f8: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a413fc: b9407508     	ldr	w8, [x8, #0x74]
+ 1a41400: 71006508     	subs	w8, w8, #0x19
+ 1a41404: 54000461     	b.ne	0x1a41490 <Coin::Collect()+0x33c>
+ 1a41408: 14000001     	b	0x1a4140c <Coin::Collect()+0x2b8>
+ 1a4140c: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41410: f9400100     	ldr	x0, [x8]
+ 1a41414: bd403900     	ldr	s0, [x8, #0x38]
+ 1a41418: 1e27d002     	fmov	s2, #30.00000000
+ 1a4141c: 1e222800     	fadd	s0, s0, s2
+ 1a41420: bd403d01     	ldr	s1, [x8, #0x3c]
+ 1a41424: 1e222821     	fadd	s1, s1, s2
+ 1a41428: b9402908     	ldr	w8, [x8, #0x28]
+ 1a4142c: 11000501     	add	w1, w8, #0x1
+ 1a41430: 528008c2     	mov	w2, #0x46               // =70
+ 1a41434: 944d5a4f     	bl	0x2d97d70 <_ZN7LawnApp14AddTodParticleEffi14ParticleEffect@plt>
+ 1a41438: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a4143c: 2a1f03e9     	mov	w9, wzr
+ 1a41440: b9007109     	str	w9, [x8, #0x70]
+ 1a41444: b9005109     	str	w9, [x8, #0x50]
+ 1a41448: 9101f100     	add	x0, x8, #0x7c
+ 1a4144c: 52800b81     	mov	w1, #0x5c               // =92
+ 1a41450: aa1f03e2     	mov	x2, xzr
+ 1a41454: 944d64d3     	bl	0x2d9a7a0 <_Z37AttachmentDetachCrossFadeParticleTypeR12AttachmentID14ParticleEffectPKc@plt>
+ 1a41458: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a4145c: f9400108     	ldr	x8, [x8]
+ 1a41460: f9461108     	ldr	x8, [x8, #0xc20]
+ 1a41464: b97d7d08     	ldr	w8, [x8, #0x3d7c]
+ 1a41468: 71000d08     	subs	w8, w8, #0x3
+ 1a4146c: 54000100     	b.eq	0x1a4148c <Coin::Collect()+0x338>
+ 1a41470: 14000001     	b	0x1a41474 <Coin::Collect()+0x320>
+ 1a41474: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41478: f9400108     	ldr	x8, [x8]
+ 1a4147c: f9461109     	ldr	x9, [x8, #0xc20]
+ 1a41480: 52800028     	mov	w8, #0x1                // =1
+ 1a41484: b93d7d28     	str	w8, [x9, #0x3d7c]
+ 1a41488: 14000001     	b	0x1a4148c <Coin::Collect()+0x338>
+ 1a4148c: 140002e0     	b	0x1a4200c <Coin::Collect()+0xeb8>
+ 1a41490: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41494: b9407508     	ldr	w8, [x8, #0x74]
+ 1a41498: 71005908     	subs	w8, w8, #0x16
+ 1a4149c: 54000361     	b.ne	0x1a41508 <Coin::Collect()+0x3b4>
+ 1a414a0: 14000001     	b	0x1a414a4 <Coin::Collect()+0x350>
+ 1a414a4: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a414a8: f9400100     	ldr	x0, [x8]
+ 1a414ac: bd403900     	ldr	s0, [x8, #0x38]
+ 1a414b0: 1e27d002     	fmov	s2, #30.00000000
+ 1a414b4: 1e222800     	fadd	s0, s0, s2
+ 1a414b8: bd403d01     	ldr	s1, [x8, #0x3c]
+ 1a414bc: 1e222821     	fadd	s1, s1, s2
+ 1a414c0: b9402908     	ldr	w8, [x8, #0x28]
+ 1a414c4: 11000501     	add	w1, w8, #0x1
+ 1a414c8: 528008c2     	mov	w2, #0x46               // =70
+ 1a414cc: 944d5a29     	bl	0x2d97d70 <_ZN7LawnApp14AddTodParticleEffi14ParticleEffect@plt>
+ 1a414d0: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a414d4: 2a1f03e9     	mov	w9, wzr
+ 1a414d8: b9007109     	str	w9, [x8, #0x70]
+ 1a414dc: b9005109     	str	w9, [x8, #0x50]
+ 1a414e0: 9101f100     	add	x0, x8, #0x7c
+ 1a414e4: 52800b81     	mov	w1, #0x5c               // =92
+ 1a414e8: aa1f03e2     	mov	x2, xzr
+ 1a414ec: 944d64ad     	bl	0x2d9a7a0 <_Z37AttachmentDetachCrossFadeParticleTypeR12AttachmentID14ParticleEffectPKc@plt>
+ 1a414f0: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a414f4: f9400108     	ldr	x8, [x8]
+ 1a414f8: f9461109     	ldr	x9, [x8, #0xc20]
+ 1a414fc: 52800028     	mov	w8, #0x1                // =1
+ 1a41500: b906a928     	str	w8, [x9, #0x6a8]
+ 1a41504: 140002c2     	b	0x1a4200c <Coin::Collect()+0xeb8>
+ 1a41508: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a4150c: b9407508     	ldr	w8, [x8, #0x74]
+ 1a41510: 71005d08     	subs	w8, w8, #0x17
+ 1a41514: 54000361     	b.ne	0x1a41580 <Coin::Collect()+0x42c>
+ 1a41518: 14000001     	b	0x1a4151c <Coin::Collect()+0x3c8>
+ 1a4151c: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41520: f9400100     	ldr	x0, [x8]
+ 1a41524: bd403900     	ldr	s0, [x8, #0x38]
+ 1a41528: 1e27d002     	fmov	s2, #30.00000000
+ 1a4152c: 1e222800     	fadd	s0, s0, s2
+ 1a41530: bd403d01     	ldr	s1, [x8, #0x3c]
+ 1a41534: 1e222821     	fadd	s1, s1, s2
+ 1a41538: b9402908     	ldr	w8, [x8, #0x28]
+ 1a4153c: 11000501     	add	w1, w8, #0x1
+ 1a41540: 528008c2     	mov	w2, #0x46               // =70
+ 1a41544: 944d5a0b     	bl	0x2d97d70 <_ZN7LawnApp14AddTodParticleEffi14ParticleEffect@plt>
+ 1a41548: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a4154c: 2a1f03e9     	mov	w9, wzr
+ 1a41550: b9007109     	str	w9, [x8, #0x70]
+ 1a41554: b9005109     	str	w9, [x8, #0x50]
+ 1a41558: 9101f100     	add	x0, x8, #0x7c
+ 1a4155c: 52800b81     	mov	w1, #0x5c               // =92
+ 1a41560: aa1f03e2     	mov	x2, xzr
+ 1a41564: 944d648f     	bl	0x2d9a7a0 <_Z37AttachmentDetachCrossFadeParticleTypeR12AttachmentID14ParticleEffectPKc@plt>
+ 1a41568: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a4156c: f9400108     	ldr	x8, [x8]
+ 1a41570: f9461109     	ldr	x9, [x8, #0xc20]
+ 1a41574: 52800028     	mov	w8, #0x1                // =1
+ 1a41578: b906ad28     	str	w8, [x9, #0x6ac]
+ 1a4157c: 140002a4     	b	0x1a4200c <Coin::Collect()+0xeb8>
+ 1a41580: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41584: b9407508     	ldr	w8, [x8, #0x74]
+ 1a41588: 71005108     	subs	w8, w8, #0x14
+ 1a4158c: 540000e0     	b.eq	0x1a415a8 <Coin::Collect()+0x454>
+ 1a41590: 14000001     	b	0x1a41594 <Coin::Collect()+0x440>
+ 1a41594: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41598: b9407508     	ldr	w8, [x8, #0x74]
+ 1a4159c: 71005508     	subs	w8, w8, #0x15
+ 1a415a0: 54000b41     	b.ne	0x1a41708 <Coin::Collect()+0x5b4>
+ 1a415a4: 14000001     	b	0x1a415a8 <Coin::Collect()+0x454>
+ 1a415a8: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a415ac: f9400508     	ldr	x8, [x8, #0x8]
+ 1a415b0: b5000068     	cbnz	x8, 0x1a415bc <Coin::Collect()+0x468>
+ 1a415b4: 14000001     	b	0x1a415b8 <Coin::Collect()+0x464>
+ 1a415b8: 14000295     	b	0x1a4200c <Coin::Collect()+0xeb8>
+ 1a415bc: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a415c0: f940050a     	ldr	x10, [x8, #0x8]
+ 1a415c4: 528b6609     	mov	w9, #0x5b30             // =23344
+ 1a415c8: 2a0903eb     	mov	w11, w9
+ 1a415cc: b86b6949     	ldr	w9, [x10, x11]
+ 1a415d0: 11000529     	add	w9, w9, #0x1
+ 1a415d4: b82b6949     	str	w9, [x10, x11]
+ 1a415d8: f9400100     	ldr	x0, [x8]
+ 1a415dc: bd403900     	ldr	s0, [x8, #0x38]
+ 1a415e0: 1e27d002     	fmov	s2, #30.00000000
+ 1a415e4: 1e222800     	fadd	s0, s0, s2
+ 1a415e8: bd403d01     	ldr	s1, [x8, #0x3c]
+ 1a415ec: 1e222821     	fadd	s1, s1, s2
+ 1a415f0: b9402908     	ldr	w8, [x8, #0x28]
+ 1a415f4: 11000501     	add	w1, w8, #0x1
+ 1a415f8: 528008c2     	mov	w2, #0x46               // =70
+ 1a415fc: 944d59dd     	bl	0x2d97d70 <_ZN7LawnApp14AddTodParticleEffi14ParticleEffect@plt>
+ 1a41600: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41604: f9400108     	ldr	x8, [x8]
+ 1a41608: f9461108     	ldr	x8, [x8, #0xc20]
+ 1a4160c: b945b108     	ldr	w8, [x8, #0x5b0]
+ 1a41610: 710f9d08     	subs	w8, w8, #0x3e7
+ 1a41614: 540004ac     	b.gt	0x1a416a8 <Coin::Collect()+0x554>
+ 1a41618: 14000001     	b	0x1a4161c <Coin::Collect()+0x4c8>
+ 1a4161c: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41620: f9400508     	ldr	x8, [x8, #0x8]
+ 1a41624: f90027e8     	str	x8, [sp, #0x48]
+ 1a41628: 90ff9ae1     	adrp	x1, 0xd9d000
+ 1a4162c: 913b9821     	add	x1, x1, #0xee6
+ 1a41630: d10187a0     	sub	x0, x29, #0x61
+ 1a41634: f90023e0     	str	x0, [sp, #0x40]
+ 1a41638: 944ca7be     	bl	0x2d6b530 <_ZN5eastl9allocatorC2EPKc@plt>
+ 1a4163c: f94023e2     	ldr	x2, [sp, #0x40]
+ 1a41640: d0ff9d01     	adrp	x1, 0xde3000 <eastl::memory_order_acquire+0x722>
+ 1a41644: 9121e821     	add	x1, x1, #0x87a
+ 1a41648: d10183a0     	sub	x0, x29, #0x60
+ 1a4164c: f9002be0     	str	x0, [sp, #0x50]
+ 1a41650: 944cb380     	bl	0x2d6e450 <_ZN5eastl12basic_stringIwNS_9allocatorEEC2EPKwRKS1_@plt>
+ 1a41654: f94027e0     	ldr	x0, [sp, #0x48]
+ 1a41658: f9402be1     	ldr	x1, [sp, #0x50]
+ 1a4165c: 52800122     	mov	w2, #0x9                // =9
+ 1a41660: 12800003     	mov	w3, #-0x1               // =-1
+ 1a41664: aa1f03e4     	mov	x4, xzr
+ 1a41668: 944d589a     	bl	0x2d978d0 <_ZN5Board13DisplayAdviceERKN5eastl12basic_stringIwNS0_9allocatorEEE12MessageStyle10AdviceTypePN4Sexy5ImageE@plt>
+ 1a4166c: 14000001     	b	0x1a41670 <Coin::Collect()+0x51c>
+ 1a41670: d10183a0     	sub	x0, x29, #0x60
+ 1a41674: 944cb013     	bl	0x2d6d6c0 <_ZN5eastl12basic_stringIwNS_9allocatorEED2Ev@plt>
+ 1a41678: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a4167c: f9400108     	ldr	x8, [x8]
+ 1a41680: f9461109     	ldr	x9, [x8, #0xc20]
+ 1a41684: 52807d28     	mov	w8, #0x3e9              // =1001
+ 1a41688: b905b128     	str	w8, [x9, #0x5b0]
+ 1a4168c: 1400000e     	b	0x1a416c4 <Coin::Collect()+0x570>
+ 1a41690: f81603a0     	stur	x0, [x29, #-0xa0]
+ 1a41694: 2a0103e8     	mov	w8, w1
+ 1a41698: b815c3a8     	stur	w8, [x29, #-0xa4]
+ 1a4169c: d10183a0     	sub	x0, x29, #0x60
+ 1a416a0: 944cb008     	bl	0x2d6d6c0 <_ZN5eastl12basic_stringIwNS_9allocatorEED2Ev@plt>
+ 1a416a4: 14000264     	b	0x1a42034 <Coin::Collect()+0xee0>
+ 1a416a8: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a416ac: f9400108     	ldr	x8, [x8]
+ 1a416b0: f9461109     	ldr	x9, [x8, #0xc20]
+ 1a416b4: b945b128     	ldr	w8, [x9, #0x5b0]
+ 1a416b8: 11000508     	add	w8, w8, #0x1
+ 1a416bc: b905b128     	str	w8, [x9, #0x5b0]
+ 1a416c0: 14000001     	b	0x1a416c4 <Coin::Collect()+0x570>
+ 1a416c4: f94047e0     	ldr	x0, [sp, #0x88]
+ 1a416c8: 2a1f03e8     	mov	w8, wzr
+ 1a416cc: b9007008     	str	w8, [x0, #0x70]
+ 1a416d0: 944d6438     	bl	0x2d9a7b0 <_ZN4Coin9StartFadeEv@plt>
+ 1a416d4: 3856f3a8     	ldurb	w8, [x29, #-0x91]
+ 1a416d8: 36000168     	tbz	w8, #0x0, 0x1a41704 <Coin::Collect()+0x5b0>
+ 1a416dc: 14000001     	b	0x1a416e0 <Coin::Collect()+0x58c>
+ 1a416e0: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a416e4: 9101f100     	add	x0, x8, #0x7c
+ 1a416e8: 52800b81     	mov	w1, #0x5c               // =92
+ 1a416ec: aa1f03e2     	mov	x2, xzr
+ 1a416f0: 944d642c     	bl	0x2d9a7a0 <_Z37AttachmentDetachCrossFadeParticleTypeR12AttachmentID14ParticleEffectPKc@plt>
+ 1a416f4: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a416f8: f9400500     	ldr	x0, [x8, #0x8]
+ 1a416fc: 944d5935     	bl	0x2d97bd0 <_ZN5Board12FadeOutLevelEv@plt>
+ 1a41700: 14000001     	b	0x1a41704 <Coin::Collect()+0x5b0>
+ 1a41704: 14000242     	b	0x1a4200c <Coin::Collect()+0xeb8>
+ 1a41708: f94047e0     	ldr	x0, [sp, #0x88]
+ 1a4170c: 944d6421     	bl	0x2d9a790 <_ZN4Coin12IsLevelAwardEv@plt>
+ 1a41710: 36002e40     	tbz	w0, #0x0, 0x1a41cd8 <Coin::Collect()+0xb84>
+ 1a41714: 14000001     	b	0x1a41718 <Coin::Collect()+0x5c4>
+ 1a41718: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a4171c: f9400100     	ldr	x0, [x8]
+ 1a41720: 944cd700     	bl	0x2d77320 <_ZN7LawnApp15IsQuickPlayModeEv@plt>
+ 1a41724: 36000240     	tbz	w0, #0x0, 0x1a4176c <Coin::Collect()+0x618>
+ 1a41728: 14000001     	b	0x1a4172c <Coin::Collect()+0x5d8>
+ 1a4172c: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41730: b9407508     	ldr	w8, [x8, #0x74]
+ 1a41734: 71004508     	subs	w8, w8, #0x11
+ 1a41738: 540001a1     	b.ne	0x1a4176c <Coin::Collect()+0x618>
+ 1a4173c: 14000001     	b	0x1a41740 <Coin::Collect()+0x5ec>
+ 1a41740: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41744: f9400100     	ldr	x0, [x8]
+ 1a41748: 528003c1     	mov	w1, #0x1e               // =30
+ 1a4174c: 944cd4a9     	bl	0x2d769f0 <_ZN7LawnApp9PlayFoleyE9FoleyType@plt>
+ 1a41750: f94047e0     	ldr	x0, [sp, #0x88]
+ 1a41754: 52800041     	mov	w1, #0x2                // =2
+ 1a41758: 528000a2     	mov	w2, #0x5                // =5
+ 1a4175c: 944d6419     	bl	0x2d9a7c0 <_ZN4Coin11FanOutCoinsE8CoinTypei@plt>
+ 1a41760: f94047e0     	ldr	x0, [sp, #0x88]
+ 1a41764: 944d6413     	bl	0x2d9a7b0 <_ZN4Coin9StartFadeEv@plt>
+ 1a41768: 140000f5     	b	0x1a41b3c <Coin::Collect()+0x9e8>
+ 1a4176c: 3856f3a8     	ldurb	w8, [x29, #-0x91]
+ 1a41770: 36000508     	tbz	w8, #0x0, 0x1a41810 <Coin::Collect()+0x6bc>
+ 1a41774: 14000001     	b	0x1a41778 <Coin::Collect()+0x624>
+ 1a41778: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a4177c: b9407508     	ldr	w8, [x8, #0x74]
+ 1a41780: 71004d08     	subs	w8, w8, #0x13
+ 1a41784: 54000221     	b.ne	0x1a417c8 <Coin::Collect()+0x674>
+ 1a41788: 14000001     	b	0x1a4178c <Coin::Collect()+0x638>
+ 1a4178c: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41790: f9400100     	ldr	x0, [x8]
+ 1a41794: b000a728     	adrp	x8, 0x2f26000
+ 1a41798: f945c508     	ldr	x8, [x8, #0xb88]
+ 1a4179c: b9400101     	ldr	w1, [x8]
+ 1a417a0: f9400008     	ldr	x8, [x0]
+ 1a417a4: f940e108     	ldr	x8, [x8, #0x1c0]
+ 1a417a8: d63f0100     	blr	x8
+ 1a417ac: f94047e0     	ldr	x0, [sp, #0x88]
+ 1a417b0: 52800061     	mov	w1, #0x3                // =3
+ 1a417b4: 52800022     	mov	w2, #0x1                // =1
+ 1a417b8: 944d6402     	bl	0x2d9a7c0 <_ZN4Coin11FanOutCoinsE8CoinTypei@plt>
+ 1a417bc: f94047e0     	ldr	x0, [sp, #0x88]
+ 1a417c0: 944d63fc     	bl	0x2d9a7b0 <_ZN4Coin9StartFadeEv@plt>
+ 1a417c4: 14000012     	b	0x1a4180c <Coin::Collect()+0x6b8>
+ 1a417c8: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a417cc: b9407508     	ldr	w8, [x8, #0x74]
+ 1a417d0: 71004508     	subs	w8, w8, #0x11
+ 1a417d4: 540001a1     	b.ne	0x1a41808 <Coin::Collect()+0x6b4>
+ 1a417d8: 14000001     	b	0x1a417dc <Coin::Collect()+0x688>
+ 1a417dc: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a417e0: f9400100     	ldr	x0, [x8]
+ 1a417e4: 528003c1     	mov	w1, #0x1e               // =30
+ 1a417e8: 944cd482     	bl	0x2d769f0 <_ZN7LawnApp9PlayFoleyE9FoleyType@plt>
+ 1a417ec: f94047e0     	ldr	x0, [sp, #0x88]
+ 1a417f0: 52800041     	mov	w1, #0x2                // =2
+ 1a417f4: 528000a2     	mov	w2, #0x5                // =5
+ 1a417f8: 944d63f2     	bl	0x2d9a7c0 <_ZN4Coin11FanOutCoinsE8CoinTypei@plt>
+ 1a417fc: f94047e0     	ldr	x0, [sp, #0x88]
+ 1a41800: 944d63ec     	bl	0x2d9a7b0 <_ZN4Coin9StartFadeEv@plt>
+ 1a41804: 14000001     	b	0x1a41808 <Coin::Collect()+0x6b4>
+ 1a41808: 14000001     	b	0x1a4180c <Coin::Collect()+0x6b8>
+ 1a4180c: 140000cb     	b	0x1a41b38 <Coin::Collect()+0x9e4>
+ 1a41810: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41814: f9400100     	ldr	x0, [x8]
+ 1a41818: 944d5742     	bl	0x2d97520 <_ZN7LawnApp18IsScaryPotterLevelEv@plt>
+ 1a4181c: 360004a0     	tbz	w0, #0x0, 0x1a418b0 <Coin::Collect()+0x75c>
+ 1a41820: 14000001     	b	0x1a41824 <Coin::Collect()+0x6d0>
+ 1a41824: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41828: f9400100     	ldr	x0, [x8]
+ 1a4182c: 944cd6b9     	bl	0x2d77310 <_ZN7LawnApp15IsAdventureModeEv@plt>
+ 1a41830: 37000400     	tbnz	w0, #0x0, 0x1a418b0 <Coin::Collect()+0x75c>
+ 1a41834: 14000001     	b	0x1a41838 <Coin::Collect()+0x6e4>
+ 1a41838: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a4183c: b9407508     	ldr	w8, [x8, #0x74]
+ 1a41840: 71002108     	subs	w8, w8, #0x8
+ 1a41844: 54000161     	b.ne	0x1a41870 <Coin::Collect()+0x71c>
+ 1a41848: 14000001     	b	0x1a4184c <Coin::Collect()+0x6f8>
+ 1a4184c: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41850: f9400100     	ldr	x0, [x8]
+ 1a41854: 528003c1     	mov	w1, #0x1e               // =30
+ 1a41858: 944cd466     	bl	0x2d769f0 <_ZN7LawnApp9PlayFoleyE9FoleyType@plt>
+ 1a4185c: f94047e0     	ldr	x0, [sp, #0x88]
+ 1a41860: 52800041     	mov	w1, #0x2                // =2
+ 1a41864: 528000a2     	mov	w2, #0x5                // =5
+ 1a41868: 944d63d6     	bl	0x2d9a7c0 <_ZN4Coin11FanOutCoinsE8CoinTypei@plt>
+ 1a4186c: 14000010     	b	0x1a418ac <Coin::Collect()+0x758>
+ 1a41870: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41874: b9407508     	ldr	w8, [x8, #0x74]
+ 1a41878: 71004508     	subs	w8, w8, #0x11
+ 1a4187c: 54000161     	b.ne	0x1a418a8 <Coin::Collect()+0x754>
+ 1a41880: 14000001     	b	0x1a41884 <Coin::Collect()+0x730>
+ 1a41884: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41888: f9400100     	ldr	x0, [x8]
+ 1a4188c: 528003c1     	mov	w1, #0x1e               // =30
+ 1a41890: 944cd458     	bl	0x2d769f0 <_ZN7LawnApp9PlayFoleyE9FoleyType@plt>
+ 1a41894: f94047e0     	ldr	x0, [sp, #0x88]
+ 1a41898: 52800041     	mov	w1, #0x2                // =2
+ 1a4189c: 528000a2     	mov	w2, #0x5                // =5
+ 1a418a0: 944d63c8     	bl	0x2d9a7c0 <_ZN4Coin11FanOutCoinsE8CoinTypei@plt>
+ 1a418a4: 14000001     	b	0x1a418a8 <Coin::Collect()+0x754>
+ 1a418a8: 14000001     	b	0x1a418ac <Coin::Collect()+0x758>
+ 1a418ac: 140000a2     	b	0x1a41b34 <Coin::Collect()+0x9e0>
+ 1a418b0: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a418b4: f9400100     	ldr	x0, [x8]
+ 1a418b8: 944cd696     	bl	0x2d77310 <_ZN7LawnApp15IsAdventureModeEv@plt>
+ 1a418bc: 360001c0     	tbz	w0, #0x0, 0x1a418f4 <Coin::Collect()+0x7a0>
+ 1a418c0: 14000001     	b	0x1a418c4 <Coin::Collect()+0x770>
+ 1a418c4: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a418c8: f9400508     	ldr	x8, [x8, #0x8]
+ 1a418cc: 528b1689     	mov	w9, #0x58b4             // =22708
+ 1a418d0: b8696908     	ldr	w8, [x8, x9]
+ 1a418d4: 7100c908     	subs	w8, w8, #0x32
+ 1a418d8: 540000e1     	b.ne	0x1a418f4 <Coin::Collect()+0x7a0>
+ 1a418dc: 14000001     	b	0x1a418e0 <Coin::Collect()+0x78c>
+ 1a418e0: f94047e0     	ldr	x0, [sp, #0x88]
+ 1a418e4: 52800062     	mov	w2, #0x3                // =3
+ 1a418e8: 2a0203e1     	mov	w1, w2
+ 1a418ec: 944d63b5     	bl	0x2d9a7c0 <_ZN4Coin11FanOutCoinsE8CoinTypei@plt>
+ 1a418f0: 14000090     	b	0x1a41b30 <Coin::Collect()+0x9dc>
+ 1a418f4: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a418f8: b9407508     	ldr	w8, [x8, #0x74]
+ 1a418fc: 71004508     	subs	w8, w8, #0x11
+ 1a41900: 54000461     	b.ne	0x1a4198c <Coin::Collect()+0x838>
+ 1a41904: 14000001     	b	0x1a41908 <Coin::Collect()+0x7b4>
+ 1a41908: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a4190c: 528000a9     	mov	w9, #0x5                // =5
+ 1a41910: b81583a9     	stur	w9, [x29, #-0xa8]
+ 1a41914: f9400100     	ldr	x0, [x8]
+ 1a41918: 528003c1     	mov	w1, #0x1e               // =30
+ 1a4191c: 944cd435     	bl	0x2d769f0 <_ZN7LawnApp9PlayFoleyE9FoleyType@plt>
+ 1a41920: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41924: f9400100     	ldr	x0, [x8]
+ 1a41928: 944d539a     	bl	0x2d96790 <_ZN7LawnApp21IsReplayingAdventure1Ev@plt>
+ 1a4192c: 360000e0     	tbz	w0, #0x0, 0x1a41948 <Coin::Collect()+0x7f4>
+ 1a41930: 14000001     	b	0x1a41934 <Coin::Collect()+0x7e0>
+ 1a41934: f94047e0     	ldr	x0, [sp, #0x88]
+ 1a41938: 52800041     	mov	w1, #0x2                // =2
+ 1a4193c: 52800062     	mov	w2, #0x3                // =3
+ 1a41940: 944d63a0     	bl	0x2d9a7c0 <_ZN4Coin11FanOutCoinsE8CoinTypei@plt>
+ 1a41944: 14000011     	b	0x1a41988 <Coin::Collect()+0x834>
+ 1a41948: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a4194c: f9400100     	ldr	x0, [x8]
+ 1a41950: 944d5898     	bl	0x2d97bb0 <_ZN7LawnApp21IsReplayingAdventure2Ev@plt>
+ 1a41954: 360000e0     	tbz	w0, #0x0, 0x1a41970 <Coin::Collect()+0x81c>
+ 1a41958: 14000001     	b	0x1a4195c <Coin::Collect()+0x808>
+ 1a4195c: f94047e0     	ldr	x0, [sp, #0x88]
+ 1a41960: 52800041     	mov	w1, #0x2                // =2
+ 1a41964: 528000a2     	mov	w2, #0x5                // =5
+ 1a41968: 944d6396     	bl	0x2d9a7c0 <_ZN4Coin11FanOutCoinsE8CoinTypei@plt>
+ 1a4196c: 14000006     	b	0x1a41984 <Coin::Collect()+0x830>
+ 1a41970: f94047e0     	ldr	x0, [sp, #0x88]
+ 1a41974: b85583a2     	ldur	w2, [x29, #-0xa8]
+ 1a41978: 52800041     	mov	w1, #0x2                // =2
+ 1a4197c: 944d6391     	bl	0x2d9a7c0 <_ZN4Coin11FanOutCoinsE8CoinTypei@plt>
+ 1a41980: 14000001     	b	0x1a41984 <Coin::Collect()+0x830>
+ 1a41984: 14000001     	b	0x1a41988 <Coin::Collect()+0x834>
+ 1a41988: 14000069     	b	0x1a41b2c <Coin::Collect()+0x9d8>
+ 1a4198c: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41990: f9400100     	ldr	x0, [x8]
+ 1a41994: 944d537f     	bl	0x2d96790 <_ZN7LawnApp21IsReplayingAdventure1Ev@plt>
+ 1a41998: 370002e0     	tbnz	w0, #0x0, 0x1a419f4 <Coin::Collect()+0x8a0>
+ 1a4199c: 14000001     	b	0x1a419a0 <Coin::Collect()+0x84c>
+ 1a419a0: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a419a4: f9400100     	ldr	x0, [x8]
+ 1a419a8: 944ccea6     	bl	0x2d75440 <_ZN7LawnApp24IsFirstTimeAdventureModeEv@plt>
+ 1a419ac: 36000240     	tbz	w0, #0x0, 0x1a419f4 <Coin::Collect()+0x8a0>
+ 1a419b0: 14000001     	b	0x1a419b4 <Coin::Collect()+0x860>
+ 1a419b4: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a419b8: f9400508     	ldr	x8, [x8, #0x8]
+ 1a419bc: 528b1689     	mov	w9, #0x58b4             // =22708
+ 1a419c0: b8696908     	ldr	w8, [x8, x9]
+ 1a419c4: 71001108     	subs	w8, w8, #0x4
+ 1a419c8: 54000161     	b.ne	0x1a419f4 <Coin::Collect()+0x8a0>
+ 1a419cc: 14000001     	b	0x1a419d0 <Coin::Collect()+0x87c>
+ 1a419d0: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a419d4: f9400100     	ldr	x0, [x8]
+ 1a419d8: b000a728     	adrp	x8, 0x2f26000
+ 1a419dc: f945c908     	ldr	x8, [x8, #0xb90]
+ 1a419e0: b9400101     	ldr	w1, [x8]
+ 1a419e4: f9400008     	ldr	x8, [x0]
+ 1a419e8: f940e108     	ldr	x8, [x8, #0x1c0]
+ 1a419ec: d63f0100     	blr	x8
+ 1a419f0: 1400004e     	b	0x1a41b28 <Coin::Collect()+0x9d4>
+ 1a419f4: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a419f8: f9400100     	ldr	x0, [x8]
+ 1a419fc: 944d5365     	bl	0x2d96790 <_ZN7LawnApp21IsReplayingAdventure1Ev@plt>
+ 1a41a00: 370004a0     	tbnz	w0, #0x0, 0x1a41a94 <Coin::Collect()+0x940>
+ 1a41a04: 14000001     	b	0x1a41a08 <Coin::Collect()+0x8b4>
+ 1a41a08: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41a0c: f9400100     	ldr	x0, [x8]
+ 1a41a10: 944cce8c     	bl	0x2d75440 <_ZN7LawnApp24IsFirstTimeAdventureModeEv@plt>
+ 1a41a14: 36000400     	tbz	w0, #0x0, 0x1a41a94 <Coin::Collect()+0x940>
+ 1a41a18: 14000001     	b	0x1a41a1c <Coin::Collect()+0x8c8>
+ 1a41a1c: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41a20: f9400508     	ldr	x8, [x8, #0x8]
+ 1a41a24: 528b1689     	mov	w9, #0x58b4             // =22708
+ 1a41a28: b8696908     	ldr	w8, [x8, x9]
+ 1a41a2c: 71006108     	subs	w8, w8, #0x18
+ 1a41a30: 54000200     	b.eq	0x1a41a70 <Coin::Collect()+0x91c>
+ 1a41a34: 14000001     	b	0x1a41a38 <Coin::Collect()+0x8e4>
+ 1a41a38: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41a3c: f9400508     	ldr	x8, [x8, #0x8]
+ 1a41a40: 528b1689     	mov	w9, #0x58b4             // =22708
+ 1a41a44: b8696908     	ldr	w8, [x8, x9]
+ 1a41a48: 71008908     	subs	w8, w8, #0x22
+ 1a41a4c: 54000120     	b.eq	0x1a41a70 <Coin::Collect()+0x91c>
+ 1a41a50: 14000001     	b	0x1a41a54 <Coin::Collect()+0x900>
+ 1a41a54: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41a58: f9400508     	ldr	x8, [x8, #0x8]
+ 1a41a5c: 528b1689     	mov	w9, #0x58b4             // =22708
+ 1a41a60: b8696908     	ldr	w8, [x8, x9]
+ 1a41a64: 7100b108     	subs	w8, w8, #0x2c
+ 1a41a68: 54000161     	b.ne	0x1a41a94 <Coin::Collect()+0x940>
+ 1a41a6c: 14000001     	b	0x1a41a70 <Coin::Collect()+0x91c>
+ 1a41a70: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41a74: f9400100     	ldr	x0, [x8]
+ 1a41a78: b000a728     	adrp	x8, 0x2f26000
+ 1a41a7c: f945cd08     	ldr	x8, [x8, #0xb98]
+ 1a41a80: b9400101     	ldr	w1, [x8]
+ 1a41a84: f9400008     	ldr	x8, [x0]
+ 1a41a88: f940e108     	ldr	x8, [x8, #0x1c0]
+ 1a41a8c: d63f0100     	blr	x8
+ 1a41a90: 14000025     	b	0x1a41b24 <Coin::Collect()+0x9d0>
+ 1a41a94: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41a98: b9407508     	ldr	w8, [x8, #0x74]
+ 1a41a9c: 71002108     	subs	w8, w8, #0x8
+ 1a41aa0: 540001e1     	b.ne	0x1a41adc <Coin::Collect()+0x988>
+ 1a41aa4: 14000001     	b	0x1a41aa8 <Coin::Collect()+0x954>
+ 1a41aa8: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41aac: f9400100     	ldr	x0, [x8]
+ 1a41ab0: b000a728     	adrp	x8, 0x2f26000
+ 1a41ab4: f945c508     	ldr	x8, [x8, #0xb88]
+ 1a41ab8: b9400101     	ldr	w1, [x8]
+ 1a41abc: f9400008     	ldr	x8, [x0]
+ 1a41ac0: f940e108     	ldr	x8, [x8, #0x1c0]
+ 1a41ac4: d63f0100     	blr	x8
+ 1a41ac8: f94047e0     	ldr	x0, [sp, #0x88]
+ 1a41acc: 52800061     	mov	w1, #0x3                // =3
+ 1a41ad0: 52800022     	mov	w2, #0x1                // =1
+ 1a41ad4: 944d633b     	bl	0x2d9a7c0 <_ZN4Coin11FanOutCoinsE8CoinTypei@plt>
+ 1a41ad8: 14000012     	b	0x1a41b20 <Coin::Collect()+0x9cc>
+ 1a41adc: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41ae0: f9400100     	ldr	x0, [x8]
+ 1a41ae4: b000a728     	adrp	x8, 0x2f26000
+ 1a41ae8: f945d108     	ldr	x8, [x8, #0xba0]
+ 1a41aec: b9400101     	ldr	w1, [x8]
+ 1a41af0: f9400008     	ldr	x8, [x0]
+ 1a41af4: f940e108     	ldr	x8, [x8, #0x1c0]
+ 1a41af8: d63f0100     	blr	x8
+ 1a41afc: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41b00: f9400100     	ldr	x0, [x8]
+ 1a41b04: b000a728     	adrp	x8, 0x2f26000
+ 1a41b08: f945cd08     	ldr	x8, [x8, #0xb98]
+ 1a41b0c: b9400101     	ldr	w1, [x8]
+ 1a41b10: f9400008     	ldr	x8, [x0]
+ 1a41b14: f940e108     	ldr	x8, [x8, #0x1c0]
+ 1a41b18: d63f0100     	blr	x8
+ 1a41b1c: 14000001     	b	0x1a41b20 <Coin::Collect()+0x9cc>
+ 1a41b20: 14000001     	b	0x1a41b24 <Coin::Collect()+0x9d0>
+ 1a41b24: 14000001     	b	0x1a41b28 <Coin::Collect()+0x9d4>
+ 1a41b28: 14000001     	b	0x1a41b2c <Coin::Collect()+0x9d8>
+ 1a41b2c: 14000001     	b	0x1a41b30 <Coin::Collect()+0x9dc>
+ 1a41b30: 14000001     	b	0x1a41b34 <Coin::Collect()+0x9e0>
+ 1a41b34: 14000001     	b	0x1a41b38 <Coin::Collect()+0x9e4>
+ 1a41b38: 14000001     	b	0x1a41b3c <Coin::Collect()+0x9e8>
+ 1a41b3c: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41b40: f9400100     	ldr	x0, [x8]
+ 1a41b44: bd403900     	ldr	s0, [x8, #0x38]
+ 1a41b48: 1e27d002     	fmov	s2, #30.00000000
+ 1a41b4c: 1e222800     	fadd	s0, s0, s2
+ 1a41b50: bd403d01     	ldr	s1, [x8, #0x3c]
+ 1a41b54: 1e222821     	fadd	s1, s1, s2
+ 1a41b58: b9402908     	ldr	w8, [x8, #0x28]
+ 1a41b5c: 11000501     	add	w1, w8, #0x1
+ 1a41b60: 52800c82     	mov	w2, #0x64               // =100
+ 1a41b64: 944d5883     	bl	0x2d97d70 <_ZN7LawnApp14AddTodParticleEffi14ParticleEffect@plt>
+ 1a41b68: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41b6c: f9400508     	ldr	x8, [x8, #0x8]
+ 1a41b70: b5000068     	cbnz	x8, 0x1a41b7c <Coin::Collect()+0xa28>
+ 1a41b74: 14000001     	b	0x1a41b78 <Coin::Collect()+0xa24>
+ 1a41b78: 14000125     	b	0x1a4200c <Coin::Collect()+0xeb8>
+ 1a41b7c: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41b80: f9400500     	ldr	x0, [x8, #0x8]
+ 1a41b84: 944d5813     	bl	0x2d97bd0 <_ZN5Board12FadeOutLevelEv@plt>
+ 1a41b88: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41b8c: 9101f100     	add	x0, x8, #0x7c
+ 1a41b90: f9001be0     	str	x0, [sp, #0x30]
+ 1a41b94: 52800381     	mov	w1, #0x1c               // =28
+ 1a41b98: aa1f03e2     	mov	x2, xzr
+ 1a41b9c: f9001fe2     	str	x2, [sp, #0x38]
+ 1a41ba0: 944d6300     	bl	0x2d9a7a0 <_Z37AttachmentDetachCrossFadeParticleTypeR12AttachmentID14ParticleEffectPKc@plt>
+ 1a41ba4: f9401be0     	ldr	x0, [sp, #0x30]
+ 1a41ba8: f9401fe2     	ldr	x2, [sp, #0x38]
+ 1a41bac: 52800b81     	mov	w1, #0x5c               // =92
+ 1a41bb0: 944d62fc     	bl	0x2d9a7a0 <_Z37AttachmentDetachCrossFadeParticleTypeR12AttachmentID14ParticleEffectPKc@plt>
+ 1a41bb4: f9401be0     	ldr	x0, [sp, #0x30]
+ 1a41bb8: f9401fe2     	ldr	x2, [sp, #0x38]
+ 1a41bbc: 528008a1     	mov	w1, #0x45               // =69
+ 1a41bc0: 944d62f8     	bl	0x2d9a7a0 <_Z37AttachmentDetachCrossFadeParticleTypeR12AttachmentID14ParticleEffectPKc@plt>
+ 1a41bc4: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41bc8: b9407508     	ldr	w8, [x8, #0x74]
+ 1a41bcc: 71003d08     	subs	w8, w8, #0xf
+ 1a41bd0: 54000201     	b.ne	0x1a41c10 <Coin::Collect()+0xabc>
+ 1a41bd4: 14000001     	b	0x1a41bd8 <Coin::Collect()+0xa84>
+ 1a41bd8: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41bdc: f9400100     	ldr	x0, [x8]
+ 1a41be0: bd403900     	ldr	s0, [x8, #0x38]
+ 1a41be4: 1e27d002     	fmov	s2, #30.00000000
+ 1a41be8: 1e222800     	fadd	s0, s0, s2
+ 1a41bec: bd403d01     	ldr	s1, [x8, #0x3c]
+ 1a41bf0: 1e222821     	fadd	s1, s1, s2
+ 1a41bf4: b9402908     	ldr	w8, [x8, #0x28]
+ 1a41bf8: 11000501     	add	w1, w8, #0x1
+ 1a41bfc: 528008c2     	mov	w2, #0x46               // =70
+ 1a41c00: 944d585c     	bl	0x2d97d70 <_ZN7LawnApp14AddTodParticleEffi14ParticleEffect@plt>
+ 1a41c04: f94047e0     	ldr	x0, [sp, #0x88]
+ 1a41c08: 944d62ea     	bl	0x2d9a7b0 <_ZN4Coin9StartFadeEv@plt>
+ 1a41c0c: 1400002f     	b	0x1a41cc8 <Coin::Collect()+0xb74>
+ 1a41c10: 3856f3a8     	ldurb	w8, [x29, #-0x91]
+ 1a41c14: 37000588     	tbnz	w8, #0x0, 0x1a41cc4 <Coin::Collect()+0xb70>
+ 1a41c18: 14000001     	b	0x1a41c1c <Coin::Collect()+0xac8>
+ 1a41c1c: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41c20: f9400100     	ldr	x0, [x8]
+ 1a41c24: 944d619f     	bl	0x2d9a2a0 <_ZN4Sexy11SexyAppBase15Is3DAcceleratedEv@plt>
+ 1a41c28: 360004e0     	tbz	w0, #0x0, 0x1a41cc4 <Coin::Collect()+0xb70>
+ 1a41c2c: 14000001     	b	0x1a41c30 <Coin::Collect()+0xadc>
+ 1a41c30: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41c34: f9400100     	ldr	x0, [x8]
+ 1a41c38: 944cd5ba     	bl	0x2d77320 <_ZN7LawnApp15IsQuickPlayModeEv@plt>
+ 1a41c3c: 37000440     	tbnz	w0, #0x0, 0x1a41cc4 <Coin::Collect()+0xb70>
+ 1a41c40: 14000001     	b	0x1a41c44 <Coin::Collect()+0xaf0>
+ 1a41c44: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41c48: b9401909     	ldr	w9, [x8, #0x18]
+ 1a41c4c: 7100012a     	subs	w10, w9, #0x0
+ 1a41c50: 1a89a529     	cinc	w9, w9, lt
+ 1a41c54: 13017d29     	asr	w9, w9, #1
+ 1a41c58: 1e220120     	scvtf	s0, w9
+ 1a41c5c: bc1543a0     	stur	s0, [x29, #-0xac]
+ 1a41c60: b9401d09     	ldr	w9, [x8, #0x1c]
+ 1a41c64: 7100012a     	subs	w10, w9, #0x0
+ 1a41c68: 1a89a529     	cinc	w9, w9, lt
+ 1a41c6c: 13017d29     	asr	w9, w9, #1
+ 1a41c70: 1e220120     	scvtf	s0, w9
+ 1a41c74: bd00b3e0     	str	s0, [sp, #0xb0]
+ 1a41c78: f9400100     	ldr	x0, [x8]
+ 1a41c7c: bd403900     	ldr	s0, [x8, #0x38]
+ 1a41c80: bc5543a1     	ldur	s1, [x29, #-0xac]
+ 1a41c84: 1e212800     	fadd	s0, s0, s1
+ 1a41c88: bd403d01     	ldr	s1, [x8, #0x3c]
+ 1a41c8c: bd40b3e2     	ldr	s2, [sp, #0xb0]
+ 1a41c90: 1e222821     	fadd	s1, s1, s2
+ 1a41c94: b9402908     	ldr	w8, [x8, #0x28]
+ 1a41c98: 71000501     	subs	w1, w8, #0x1
+ 1a41c9c: 528005e2     	mov	w2, #0x2f               // =47
+ 1a41ca0: 944d5834     	bl	0x2d97d70 <_ZN7LawnApp14AddTodParticleEffi14ParticleEffect@plt>
+ 1a41ca4: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41ca8: f90057e0     	str	x0, [sp, #0xa8]
+ 1a41cac: 9101f100     	add	x0, x8, #0x7c
+ 1a41cb0: f94057e1     	ldr	x1, [sp, #0xa8]
+ 1a41cb4: bc5543a0     	ldur	s0, [x29, #-0xac]
+ 1a41cb8: bd40b3e1     	ldr	s1, [sp, #0xb0]
+ 1a41cbc: 944d62c5     	bl	0x2d9a7d0 <_Z14AttachParticleR12AttachmentIDP17TodParticleSystemff@plt>
+ 1a41cc0: 14000001     	b	0x1a41cc4 <Coin::Collect()+0xb70>
+ 1a41cc4: 14000001     	b	0x1a41cc8 <Coin::Collect()+0xb74>
+ 1a41cc8: f94047e9     	ldr	x9, [sp, #0x88]
+ 1a41ccc: 2a1f03e8     	mov	w8, wzr
+ 1a41cd0: b9007128     	str	w8, [x9, #0x70]
+ 1a41cd4: 140000ce     	b	0x1a4200c <Coin::Collect()+0xeb8>
+ 1a41cd8: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41cdc: b9407508     	ldr	w8, [x8, #0x74]
+ 1a41ce0: 71004108     	subs	w8, w8, #0x10
+ 1a41ce4: 540003c1     	b.ne	0x1a41d5c <Coin::Collect()+0xc08>
+ 1a41ce8: 14000001     	b	0x1a41cec <Coin::Collect()+0xb98>
+ 1a41cec: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41cf0: f9400508     	ldr	x8, [x8, #0x8]
+ 1a41cf4: b5000068     	cbnz	x8, 0x1a41d00 <Coin::Collect()+0xbac>
+ 1a41cf8: 14000001     	b	0x1a41cfc <Coin::Collect()+0xba8>
+ 1a41cfc: 140000c4     	b	0x1a4200c <Coin::Collect()+0xeb8>
+ 1a41d00: f94047e1     	ldr	x1, [sp, #0x88]
+ 1a41d04: b9408428     	ldr	w8, [x1, #0x84]
+ 1a41d08: f9400429     	ldr	x9, [x1, #0x8]
+ 1a41d0c: f9423929     	ldr	x9, [x9, #0x470]
+ 1a41d10: f9400929     	ldr	x9, [x9, #0x10]
+ 1a41d14: b9003d28     	str	w8, [x9, #0x3c]
+ 1a41d18: f9400428     	ldr	x8, [x1, #0x8]
+ 1a41d1c: f9423908     	ldr	x8, [x8, #0x470]
+ 1a41d20: f9400909     	ldr	x9, [x8, #0x10]
+ 1a41d24: 52800048     	mov	w8, #0x2                // =2
+ 1a41d28: b9004528     	str	w8, [x9, #0x44]
+ 1a41d2c: f9400428     	ldr	x8, [x1, #0x8]
+ 1a41d30: 91064100     	add	x0, x8, #0x190
+ 1a41d34: 944d62ab     	bl	0x2d9a7e0 <_ZN6TodLib9DataArrayI4CoinE14DataArrayGetIDEPS1_@plt>
+ 1a41d38: f94047e9     	ldr	x9, [sp, #0x88]
+ 1a41d3c: f9400528     	ldr	x8, [x9, #0x8]
+ 1a41d40: f9423908     	ldr	x8, [x8, #0x470]
+ 1a41d44: f9400908     	ldr	x8, [x8, #0x10]
+ 1a41d48: b9004900     	str	w0, [x8, #0x48]
+ 1a41d4c: bd403d20     	ldr	s0, [x9, #0x3c]
+ 1a41d50: 1e380008     	fcvtzs	w8, s0
+ 1a41d54: b9006128     	str	w8, [x9, #0x60]
+ 1a41d58: 140000ad     	b	0x1a4200c <Coin::Collect()+0xeb8>
+ 1a41d5c: f94047e0     	ldr	x0, [sp, #0x88]
+ 1a41d60: 944d5d80     	bl	0x2d99360 <_ZN4Coin7IsMoneyEv@plt>
+ 1a41d64: 36000140     	tbz	w0, #0x0, 0x1a41d8c <Coin::Collect()+0xc38>
+ 1a41d68: 14000001     	b	0x1a41d6c <Coin::Collect()+0xc18>
+ 1a41d6c: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41d70: f9400508     	ldr	x8, [x8, #0x8]
+ 1a41d74: b40000c8     	cbz	x8, 0x1a41d8c <Coin::Collect()+0xc38>
+ 1a41d78: 14000001     	b	0x1a41d7c <Coin::Collect()+0xc28>
+ 1a41d7c: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41d80: f9400500     	ldr	x0, [x8, #0x8]
+ 1a41d84: 944d59bb     	bl	0x2d98470 <_ZN5Board12ShowCoinBankEv@plt>
+ 1a41d88: 14000001     	b	0x1a41d8c <Coin::Collect()+0xc38>
+ 1a41d8c: 14000001     	b	0x1a41d90 <Coin::Collect()+0xc3c>
+ 1a41d90: 14000001     	b	0x1a41d94 <Coin::Collect()+0xc40>
+ 1a41d94: 14000001     	b	0x1a41d98 <Coin::Collect()+0xc44>
+ 1a41d98: 14000001     	b	0x1a41d9c <Coin::Collect()+0xc48>
+ 1a41d9c: 14000001     	b	0x1a41da0 <Coin::Collect()+0xc4c>
+ 1a41da0: 14000001     	b	0x1a41da4 <Coin::Collect()+0xc50>
+ 1a41da4: 14000001     	b	0x1a41da8 <Coin::Collect()+0xc54>
+ 1a41da8: f94047e0     	ldr	x0, [sp, #0x88]
+ 1a41dac: 2a1f03e8     	mov	w8, wzr
+ 1a41db0: b9005008     	str	w8, [x0, #0x50]
+ 1a41db4: 944d5d5f     	bl	0x2d99330 <_ZN4Coin5IsSunEv@plt>
+ 1a41db8: 36000a40     	tbz	w0, #0x0, 0x1a41f00 <Coin::Collect()+0xdac>
+ 1a41dbc: 14000001     	b	0x1a41dc0 <Coin::Collect()+0xc6c>
+ 1a41dc0: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41dc4: f9400508     	ldr	x8, [x8, #0x8]
+ 1a41dc8: b40009c8     	cbz	x8, 0x1a41f00 <Coin::Collect()+0xdac>
+ 1a41dcc: 14000001     	b	0x1a41dd0 <Coin::Collect()+0xc7c>
+ 1a41dd0: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41dd4: f9400500     	ldr	x0, [x8, #0x8]
+ 1a41dd8: 944d5662     	bl	0x2d97760 <_ZN5Board23HasConveyorBeltSeedBankEv@plt>
+ 1a41ddc: 37000920     	tbnz	w0, #0x0, 0x1a41f00 <Coin::Collect()+0xdac>
+ 1a41de0: 14000001     	b	0x1a41de4 <Coin::Collect()+0xc90>
+ 1a41de4: 2a1f03e8     	mov	w8, wzr
+ 1a41de8: b900a7e8     	str	w8, [sp, #0xa4]
+ 1a41dec: 14000001     	b	0x1a41df0 <Coin::Collect()+0xc9c>
+ 1a41df0: f94047e9     	ldr	x9, [sp, #0x88]
+ 1a41df4: b940a7e8     	ldr	w8, [sp, #0xa4]
+ 1a41df8: f9400529     	ldr	x9, [x9, #0x8]
+ 1a41dfc: f9411129     	ldr	x9, [x9, #0x220]
+ 1a41e00: b9403929     	ldr	w9, [x9, #0x38]
+ 1a41e04: 6b090108     	subs	w8, w8, w9
+ 1a41e08: 5400060a     	b.ge	0x1a41ec8 <Coin::Collect()+0xd74>
+ 1a41e0c: 14000001     	b	0x1a41e10 <Coin::Collect()+0xcbc>
+ 1a41e10: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41e14: f9400509     	ldr	x9, [x8, #0x8]
+ 1a41e18: f941112b     	ldr	x11, [x9, #0x220]
+ 1a41e1c: b980a7e9     	ldrsw	x9, [sp, #0xa4]
+ 1a41e20: 52800d0a     	mov	w10, #0x68              // =104
+ 1a41e24: 2a0a03e0     	mov	w0, w10
+ 1a41e28: 2a0003ea     	mov	w10, w0
+ 1a41e2c: 9b2a2d29     	smaddl	x9, w9, w10, x11
+ 1a41e30: 91010129     	add	x9, x9, #0x40
+ 1a41e34: f9004fe9     	str	x9, [sp, #0x98]
+ 1a41e38: f9400500     	ldr	x0, [x8, #0x8]
+ 1a41e3c: f9404fe8     	ldr	x8, [sp, #0x98]
+ 1a41e40: b9404901     	ldr	w1, [x8, #0x48]
+ 1a41e44: b9404d02     	ldr	w2, [x8, #0x4c]
+ 1a41e48: 944d58de     	bl	0x2d981c0 <_ZN5Board19GetCurrentPlantCostE8SeedTypeS0_@plt>
+ 1a41e4c: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41e50: b90097e0     	str	w0, [sp, #0x94]
+ 1a41e54: f9400500     	ldr	x0, [x8, #0x8]
+ 1a41e58: 528b1888     	mov	w8, #0x58c4             // =22724
+ 1a41e5c: b8686808     	ldr	w8, [x0, x8]
+ 1a41e60: b9002fe8     	str	w8, [sp, #0x2c]
+ 1a41e64: 944d590f     	bl	0x2d982a0 <_ZN5Board22CountSunBeingCollectedEv@plt>
+ 1a41e68: b9402fe8     	ldr	w8, [sp, #0x2c]
+ 1a41e6c: 0b000108     	add	w8, w8, w0
+ 1a41e70: b94097e9     	ldr	w9, [sp, #0x94]
+ 1a41e74: 6b090108     	subs	w8, w8, w9
+ 1a41e78: b90093e8     	str	w8, [sp, #0x90]
+ 1a41e7c: b94093e8     	ldr	w8, [sp, #0x90]
+ 1a41e80: 37f801a8     	tbnz	w8, #0x1f, 0x1a41eb4 <Coin::Collect()+0xd60>
+ 1a41e84: 14000001     	b	0x1a41e88 <Coin::Collect()+0xd34>
+ 1a41e88: f94047e0     	ldr	x0, [sp, #0x88]
+ 1a41e8c: b94093e8     	ldr	w8, [sp, #0x90]
+ 1a41e90: b9002be8     	str	w8, [sp, #0x28]
+ 1a41e94: 944d5d2b     	bl	0x2d99340 <_ZN4Coin11GetSunValueEv@plt>
+ 1a41e98: b9402be8     	ldr	w8, [sp, #0x28]
+ 1a41e9c: 6b000108     	subs	w8, w8, w0
+ 1a41ea0: 540000aa     	b.ge	0x1a41eb4 <Coin::Collect()+0xd60>
+ 1a41ea4: 14000001     	b	0x1a41ea8 <Coin::Collect()+0xd54>
+ 1a41ea8: f9404fe0     	ldr	x0, [sp, #0x98]
+ 1a41eac: 944d6251     	bl	0x2d9a7f0 <_ZN10SeedPacket12FlashIfReadyEv@plt>
+ 1a41eb0: 14000001     	b	0x1a41eb4 <Coin::Collect()+0xd60>
+ 1a41eb4: 14000001     	b	0x1a41eb8 <Coin::Collect()+0xd64>
+ 1a41eb8: b940a7e8     	ldr	w8, [sp, #0xa4]
+ 1a41ebc: 11000508     	add	w8, w8, #0x1
+ 1a41ec0: b900a7e8     	str	w8, [sp, #0xa4]
+ 1a41ec4: 17ffffcb     	b	0x1a41df0 <Coin::Collect()+0xc9c>
+ 1a41ec8: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41ecc: f9400500     	ldr	x0, [x8, #0x8]
+ 1a41ed0: 944d55e8     	bl	0x2d97670 <_ZN5Board11StageHasFogEv@plt>
+ 1a41ed4: 36000140     	tbz	w0, #0x0, 0x1a41efc <Coin::Collect()+0xda8>
+ 1a41ed8: 14000001     	b	0x1a41edc <Coin::Collect()+0xd88>
+ 1a41edc: 5286a000     	mov	w0, #0x3500             // =13568
+ 1a41ee0: 72a00180     	movk	w0, #0xc, lsl #16
+ 1a41ee4: 2a1f03e1     	mov	w1, wzr
+ 1a41ee8: 52800042     	mov	w2, #0x2                // =2
+ 1a41eec: 944d5515     	bl	0x2d97340 <_ZN5Board15MakeRenderOrderE11RenderLayerii@plt>
+ 1a41ef0: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41ef4: b9002900     	str	w0, [x8, #0x28]
+ 1a41ef8: 14000001     	b	0x1a41efc <Coin::Collect()+0xda8>
+ 1a41efc: 14000001     	b	0x1a41f00 <Coin::Collect()+0xdac>
+ 1a41f00: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41f04: 9101f100     	add	x0, x8, #0x7c
+ 1a41f08: 528008a1     	mov	w1, #0x45               // =69
+ 1a41f0c: aa1f03e2     	mov	x2, xzr
+ 1a41f10: 944d6224     	bl	0x2d9a7a0 <_Z37AttachmentDetachCrossFadeParticleTypeR12AttachmentID14ParticleEffectPKc@plt>
+ 1a41f14: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41f18: f9400100     	ldr	x0, [x8]
+ 1a41f1c: 944ccd49     	bl	0x2d75440 <_ZN7LawnApp24IsFirstTimeAdventureModeEv@plt>
+ 1a41f20: 36000760     	tbz	w0, #0x0, 0x1a4200c <Coin::Collect()+0xeb8>
+ 1a41f24: 14000001     	b	0x1a41f28 <Coin::Collect()+0xdd4>
+ 1a41f28: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41f2c: f9400508     	ldr	x8, [x8, #0x8]
+ 1a41f30: b40006e8     	cbz	x8, 0x1a4200c <Coin::Collect()+0xeb8>
+ 1a41f34: 14000001     	b	0x1a41f38 <Coin::Collect()+0xde4>
+ 1a41f38: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41f3c: f9400508     	ldr	x8, [x8, #0x8]
+ 1a41f40: 528b1689     	mov	w9, #0x58b4             // =22708
+ 1a41f44: b8696908     	ldr	w8, [x8, x9]
+ 1a41f48: 71002d08     	subs	w8, w8, #0xb
+ 1a41f4c: 54000601     	b.ne	0x1a4200c <Coin::Collect()+0xeb8>
+ 1a41f50: 14000001     	b	0x1a41f54 <Coin::Collect()+0xe00>
+ 1a41f54: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41f58: f9400100     	ldr	x0, [x8]
+ 1a41f5c: 944d520d     	bl	0x2d96790 <_ZN7LawnApp21IsReplayingAdventure1Ev@plt>
+ 1a41f60: 37000560     	tbnz	w0, #0x0, 0x1a4200c <Coin::Collect()+0xeb8>
+ 1a41f64: 14000001     	b	0x1a41f68 <Coin::Collect()+0xe14>
+ 1a41f68: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41f6c: b9407508     	ldr	w8, [x8, #0x74]
+ 1a41f70: 71000908     	subs	w8, w8, #0x2
+ 1a41f74: 540000e0     	b.eq	0x1a41f90 <Coin::Collect()+0xe3c>
+ 1a41f78: 14000001     	b	0x1a41f7c <Coin::Collect()+0xe28>
+ 1a41f7c: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41f80: b9407508     	ldr	w8, [x8, #0x74]
+ 1a41f84: 71000508     	subs	w8, w8, #0x1
+ 1a41f88: 54000401     	b.ne	0x1a42008 <Coin::Collect()+0xeb4>
+ 1a41f8c: 14000001     	b	0x1a41f90 <Coin::Collect()+0xe3c>
+ 1a41f90: f94047e8     	ldr	x8, [sp, #0x88]
+ 1a41f94: f9400508     	ldr	x8, [x8, #0x8]
+ 1a41f98: f9000fe8     	str	x8, [sp, #0x18]
+ 1a41f9c: 90ff9ae1     	adrp	x1, 0xd9d000
+ 1a41fa0: 913b9821     	add	x1, x1, #0xee6
+ 1a41fa4: d10207a0     	sub	x0, x29, #0x81
+ 1a41fa8: f9000be0     	str	x0, [sp, #0x10]
+ 1a41fac: 944ca561     	bl	0x2d6b530 <_ZN5eastl9allocatorC2EPKc@plt>
+ 1a41fb0: f9400be2     	ldr	x2, [sp, #0x10]
+ 1a41fb4: b0ff9d41     	adrp	x1, 0xdea000 <eastl::memory_order_acquire+0x7722>
+ 1a41fb8: 912aa021     	add	x1, x1, #0xaa8
+ 1a41fbc: d10203a0     	sub	x0, x29, #0x80
+ 1a41fc0: f90013e0     	str	x0, [sp, #0x20]
+ 1a41fc4: 944cb123     	bl	0x2d6e450 <_ZN5eastl12basic_stringIwNS_9allocatorEEC2EPKwRKS1_@plt>
+ 1a41fc8: f9400fe0     	ldr	x0, [sp, #0x18]
+ 1a41fcc: f94013e1     	ldr	x1, [sp, #0x20]
+ 1a41fd0: 528000e2     	mov	w2, #0x7                // =7
+ 1a41fd4: 52800043     	mov	w3, #0x2                // =2
+ 1a41fd8: aa1f03e4     	mov	x4, xzr
+ 1a41fdc: 944d563d     	bl	0x2d978d0 <_ZN5Board13DisplayAdviceERKN5eastl12basic_stringIwNS0_9allocatorEEE12MessageStyle10AdviceTypePN4Sexy5ImageE@plt>
+ 1a41fe0: 14000001     	b	0x1a41fe4 <Coin::Collect()+0xe90>
+ 1a41fe4: d10203a0     	sub	x0, x29, #0x80
+ 1a41fe8: 944cadb6     	bl	0x2d6d6c0 <_ZN5eastl12basic_stringIwNS_9allocatorEED2Ev@plt>
+ 1a41fec: 14000007     	b	0x1a42008 <Coin::Collect()+0xeb4>
+ 1a41ff0: f81603a0     	stur	x0, [x29, #-0xa0]
+ 1a41ff4: 2a0103e8     	mov	w8, w1
+ 1a41ff8: b815c3a8     	stur	w8, [x29, #-0xa4]
+ 1a41ffc: d10203a0     	sub	x0, x29, #0x80
+ 1a42000: 944cadb0     	bl	0x2d6d6c0 <_ZN5eastl12basic_stringIwNS_9allocatorEED2Ev@plt>
+ 1a42004: 1400000c     	b	0x1a42034 <Coin::Collect()+0xee0>
+ 1a42008: 14000001     	b	0x1a4200c <Coin::Collect()+0xeb8>
+ 1a4200c: d53bd048     	mrs	x8, TPIDR_EL0
+ 1a42010: f9401508     	ldr	x8, [x8, #0x28]
+ 1a42014: f85f83a9     	ldur	x9, [x29, #-0x8]
+ 1a42018: eb090108     	subs	x8, x8, x9
+ 1a4201c: 54000201     	b.ne	0x1a4205c <Coin::Collect()+0xf08>
+ 1a42020: 14000001     	b	0x1a42024 <Coin::Collect()+0xed0>
+ 1a42024: f940bbfc     	ldr	x28, [sp, #0x170]
+ 1a42028: a9567bfd     	ldp	x29, x30, [sp, #0x160]
+ 1a4202c: 910603ff     	add	sp, sp, #0x180
+ 1a42030: d65f03c0     	ret
+ 1a42034: f85603a0     	ldur	x0, [x29, #-0xa0]
+ 1a42038: f90007e0     	str	x0, [sp, #0x8]
+ 1a4203c: d53bd048     	mrs	x8, TPIDR_EL0
+ 1a42040: f9401508     	ldr	x8, [x8, #0x28]
+ 1a42044: f85f83a9     	ldur	x9, [x29, #-0x8]
+ 1a42048: eb090108     	subs	x8, x8, x9
+ 1a4204c: 54000081     	b.ne	0x1a4205c <Coin::Collect()+0xf08>
+ 1a42050: 14000001     	b	0x1a42054 <Coin::Collect()+0xf00>
+ 1a42054: f94007e0     	ldr	x0, [sp, #0x8]
+ 1a42058: 943b179d     	bl	0x2907ecc <zError+0x1f8>
+ 1a4205c: 944ca3c9     	bl	0x2d6af80 <__stack_chk_fail@plt>

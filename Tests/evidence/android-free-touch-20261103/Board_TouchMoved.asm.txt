@@ -1,0 +1,66 @@
+
+..\tv_assets\FREE_3.18.0_Phone\apk_contents\split_config.arm64_v8a\lib\arm64-v8a\libpvz.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+0000000001a00ac8 <Board::TouchMoved(Sexy::Touch*)>:
+ 1a00ac8:      	sub	sp, sp, #0x30
+ 1a00acc:      	stp	x29, x30, [sp, #0x20]
+ 1a00ad0:      	add	x29, sp, #0x20
+ 1a00ad4:      	stur	x0, [x29, #-0x8]
+ 1a00ad8:      	str	x1, [sp, #0x10]
+ 1a00adc:      	ldur	x0, [x29, #-0x8]
+ 1a00ae0:      	str	x0, [sp]
+ 1a00ae4:      	ldr	x8, [sp, #0x10]
+ 1a00ae8:      	ldr	w8, [x8, #0x8]
+ 1a00aec:      	str	w8, [sp, #0xc]
+ 1a00af0:      	ldr	x8, [sp, #0x10]
+ 1a00af4:      	ldr	w8, [x8, #0xc]
+ 1a00af8:      	str	w8, [sp, #0x8]
+ 1a00afc:      	ldr	x1, [sp, #0x10]
+ 1a00b00:      	bl	0x2d98490 <_ZN5Board12GetTouchInfoEPN4Sexy5TouchE@plt>
+ 1a00b04:      	ldr	x8, [sp]
+ 1a00b08:      	str	x0, [x8, #0x470]
+ 1a00b0c:      	ldr	x8, [x8, #0x470]
+ 1a00b10:      	cbz	x8, 0x1a00b8c <Board::TouchMoved(Sexy::Touch*)+0xc4>
+ 1a00b14:      	b	0x1a00b18 <Board::TouchMoved(Sexy::Touch*)+0x50>
+ 1a00b18:      	ldr	x0, [sp]
+ 1a00b1c:      	ldr	x1, [sp, #0x10]
+ 1a00b20:      	bl	0x2d98490 <_ZN5Board12GetTouchInfoEPN4Sexy5TouchE@plt>
+ 1a00b24:      	ldr	x8, [sp]
+ 1a00b28:      	str	x0, [x8, #0x470]
+ 1a00b2c:      	ldr	x8, [x8, #0x470]
+ 1a00b30:      	ldrb	w8, [x8]
+ 1a00b34:      	tbz	w8, #0x0, 0x1a00b6c <Board::TouchMoved(Sexy::Touch*)+0xa4>
+ 1a00b38:      	b	0x1a00b3c <Board::TouchMoved(Sexy::Touch*)+0x74>
+ 1a00b3c:      	ldr	x8, [sp]
+ 1a00b40:      	ldr	x8, [x8, #0x470]
+ 1a00b44:      	ldr	x8, [x8, #0x10]
+ 1a00b48:      	ldr	w8, [x8, #0x44]
+ 1a00b4c:      	subs	w8, w8, #0x2
+ 1a00b50:      	b.ne	0x1a00b68 <Board::TouchMoved(Sexy::Touch*)+0xa0>
+ 1a00b54:      	b	0x1a00b58 <Board::TouchMoved(Sexy::Touch*)+0x90>
+ 1a00b58:      	ldr	x8, [sp]
+ 1a00b5c:      	ldr	x8, [x8, #0x470]
+ 1a00b60:      	strb	wzr, [x8]
+ 1a00b64:      	b	0x1a00b68 <Board::TouchMoved(Sexy::Touch*)+0xa0>
+ 1a00b68:      	b	0x1a00b6c <Board::TouchMoved(Sexy::Touch*)+0xa4>
+ 1a00b6c:      	ldr	x9, [sp]
+ 1a00b70:      	ldr	w8, [sp, #0xc]
+ 1a00b74:      	ldr	x10, [x9, #0x470]
+ 1a00b78:      	str	w8, [x10, #0x4]
+ 1a00b7c:      	ldr	w8, [sp, #0x8]
+ 1a00b80:      	ldr	x9, [x9, #0x470]
+ 1a00b84:      	str	w8, [x9, #0x8]
+ 1a00b88:      	b	0x1a00b8c <Board::TouchMoved(Sexy::Touch*)+0xc4>
+ 1a00b8c:      	ldr	x8, [sp]
+ 1a00b90:      	ldr	x0, [x8, #0x490]
+ 1a00b94:      	ldr	w1, [sp, #0xc]
+ 1a00b98:      	ldr	w2, [sp, #0x8]
+ 1a00b9c:      	bl	0x2d98690 <_ZN9Challenge9MouseMoveEii@plt>
+ 1a00ba0:      	tbz	w0, #0x0, 0x1a00bac <Board::TouchMoved(Sexy::Touch*)+0xe4>
+ 1a00ba4:      	b	0x1a00ba8 <Board::TouchMoved(Sexy::Touch*)+0xe0>
+ 1a00ba8:      	b	0x1a00bac <Board::TouchMoved(Sexy::Touch*)+0xe4>
+ 1a00bac:      	ldp	x29, x30, [sp, #0x20]
+ 1a00bb0:      	add	sp, sp, #0x30
+ 1a00bb4:      	ret

@@ -1,0 +1,56 @@
+
+..\tv_assets\FREE_3.18.0_Phone\apk_contents\split_config.arm64_v8a\lib\arm64-v8a\libpvz.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+00000000019e5054 <TouchInfo::Init()>:
+ 19e5054:      	sub	sp, sp, #0x40
+ 19e5058:      	stp	x29, x30, [sp, #0x30]
+ 19e505c:      	add	x29, sp, #0x30
+ 19e5060:      	stur	x0, [x29, #-0x8]
+ 19e5064:      	ldur	x8, [x29, #-0x8]
+ 19e5068:      	str	x8, [sp, #0x10]
+ 19e506c:      	ldr	x8, [x8, #0x10]
+ 19e5070:      	cbnz	x8, 0x19e50b8 <TouchInfo::Init()+0x64>
+ 19e5074:      	b	0x19e5078 <TouchInfo::Init()+0x24>
+ 19e5078:      	mov	x0, #0x68               // =104
+ 19e507c:      	bl	0x2d6be90 <_Znwm@plt>
+ 19e5080:      	str	x0, [sp, #0x8]
+ 19e5084:      	bl	0x2d96bd0 <_ZN12CursorObjectC1Ev@plt>
+ 19e5088:      	b	0x19e508c <TouchInfo::Init()+0x38>
+ 19e508c:      	ldr	x9, [sp, #0x10]
+ 19e5090:      	ldr	x8, [sp, #0x8]
+ 19e5094:      	str	x8, [x9, #0x10]
+ 19e5098:      	b	0x19e50b8 <TouchInfo::Init()+0x64>
+ 19e509c:      	mov	x8, x0
+ 19e50a0:      	ldr	x0, [sp, #0x8]
+ 19e50a4:      	stur	x8, [x29, #-0x10]
+ 19e50a8:      	mov	w8, w1
+ 19e50ac:      	stur	w8, [x29, #-0x14]
+ 19e50b0:      	bl	0x2d6aed0 <_ZdlPv@plt>
+ 19e50b4:      	b	0x19e5114 <TouchInfo::Init()+0xc0>
+ 19e50b8:      	ldr	x8, [sp, #0x10]
+ 19e50bc:      	ldr	x8, [x8, #0x18]
+ 19e50c0:      	cbnz	x8, 0x19e5108 <TouchInfo::Init()+0xb4>
+ 19e50c4:      	b	0x19e50c8 <TouchInfo::Init()+0x74>
+ 19e50c8:      	mov	x0, #0x40               // =64
+ 19e50cc:      	bl	0x2d6be90 <_Znwm@plt>
+ 19e50d0:      	str	x0, [sp]
+ 19e50d4:      	bl	0x2d96be0 <_ZN13CursorPreviewC1Ev@plt>
+ 19e50d8:      	b	0x19e50dc <TouchInfo::Init()+0x88>
+ 19e50dc:      	ldr	x9, [sp, #0x10]
+ 19e50e0:      	ldr	x8, [sp]
+ 19e50e4:      	str	x8, [x9, #0x18]
+ 19e50e8:      	b	0x19e5108 <TouchInfo::Init()+0xb4>
+ 19e50ec:      	mov	x8, x0
+ 19e50f0:      	ldr	x0, [sp]
+ 19e50f4:      	stur	x8, [x29, #-0x10]
+ 19e50f8:      	mov	w8, w1
+ 19e50fc:      	stur	w8, [x29, #-0x14]
+ 19e5100:      	bl	0x2d6aed0 <_ZdlPv@plt>
+ 19e5104:      	b	0x19e5114 <TouchInfo::Init()+0xc0>
+ 19e5108:      	ldp	x29, x30, [sp, #0x30]
+ 19e510c:      	add	sp, sp, #0x40
+ 19e5110:      	ret
+ 19e5114:      	ldur	x0, [x29, #-0x10]
+ 19e5118:      	bl	0x2907ecc <zError+0x1f8>

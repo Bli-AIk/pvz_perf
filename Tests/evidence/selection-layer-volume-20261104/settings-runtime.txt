@@ -1,0 +1,1 @@
+PASS production settings: clamped input, 0..100 sliders, original SFX gain, all 101 integer round-trips

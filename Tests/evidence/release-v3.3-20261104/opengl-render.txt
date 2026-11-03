@@ -1,0 +1,9 @@
+Test project C:/Users/Administrator/CLionProjects/codex/PlantsVsZombiesModern/out/x64-win7-opengl
+    Start 60: sexy_opengl_font_weights
+1/2 Test #60: sexy_opengl_font_weights .........   Passed    0.17 sec
+    Start 61: sexy_opengl_render
+2/2 Test #61: sexy_opengl_render ...............   Passed    2.41 sec
+
+100% tests passed out of 2
+
+Total Test time (real) =   2.60 sec

@@ -1,0 +1,35 @@
+{
+  "HDR": {
+    "strength": 1.0,
+    "enable": false
+  },
+  "window": {
+    "multiplier": 2,
+    "effects": [
+      {
+        "path": "Anime4K/Anime4K_Upscale_Denoise_UL.hlsl"
+      }
+    ]
+  },
+  "fullScreen": {
+    "output": {
+      "width": 0,
+      "height": 0
+    },
+    "effects": [
+      {
+        "path": "Anime4K/Anime4K_Upscale_Denoise_UL.hlsl"
+      },
+      {
+        "path": "Anime4K/Anime4K_Upscale_Denoise_UL.hlsl"
+      },
+      {
+        "path": "SSimDownscaler.hlsl",
+        "params": {
+          "mode": "fit",
+          "overSharp": 1.0
+        }
+      }
+    ]
+  }
+}

@@ -56,6 +56,7 @@ public:
 	void				StartButtonPressed();
 	virtual void		MouseDown(int x, int y, int theClickCount);
 	virtual void		MouseUp(int x, int y, int theClickCount);
+    const void* TouchHitTest(int x, int y) override;
 	// @Patoke: implement functions
 	void				DrawAchievements(Graphics* g);
 	void				AchievementsContinuePressed();

@@ -1,0 +1,7 @@
+Test project C:/Users/Administrator/CLionProjects/codex/PlantsVsZombiesModern/out/x64-win32-vulkan
+    Start 63: sexy_vulkan_hdr
+1/1 Test #63: sexy_vulkan_hdr ..................   Passed    5.37 sec
+
+100% tests passed out of 1
+
+Total Test time (real) =   5.39 sec

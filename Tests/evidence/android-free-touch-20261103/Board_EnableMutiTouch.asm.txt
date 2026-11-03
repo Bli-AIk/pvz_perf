@@ -1,0 +1,23 @@
+
+..\tv_assets\FREE_3.18.0_Phone\apk_contents\split_config.arm64_v8a\lib\arm64-v8a\libpvz.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+00000000019e81a4 <Board::EnableMutiTouch(bool)>:
+ 19e81a4:      	sub	sp, sp, #0x20
+ 19e81a8:      	stp	x29, x30, [sp, #0x10]
+ 19e81ac:      	add	x29, sp, #0x10
+ 19e81b0:      	str	x0, [sp, #0x8]
+ 19e81b4:      	strb	w1, [sp, #0x7]
+ 19e81b8:      	ldr	x0, [sp, #0x8]
+ 19e81bc:      	bl	0x2d96f60 <_ZN5Board26GameModeSupportsMultiTouchEv@plt>
+ 19e81c0:      	tbnz	w0, #0x0, 0x19e81d0 <Board::EnableMutiTouch(bool)+0x2c>
+ 19e81c4:      	b	0x19e81c8 <Board::EnableMutiTouch(bool)+0x24>
+ 19e81c8:      	strb	wzr, [sp, #0x7]
+ 19e81cc:      	b	0x19e81d0 <Board::EnableMutiTouch(bool)+0x2c>
+ 19e81d0:      	ldrb	w8, [sp, #0x7]
+ 19e81d4:      	and	w0, w8, #0x1
+ 19e81d8:      	bl	0x2d96f70 <_ZN4Sexy20SetMultiTouchEnabledEb@plt>
+ 19e81dc:      	ldp	x29, x30, [sp, #0x10]
+ 19e81e0:      	add	sp, sp, #0x20
+ 19e81e4:      	ret

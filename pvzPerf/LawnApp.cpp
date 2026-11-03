@@ -1,4 +1,4 @@
-﻿#include <thread>
+#include <thread>
 #include <chrono>
 #include <time.h>
 #include <cstdlib>
@@ -159,7 +159,7 @@ LawnApp::LawnApp()
 	mDebugKeysEnabled = false;
 	mFullCompanyName = "PopCap Games";
 	mProdName = "PopCap\\PlantsVsZombies";
-	mProductVersion = "3.2.5beta";
+	mProductVersion = "3.3";
 	std::string aTitleName = "pvz_perf";
 #ifdef _DEBUG
 	aTitleName += " BETA ";
@@ -1213,7 +1213,11 @@ bool LawnApp::KillNewOptionsDialog()
 	if (aNewOptionsDialog == nullptr)
 		return false;
 
+#if defined(__ANDROID__)
+    const bool wantWindowed = mIsWindowed;
+#else
 	const bool wantWindowed = !aNewOptionsDialog->mFullscreenCheckbox->mChecked;
+#endif
 	const bool useCustomScale = aNewOptionsDialog->mScaleCheckbox->mChecked;
 
 	// Modal/widget focus restoration must finish before the shared display
@@ -3427,7 +3431,11 @@ void LawnApp::SwitchScreenMode(bool wantWindowed, bool force)
 	{
 		// 同步显示状态，不回调：listener 回调会在切换刚结束时反向触发
 		// CheckboxChecked，叠加进尚未稳定的模式状态。
+#if defined(__ANDROID__)
+        aNewOptionsDialog->mFullscreenCheckbox->SetChecked(false, false);
+#else
 		aNewOptionsDialog->mFullscreenCheckbox->SetChecked(!mIsWindowed, false);
+#endif
 		aNewOptionsDialog->mScaleCheckbox->SetChecked(mUseCustomScale, false);
 	}
 }

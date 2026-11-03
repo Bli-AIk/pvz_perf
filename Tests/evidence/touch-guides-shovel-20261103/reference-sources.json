@@ -1,0 +1,32 @@
+{
+  "date": "2026-11-03",
+  "WP": [
+    {
+      "path": "Lawn/Board.cs",
+      "sha256": "53acb118d5575d476eed1892a306ee1ce888f887e83ce12d1fbc8eb1065d2755",
+      "url": "https://github.com/IsraelDXPP/PvZ-Windows-Phone-decomp/blob/26cbb77df48c674dca6cb6b1fa9ad6783903a5c4/Lawn/Board.cs"
+    },
+    {
+      "path": "Lawn/CursorObject.cs",
+      "sha256": "4f2bdf438cb86dcbb56762b4531fe8a0c813f28026be41e9841bdd93ac57d797",
+      "url": "https://github.com/IsraelDXPP/PvZ-Windows-Phone-decomp/blob/26cbb77df48c674dca6cb6b1fa9ad6783903a5c4/Lawn/CursorObject.cs"
+    },
+    {
+      "path": "Sexy/Graphics.cs",
+      "sha256": "22debddd0d0f58d7a56933220c66f712152bc4ec01d6b993d210731422e0a74d",
+      "url": "https://github.com/IsraelDXPP/PvZ-Windows-Phone-decomp/blob/26cbb77df48c674dca6cb6b1fa9ad6783903a5c4/Sexy/Graphics.cs"
+    },
+    {
+      "path": "Sexy/SexyColor.cs",
+      "sha256": "47fac55ca1a79b08e4849df3371e1ab5affb8a3bf49bad9b962af32277f22390",
+      "url": "https://github.com/IsraelDXPP/PvZ-Windows-Phone-decomp/blob/26cbb77df48c674dca6cb6b1fa9ad6783903a5c4/Sexy/SexyColor.cs"
+    }
+  ],
+  "Free": {
+    "version": "3.18.0",
+    "native_sha256": "079a0c71a67ae61fa98cd797dbb527e1c16fa0e409fe7f980c459afe1488dff5",
+    "color": "RGB=255,255,255; alpha=64; drawMode=1 (additive)",
+    "roof": "top-left/right use current/next column GridToPixelY +20; last row height80; other rows use next-row positions",
+    "selected_cell": "DrawGroundLayer draws the target row, column except target, then target with force=true, producing a second highlight at the target"
+  }
+}

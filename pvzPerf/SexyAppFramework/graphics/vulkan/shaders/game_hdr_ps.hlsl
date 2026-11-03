@@ -1,5 +1,5 @@
-// Legacy HDR final-blit math; only bindings/parameters changed for native Vulkan.
-// Scene/scale remain SDR UNORM. Decode SDR and encode PQ once, at presentation.
+// HDR final-blit tone mapping. Production output is linear floating-point scRGB.
+// PQ encoding is retained only for the retired-path compute regression oracle.
 #ifndef PVZ_HDR_COMPUTE_PROBE
 // bindless：呈现源（场景或缩放链输出）走全场纹理数组，槽位由顶点携带。
 // 不加非一致装饰是合法的：本着色器只服务呈现单四边形（一帧一纹理），
@@ -93,7 +93,17 @@ float4 ConvertHdr(float3 signal) {
 	float3 s = GAMUT_EXPANSION > 0 ? sGam : s2020;
 	float3 sdrRef = mul(M709to2020, c) * (REINHARD_PAPER / PAPER_WHITE);
 	s = lerp(sdrRef, s, STRENGTH);
+#ifdef PVZ_HDR_LINEAR_OUTPUT
+    // scRGB is linear Rec.709; 1.0 corresponds to 80 nits. Preserve signed
+    // wide-gamut values rather than clamping them as an UNORM/PQ surface would.
+    const float3x3 M2020to709 = {
+        1.6604910172, -0.5876472172, -0.0728450165,
+        -0.1245500243, 1.1329005300, -0.0083484533,
+        -0.0181511207, -0.1005786015, 1.1187294311 };
+    return float4(mul(M2020to709, s) * (PAPER_WHITE / 80.0), 1.0);
+#else
 	return float4(PQ(s * PAPER_WHITE), 1.0);
+#endif
 }
 #ifndef PVZ_HDR_COMPUTE_PROBE
 float4 main(PSIn input) : SV_Target { return ConvertHdr(Tex[input.Slot].Sample(Sam[1],input.UV).rgb*input.Color.rgb); }

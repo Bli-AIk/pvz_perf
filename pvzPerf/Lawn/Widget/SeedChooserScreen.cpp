@@ -1142,14 +1142,15 @@ void SeedChooserScreen::CancelLawnView()
 //0x486630
 void SeedChooserScreen::MouseUp(int x, int y, int theClickCount)
 {
+	const int aPreviousX = mX;
 	RefreshChooserHudLayout(*this);
-	(void)x;(void)y;
+	x = SeedChooserLayout::RebaseX(x, aPreviousX, mX);
 	if (theClickCount == 1)
 	{
-		if (mMenuButton->IsMouseOver()) ButtonDepress(SeedChooserScreen::SeedChooserScreen_Menu);
-		else if (mStartButton->IsMouseOver()) ButtonDepress(SeedChooserScreen::SeedChooserScreen_Start);
-		else if (mAlmanacButton->IsMouseOver()) ButtonDepress(SeedChooserScreen::SeedChooserScreen_Almanac);
-		else if (mStoreButton->IsMouseOver()) ButtonDepress(SeedChooserScreen::SeedChooserScreen_Store);
+		if (mMenuButton->HitTest(x, y, this)) ButtonDepress(SeedChooserScreen::SeedChooserScreen_Menu);
+		else if (mStartButton->HitTest(x, y, this)) ButtonDepress(SeedChooserScreen::SeedChooserScreen_Start);
+		else if (mAlmanacButton->HitTest(x, y, this)) ButtonDepress(SeedChooserScreen::SeedChooserScreen_Almanac);
+		else if (mStoreButton->HitTest(x, y, this)) ButtonDepress(SeedChooserScreen::SeedChooserScreen_Store);
 	}
 }
 
@@ -1191,25 +1192,25 @@ void SeedChooserScreen::MouseDown(int x, int y, int theClickCount)
 	{
 		CancelLawnView();
 	}
-	else if (mRandomButton->IsMouseOver())
+	else if (mRandomButton->HitTest(x, y, this))
 	{
 		mApp->PlaySample(Sexy::SOUND_TAP);
 		ButtonDepress(SeedChooserScreen::SeedChooserScreen_Random);
 	}
-	else if (mViewLawnButton->IsMouseOver())
+	else if (mViewLawnButton->HitTest(x, y, this))
 	{
 		mApp->PlaySample(Sexy::SOUND_TAP);
 		ButtonDepress(SeedChooserScreen::SeedChooserScreen_ViewLawn);
 	}
-	else if (mMenuButton->IsMouseOver())
+	else if (mMenuButton->HitTest(x, y, this))
 	{
 		mApp->PlaySample(Sexy::SOUND_GRAVEBUTTON);
 	}
-	else if (mStartButton->IsMouseOver() || mAlmanacButton->IsMouseOver() || mStoreButton->IsMouseOver())
+	else if (mStartButton->HitTest(x, y, this) || mAlmanacButton->HitTest(x, y, this) || mStoreButton->HitTest(x, y, this))
 	{
 		mApp->PlaySample(Sexy::SOUND_TAP);
 	}
-	else if (mImitaterButton->IsMouseOver())
+	else if (mImitaterButton->HitTest(x, y, this))
 	{
 		if (mSeedsInBank != mBoard->mSeedBank->mNumPackets)
 		{
@@ -1222,7 +1223,7 @@ void SeedChooserScreen::MouseDown(int x, int y, int theClickCount)
 	}
 	else
 	{
-		if (!mBoard->mSeedBank->ContainsPoint(x, y) && !mAlmanacButton->IsMouseOver() && !mStoreButton->IsMouseOver() && mApp->CanShowAlmanac())
+		if (!mBoard->mSeedBank->ContainsPoint(x, y) && !mAlmanacButton->HitTest(x, y, this) && !mStoreButton->HitTest(x, y, this) && mApp->CanShowAlmanac())
 		{
 			Zombie* aZombie = mBoard->ZombieHitTest(
 				SeedChooserLayout::RebaseX(x, mX, mBoard->mX), y + mY - mBoard->mY);
@@ -1353,4 +1354,32 @@ void SeedChooserScreen::UpdateAfterPurchase()
 	}
 	EnableStartButton(mSeedsInBank == mBoard->mSeedBank->mNumPackets);
 	UpdateImitaterButton();
+}
+
+const void* SeedChooserScreen::TouchHitTest(int x, int y)
+{
+    if (mMenuButton->HitTest(x, y, this)) return mMenuButton;
+    if (mStartButton->HitTest(x, y, this)) return mStartButton;
+    if (mAlmanacButton->HitTest(x, y, this)) return mAlmanacButton;
+    if (mStoreButton->HitTest(x, y, this)) return mStoreButton;
+    if (mRandomButton->HitTest(x, y, this)) return mRandomButton;
+    if (mViewLawnButton->HitTest(x, y, this)) return mViewLawnButton;
+    if (mImitaterButton->HitTest(x, y, this)) return mImitaterButton;
+    return this;
+}
+
+void SeedChooserScreen::TouchBegan(const TouchEvent& event)
+{
+    // Several legacy chooser buttons act in MouseDown. Defer their action
+    // until WidgetManager verifies a release over the originally pressed button.
+    if (TouchHitTest(event.x, event.y) == this)
+        MouseDown(event.x, event.y, 1);
+}
+
+void SeedChooserScreen::TouchEnded(const TouchEvent& event)
+{
+    if (TouchHitTest(event.x, event.y) != this)
+        MouseDown(event.x, event.y, 1);
+    if (mApp->mSeedChooserScreen == this && mMouseVisible)
+        MouseUp(event.x, event.y, 1);
 }

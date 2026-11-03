@@ -1,0 +1,47 @@
+
+..\tv_assets\FREE_3.18.0_Phone\apk_contents\split_config.arm64_v8a\lib\arm64-v8a\libpvz.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+00000000019fe1fc <Board::GetTouchInfo(Sexy::Touch*)>:
+ 19fe1fc:      	sub	sp, sp, #0x30
+ 19fe200:      	str	x0, [sp, #0x20]
+ 19fe204:      	str	x1, [sp, #0x18]
+ 19fe208:      	ldr	x8, [sp, #0x20]
+ 19fe20c:      	str	x8, [sp, #0x8]
+ 19fe210:      	str	wzr, [sp, #0x14]
+ 19fe214:      	b	0x19fe218 <Board::GetTouchInfo(Sexy::Touch*)+0x1c>
+ 19fe218:      	ldr	w8, [sp, #0x14]
+ 19fe21c:      	subs	w8, w8, #0xb
+ 19fe220:      	b.ge	0x19fe28c <Board::GetTouchInfo(Sexy::Touch*)+0x90>
+ 19fe224:      	b	0x19fe228 <Board::GetTouchInfo(Sexy::Touch*)+0x2c>
+ 19fe228:      	ldr	x8, [sp, #0x8]
+ 19fe22c:      	add	x8, x8, #0x2b0
+ 19fe230:      	ldrsw	x9, [sp, #0x14]
+ 19fe234:      	mov	x10, #0x28              // =40
+ 19fe238:      	mul	x9, x9, x10
+ 19fe23c:      	add	x8, x8, x9
+ 19fe240:      	ldr	x8, [x8, #0x20]
+ 19fe244:      	ldr	x9, [sp, #0x18]
+ 19fe248:      	ldr	x9, [x9]
+ 19fe24c:      	subs	x8, x8, x9
+ 19fe250:      	b.ne	0x19fe278 <Board::GetTouchInfo(Sexy::Touch*)+0x7c>
+ 19fe254:      	b	0x19fe258 <Board::GetTouchInfo(Sexy::Touch*)+0x5c>
+ 19fe258:      	ldr	x8, [sp, #0x8]
+ 19fe25c:      	add	x8, x8, #0x2b0
+ 19fe260:      	ldrsw	x9, [sp, #0x14]
+ 19fe264:      	mov	x10, #0x28              // =40
+ 19fe268:      	mul	x9, x9, x10
+ 19fe26c:      	add	x8, x8, x9
+ 19fe270:      	str	x8, [sp, #0x28]
+ 19fe274:      	b	0x19fe294 <Board::GetTouchInfo(Sexy::Touch*)+0x98>
+ 19fe278:      	b	0x19fe27c <Board::GetTouchInfo(Sexy::Touch*)+0x80>
+ 19fe27c:      	ldr	w8, [sp, #0x14]
+ 19fe280:      	add	w8, w8, #0x1
+ 19fe284:      	str	w8, [sp, #0x14]
+ 19fe288:      	b	0x19fe218 <Board::GetTouchInfo(Sexy::Touch*)+0x1c>
+ 19fe28c:      	str	xzr, [sp, #0x28]
+ 19fe290:      	b	0x19fe294 <Board::GetTouchInfo(Sexy::Touch*)+0x98>
+ 19fe294:      	ldr	x0, [sp, #0x28]
+ 19fe298:      	add	sp, sp, #0x30
+ 19fe29c:      	ret

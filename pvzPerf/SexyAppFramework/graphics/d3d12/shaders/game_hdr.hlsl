@@ -51,13 +51,7 @@ float3 SRGBToLinear(float3 c)
     return lerp(lo, hi, step(0.04045, c));
 }
 
-float3 PQ(float3 L)
-{
-    const float m1 = 0.1593017578125, m2 = 78.84375;
-    const float c1 = 0.8359375, c2 = 18.8515625, c3 = 18.6875;
-    float3 lp = pow(max(L, 0) / 10000.0, m1);
-    return pow((c1 + c2 * lp) / (1 + c3 * lp), m2);
-}
+
 
 static const float3x3 M709to2020 = {
     0.6274040, 0.3292860, 0.0433101,
@@ -137,7 +131,11 @@ float4 ConvertHdr(float3 signal)
     float3 s = GAMUT_EXPANSION > 0 ? sGam : s2020;
     float3 sdrRef = mul(M709to2020, c) * (REINHARD_PAPER / PAPER_WHITE);
     s = lerp(sdrRef, s, STRENGTH);
-    return float4(PQ(s * PAPER_WHITE), 1.0);
+    const float3x3 M2020to709 = {
+        1.6604910172, -0.5876472172, -0.0728450165,
+        -0.1245500243, 1.1329005300, -0.0083484533,
+        -0.0181511207, -0.1005786015, 1.1187294311 };
+    return float4(mul(M2020to709, s) * (PAPER_WHITE / 80.0), 1.0);
 }
 
 float4 PSMain(VertexOut input) : SV_Target0

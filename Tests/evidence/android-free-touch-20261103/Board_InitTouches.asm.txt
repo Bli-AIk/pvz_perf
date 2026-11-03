@@ -1,0 +1,33 @@
+
+..\tv_assets\FREE_3.18.0_Phone\apk_contents\split_config.arm64_v8a\lib\arm64-v8a\libpvz.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+00000000019e731c <Board::InitTouches()>:
+ 19e731c:      	sub	sp, sp, #0x30
+ 19e7320:      	stp	x29, x30, [sp, #0x20]
+ 19e7324:      	add	x29, sp, #0x20
+ 19e7328:      	stur	x0, [x29, #-0x8]
+ 19e732c:      	ldur	x8, [x29, #-0x8]
+ 19e7330:      	str	x8, [sp, #0x8]
+ 19e7334:      	stur	wzr, [x29, #-0xc]
+ 19e7338:      	b	0x19e733c <Board::InitTouches()+0x20>
+ 19e733c:      	ldur	w8, [x29, #-0xc]
+ 19e7340:      	subs	w8, w8, #0xb
+ 19e7344:      	b.ge	0x19e737c <Board::InitTouches()+0x60>
+ 19e7348:      	b	0x19e734c <Board::InitTouches()+0x30>
+ 19e734c:      	ldr	x8, [sp, #0x8]
+ 19e7350:      	add	x8, x8, #0x2b0
+ 19e7354:      	ldursw	x9, [x29, #-0xc]
+ 19e7358:      	mov	x10, #0x28              // =40
+ 19e735c:      	mul	x9, x9, x10
+ 19e7360:      	add	x0, x8, x9
+ 19e7364:      	bl	0x2d96bc0 <_ZN9TouchInfo4InitEv@plt>
+ 19e7368:      	b	0x19e736c <Board::InitTouches()+0x50>
+ 19e736c:      	ldur	w8, [x29, #-0xc]
+ 19e7370:      	add	w8, w8, #0x1
+ 19e7374:      	stur	w8, [x29, #-0xc]
+ 19e7378:      	b	0x19e733c <Board::InitTouches()+0x20>
+ 19e737c:      	ldp	x29, x30, [sp, #0x20]
+ 19e7380:      	add	sp, sp, #0x30
+ 19e7384:      	ret

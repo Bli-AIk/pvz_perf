@@ -409,6 +409,7 @@ std::string MakeBakedHeader(const std::vector<BakedString>& strings)
     out << "\n";
     out << "struct LawnStrings\n";
     out << "{\n";
+    out << "\tstatic const std::string OPTIONS_DISPLAY_MODE;\n";
     bool renamed = false;
     for (const BakedString& s : strings) {
         out << "\tstd::string " << s.ident << ";";
@@ -435,6 +436,11 @@ std::string MakeBakedSource(const std::vector<BakedString>& strings)
     out << "\n";
     out << "#include \"LawnStrings.h\"\n";
     out << "\n";
+    out << "#if defined(__ANDROID__)\n";
+    out << "const std::string LawnStrings::OPTIONS_DISPLAY_MODE = \"HDR (disabled)\";\n";
+    out << "#else\n";
+    out << "const std::string LawnStrings::OPTIONS_DISPLAY_MODE = \"Full Screen\";\n";
+    out << "#endif\n\n";
     out << "const LawnStrings gStr =\n";
     out << "{\n";
     for (std::size_t i = 0; i < strings.size(); i++) {

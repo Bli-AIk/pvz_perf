@@ -1,0 +1,46 @@
+{
+  "date": "2026-11-03",
+  "scope": "production-object input/render regression; actual pixel readback",
+  "source_sha256": {
+    "pvzPerf/Lawn/BoardTouch.cpp": "8103d18d5258fe18482e5ce9ac776b381342a9f6c6f4cbbadb38777e62f73389",
+    "Tests/native/ImageRuntimeTests.cpp": "85a31ffc2acea69aa54bde442b9afe3babfa06322bd08c34b54ebfd42b2559d2"
+  },
+  "windows": {
+    "exe_sha256": "def36d401e2ab244ef99f5c64e1886b3d439c0f2b26b98e527fa224d270d6150",
+    "pak_sha256": "d8087bd5c870f428d2e4f4c5d39b6f78b22524353ca5a718d649fecfd49f36ea",
+    "fixture_sha256": "749e56db1e735845a0305b91fb03c36148be3fa7d5a2e6a35c8df6f442048ada",
+    "result": "PASS",
+    "flags": [
+      "Release",
+      "/GL",
+      "/LTCG"
+    ]
+  },
+  "save_format": "DAT64 v4 unchanged",
+  "guides": {
+    "rgb": [
+      255,
+      255,
+      255
+    ],
+    "alpha": 64,
+    "blend": "additive",
+    "target": "row/column double highlight",
+    "roof": "GPU convex quads joining adjacent column heights"
+  },
+  "evidence_sha256": {
+    "free-ColorRgbAlpha.asm.txt": "93ed62f61175331e25498607427e50a0f4a1ee9452e8392b765bff148e30f576",
+    "free-CursorDrawGroundLayer.asm.txt": "f62d7d58ebef840c233a9e55c161b667b307ec389953c3d5faa09b5bc559306b",
+    "free-DrawCelHighlight.asm.txt": "5da39e4bad4ac9343330b1a42a61206387c62549df9d87685b77e2d4dae81509",
+    "native-tests.log": "f76db92ffc8117f1bc556187ee05a1a8796c8f89734d5b296dbc44401f60d8f2",
+    "README.md": "c8f355824cf889437bcf4ccc9559c508136e20c7fd1554ff57f605d79bbeba30",
+    "reference-sources.json": "9120575dfd3c6e9b6787c8e74661d085af5e95c33b9ef88921b7f29a6ff81b1c",
+    "touch-guides-0-plant.png": "affc0fb7a8567ec90601a5575067a67cbd4a3a0f0b6e03384c9bd98f2c07de9c",
+    "touch-guides-0-shovel.png": "affc0fb7a8567ec90601a5575067a67cbd4a3a0f0b6e03384c9bd98f2c07de9c",
+    "touch-guides-2-plant.png": "599ba6cb23c6f3d04ca20fc3633685ad8c47bf107c196f68483ef8daa7967cc2",
+    "touch-guides-2-shovel.png": "599ba6cb23c6f3d04ca20fc3633685ad8c47bf107c196f68483ef8daa7967cc2",
+    "touch-guides-4-plant.png": "cb76f9306e7750ef87a54b6a4d31ccf930bc2a67793af39dec85922e5d477123",
+    "touch-guides-4-shovel.png": "cb76f9306e7750ef87a54b6a4d31ccf930bc2a67793af39dec85922e5d477123",
+    "touch-input.log": "2ce47ead911eabec437e9256268a83f009bf94667e302c7a4e67204e871d8a1c"
+  }
+}

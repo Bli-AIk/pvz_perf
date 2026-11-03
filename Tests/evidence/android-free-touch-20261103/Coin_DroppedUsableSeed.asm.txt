@@ -1,0 +1,30 @@
+
+C:/Users/Administrator/CLionProjects/codex/tv_assets/FREE_3.18.0_Phone/apk_contents/split_config.arm64_v8a/lib/arm64-v8a/libpvz.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+0000000001a4672c <Coin::DroppedUsableSeed()>:
+ 1a4672c: d10083ff     	sub	sp, sp, #0x20
+ 1a46730: a9017bfd     	stp	x29, x30, [sp, #0x10]
+ 1a46734: 910043fd     	add	x29, sp, #0x10
+ 1a46738: f90007e0     	str	x0, [sp, #0x8]
+ 1a4673c: f94007e8     	ldr	x8, [sp, #0x8]
+ 1a46740: f90003e8     	str	x8, [sp]
+ 1a46744: 3901b11f     	strb	wzr, [x8, #0x6c]
+ 1a46748: b940d108     	ldr	w8, [x8, #0xd0]
+ 1a4674c: 35000128     	cbnz	w8, 0x1a46770 <Coin::DroppedUsableSeed()+0x44>
+ 1a46750: 14000001     	b	0x1a46754 <Coin::DroppedUsableSeed()+0x28>
+ 1a46754: f94003e8     	ldr	x8, [sp]
+ 1a46758: b9407100     	ldr	w0, [x8, #0x70]
+ 1a4675c: 52809601     	mov	w1, #0x4b0              // =1200
+ 1a46760: 944d434c     	bl	0x2d97490 <_ZN5eastl3minIiEENS_9enable_ifIXsr5eastl9is_scalarIT_EE5valueES2_E4typeES2_S2_@plt>
+ 1a46764: f94003e8     	ldr	x8, [sp]
+ 1a46768: b9007100     	str	w0, [x8, #0x70]
+ 1a4676c: 14000001     	b	0x1a46770 <Coin::DroppedUsableSeed()+0x44>
+ 1a46770: f94003e9     	ldr	x9, [sp]
+ 1a46774: b940d128     	ldr	w8, [x9, #0xd0]
+ 1a46778: 11000508     	add	w8, w8, #0x1
+ 1a4677c: b900d128     	str	w8, [x9, #0xd0]
+ 1a46780: a9417bfd     	ldp	x29, x30, [sp, #0x10]
+ 1a46784: 910083ff     	add	sp, sp, #0x20
+ 1a46788: d65f03c0     	ret

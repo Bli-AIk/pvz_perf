@@ -1253,6 +1253,14 @@
           {
             "tag": "Image",
             "attrs": {
+              "id": "TOUCH_SELECTION_FRAME_BLUE",
+              "path": "touch_selection_frame_blue"
+            },
+            "children": []
+          },
+          {
+            "tag": "Image",
+            "attrs": {
               "id": "COBCANNON_POPCORN",
               "path": "CobCannon_popcorn",
               "cols": "5"

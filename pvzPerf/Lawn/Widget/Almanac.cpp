@@ -860,13 +860,15 @@ ZombieType AlmanacDialog::ZombieHitTest(int x, int y)
 //0x403C60
 void AlmanacDialog::MouseUp(int x, int y, int theClickCount)
 {
+	const int aPreviousX = mX;
 	RefreshAlmanacLayout(*this);
-	(void)x;(void)y;(void)theClickCount;
+	x += aPreviousX - mX;
+	(void)theClickCount;
 	mDescScrollBarDragging = false;
-	if (mPlantButton->IsMouseOver())		SetPage(ALMANAC_PAGE_PLANTS);
-	else if (mZombieButton->IsMouseOver())	SetPage(ALMANAC_PAGE_ZOMBIES);
-	else if (mCloseButton->IsMouseOver())	mApp->KillAlmanacDialog();
-	else if (mIndexButton->IsMouseOver())	SetPage(ALMANAC_PAGE_INDEX);
+	if (mPlantButton->HitTest(x, y, this))		SetPage(ALMANAC_PAGE_PLANTS);
+	else if (mZombieButton->HitTest(x, y, this))	SetPage(ALMANAC_PAGE_ZOMBIES);
+	else if (mCloseButton->HitTest(x, y, this))	mApp->KillAlmanacDialog();
+	else if (mIndexButton->HitTest(x, y, this))	SetPage(ALMANAC_PAGE_INDEX);
 }
 
 //0x403D00
@@ -888,9 +890,9 @@ void AlmanacDialog::MouseDown(int x, int y, int theClickCount)
 		return;
 	}
 
-	if (mPlantButton->IsMouseOver() || mCloseButton->IsMouseOver() || mIndexButton->IsMouseOver())
+	if (mPlantButton->HitTest(x, y, this) || mCloseButton->HitTest(x, y, this) || mIndexButton->HitTest(x, y, this))
 		mApp->PlaySample(Sexy::SOUND_TAP);
-	if (mZombieButton->IsMouseOver())
+	if (mZombieButton->HitTest(x, y, this))
 		mApp->PlaySample(Sexy::SOUND_GRAVEBUTTON);
 
 	SeedType aSeedType = SeedHitTest(x, y);
@@ -957,4 +959,13 @@ void AlmanacInitForPlayer()
 void AlmanacPlayerDefeatedZombie(ZombieType theZombieType)
 {
 	gZombieDefeated[(int)theZombieType] = true;
+}
+
+const void* AlmanacDialog::TouchHitTest(int x, int y)
+{
+    if (mPlantButton->HitTest(x, y, this)) return mPlantButton;
+    if (mZombieButton->HitTest(x, y, this)) return mZombieButton;
+    if (mCloseButton->HitTest(x, y, this)) return mCloseButton;
+    if (mIndexButton->HitTest(x, y, this)) return mIndexButton;
+    return this;
 }

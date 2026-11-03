@@ -56,7 +56,7 @@ elseif(ANDROID OR CMAKE_SYSTEM_NAME STREQUAL "Android")
 endif()
 
 set(PVZ_NATIVE_SHADER_DIR "${CMAKE_CURRENT_BINARY_DIR}/shaders/$<CONFIG>")
-foreach(stage IN ITEMS vs pool_vs ps sprite_ps sprite_mixed_ps hdr_ps coverage_ps caustic_cs font_cs alpha_cs color_cs)
+foreach(stage IN ITEMS vs pool_vs ps sprite_ps sprite_mixed_ps hdr_linear_ps coverage_ps caustic_cs font_cs alpha_cs color_cs)
     if(stage STREQUAL "vs" OR stage STREQUAL "pool_vs")
         set(shaderStage vertex)
         set(shaderSource "${CMAKE_CURRENT_SOURCE_DIR}/shaders/game_${stage}.hlsl")
@@ -79,6 +79,10 @@ foreach(stage IN ITEMS vs pool_vs ps sprite_ps sprite_mixed_ps hdr_ps coverage_p
         set(shaderSource "${CMAKE_CURRENT_SOURCE_DIR}/shaders/game_${stage}.hlsl")
         set(shaderLanguage -x hlsl)
     endif()
+    set(shaderDependencies "${shaderSource}")
+    if(stage STREQUAL "hdr_linear_ps")
+        list(APPEND shaderDependencies "${CMAKE_CURRENT_SOURCE_DIR}/shaders/game_hdr_ps.hlsl")
+    endif()
     set(output "${PVZ_NATIVE_SHADER_DIR}/game_${stage}.spv")
     add_custom_command(OUTPUT "${output}"
         COMMAND "${CMAKE_COMMAND}" -E make_directory "${PVZ_NATIVE_SHADER_DIR}"
@@ -86,7 +90,7 @@ foreach(stage IN ITEMS vs pool_vs ps sprite_ps sprite_mixed_ps hdr_ps coverage_p
             --target-env=vulkan1.3 -O "${shaderSource}"
             -o "${output}"
         COMMAND "${PVZ_SPIRV_VAL}" --target-env vulkan1.3 "${output}"
-        DEPENDS "${shaderSource}" VERBATIM)
+        DEPENDS ${shaderDependencies} VERBATIM)
     list(APPEND nativeShaders "${output}")
 endforeach()
 if(ANDROID AND PVZ_VULKAN_SEPARATE_BLEND_TEST)
@@ -209,12 +213,21 @@ if(BUILD_TESTING AND WIN32)
         COMMAND "${PVZ_SPIRV_VAL}" --target-env vulkan1.3 "${hdrProbe}"
         DEPENDS tests/hdr_probe_cs.hlsl shaders/game_hdr_ps.hlsl VERBATIM)
     add_custom_target(sexy_vulkan_hdr_probe DEPENDS "${hdrProbe}")
+    set(hdrLinearProbe "${PVZ_NATIVE_SHADER_DIR}/hdr_linear_probe.spv")
+    add_custom_command(OUTPUT "${hdrLinearProbe}"
+        COMMAND "${PVZ_GLSLC}" -Werror -x hlsl -DPVZ_HDR_LINEAR_OUTPUT -fshader-stage=compute --target-env=vulkan1.3 -O
+            "${CMAKE_CURRENT_SOURCE_DIR}/tests/hdr_probe_cs.hlsl" -o "${hdrLinearProbe}"
+        COMMAND "${PVZ_SPIRV_VAL}" --target-env vulkan1.3 "${hdrLinearProbe}"
+        DEPENDS tests/hdr_probe_cs.hlsl shaders/game_hdr_ps.hlsl VERBATIM)
+    add_custom_target(sexy_vulkan_hdr_linear_probe DEPENDS "${hdrLinearProbe}")
+    add_dependencies(sexy_vulkan_hdr_linear_probe sexy_vulkan_shaders)
     add_dependencies(sexy_vulkan_hdr_probe sexy_vulkan_shaders)
     if(NOT WIN32 OR NOT PVZ_WINDOWS_PLATFORM STREQUAL "WIN7")
-        add_executable(sexy_vulkan_hdr_tests tests/hdr_tests.cpp)
+        add_executable(sexy_vulkan_hdr_tests tests/hdr_tests.cpp tests/hdr_reference.cpp)
         target_link_libraries(sexy_vulkan_hdr_tests PRIVATE sexy_vulkan)
         target_compile_definitions(sexy_vulkan_hdr_tests PRIVATE PVZ_NATIVE_SHADER_DIR="${PVZ_NATIVE_SHADER_DIR}")
         add_dependencies(sexy_vulkan_hdr_tests sexy_vulkan_hdr_probe)
+        add_dependencies(sexy_vulkan_hdr_tests sexy_vulkan_hdr_linear_probe)
         add_test(NAME sexy_vulkan_hdr COMMAND sexy_vulkan_hdr_tests)
         set_tests_properties(sexy_vulkan_hdr PROPERTIES TIMEOUT 60 ENVIRONMENT "VK_LAYER_VALIDATE_SYNC=1")
     endif()

@@ -1,5 +1,6 @@
 ﻿#include "../NativeWindow.h"
 #include "AndroidWindow.h"
+#include "AndroidTouchInput.h"
 #include "SexyAppFramework/Common.h"
 #include "widget/EditWidget.h"
 #include <cmath>
@@ -16,11 +17,14 @@ android_app* gApp = nullptr;
 ANativeWindow* gWindow = nullptr;
 NativeWindowEventCallback gEventCallback = nullptr;
 void* gEventContext = nullptr;
-// 触摸即指针：MOVE 只更新采样值，DOWN/UP 走事件 FIFO（坐标随事件携带）。
+// Physical mouse sampling is independent of finger/stylus contacts.
 NativePointerState gPointer{};
-bool gTouching = false;
+unsigned int gMouseButtons = 0;
+AndroidTouchInput gTouches;
 bool gGameGesture = false;
 std::atomic<unsigned long long> gSurfaceOrigin{0};
+// android.view.MotionEvent.FLAG_CANCELED (API 33); absent from NDK r27's enum.
+constexpr int MotionFlagCanceled = 0x20;
 EditWidget* gEditor = nullptr; // Only dereferenced on the native game thread.
 jlong gEditorSession = 0;
 std::string gEditorText;
@@ -171,6 +175,8 @@ void AndroidAppCommand(android_app* state, int32_t command)
     case APP_CMD_WINDOW_RESIZED:
     case APP_CMD_CONFIG_CHANGED:
     case APP_CMD_INIT_WINDOW:
+        gTouches.CancelAll();
+        gGameGesture = false;
         gWindow = state->window;
 
         // Resize(未最小化) 驱动 NotifySurfaceSuspended(false) + 几何重建；
@@ -188,7 +194,8 @@ void AndroidAppCommand(android_app* state, int32_t command)
         // 本帧排水点把 surface 标记挂起，之后无人再触碰该窗口指针。
         gWindow = nullptr;
         gGameGesture = false;
-        gTouching = false;
+        gTouches.CancelAll();
+        gMouseButtons = 0;
         gPointer.inside = false;
         {
             NativeWindowEvent event{};
@@ -205,6 +212,10 @@ void AndroidAppCommand(android_app* state, int32_t command)
         break;
     }
     case APP_CMD_LOST_FOCUS: {
+        gTouches.CancelAll();
+        gGameGesture = false;
+        gMouseButtons = 0;
+        gPointer.inside = false;
         if (gEditor) EndAndroidTextInput(gEditor);
         NativeWindowEvent event{};
         event.kind = NativeWindowEventKind::Focus;
@@ -213,6 +224,7 @@ void AndroidAppCommand(android_app* state, int32_t command)
         break;
     }
     case APP_CMD_DESTROY: {
+        gTouches.CancelAll();
         NativeWindowEvent event{};
         event.kind = NativeWindowEventKind::Close;
         EmitEvent(event);
@@ -228,6 +240,7 @@ int32_t AndroidAppInput(android_app*, AInputEvent* event)
     const int32_t type = AInputEvent_getType(event);
     if (type == AINPUT_EVENT_TYPE_KEY)
     {
+        gTouches.FlushMoves(); // Preserve pending motion before a key/IME action.
         const int32_t action = AKeyEvent_getAction(event);
         if (action != AKEY_EVENT_ACTION_DOWN && action != AKEY_EVENT_ACTION_UP)
             return 0;
@@ -277,55 +290,111 @@ int32_t AndroidAppInput(android_app*, AInputEvent* event)
     if (type != AINPUT_EVENT_TYPE_MOTION)
         return 0;
     const auto origin = gSurfaceOrigin.load(std::memory_order_relaxed);
-    const float x = AMotionEvent_getX(event, 0) - static_cast<int>(origin >> 32);
-    const float y = AMotionEvent_getY(event, 0) - static_cast<int>(static_cast<unsigned int>(origin));
+    const float originX = static_cast<int>(origin >> 32);
+    const float originY = static_cast<int>(static_cast<unsigned int>(origin));
     const int32_t action = AMotionEvent_getAction(event);
     const int32_t masked = action & AMOTION_EVENT_ACTION_MASK;
-    if (masked == AMOTION_EVENT_ACTION_DOWN) {
-        gGameGesture = gWindow && x >= 0 && y >= 0 &&
-            x < ANativeWindow_getWidth(gWindow) && y < ANativeWindow_getHeight(gWindow);
-    }
-    // The DOWN target owns the complete gesture. In particular, caption drags
-    // must stay in Java even if the pointer later crosses into the game area.
-    if (!gGameGesture) return 0;
-    const int32_t pointerIndex = action >> AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT;
-    bool button = false, pressed = false;
-    switch (masked) {
-    case AMOTION_EVENT_ACTION_DOWN:
-        button = pressed = true;
-        break;
-    case AMOTION_EVENT_ACTION_POINTER_DOWN:
-        if (pointerIndex == 0) button = pressed = true;
-        break;
-    case AMOTION_EVENT_ACTION_UP:
-    case AMOTION_EVENT_ACTION_CANCEL:
-        button = true;
-        pressed = false;
-        break;
-    case AMOTION_EVENT_ACTION_POINTER_UP:
-        if (pointerIndex == 0) { button = true; pressed = false; }
-        break;
-    case AMOTION_EVENT_ACTION_MOVE:
-    case AMOTION_EVENT_ACTION_HOVER_MOVE:
-        break;
-    default:
+    const auto source = AInputEvent_getSource(event);
+    if (masked == AMOTION_EVENT_ACTION_CANCEL)
+    {
+        if ((source & AINPUT_SOURCE_MOUSE) == AINPUT_SOURCE_MOUSE)
+        {
+            gMouseButtons = 0;
+            NativeWindowEvent canceled{};
+            canceled.kind = NativeWindowEventKind::MouseCanceled;
+            EmitEvent(canceled);
+        }
+        else
+        {
+            gTouches.CancelAll();
+            gGameGesture = false;
+        }
         return 1;
     }
-    gPointer.x = x;
-    gPointer.y = y;
-    if (button) gTouching = pressed;
-    if (masked == AMOTION_EVENT_ACTION_UP || masked == AMOTION_EVENT_ACTION_CANCEL)
+    const auto pointerCount = AMotionEvent_getPointerCount(event);
+    if (pointerCount == 0) return 0;
+    const auto inside = [&](double x, double y) {
+        return gWindow && x >= 0 && y >= 0 && x < ANativeWindow_getWidth(gWindow) &&
+            y < ANativeWindow_getHeight(gWindow);
+    };
+    if ((source & AINPUT_SOURCE_MOUSE) == AINPUT_SOURCE_MOUSE)
+    {
+        gTouches.FlushMoves();
+        const double x = AMotionEvent_getX(event, 0) - originX;
+        const double y = AMotionEvent_getY(event, 0) - originY;
+        gPointer = {x, y, masked != AMOTION_EVENT_ACTION_HOVER_EXIT && inside(x, y)};
+        // The system caption owns a mouse press that starts outside the game.
+        if (!gPointer.inside && gMouseButtons == 0) return 0;
+        if (masked == AMOTION_EVENT_ACTION_SCROLL)
+        {
+            NativeWindowEvent wheel{};
+            wheel.kind = NativeWindowEventKind::MouseWheel;
+            wheel.x = AMotionEvent_getAxisValue(event, AMOTION_EVENT_AXIS_HSCROLL, 0);
+            wheel.y = AMotionEvent_getAxisValue(event, AMOTION_EVENT_AXIS_VSCROLL, 0);
+            EmitEvent(wheel);
+        }
+        unsigned int buttons = static_cast<unsigned int>(AMotionEvent_getButtonState(event));
+        if (masked == AMOTION_EVENT_ACTION_DOWN && buttons == 0)
+            buttons = AMOTION_EVENT_BUTTON_PRIMARY; // Also accepts shell-generated mouse taps.
+        if (masked == AMOTION_EVENT_ACTION_UP) buttons = 0;
+        static constexpr unsigned int nativeButtons[]{AMOTION_EVENT_BUTTON_PRIMARY,
+            AMOTION_EVENT_BUTTON_SECONDARY, AMOTION_EVENT_BUTTON_TERTIARY};
+        const unsigned int changed = buttons ^ gMouseButtons;
+        for (int button = 0; button < 3; ++button)
+            if ((changed & nativeButtons[button]) != 0)
+            {
+                NativeWindowEvent out{};
+                out.kind = NativeWindowEventKind::MouseButton;
+                out.button = button;
+                out.pressed = (buttons & nativeButtons[button]) != 0;
+                out.x = x;
+                out.y = y;
+                out.timeMs = static_cast<unsigned long long>(AMotionEvent_getEventTime(event) / 1000000);
+                EmitEvent(out);
+            }
+        gMouseButtons = buttons;
+        return gPointer.inside || changed != 0;
+    }
+    if ((source & AINPUT_SOURCE_TOUCHSCREEN) != AINPUT_SOURCE_TOUCHSCREEN &&
+        (source & AINPUT_SOURCE_STYLUS) != AINPUT_SOURCE_STYLUS) return 0;
+    const auto pointerIndex = static_cast<size_t>((action & AMOTION_EVENT_ACTION_POINTER_INDEX_MASK)
+        >> AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT);
+    if (pointerIndex >= pointerCount) return 0;
+    const double x = AMotionEvent_getX(event, pointerIndex) - originX;
+    const double y = AMotionEvent_getY(event, pointerIndex) - originY;
+    if (masked == AMOTION_EVENT_ACTION_DOWN)
+    {
+        gTouches.CancelAll();
+        gGameGesture = inside(x, y);
+    }
+    // Caption gestures remain owned by Android for their entire lifetime.
+    if (!gGameGesture) return 0;
+    const unsigned int device = static_cast<unsigned int>(AInputEvent_getDeviceId(event));
+    const auto id = [&](size_t index) {
+        return (1ULL << 63) | (static_cast<unsigned long long>(device) << 32) |
+            static_cast<unsigned int>(AMotionEvent_getPointerId(event, index));
+    };
+    switch (masked)
+    {
+    case AMOTION_EVENT_ACTION_DOWN: case AMOTION_EVENT_ACTION_POINTER_DOWN:
+        if (inside(x, y)) gTouches.Begin(id(pointerIndex), x, y);
+        break;
+    case AMOTION_EVENT_ACTION_MOVE:
+        for (size_t index = 0; index < pointerCount; ++index)
+            gTouches.Move(id(index), AMotionEvent_getX(event, index) - originX,
+                AMotionEvent_getY(event, index) - originY);
+        break;
+    case AMOTION_EVENT_ACTION_UP: case AMOTION_EVENT_ACTION_POINTER_UP:
+        if ((AMotionEvent_getFlags(event) & MotionFlagCanceled) != 0)
+            gTouches.Cancel(id(pointerIndex));
+        else gTouches.End(id(pointerIndex), x, y);
+        if (masked == AMOTION_EVENT_ACTION_UP) gGameGesture = false;
+        break;
+    case AMOTION_EVENT_ACTION_CANCEL:
+        gTouches.CancelAll();
         gGameGesture = false;
-    gPointer.inside = gTouching;
-    if (button) {
-        NativeWindowEvent out{};
-        out.kind = NativeWindowEventKind::MouseButton;
-        out.button = 0;
-        out.pressed = pressed;
-        out.x = x;
-        out.y = y;
-        out.timeMs = static_cast<unsigned long long>(AMotionEvent_getEventTime(event) / 1000000);
-        EmitEvent(out);
+        break;
+    default: break;
     }
     return 1;
 }
@@ -342,11 +411,17 @@ NativeWindow::NativeWindow(const NativeWindowConfig& config) : impl_(new Impl) {
     Visible = config.visible;
     gEventCallback = config.callback;
     gEventContext = config.callbackContext;
+    gTouches.CancelAll();
+    gTouches.callback = config.callback;
+    gTouches.context = config.callbackContext;
 }
 NativeWindow::~NativeWindow()
 {
     gEventCallback = nullptr;
     gEventContext = nullptr;
+    gTouches.callback = nullptr;
+    gTouches.context = nullptr;
+    gTouches.CancelAll();
 }
 void NativeWindow::PumpEvents()
 {
@@ -360,6 +435,7 @@ void NativeWindow::PumpEvents()
         if (source) source->process(gApp, source);
         if (gApp->destroyRequested) return;
     }
+    gTouches.FlushMoves();
 }
 NativePointerState NativeWindow::SamplePointer() { return gPointer; }
 void NativeWindow::Show() { Visible = true; }

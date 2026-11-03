@@ -1,0 +1,10 @@
+{
+  "window": {
+    "multiplier": 1,
+    "effects": []
+  },
+  "fullScreen": {
+    "output": { "width": 0, "height": 0 },
+    "effects": []
+  }
+}

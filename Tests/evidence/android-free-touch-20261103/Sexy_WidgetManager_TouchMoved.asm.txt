@@ -1,0 +1,114 @@
+
+..\tv_assets\FREE_3.18.0_Phone\apk_contents\split_config.arm64_v8a\lib\arm64-v8a\libpvz.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+0000000002056408 <Sexy::WidgetManager::TouchMoved(Sexy::Touch*)>:
+ 2056408:      	sub	sp, sp, #0x50
+ 205640c:      	stp	x29, x30, [sp, #0x40]
+ 2056410:      	add	x29, sp, #0x40
+ 2056414:      	mrs	x8, TPIDR_EL0
+ 2056418:      	ldr	x8, [x8, #0x28]
+ 205641c:      	stur	x8, [x29, #-0x8]
+ 2056420:      	stur	x0, [x29, #-0x18]
+ 2056424:      	str	x1, [sp, #0x20]
+ 2056428:      	ldur	x8, [x29, #-0x18]
+ 205642c:      	mov	x9, x8
+ 2056430:      	str	x9, [sp, #0x8]
+ 2056434:      	ldr	w9, [x8, #0x48]
+ 2056438:      	str	w9, [x8, #0x15c]
+ 205643c:      	mov	w9, #0x1                // =1
+ 2056440:      	strb	w9, [x8, #0x148]
+ 2056444:      	ldr	x9, [sp, #0x20]
+ 2056448:      	ldr	w9, [x9, #0x8]
+ 205644c:      	str	w9, [x8, #0x14c]
+ 2056450:      	ldr	x9, [sp, #0x20]
+ 2056454:      	ldr	w9, [x9, #0xc]
+ 2056458:      	str	w9, [x8, #0x150]
+ 205645c:      	ldr	x8, [x8, #0xd8]
+ 2056460:      	cbz	x8, 0x2056590 <Sexy::WidgetManager::TouchMoved(Sexy::Touch*)+0x188>
+ 2056464:      	b	0x2056468 <Sexy::WidgetManager::TouchMoved(Sexy::Touch*)+0x60>
+ 2056468:      	ldr	x0, [sp, #0x8]
+ 205646c:      	ldr	x8, [sp, #0x20]
+ 2056470:      	ldr	w1, [x8, #0x8]
+ 2056474:      	ldr	w2, [x8, #0xc]
+ 2056478:      	mov	x4, xzr
+ 205647c:      	mov	x3, x4
+ 2056480:      	bl	0x2dcb6c0 <_ZN4Sexy13WidgetManager11GetWidgetAtEiiPiS1_@plt>
+ 2056484:      	ldr	x8, [sp, #0x8]
+ 2056488:      	str	x0, [sp, #0x18]
+ 205648c:      	ldr	x0, [x8, #0xd8]
+ 2056490:      	ldr	x8, [x0]
+ 2056494:      	ldr	x9, [x8, #0x80]
+ 2056498:      	sub	x8, x29, #0x10
+ 205649c:      	blr	x9
+ 20564a0:      	ldr	x8, [sp, #0x8]
+ 20564a4:      	ldur	w11, [x29, #-0x10]
+ 20564a8:      	ldr	x10, [sp, #0x20]
+ 20564ac:      	ldr	w9, [x10, #0x8]
+ 20564b0:      	subs	w9, w9, w11
+ 20564b4:      	str	w9, [x10, #0x8]
+ 20564b8:      	ldur	w11, [x29, #-0xc]
+ 20564bc:      	ldr	x10, [sp, #0x20]
+ 20564c0:      	ldr	w9, [x10, #0xc]
+ 20564c4:      	subs	w9, w9, w11
+ 20564c8:      	str	w9, [x10, #0xc]
+ 20564cc:      	ldur	w11, [x29, #-0x10]
+ 20564d0:      	ldr	x10, [sp, #0x20]
+ 20564d4:      	ldr	w9, [x10, #0x10]
+ 20564d8:      	subs	w9, w9, w11
+ 20564dc:      	str	w9, [x10, #0x10]
+ 20564e0:      	ldur	w11, [x29, #-0xc]
+ 20564e4:      	ldr	x10, [sp, #0x20]
+ 20564e8:      	ldr	w9, [x10, #0x14]
+ 20564ec:      	subs	w9, w9, w11
+ 20564f0:      	str	w9, [x10, #0x14]
+ 20564f4:      	ldr	x0, [x8, #0xd8]
+ 20564f8:      	ldr	x1, [sp, #0x20]
+ 20564fc:      	ldr	x8, [x0]
+ 2056500:      	ldr	x8, [x8, #0x230]
+ 2056504:      	blr	x8
+ 2056508:      	ldr	x9, [sp, #0x8]
+ 205650c:      	ldr	x8, [sp, #0x18]
+ 2056510:      	ldr	x9, [x9, #0xd8]
+ 2056514:      	subs	x8, x8, x9
+ 2056518:      	b.ne	0x2056558 <Sexy::WidgetManager::TouchMoved(Sexy::Touch*)+0x150>
+ 205651c:      	b	0x2056520 <Sexy::WidgetManager::TouchMoved(Sexy::Touch*)+0x118>
+ 2056520:      	ldr	x8, [sp, #0x18]
+ 2056524:      	cbz	x8, 0x2056558 <Sexy::WidgetManager::TouchMoved(Sexy::Touch*)+0x150>
+ 2056528:      	b	0x205652c <Sexy::WidgetManager::TouchMoved(Sexy::Touch*)+0x124>
+ 205652c:      	ldr	x8, [sp, #0x8]
+ 2056530:      	ldr	x8, [x8, #0xe0]
+ 2056534:      	cbnz	x8, 0x2056554 <Sexy::WidgetManager::TouchMoved(Sexy::Touch*)+0x14c>
+ 2056538:      	b	0x205653c <Sexy::WidgetManager::TouchMoved(Sexy::Touch*)+0x134>
+ 205653c:      	ldr	x0, [sp, #0x8]
+ 2056540:      	ldr	x8, [x0, #0xd8]
+ 2056544:      	str	x8, [x0, #0xe0]
+ 2056548:      	ldr	x1, [x0, #0xe0]
+ 205654c:      	bl	0x2dcb780 <_ZN4Sexy13WidgetManager10MouseEnterEPNS_6WidgetE@plt>
+ 2056550:      	b	0x2056554 <Sexy::WidgetManager::TouchMoved(Sexy::Touch*)+0x14c>
+ 2056554:      	b	0x205658c <Sexy::WidgetManager::TouchMoved(Sexy::Touch*)+0x184>
+ 2056558:      	ldr	x8, [sp, #0x8]
+ 205655c:      	ldr	x8, [x8, #0xe0]
+ 2056560:      	cbz	x8, 0x2056588 <Sexy::WidgetManager::TouchMoved(Sexy::Touch*)+0x180>
+ 2056564:      	b	0x2056568 <Sexy::WidgetManager::TouchMoved(Sexy::Touch*)+0x160>
+ 2056568:      	ldr	x0, [sp, #0x8]
+ 205656c:      	ldr	x8, [x0, #0xe0]
+ 2056570:      	str	x8, [sp, #0x10]
+ 2056574:      	mov	x8, xzr
+ 2056578:      	str	x8, [x0, #0xe0]
+ 205657c:      	ldr	x1, [sp, #0x10]
+ 2056580:      	bl	0x2dcb670 <_ZN4Sexy13WidgetManager10MouseLeaveEPNS_6WidgetE@plt>
+ 2056584:      	b	0x2056588 <Sexy::WidgetManager::TouchMoved(Sexy::Touch*)+0x180>
+ 2056588:      	b	0x205658c <Sexy::WidgetManager::TouchMoved(Sexy::Touch*)+0x184>
+ 205658c:      	b	0x2056590 <Sexy::WidgetManager::TouchMoved(Sexy::Touch*)+0x188>
+ 2056590:      	mrs	x8, TPIDR_EL0
+ 2056594:      	ldr	x8, [x8, #0x28]
+ 2056598:      	ldur	x9, [x29, #-0x8]
+ 205659c:      	subs	x8, x8, x9
+ 20565a0:      	b.ne	0x20565b4 <Sexy::WidgetManager::TouchMoved(Sexy::Touch*)+0x1ac>
+ 20565a4:      	b	0x20565a8 <Sexy::WidgetManager::TouchMoved(Sexy::Touch*)+0x1a0>
+ 20565a8:      	ldp	x29, x30, [sp, #0x40]
+ 20565ac:      	add	sp, sp, #0x50
+ 20565b0:      	ret
+ 20565b4:      	bl	0x2d6af80 <__stack_chk_fail@plt>

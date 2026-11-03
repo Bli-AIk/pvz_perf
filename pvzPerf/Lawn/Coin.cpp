@@ -21,6 +21,7 @@
 #include "Sexy.TodLib/EffectSystem.h"
 #include "Widget/AchievementsWidget.h"
 #include <array>
+#include <algorithm>
 #include <cmath>
 
 // 礼物植物候选表：各背景礼盒开出的盆栽种子（原版五连 else-if 各内联一张数组）。
@@ -916,11 +917,7 @@ void Coin::Draw(Graphics* g)
     if (mType == CoinType::COIN_USABLE_SEED_PACKET)
     {
         int aGrayness = 255;
-        if (mIsBeingCollected)
-        {
-            aGrayness = 128;
-        }
-        else
+        if (!mIsBeingCollected)
         {
             int aDisappearTime = GetDisappearTime();
             if (mDisappearStartTimeNs!=INT64_MAX && ReanimClock::Subtract(nowNs,mDisappearStartTimeNs) > static_cast<std::int64_t>(aDisappearTime-300)*10'000'000 && ReanimClock::Subtract(nowNs,mDisappearStartTimeNs)%600'000'000 < 300'000'000)
@@ -932,6 +929,8 @@ void Coin::Draw(Graphics* g)
         g->mColorizeImages = true;
         DrawSeedPacket(g, (int)mPosX, (int)mPosY, mUsableSeedType, SeedType::SEED_NONE, 0.0f, aGrayness, false, false);
         g->mColorizeImages = false;
+        if (mIsBeingCollected)
+            mBoard->DrawFieldCardSelection(g, *this);
 
         return;
     }
@@ -1437,26 +1436,29 @@ void Coin::Die()
     AttachmentDie(mAttachmentID);
 }
 
+namespace {
+struct CoinHitBounds {
+    float left, top, right, bottom;
+};
+
+CoinHitBounds HitBounds(const Coin& coin)
+{
+    const auto type = coin.mType;
+    const int offsetY = type == COIN_PRESENT_PLANT || type == COIN_AWARD_PRESENT ||
+        type == COIN_PRESENT_MINIGAMES || type == COIN_PRESENT_PUZZLE_MODE ||
+        type == COIN_PRESENT_SURVIVAL_MODE ? -20 : 0;
+    const bool whack = coin.mApp->IsWhackAZombieLevel();
+    const int margin = whack || type == COIN_SUN ? 15 : 0;
+    return {coin.mPosX - margin, coin.mPosY + offsetY - margin,
+        coin.mPosX + coin.mWidth + margin,
+        coin.mPosY + coin.mHeight + offsetY + margin + (whack ? 30 : 0)};
+}
+}
+
 //0x432E20
 bool Coin::MouseHitTest(int theX, int theY, HitResult* theHitResult)
 {
-    int aOffsetY = 0;
-    if (mType == CoinType::COIN_PRESENT_PLANT || mType == CoinType::COIN_AWARD_PRESENT || IsPresentWithAdvice())
-    {
-        aOffsetY = -20;
-    }
-
-    int aExtraClickSize = 0;
-    int aExtraClickHeight = 0;
-    if (mApp->IsWhackAZombieLevel())
-    {
-        aExtraClickHeight = 30;
-        aExtraClickSize = 15;
-    }
-    if (mType == CoinType::COIN_SUN)
-    {
-        aExtraClickSize = 15;
-    }
+    const auto bounds = HitBounds(*this);
 
     bool aCanHitCoin = true;
     if (mDead || mIsBeingCollected)
@@ -1472,10 +1474,8 @@ bool Coin::MouseHitTest(int theX, int theY, HitResult* theHitResult)
     }
 
     if (aCanHitCoin &&
-        theX >= mPosX - aExtraClickSize &&
-        theX < mPosX + mWidth + aExtraClickSize &&
-        theY >= mPosY + aOffsetY - aExtraClickSize &&
-        theY < mPosY + mHeight + aOffsetY + aExtraClickSize + aExtraClickHeight)
+        theX >= bounds.left && theX < bounds.right &&
+        theY >= bounds.top && theY < bounds.bottom)
     {
         theHitResult->mObject = this;
         theHitResult->mObjectType = GameObjectType::OBJECT_TYPE_COIN;
@@ -1485,6 +1485,33 @@ bool Coin::MouseHitTest(int theX, int theY, HitResult* theHitResult)
     theHitResult->mObject = nullptr;
     theHitResult->mObjectType = GameObjectType::OBJECT_TYPE_NONE;
     return false;
+}
+
+bool Coin::TouchHitTest(int fromX, int fromY, int toX, int toY)
+{
+    if (mDead || mIsBeingCollected || (!IsSun() && !IsMoney() && !IsLevelAward())) return false;
+    const auto bounds = HitBounds(*this);
+    if (std::max(fromX, toX) < bounds.left || std::min(fromX, toX) >= bounds.right ||
+        std::max(fromY, toY) < bounds.top || std::min(fromY, toY) >= bounds.bottom)
+        return false;
+
+    // Clip the reported movement segment, so a fast drag can collect an item
+    // even when both sampled endpoints lie outside it. Preserve half-open edges.
+    float enter = 0, leave = 1;
+    const auto clip = [&](float origin, float delta, float low, float high) {
+        if (delta == 0) return origin >= low && origin < high;
+        float first = (low - origin) / delta, last = (high - origin) / delta;
+        if (first > last) std::swap(first, last);
+        enter = std::max(enter, first);
+        leave = std::min(leave, last);
+        return enter <= leave;
+    };
+    const float dx = float(toX) - float(fromX), dy = float(toY) - float(fromY);
+    if (!clip(float(fromX), dx, bounds.left, bounds.right) ||
+        !clip(float(fromY), dy, bounds.top, bounds.bottom)) return false;
+    const float middle = (enter + leave) * 0.5f;
+    const float x = float(fromX) + dx * middle, y = float(fromY) + dy * middle;
+    return x >= bounds.left && x < bounds.right && y >= bounds.top && y < bounds.bottom;
 }
 
 //0x432F80

@@ -1,0 +1,1424 @@
+
+C:\Users\ADMINI~1\AppData\Local\Temp/pvz-tv-draw-order-20261104/libGameMain.so:	file format elf32-littlearm
+
+Disassembly of section .text:
+
+001772ec <SeedBank::Draw(Sexy::Graphics*)>:
+  1772ec:      	push.w	{r4, r5, r6, r7, r8, r9, r10, r11, lr}
+  1772f0:      	mov	r5, r0
+  1772f2:      	ldr.w	r9, [pc, #0xbcc]        @ 0x177ec0 <SeedBank::Draw(Sexy::Graphics*)+0xbd4>
+  1772f6:      	mov	r4, r1
+  1772f8:      	vpush	{d8, d9, d10}
+  1772fc:      	sub	sp, #0x94
+  1772fe:      	ldr	r0, [r0, #0x10]
+  177300:      	add	r9, pc
+  177302:      	bl	0x2acd44 <Sexy::GamepadApp::HasGamepad()> @ imm = #0x135a3e
+  177306:      	cmp	r0, #0x0
+  177308:      	bne	0x1773e4 <SeedBank::Draw(Sexy::Graphics*)+0xf8> @ imm = #0xd8
+  17730a:      	ldr	r0, [r5, #0x10]
+  17730c:      	ldrb.w	r3, [r0, #0x83d]
+  177310:      	cmp	r3, #0x0
+  177312:      	beq	0x1773d0 <SeedBank::Draw(Sexy::Graphics*)+0xe4> @ imm = #0xba
+  177314:      	ldrb.w	r3, [r0, #0x899]
+  177318:      	cmp	r3, #0x0
+  17731a:      	beq	0x1773d0 <SeedBank::Draw(Sexy::Graphics*)+0xe4> @ imm = #0xb2
+  17731c:      	add	r7, sp, #0x4c
+  17731e:      	str	r7, [sp, #0x1c]
+  177320:      	bl	0x2acd44 <Sexy::GamepadApp::HasGamepad()> @ imm = #0x135a20
+  177324:      	cmp	r0, #0x0
+  177326:      	beq	0x1773f2 <SeedBank::Draw(Sexy::Graphics*)+0x106> @ imm = #0xc8
+  177328:      	ldr	r0, [r5, #0x10]
+  17732a:      	bl	0x2b78f4 <LawnApp::CanShopLevel()> @ imm = #0x1405c6
+  17732e:      	cmp	r0, #0x0
+  177330:      	bne	0x17740c <SeedBank::Draw(Sexy::Graphics*)+0x120> @ imm = #0xd8
+  177332:      	ldr	r6, [r4, #0x20]
+  177334:      	mov	r0, r4
+  177336:      	ldr	r7, [r4, #0x24]
+  177338:      	vldr	s16, [r4, #16]
+  17733c:      	str	r6, [sp, #0x28]
+  17733e:      	str	r7, [sp, #0x2c]
+  177340:      	ldr	r6, [r4, #0x28]
+  177342:      	ldr	r7, [r4, #0x2c]
+  177344:      	vldr	s17, [r4, #20]
+  177348:      	str	r6, [sp, #0x30]
+  17734a:      	str	r7, [sp, #0x34]
+  17734c:      	vldr	s18, [r4, #24]
+  177350:      	vldr	s19, [r4, #28]
+  177354:      	vldr	s20, [r4, #8]
+  177358:      	vldr	s21, [r4, #12]
+  17735c:      	bl	0x30bf8c <Sexy::Graphics::GetColor()> @ imm = #0x194c2c
+  177360:      	ldm	r0, {r0, r1, r2, r3}
+  177362:      	ldr	r6, [sp, #0x1c]
+  177364:      	stm.w	r6, {r0, r1, r2, r3}
+  177368:      	mov	r0, r4
+  17736a:      	bl	0x30bfac <Sexy::Graphics::GetColorizeImages()> @ imm = #0x194c3e
+  17736e:      	ldr	r3, [r5, #0x10]
+  177370:      	str	r0, [sp, #0x24]
+  177372:      	ldr.w	r2, [r3, #0x900]
+  177376:      	cmp	r2, #0x4c
+  177378:      	beq.w	0x177afa <SeedBank::Draw(Sexy::Graphics*)+0x80e> @ imm = #0x77e
+  17737c:      	ldr.w	r2, [r3, #0x904]
+  177380:      	cmp	r2, #0x3
+  177382:      	ldr	r2, [r5, #0x14]
+  177384:      	ittt	ne
+  177386:      	vldrne	s12, [r4, #8]
+  17738a:      	vldrne	s13, [r4, #12]
+  17738e:      	vldrne	s11, [r2, #52]
+  177392:      	ldr.w	r0, [r2, #0x250]
+  177396:      	itttt	ne
+  177398:      	vcvtne.f32.s32	s14, s11
+  17739c:      	vldrne	s11, [r2, #56]
+  1773a0:      	vsubne.f32	s14, s12, s14
+  1773a4:      	vcvtne.f32.s32	s15, s11
+  1773a8:      	ittt	ne
+  1773aa:      	vstrne	s14, [r4, #8]
+  1773ae:      	vsubne.f32	s15, s13, s15
+  1773b2:      	vstrne	s15, [r4, #12]
+  1773b6:      	cmp	r0, #0x0
+  1773b8:      	beq.w	0x17754a <SeedBank::Draw(Sexy::Graphics*)+0x25e> @ imm = #0x18e
+  1773bc:      	bl	0x179740 <CutScene::IsBeforePreloading()> @ imm = #0x2380
+  1773c0:      	cmp	r0, #0x0
+  1773c2:      	beq.w	0x177548 <SeedBank::Draw(Sexy::Graphics*)+0x25c> @ imm = #0x182
+  1773c6:      	add	sp, #0x94
+  1773c8:      	vpop	{d8, d9, d10}
+  1773cc:      	pop.w	{r4, r5, r6, r7, r8, r9, r10, r11, pc}
+  1773d0:      	bl	0x2b78f4 <LawnApp::CanShopLevel()> @ imm = #0x140520
+  1773d4:      	cbz	r0, 0x1773e4 <SeedBank::Draw(Sexy::Graphics*)+0xf8> @ imm = #0xc
+  1773d6:      	ldr	r3, [r5, #0x14]
+  1773d8:      	ldr.w	r3, [r3, #0x230]
+  1773dc:      	ldr	r3, [r3, #0x60]
+  1773de:      	cmp	r3, #0x6
+  1773e0:      	beq.w	0x177d2a <SeedBank::Draw(Sexy::Graphics*)+0xa3e> @ imm = #0x946
+  1773e4:      	ldr	r0, [r5, #0x10]
+  1773e6:      	add	r6, sp, #0x4c
+  1773e8:      	str	r6, [sp, #0x1c]
+  1773ea:      	bl	0x2acd44 <Sexy::GamepadApp::HasGamepad()> @ imm = #0x135956
+  1773ee:      	cmp	r0, #0x0
+  1773f0:      	bne	0x177328 <SeedBank::Draw(Sexy::Graphics*)+0x3c> @ imm = #-0xcc
+  1773f2:      	ldr	r0, [r5, #0x10]
+  1773f4:      	ldrb.w	r3, [r0, #0x83d]
+  1773f8:      	cmp	r3, #0x0
+  1773fa:      	beq	0x177332 <SeedBank::Draw(Sexy::Graphics*)+0x46> @ imm = #-0xcc
+  1773fc:      	ldrb.w	r3, [r0, #0x899]
+  177400:      	cmp	r3, #0x0
+  177402:      	beq	0x177332 <SeedBank::Draw(Sexy::Graphics*)+0x46> @ imm = #-0xd4
+  177404:      	bl	0x2b78f4 <LawnApp::CanShopLevel()> @ imm = #0x1404ec
+  177408:      	cmp	r0, #0x0
+  17740a:      	beq	0x177332 <SeedBank::Draw(Sexy::Graphics*)+0x46> @ imm = #-0xdc
+  17740c:      	ldr	r3, [r5, #0x14]
+  17740e:      	add.w	r8, sp, #0x5c
+  177412:      	ldr.w	r3, [r3, #0x230]
+  177416:      	ldrb.w	r3, [r3, #0xf5]
+  17741a:      	cmp	r3, #0x0
+  17741c:      	beq.w	0x1779aa <SeedBank::Draw(Sexy::Graphics*)+0x6be> @ imm = #0x58a
+  177420:      	ldr.w	r1, [pc, #0xaa0]        @ 0x177ec4 <SeedBank::Draw(Sexy::Graphics*)+0xbd8>
+  177424:      	mov	r0, r8
+  177426:      	ldr.w	r6, [pc, #0xaa0]        @ 0x177ec8 <SeedBank::Draw(Sexy::Graphics*)+0xbdc>
+  17742a:      	add	r7, sp, #0x6c
+  17742c:      	ldr	r2, [sp, #0x1c]
+  17742e:      	add	r1, pc
+  177430:      	blx	0x2f13dc <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x6b34> @ imm = #0x179fa8
+  177434:      	ldr.w	r6, [r9, r6]
+  177438:      	mov	r0, r7
+  17743a:      	movs	r1, #0xe0
+  17743c:      	movs	r2, #0xbb
+  17743e:      	movs	r3, #0x62
+  177440:      	ldr.w	r10, [r6]
+  177444:      	bl	0x30b90c <Sexy::Color::Color(int, int, int)> @ imm = #0x1944c4
+  177448:      	ldm.w	r7, {r0, r1, r2, r3}
+  17744c:      	mov	r6, sp
+  17744e:      	mov.w	lr, #0x2
+  177452:      	str	r10, [r6], #4
+  177456:      	str	r6, [sp, #0x20]
+  177458:      	stm.w	r6, {r0, r1, r2, r3}
+  17745c:      	mov	r1, r8
+  17745e:      	str.w	lr, [sp, #0x14]
+  177462:      	mov	r0, r4
+  177464:      	movs	r2, #0xdc
+  177466:      	mvn	r3, #0x8
+  17746a:      	bl	0x1fa888 <TodDrawString(Sexy::Graphics*, std::string const&, int, int, Sexy::Font*, Sexy::Color, DrawStringJustification)> @ imm = #0x8341a
+  17746e:      	ldr.w	r2, [pc, #0xa5c]        @ 0x177ecc <SeedBank::Draw(Sexy::Graphics*)+0xbe0>
+  177472:      	ldr	r3, [sp, #0x5c]
+  177474:      	ldr.w	r10, [r9, r2]
+  177478:      	sub.w	r0, r3, #0xc
+  17747c:      	cmp	r0, r10
+  17747e:      	bne.w	0x1780fe <SeedBank::Draw(Sexy::Graphics*)+0xe12> @ imm = #0xc7c
+  177482:      	mov	r0, r4
+  177484:      	movs	r1, #0x0
+  177486:      	movs	r2, #0xa
+  177488:      	mov	r8, r5
+  17748a:      	bl	0x30f04c <Sexy::Graphics::Translate(int, int)> @ imm = #0x197bbe
+  17748e:      	ldr.w	r1, [pc, #0xa40]        @ 0x177ed0 <SeedBank::Draw(Sexy::Graphics*)+0xbe4>
+  177492:      	mov	r0, r4
+  177494:      	movs	r2, #0x0
+  177496:      	mvn	r3, #0x9
+  17749a:      	movs	r5, #0x7
+  17749c:      	ldr.w	r1, [r9, r1]
+  1774a0:      	ldr	r1, [r1]
+  1774a2:      	bl	0x30d990 <Sexy::Graphics::DrawImage(Sexy::Image*, int, int)> @ imm = #0x1964ea
+  1774a6:      	ldr	r6, [sp, #0x20]
+  1774a8:      	b	0x1774b2 <SeedBank::Draw(Sexy::Graphics*)+0x1c6> @ imm = #0x6
+  1774aa:      	subs	r5, #0x1
+  1774ac:      	add.w	r8, r8, #0x54
+  1774b0:      	beq	0x1774e2 <SeedBank::Draw(Sexy::Graphics*)+0x1f6> @ imm = #0x2e
+  1774b2:      	ldr.w	r3, [r8, #0x4d0]
+  1774b6:      	add.w	r11, r8, #0x4d0
+  1774ba:      	mov	r0, r11
+  1774bc:      	mov	r1, r4
+  1774be:      	ldr	r3, [r3, #0x8]
+  1774c0:      	blx	r3
+  1774c2:      	cmp	r0, #0x0
+  1774c4:      	beq	0x1774aa <SeedBank::Draw(Sexy::Graphics*)+0x1be> @ imm = #-0x1e
+  1774c6:      	mov	r0, r11
+  1774c8:      	mov	r1, r4
+  1774ca:      	bl	0x1772cc <ShopSeedPacket::Draw(Sexy::Graphics*)> @ imm = #-0x202
+  1774ce:      	ldr.w	r3, [r8, #0x4d0]
+  1774d2:      	mov	r0, r11
+  1774d4:      	mov	r1, r4
+  1774d6:      	add.w	r8, r8, #0x54
+  1774da:      	ldr	r3, [r3, #0xc]
+  1774dc:      	blx	r3
+  1774de:      	subs	r5, #0x1
+  1774e0:      	bne	0x1774b2 <SeedBank::Draw(Sexy::Graphics*)+0x1c6> @ imm = #-0x32
+  1774e2:      	ldr.w	r3, [pc, #0x9f0]        @ 0x177ed4 <SeedBank::Draw(Sexy::Graphics*)+0xbe8>
+  1774e6:      	str	r6, [sp, #0x20]
+  1774e8:      	ldr.w	r11, [r9, r3]
+  1774ec:      	ldr.w	r3, [r11]
+  1774f0:      	lsls	r6, r3, #0x1f
+  1774f2:      	bpl.w	0x177dfe <SeedBank::Draw(Sexy::Graphics*)+0xb12> @ imm = #0x908
+  1774f6:      	ldr.w	r3, [pc, #0x9e0]        @ 0x177ed8 <SeedBank::Draw(Sexy::Graphics*)+0xbec>
+  1774fa:      	ldr.w	r8, [r9, r3]
+  1774fe:      	ldr.w	r5, [pc, #0x9dc]        @ 0x177edc <SeedBank::Draw(Sexy::Graphics*)+0xbf0>
+  177502:      	movs	r1, #0x0
+  177504:      	mov	r2, r1
+  177506:      	mov	r3, r1
+  177508:      	mov	r0, r7
+  17750a:      	ldr.w	r5, [r9, r5]
+  17750e:      	ldr	r5, [r5]
+  177510:      	bl	0x30b90c <Sexy::Color::Color(int, int, int)> @ imm = #0x1943f8
+  177514:      	ldm.w	r7, {r0, r1, r2, r3}
+  177518:      	movs	r7, #0x2
+  17751a:      	str	r5, [sp]
+  17751c:      	ldr	r5, [sp, #0x20]
+  17751e:      	stm.w	r5, {r0, r1, r2, r3}
+  177522:      	add.w	r1, r8, #0xc
+  177526:      	mov	r0, r4
+  177528:      	movs	r3, #0x44
+  17752a:      	movs	r2, #0x26
+  17752c:      	str	r7, [sp, #0x14]
+  17752e:      	bl	0x1fa888 <TodDrawString(Sexy::Graphics*, std::string const&, int, int, Sexy::Font*, Sexy::Color, DrawStringJustification)> @ imm = #0x83356
+  177532:      	mov	r0, r4
+  177534:      	movs	r1, #0x0
+  177536:      	mvn	r2, #0x9
+  17753a:      	bl	0x30f04c <Sexy::Graphics::Translate(int, int)> @ imm = #0x197b0e
+  17753e:      	add	sp, #0x94
+  177540:      	vpop	{d8, d9, d10}
+  177544:      	pop.w	{r4, r5, r6, r7, r8, r9, r10, r11, pc}
+  177548:      	ldr	r3, [r5, #0x10]
+  17754a:      	mov	r0, r3
+  17754c:      	bl	0x2b26dc <LawnApp::IsSlotMachineLevel()> @ imm = #0x13b18c
+  177550:      	mov	r6, r0
+  177552:      	cmp	r0, #0x0
+  177554:      	beq.w	0x177922 <SeedBank::Draw(Sexy::Graphics*)+0x636> @ imm = #0x3ca
+  177558:      	ldr.w	r1, [pc, #0x984]        @ 0x177ee0 <SeedBank::Draw(Sexy::Graphics*)+0xbf4>
+  17755c:      	movs	r2, #0x0
+  17755e:      	ldr.w	r1, [r9, r1]
+  177562:      	mov	r3, r2
+  177564:      	mov	r0, r4
+  177566:      	ldr	r1, [r1]
+  177568:      	bl	0x30d990 <Sexy::Graphics::DrawImage(Sexy::Image*, int, int)> @ imm = #0x196424
+  17756c:      	ldr	r3, [r5, #0x34]
+  17756e:      	cmp	r3, #0x0
+  177570:      	itt	le
+  177572:      	movle	r7, #0x0
+  177574:      	movle	r8, r7
+  177576:      	ble.w	0x1776d2 <SeedBank::Draw(Sexy::Graphics*)+0x3e6> @ imm = #0x158
+  17757a:      	add.w	r2, r5, #0x48
+  17757e:      	mov.w	r11, #0x0
+  177582:      	str	r2, [sp, #0x20]
+  177584:      	mov	r6, r2
+  177586:      	mov	r8, r11
+  177588:      	mov	r7, r11
+  17758a:      	mov	r10, r5
+  17758c:      	b	0x1775e8 <SeedBank::Draw(Sexy::Graphics*)+0x2fc> @ imm = #0x58
+  17758e:      	ldr	r3, [r5, #0x10]
+  177590:      	ldr.w	r3, [r3, #0x900]
+  177594:      	cmp	r3, #0x4c
+  177596:      	beq	0x177602 <SeedBank::Draw(Sexy::Graphics*)+0x316> @ imm = #0x68
+  177598:      	ldr	r3, [r5, #0x14]
+  17759a:      	ldr.w	r1, [r3, #0x230]
+  17759e:      	ldr.w	r2, [r1, #0x98]
+  1775a2:      	adds	r2, #0x1
+  1775a4:      	beq	0x1775ae <SeedBank::Draw(Sexy::Graphics*)+0x2c2> @ imm = #0x6
+  1775a6:      	ldr.w	r2, [r1, #0xb4]
+  1775aa:      	cmp	r11, r2
+  1775ac:      	beq	0x177624 <SeedBank::Draw(Sexy::Graphics*)+0x338> @ imm = #0x74
+  1775ae:      	ldr.w	r3, [r3, #0x234]
+  1775b2:      	ldr.w	r2, [r3, #0x98]
+  1775b6:      	adds	r2, #0x1
+  1775b8:      	beq	0x1775c4 <SeedBank::Draw(Sexy::Graphics*)+0x2d8> @ imm = #0x8
+  1775ba:      	ldr.w	r3, [r3, #0xb4]
+  1775be:      	cmp	r11, r3
+  1775c0:      	beq.w	0x177e94 <SeedBank::Draw(Sexy::Graphics*)+0xba8> @ imm = #0x8d0
+  1775c4:      	ldr.w	r3, [r10, #0x48]
+  1775c8:      	mov	r0, r6
+  1775ca:      	mov	r1, r4
+  1775cc:      	ldr	r3, [r3, #0x8]
+  1775ce:      	blx	r3
+  1775d0:      	cmp	r0, #0x0
+  1775d2:      	bne.w	0x177a32 <SeedBank::Draw(Sexy::Graphics*)+0x746> @ imm = #0x45c
+  1775d6:      	ldr	r3, [r5, #0x34]
+  1775d8:      	add.w	r11, r11, #0x1
+  1775dc:      	add.w	r10, r10, #0x74
+  1775e0:      	cmp	r3, r11
+  1775e2:      	add.w	r6, r6, #0x74
+  1775e6:      	ble	0x177636 <SeedBank::Draw(Sexy::Graphics*)+0x34a> @ imm = #0x4c
+  1775e8:      	ldr	r2, [r6, #0x44]
+  1775ea:      	adds	r2, #0x1
+  1775ec:      	beq	0x1775d8 <SeedBank::Draw(Sexy::Graphics*)+0x2ec> @ imm = #-0x18
+  1775ee:      	ldr	r0, [r5, #0x10]
+  1775f0:      	bl	0x2b26dc <LawnApp::IsSlotMachineLevel()> @ imm = #0x13b0e8
+  1775f4:      	cmp	r0, #0x0
+  1775f6:      	bne	0x1775c4 <SeedBank::Draw(Sexy::Graphics*)+0x2d8> @ imm = #-0x36
+  1775f8:      	ldr	r0, [r5, #0x10]
+  1775fa:      	bl	0x2b259c <LawnApp::IsCoopMode()> @ imm = #0x13af9e
+  1775fe:      	cmp	r0, #0x0
+  177600:      	beq	0x17758e <SeedBank::Draw(Sexy::Graphics*)+0x2a2> @ imm = #-0x76
+  177602:      	ldr	r3, [r5, #0x14]
+  177604:      	ldr.w	r2, [r3, #0x20c]
+  177608:      	cmp	r2, r5
+  17760a:      	it	ne
+  17760c:      	ldrne.w	r3, [r3, #0x234]
+  177610:      	beq.w	0x177df8 <SeedBank::Draw(Sexy::Graphics*)+0xb0c> @ imm = #0x7e4
+  177614:      	ldr.w	r2, [r3, #0x98]
+  177618:      	adds	r2, #0x1
+  17761a:      	beq	0x1775c4 <SeedBank::Draw(Sexy::Graphics*)+0x2d8> @ imm = #-0x5a
+  17761c:      	ldr.w	r3, [r3, #0xb4]
+  177620:      	cmp	r11, r3
+  177622:      	bne	0x1775c4 <SeedBank::Draw(Sexy::Graphics*)+0x2d8> @ imm = #-0x62
+  177624:      	ldr	r3, [r5, #0x34]
+  177626:      	add.w	r11, r11, #0x1
+  17762a:      	mov	r7, r6
+  17762c:      	add.w	r10, r10, #0x74
+  177630:      	adds	r6, #0x74
+  177632:      	cmp	r3, r11
+  177634:      	bgt	0x1775e8 <SeedBank::Draw(Sexy::Graphics*)+0x2fc> @ imm = #-0x50
+  177636:      	cmp	r3, #0x0
+  177638:      	ble	0x1776d2 <SeedBank::Draw(Sexy::Graphics*)+0x3e6> @ imm = #0x96
+  17763a:      	ldr	r6, [sp, #0x20]
+  17763c:      	mov	r10, r5
+  17763e:      	mov.w	r11, #0x0
+  177642:      	b	0x177654 <SeedBank::Draw(Sexy::Graphics*)+0x368> @ imm = #0xe
+  177644:      	add.w	r11, r11, #0x1
+  177648:      	add.w	r10, r10, #0x74
+  17764c:      	cmp	r3, r11
+  17764e:      	add.w	r6, r6, #0x74
+  177652:      	ble	0x177684 <SeedBank::Draw(Sexy::Graphics*)+0x398> @ imm = #0x2e
+  177654:      	ldr	r2, [r6, #0x44]
+  177656:      	adds	r2, #0x1
+  177658:      	beq	0x177644 <SeedBank::Draw(Sexy::Graphics*)+0x358> @ imm = #-0x18
+  17765a:      	cmp	r8, r6
+  17765c:      	it	ne
+  17765e:      	cmpne	r7, r6
+  177660:      	beq	0x177644 <SeedBank::Draw(Sexy::Graphics*)+0x358> @ imm = #-0x20
+  177662:      	ldr.w	r3, [r10, #0x48]
+  177666:      	mov	r0, r6
+  177668:      	mov	r1, r4
+  17766a:      	ldr	r3, [r3, #0x8]
+  17766c:      	blx	r3
+  17766e:      	cmp	r0, #0x0
+  177670:      	bne.w	0x177ace <SeedBank::Draw(Sexy::Graphics*)+0x7e2> @ imm = #0x45a
+  177674:      	ldr	r3, [r5, #0x34]
+  177676:      	add.w	r11, r11, #0x1
+  17767a:      	add.w	r10, r10, #0x74
+  17767e:      	adds	r6, #0x74
+  177680:      	cmp	r3, r11
+  177682:      	bgt	0x177654 <SeedBank::Draw(Sexy::Graphics*)+0x368> @ imm = #-0x32
+  177684:      	cmp	r3, #0x0
+  177686:      	ble	0x1776d2 <SeedBank::Draw(Sexy::Graphics*)+0x3e6> @ imm = #0x48
+  177688:      	ldr.w	r10, [sp, #0x20]
+  17768c:      	mov	r11, r5
+  17768e:      	movs	r6, #0x0
+  177690:      	b	0x1776a0 <SeedBank::Draw(Sexy::Graphics*)+0x3b4> @ imm = #0xc
+  177692:      	adds	r6, #0x1
+  177694:      	add.w	r11, r11, #0x74
+  177698:      	cmp	r3, r6
+  17769a:      	add.w	r10, r10, #0x74
+  17769e:      	ble	0x1776d2 <SeedBank::Draw(Sexy::Graphics*)+0x3e6> @ imm = #0x30
+  1776a0:      	ldr.w	r2, [r10, #0x44]
+  1776a4:      	adds	r2, #0x1
+  1776a6:      	beq	0x177692 <SeedBank::Draw(Sexy::Graphics*)+0x3a6> @ imm = #-0x18
+  1776a8:      	cmp	r8, r10
+  1776aa:      	it	ne
+  1776ac:      	cmpne	r7, r10
+  1776ae:      	beq	0x177692 <SeedBank::Draw(Sexy::Graphics*)+0x3a6> @ imm = #-0x20
+  1776b0:      	ldr.w	r3, [r11, #0x48]
+  1776b4:      	mov	r0, r10
+  1776b6:      	mov	r1, r4
+  1776b8:      	ldr	r3, [r3, #0x8]
+  1776ba:      	blx	r3
+  1776bc:      	cmp	r0, #0x0
+  1776be:      	bne.w	0x177ae4 <SeedBank::Draw(Sexy::Graphics*)+0x7f8> @ imm = #0x422
+  1776c2:      	ldr	r3, [r5, #0x34]
+  1776c4:      	adds	r6, #0x1
+  1776c6:      	add.w	r11, r11, #0x74
+  1776ca:      	add.w	r10, r10, #0x74
+  1776ce:      	cmp	r3, r6
+  1776d0:      	bgt	0x1776a0 <SeedBank::Draw(Sexy::Graphics*)+0x3b4> @ imm = #-0x34
+  1776d2:      	ldr	r0, [r4, #0x20]
+  1776d4:      	ldr	r1, [r4, #0x28]
+  1776d6:      	ldr	r2, [r4, #0x24]
+  1776d8:      	ldr	r3, [r4, #0x2c]
+  1776da:      	subs	r0, #0x14
+  1776dc:      	adds	r1, #0x14
+  1776de:      	str	r0, [r4, #0x20]
+  1776e0:      	subs	r2, #0x14
+  1776e2:      	str	r1, [r4, #0x28]
+  1776e4:      	adds	r3, #0x1e
+  1776e6:      	str	r2, [r4, #0x24]
+  1776e8:      	str	r3, [r4, #0x2c]
+  1776ea:      	cbz	r7, 0x1776fc <SeedBank::Draw(Sexy::Graphics*)+0x410> @ imm = #0xe
+  1776ec:      	ldr	r3, [r7]
+  1776ee:      	mov	r0, r7
+  1776f0:      	mov	r1, r4
+  1776f2:      	ldr	r3, [r3, #0x8]
+  1776f4:      	blx	r3
+  1776f6:      	cmp	r0, #0x0
+  1776f8:      	bne.w	0x177a48 <SeedBank::Draw(Sexy::Graphics*)+0x75c> @ imm = #0x34c
+  1776fc:      	cmp.w	r8, #0x0
+  177700:      	beq	0x177714 <SeedBank::Draw(Sexy::Graphics*)+0x428> @ imm = #0x10
+  177702:      	ldr.w	r3, [r8]
+  177706:      	mov	r0, r8
+  177708:      	mov	r1, r4
+  17770a:      	ldr	r3, [r3, #0x8]
+  17770c:      	blx	r3
+  17770e:      	cmp	r0, #0x0
+  177710:      	bne.w	0x177c28 <SeedBank::Draw(Sexy::Graphics*)+0x93c> @ imm = #0x514
+  177714:      	mov	r0, r4
+  177716:      	bl	0x30eedc <Sexy::Graphics::ClearClipRect()> @ imm = #0x1977c2
+  17771a:      	ldr	r0, [r5, #0x10]
+  17771c:      	bl	0x2acd44 <Sexy::GamepadApp::HasGamepad()> @ imm = #0x135624
+  177720:      	cmp	r0, #0x0
+  177722:      	bne.w	0x177aca <SeedBank::Draw(Sexy::Graphics*)+0x7de> @ imm = #0x3a4
+  177726:      	ldr	r0, [r5, #0x10]
+  177728:      	ldrb.w	r3, [r0, #0x83d]
+  17772c:      	cmp	r3, #0x0
+  17772e:      	beq.w	0x177a5c <SeedBank::Draw(Sexy::Graphics*)+0x770> @ imm = #0x32a
+  177732:      	ldrb.w	r3, [r0, #0x899]
+  177736:      	cmp	r3, #0x0
+  177738:      	beq.w	0x177a5c <SeedBank::Draw(Sexy::Graphics*)+0x770> @ imm = #0x320
+  17773c:      	ldr	r3, [r5, #0x44]
+  17773e:      	cbz	r3, 0x177768 <SeedBank::Draw(Sexy::Graphics*)+0x47c> @ imm = #0x26
+  177740:      	bl	0x2b78f4 <LawnApp::CanShopLevel()> @ imm = #0x1401b0
+  177744:      	cbz	r0, 0x177766 <SeedBank::Draw(Sexy::Graphics*)+0x47a> @ imm = #0x1e
+  177746:      	ldr	r3, [r5, #0x14]
+  177748:      	ldr.w	r2, [r3, #0x230]
+  17774c:      	ldr	r3, [r2, #0x60]
+  17774e:      	cmp	r3, #0x6
+  177750:      	beq.w	0x177c48 <SeedBank::Draw(Sexy::Graphics*)+0x95c> @ imm = #0x4f4
+  177754:      	ldr	r0, [r5, #0x44]
+  177756:      	movs	r3, #0x0
+  177758:      	strb	r3, [r0, #0x1c]
+  17775a:      	bl	0x1ea694 <ToolTipWidget::Update()> @ imm = #0x72f36
+  17775e:      	ldr	r0, [r5, #0x44]
+  177760:      	mov	r1, r4
+  177762:      	bl	0x1eadb0 <ToolTipWidget::Draw(Sexy::Graphics*)> @ imm = #0x7364a
+  177766:      	ldr	r0, [r5, #0x10]
+  177768:      	bl	0x2b26dc <LawnApp::IsSlotMachineLevel()> @ imm = #0x13af70
+  17776c:      	cmp	r0, #0x0
+  17776e:      	bne.w	0x177b66 <SeedBank::Draw(Sexy::Graphics*)+0x87a> @ imm = #0x3f4
+  177772:      	ldr	r0, [r5, #0x14]
+  177774:      	movs	r1, #0x0
+  177776:      	bl	0x155930 <Board::HasConveyorBeltSeedBank(bool)> @ imm = #-0x21e4a
+  17777a:      	cmp	r0, #0x0
+  17777c:      	bne.w	0x1778a2 <SeedBank::Draw(Sexy::Graphics*)+0x5b6> @ imm = #0x122
+  177780:      	ldrb.w	r3, [r5, #0x40]
+  177784:      	cmp	r3, #0x0
+  177786:      	beq.w	0x177b94 <SeedBank::Draw(Sexy::Graphics*)+0x8a8> @ imm = #0x40a
+  17778a:      	ldr	r3, [r5, #0x14]
+  17778c:      	add.w	r3, r3, #0x5600
+  177790:      	ldr	r6, [r3, #0x7c]
+  177792:      	bic.w	r6, r6, r6, asr #31
+  177796:      	ldr	r0, [r5, #0x10]
+  177798:      	bl	0x2b259c <LawnApp::IsCoopMode()> @ imm = #0x13ae00
+  17779c:      	cbz	r0, 0x1777aa <SeedBank::Draw(Sexy::Graphics*)+0x4be> @ imm = #0xa
+  17779e:      	ldr	r2, [r5, #0x14]
+  1777a0:      	ldr.w	r3, [r2, #0x210]
+  1777a4:      	cmp	r3, r5
+  1777a6:      	beq.w	0x177eb4 <SeedBank::Draw(Sexy::Graphics*)+0xbc8> @ imm = #0x70a
+  1777aa:      	ldr.w	r1, [pc, #0x738]        @ 0x177ee4 <SeedBank::Draw(Sexy::Graphics*)+0xbf8>
+  1777ae:      	add.w	r11, sp, #0x48
+  1777b2:      	mov	r2, r6
+  1777b4:      	mov	r0, r11
+  1777b6:      	add.w	r8, sp, #0x5c
+  1777ba:      	add	r1, pc
+  1777bc:      	bl	0x2ff1e8 <Sexy::StrFormat(char const*, ...)> @ imm = #0x187a28
+  1777c0:      	movs	r1, #0x0
+  1777c2:      	mov	r0, r8
+  1777c4:      	mov	r2, r1
+  1777c6:      	mov	r3, r1
+  1777c8:      	bl	0x30b90c <Sexy::Color::Color(int, int, int)> @ imm = #0x194140
+  1777cc:      	ldr	r3, [r5, #0x14]
+  1777ce:      	add.w	r3, r3, #0x5680
+  1777d2:      	ldr	r3, [r3, #0x14]
+  1777d4:      	cmp	r3, #0x0
+  1777d6:      	ble	0x1777f8 <SeedBank::Draw(Sexy::Graphics*)+0x50c> @ imm = #0x1e
+  1777d8:      	movw	r2, #0x6667
+  1777dc:      	asrs	r1, r3, #0x1f
+  1777de:      	movt	r2, #0x6666
+  1777e2:      	smull	r7, r2, r2, r3
+  1777e6:      	rsb	r2, r1, r2, asr #3
+  1777ea:      	add.w	r2, r2, r2, lsl #2
+  1777ee:      	sub.w	r2, r3, r2, lsl #2
+  1777f2:      	cmp	r2, #0x9
+  1777f4:      	ble.w	0x177e9c <SeedBank::Draw(Sexy::Graphics*)+0xbb0> @ imm = #0x6a4
+  1777f8:      	ldr.w	r7, [pc, #0x6e0]        @ 0x177edc <SeedBank::Draw(Sexy::Graphics*)+0xbf0>
+  1777fc:      	mov	r6, sp
+  1777fe:      	ldm.w	r8, {r0, r1, r2, r3}
+  177802:      	mov.w	lr, #0x2
+  177806:      	ldr.w	r10, [r9, r7]
+  17780a:      	ldrb.w	r12, [r5, #0x40]
+  17780e:      	ldr.w	r7, [r10]
+  177812:      	str	r7, [r6], #4
+  177816:      	str	r6, [sp, #0x20]
+  177818:      	stm.w	r6, {r0, r1, r2, r3}
+  17781c:      	mov	r1, r11
+  17781e:      	cmp.w	r12, #0x0
+  177822:      	ite	eq
+  177824:      	moveq	r2, #0x26
+  177826:      	movne.w	r2, #0x198
+  17782a:      	str.w	lr, [sp, #0x14]
+  17782e:      	mov	r0, r4
+  177830:      	movs	r3, #0x4e
+  177832:      	bl	0x1fa888 <TodDrawString(Sexy::Graphics*, std::string const&, int, int, Sexy::Font*, Sexy::Color, DrawStringJustification)> @ imm = #0x83052
+  177836:      	ldr	r0, [r5, #0x10]
+  177838:      	bl	0x2b25d4 <LawnApp::IsTwinSunbankMode()> @ imm = #0x13ad98
+  17783c:      	cmp	r0, #0x0
+  17783e:      	beq.w	0x177e8c <SeedBank::Draw(Sexy::Graphics*)+0xba0> @ imm = #0x64a
+  177842:      	ldr	r3, [r5, #0x14]
+  177844:      	add	r7, sp, #0x6c
+  177846:      	ldr.w	r1, [pc, #0x6a0]        @ 0x177ee8 <SeedBank::Draw(Sexy::Graphics*)+0xbfc>
+  17784a:      	mov	r0, r7
+  17784c:      	add.w	r3, r3, #0x5600
+  177850:      	ldr	r2, [r3, #0x78]
+  177852:      	add	r1, pc
+  177854:      	bic.w	r2, r2, r2, asr #31
+  177858:      	bl	0x2ff1e8 <Sexy::StrFormat(char const*, ...)> @ imm = #0x18798c
+  17785c:      	ldr.w	r6, [r10]
+  177860:      	mov.w	lr, #0x2
+  177864:      	ldm.w	r8, {r0, r1, r2, r3}
+  177868:      	str	r6, [sp]
+  17786a:      	ldr	r6, [sp, #0x20]
+  17786c:      	stm.w	r6, {r0, r1, r2, r3}
+  177870:      	mov	r1, r7
+  177872:      	str.w	lr, [sp, #0x14]
+  177876:      	mov	r0, r4
+  177878:      	mov.w	r2, #0x284
+  17787c:      	movs	r3, #0x31
+  17787e:      	bl	0x1fa888 <TodDrawString(Sexy::Graphics*, std::string const&, int, int, Sexy::Font*, Sexy::Color, DrawStringJustification)> @ imm = #0x83006
+  177882:      	ldr.w	r2, [pc, #0x648]        @ 0x177ecc <SeedBank::Draw(Sexy::Graphics*)+0xbe0>
+  177886:      	ldr	r3, [sp, #0x6c]
+  177888:      	ldr.w	r10, [r9, r2]
+  17788c:      	sub.w	r0, r3, #0xc
+  177890:      	cmp	r0, r10
+  177892:      	bne.w	0x178154 <SeedBank::Draw(Sexy::Graphics*)+0xe68> @ imm = #0x8be
+  177896:      	ldr	r3, [sp, #0x48]
+  177898:      	sub.w	r0, r3, #0xc
+  17789c:      	cmp	r0, r10
+  17789e:      	bne.w	0x17812c <SeedBank::Draw(Sexy::Graphics*)+0xe40> @ imm = #0x88a
+  1778a2:      	ldr	r2, [r5, #0x10]
+  1778a4:      	ldr.w	r3, [r2, #0x904]
+  1778a8:      	cmp	r3, #0x3
+  1778aa:      	beq	0x1778d6 <SeedBank::Draw(Sexy::Graphics*)+0x5ea> @ imm = #0x28
+  1778ac:      	ldr	r3, [r5, #0x14]
+  1778ae:      	vldr	s12, [r4, #8]
+  1778b2:      	vldr	s13, [r4, #12]
+  1778b6:      	vldr	s14, [r3, #52]
+  1778ba:      	vldr	s15, [r3, #56]
+  1778be:      	vcvt.f32.s32	s14, s14
+  1778c2:      	vcvt.f32.s32	s15, s15
+  1778c6:      	vadd.f32	s14, s12, s14
+  1778ca:      	vadd.f32	s15, s13, s15
+  1778ce:      	vstr	s14, [r4, #8]
+  1778d2:      	vstr	s15, [r4, #12]
+  1778d6:      	ldr.w	r3, [r2, #0x900]
+  1778da:      	cmp	r3, #0x4c
+  1778dc:      	beq.w	0x177c3e <SeedBank::Draw(Sexy::Graphics*)+0x952> @ imm = #0x35e
+  1778e0:      	ldr	r7, [sp, #0x28]
+  1778e2:      	mov	r0, r4
+  1778e4:      	ldr	r5, [sp, #0x2c]
+  1778e6:      	ldr	r6, [sp, #0x30]
+  1778e8:      	str	r7, [r4, #0x20]
+  1778ea:      	ldr	r7, [sp, #0x34]
+  1778ec:      	ldr	r1, [sp, #0x1c]
+  1778ee:      	str	r5, [r4, #0x24]
+  1778f0:      	str	r6, [r4, #0x28]
+  1778f2:      	str	r7, [r4, #0x2c]
+  1778f4:      	vstr	s16, [r4, #16]
+  1778f8:      	vstr	s17, [r4, #20]
+  1778fc:      	vstr	s18, [r4, #24]
+  177900:      	vstr	s19, [r4, #28]
+  177904:      	vstr	s20, [r4, #8]
+  177908:      	vstr	s21, [r4, #12]
+  17790c:      	bl	0x30bf74 <Sexy::Graphics::SetColor(Sexy::Color const&)> @ imm = #0x194664
+  177910:      	mov	r0, r4
+  177912:      	ldr	r1, [sp, #0x24]
+  177914:      	bl	0x30bfa4 <Sexy::Graphics::SetColorizeImages(bool)> @ imm = #0x19468c
+  177918:      	add	sp, #0x94
+  17791a:      	vpop	{d8, d9, d10}
+  17791e:      	pop.w	{r4, r5, r6, r7, r8, r9, r10, r11, pc}
+  177922:      	ldr	r0, [r5, #0x14]
+  177924:      	ldrb.w	r1, [r5, #0x40]
+  177928:      	bl	0x155930 <Board::HasConveyorBeltSeedBank(bool)> @ imm = #-0x21ffc
+  17792c:      	mov	r7, r0
+  17792e:      	ldr	r0, [r5, #0x10]
+  177930:      	cmp	r7, #0x0
+  177932:      	beq.w	0x177ba2 <SeedBank::Draw(Sexy::Graphics*)+0x8b6> @ imm = #0x26c
+  177936:      	bl	0x2b259c <LawnApp::IsCoopMode()> @ imm = #0x13ac62
+  17793a:      	mov	r7, r0
+  17793c:      	cmp	r0, #0x0
+  17793e:      	beq.w	0x177d92 <SeedBank::Draw(Sexy::Graphics*)+0xaa6> @ imm = #0x450
+  177942:      	ldr.w	r1, [pc, #0x5a8]        @ 0x177eec <SeedBank::Draw(Sexy::Graphics*)+0xc00>
+  177946:      	mov	r0, r4
+  177948:      	mov	r2, r6
+  17794a:      	mov	r3, r6
+  17794c:      	ldr.w	r1, [r9, r1]
+  177950:      	ldr	r1, [r1]
+  177952:      	bl	0x30d990 <Sexy::Graphics::DrawImage(Sexy::Image*, int, int)> @ imm = #0x19603a
+  177956:      	ldr	r3, [r5, #0x3c]
+  177958:      	movw	lr, #0xaaab
+  17795c:      	movt	lr, #0x2aaa
+  177960:      	ldr.w	r2, [pc, #0x58c]        @ 0x177ef0 <SeedBank::Draw(Sexy::Graphics*)+0xc04>
+  177964:      	mov	r0, r4
+  177966:      	adds	r1, r3, #0x3
+  177968:      	bics.w	r3, r3, r3, asr #32
+  17796c:      	it	hs
+  17796e:      	movhs	r3, r1
+  177970:      	ldr.w	r2, [r9, r2]
+  177974:      	asrs	r7, r3, #0x2
+  177976:      	str	r6, [sp]
+  177978:      	smull	r1, lr, lr, r7
+  17797c:      	ldr	r1, [r2]
+  17797e:      	movs	r2, #0x7
+  177980:      	sub.w	lr, lr, r3, asr #31
+  177984:      	movs	r3, #0x3f
+  177986:      	add.w	lr, lr, lr, lsl #1
+  17798a:      	sub.w	r7, r7, lr, lsl #1
+  17798e:      	str	r7, [sp, #0x4]
+  177990:      	bl	0x30f0dc <Sexy::Graphics::DrawImageCel(Sexy::Image*, int, int, int, int)> @ imm = #0x197748
+  177994:      	mov.w	r3, #0x258
+  177998:      	mov	r2, r6
+  17799a:      	str	r3, [sp]
+  17799c:      	mov	r0, r4
+  17799e:      	movs	r1, #0x7
+  1779a0:      	movw	r3, #0x139
+  1779a4:      	bl	0x30ef00 <Sexy::Graphics::SetClipRect(int, int, int, int)> @ imm = #0x197558
+  1779a8:      	b	0x17756c <SeedBank::Draw(Sexy::Graphics*)+0x280> @ imm = #-0x440
+  1779aa:      	ldr.w	r1, [pc, #0x548]        @ 0x177ef4 <SeedBank::Draw(Sexy::Graphics*)+0xc08>
+  1779ae:      	mov	r0, r8
+  1779b0:      	ldr.w	r6, [pc, #0x514]        @ 0x177ec8 <SeedBank::Draw(Sexy::Graphics*)+0xbdc>
+  1779b4:      	add	r7, sp, #0x6c
+  1779b6:      	ldr	r2, [sp, #0x1c]
+  1779b8:      	add	r1, pc
+  1779ba:      	blx	0x2f13dc <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x6b34> @ imm = #0x179a20
+  1779be:      	ldr.w	r6, [r9, r6]
+  1779c2:      	mov	r0, r7
+  1779c4:      	movs	r1, #0xe0
+  1779c6:      	movs	r2, #0xbb
+  1779c8:      	movs	r3, #0x62
+  1779ca:      	ldr.w	r10, [r6]
+  1779ce:      	bl	0x30b90c <Sexy::Color::Color(int, int, int)> @ imm = #0x193f3a
+  1779d2:      	ldm.w	r7, {r0, r1, r2, r3}
+  1779d6:      	mov	r6, sp
+  1779d8:      	mov.w	lr, #0x2
+  1779dc:      	str	r10, [r6], #4
+  1779e0:      	stm.w	r6, {r0, r1, r2, r3}
+  1779e4:      	mov	r1, r8
+  1779e6:      	str.w	lr, [sp, #0x14]
+  1779ea:      	mov	r0, r4
+  1779ec:      	movs	r2, #0xdc
+  1779ee:      	mvn	r3, #0x8
+  1779f2:      	bl	0x1fa888 <TodDrawString(Sexy::Graphics*, std::string const&, int, int, Sexy::Font*, Sexy::Color, DrawStringJustification)> @ imm = #0x82e92
+  1779f6:      	ldr.w	r2, [pc, #0x4d4]        @ 0x177ecc <SeedBank::Draw(Sexy::Graphics*)+0xbe0>
+  1779fa:      	ldr	r3, [sp, #0x5c]
+  1779fc:      	ldr.w	r10, [r9, r2]
+  177a00:      	sub.w	r0, r3, #0xc
+  177a04:      	cmp	r0, r10
+  177a06:      	beq.w	0x177332 <SeedBank::Draw(Sexy::Graphics*)+0x46> @ imm = #-0x6d8
+  177a0a:      	subs	r3, #0x4
+  177a0c:      	dmb	sy
+  177a10:      	ldrex	r2, [r3]
+  177a14:      	subs	r6, r2, #0x1
+  177a16:      	strex	lr, r6, [r3]
+  177a1a:      	cmp.w	lr, #0x0
+  177a1e:      	bne	0x177a10 <SeedBank::Draw(Sexy::Graphics*)+0x724> @ imm = #-0x12
+  177a20:      	cmp	r2, #0x0
+  177a22:      	dmb	sy
+  177a26:      	bgt.w	0x177332 <SeedBank::Draw(Sexy::Graphics*)+0x46> @ imm = #-0x6f8
+  177a2a:      	mov	r1, r7
+  177a2c:      	blx	0x2f05fc <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x5d54> @ imm = #0x178bcc
+  177a30:      	b	0x177332 <SeedBank::Draw(Sexy::Graphics*)+0x46> @ imm = #-0x702
+  177a32:      	mov	r0, r6
+  177a34:      	mov	r1, r4
+  177a36:      	bl	0x174b50 <SeedPacket::DrawBackground(Sexy::Graphics*)> @ imm = #-0x2eea
+  177a3a:      	ldr.w	r3, [r10, #0x48]
+  177a3e:      	mov	r0, r6
+  177a40:      	mov	r1, r4
+  177a42:      	ldr	r3, [r3, #0xc]
+  177a44:      	blx	r3
+  177a46:      	b	0x1775d6 <SeedBank::Draw(Sexy::Graphics*)+0x2ea> @ imm = #-0x474
+  177a48:      	mov	r0, r7
+  177a4a:      	mov	r1, r4
+  177a4c:      	bl	0x1756b0 <SeedPacket::Draw(Sexy::Graphics*)> @ imm = #-0x23a0
+  177a50:      	ldr	r3, [r7]
+  177a52:      	mov	r0, r7
+  177a54:      	mov	r1, r4
+  177a56:      	ldr	r3, [r3, #0xc]
+  177a58:      	blx	r3
+  177a5a:      	b	0x1776fc <SeedBank::Draw(Sexy::Graphics*)+0x410> @ imm = #-0x362
+  177a5c:      	bl	0x2b78f4 <LawnApp::CanShopLevel()> @ imm = #0x13fe94
+  177a60:      	cmp	r0, #0x0
+  177a62:      	beq	0x177aca <SeedBank::Draw(Sexy::Graphics*)+0x7de> @ imm = #0x64
+  177a64:      	ldr	r3, [r5, #0x14]
+  177a66:      	ldr.w	r3, [r3, #0x230]
+  177a6a:      	ldr	r3, [r3, #0x60]
+  177a6c:      	cmp	r3, #0x6
+  177a6e:      	bne	0x177aca <SeedBank::Draw(Sexy::Graphics*)+0x7de> @ imm = #0x58
+  177a70:      	mov	r0, r4
+  177a72:      	movs	r1, #0x0
+  177a74:      	movs	r2, #0x60
+  177a76:      	mov	r7, r5
+  177a78:      	bl	0x30f04c <Sexy::Graphics::Translate(int, int)> @ imm = #0x1975d0
+  177a7c:      	ldr.w	r1, [pc, #0x450]        @ 0x177ed0 <SeedBank::Draw(Sexy::Graphics*)+0xbe4>
+  177a80:      	mov	r0, r4
+  177a82:      	movs	r2, #0x0
+  177a84:      	mvn	r3, #0x9
+  177a88:      	movs	r6, #0x7
+  177a8a:      	ldr.w	r1, [r9, r1]
+  177a8e:      	ldr	r1, [r1]
+  177a90:      	bl	0x30d990 <Sexy::Graphics::DrawImage(Sexy::Image*, int, int)> @ imm = #0x195efc
+  177a94:      	b	0x177aa0 <SeedBank::Draw(Sexy::Graphics*)+0x7b4> @ imm = #0x8
+  177a96:      	subs	r6, #0x1
+  177a98:      	add.w	r7, r7, #0x54
+  177a9c:      	beq.w	0x177f38 <SeedBank::Draw(Sexy::Graphics*)+0xc4c> @ imm = #0x498
+  177aa0:      	ldr.w	r3, [r7, #0x4d0]
+  177aa4:      	add.w	r8, r7, #0x4d0
+  177aa8:      	mov	r0, r8
+  177aaa:      	mov	r1, r4
+  177aac:      	ldr	r3, [r3, #0x8]
+  177aae:      	blx	r3
+  177ab0:      	cmp	r0, #0x0
+  177ab2:      	beq	0x177a96 <SeedBank::Draw(Sexy::Graphics*)+0x7aa> @ imm = #-0x20
+  177ab4:      	mov	r0, r8
+  177ab6:      	mov	r1, r4
+  177ab8:      	bl	0x1772cc <ShopSeedPacket::Draw(Sexy::Graphics*)> @ imm = #-0x7f0
+  177abc:      	ldr.w	r3, [r7, #0x4d0]
+  177ac0:      	mov	r0, r8
+  177ac2:      	mov	r1, r4
+  177ac4:      	ldr	r3, [r3, #0xc]
+  177ac6:      	blx	r3
+  177ac8:      	b	0x177a96 <SeedBank::Draw(Sexy::Graphics*)+0x7aa> @ imm = #-0x36
+  177aca:      	ldr	r0, [r5, #0x10]
+  177acc:      	b	0x17773c <SeedBank::Draw(Sexy::Graphics*)+0x450> @ imm = #-0x394
+  177ace:      	mov	r0, r6
+  177ad0:      	mov	r1, r4
+  177ad2:      	bl	0x175008 <SeedPacket::DrawMiddle(Sexy::Graphics*)> @ imm = #-0x2ace
+  177ad6:      	ldr.w	r3, [r10, #0x48]
+  177ada:      	mov	r0, r6
+  177adc:      	mov	r1, r4
+  177ade:      	ldr	r3, [r3, #0xc]
+  177ae0:      	blx	r3
+  177ae2:      	b	0x177674 <SeedBank::Draw(Sexy::Graphics*)+0x388> @ imm = #-0x472
+  177ae4:      	mov	r0, r10
+  177ae6:      	mov	r1, r4
+  177ae8:      	bl	0x175350 <SeedPacket::DrawOverlay(Sexy::Graphics*)> @ imm = #-0x279c
+  177aec:      	ldr.w	r3, [r11, #0x48]
+  177af0:      	mov	r0, r10
+  177af2:      	mov	r1, r4
+  177af4:      	ldr	r3, [r3, #0xc]
+  177af6:      	blx	r3
+  177af8:      	b	0x1776c2 <SeedBank::Draw(Sexy::Graphics*)+0x3d6> @ imm = #-0x43a
+  177afa:      	movs	r3, #0x0
+  177afc:      	add	r7, sp, #0x6c
+  177afe:      	str	r3, [r4, #0x8]
+  177b00:      	mov	r0, r7
+  177b02:      	str	r3, [r4, #0xc]
+  177b04:      	bl	0x345ea4 <Sexy::SexyTransform2D::SexyTransform2D()> @ imm = #0x1ce39c
+  177b08:      	movw	r1, #0x6666
+  177b0c:      	mov	r0, r7
+  177b0e:      	movt	r1, #0x3f66
+  177b12:      	mov	r2, r1
+  177b14:      	bl	0x345ffc <Sexy::SexyTransform2D::Scale(float, float)> @ imm = #0x1ce4e4
+  177b18:      	ldr	r3, [r5, #0x10]
+  177b1a:      	ldr.w	r3, [r3, #0x2e4]
+  177b1e:      	ldrb.w	r3, [r3, #0x60]
+  177b22:      	cmp	r3, #0x0
+  177b24:      	beq	0x177c1c <SeedBank::Draw(Sexy::Graphics*)+0x930> @ imm = #0xf4
+  177b26:      	ldr	r3, [pc, #0x3d0]        @ 0x177ef8 <SeedBank::Draw(Sexy::Graphics*)+0xc0c>
+  177b28:      	ldr.w	r3, [r9, r3]
+  177b2c:      	ldr	r1, [r3]
+  177b2e:      	ldr	r6, [r3, #0x4]
+  177b30:      	mov	r0, r7
+  177b32:      	ldr	r3, [r5, #0x18]
+  177b34:      	ldr	r2, [r5, #0x1c]
+  177b36:      	subs	r1, r3, r1
+  177b38:      	subs	r2, r2, r6
+  177b3a:      	vmov	s15, r1
+  177b3e:      	vmov	s11, r2
+  177b42:      	vcvt.f32.s32	s15, s15
+  177b46:      	vcvt.f32.s32	s11, s11
+  177b4a:      	vmov	r1, s15
+  177b4e:      	vmov	r2, s11
+  177b52:      	bl	0x345f08 <Sexy::SexyTransform2D::Translate(float, float)> @ imm = #0x1ce3b2
+  177b56:      	ldr	r3, [r4]
+  177b58:      	mov	r1, r7
+  177b5a:      	mov	r0, r4
+  177b5c:      	movs	r2, #0x1
+  177b5e:      	ldr	r3, [r3, #0x8]
+  177b60:      	blx	r3
+  177b62:      	ldr	r3, [r5, #0x10]
+  177b64:      	b	0x17737c <SeedBank::Draw(Sexy::Graphics*)+0x90> @ imm = #-0x7ec
+  177b66:      	ldr	r3, [pc, #0x394]        @ 0x177efc <SeedBank::Draw(Sexy::Graphics*)+0xc10>
+  177b68:      	ldr	r6, [r5, #0x1c]
+  177b6a:      	ldr.w	r3, [r9, r3]
+  177b6e:      	ldr	r0, [r3]
+  177b70:      	ldr	r3, [r0]
+  177b72:      	ldr	r3, [r3, #0x14]
+  177b74:      	blx	r3
+  177b76:      	rsbs	r0, r0, #0
+  177b78:      	cmp	r6, r0
+  177b7a:      	ble.w	0x177772 <SeedBank::Draw(Sexy::Graphics*)+0x486> @ imm = #-0x40c
+  177b7e:      	ldr	r1, [pc, #0x380]        @ 0x177f00 <SeedBank::Draw(Sexy::Graphics*)+0xc14>
+  177b80:      	mov	r0, r4
+  177b82:      	movs	r2, #0xbd
+  177b84:      	mvn	r3, #0x1
+  177b88:      	ldr.w	r1, [r9, r1]
+  177b8c:      	ldr	r1, [r1]
+  177b8e:      	bl	0x30d990 <Sexy::Graphics::DrawImage(Sexy::Image*, int, int)> @ imm = #0x195dfe
+  177b92:      	b	0x177772 <SeedBank::Draw(Sexy::Graphics*)+0x486> @ imm = #-0x424
+  177b94:      	ldr	r3, [r5, #0x14]
+  177b96:      	add.w	r3, r3, #0x5600
+  177b9a:      	ldr	r6, [r3, #0x74]
+  177b9c:      	bic.w	r6, r6, r6, asr #31
+  177ba0:      	b	0x177796 <SeedBank::Draw(Sexy::Graphics*)+0x4aa> @ imm = #-0x40e
+  177ba2:      	bl	0x2b259c <LawnApp::IsCoopMode()> @ imm = #0x13a9f6
+  177ba6:      	ldr	r1, [pc, #0x35c]        @ 0x177f04 <SeedBank::Draw(Sexy::Graphics*)+0xc18>
+  177ba8:      	mov	r2, r7
+  177baa:      	cmp	r0, #0x0
+  177bac:      	bne.w	0x17755e <SeedBank::Draw(Sexy::Graphics*)+0x272> @ imm = #-0x652
+  177bb0:      	ldr	r3, [r5, #0x10]
+  177bb2:      	ldr.w	r3, [r3, #0x900]
+  177bb6:      	cmp	r3, #0x4c
+  177bb8:      	bne	0x177bc8 <SeedBank::Draw(Sexy::Graphics*)+0x8dc> @ imm = #0xc
+  177bba:      	ldrb.w	r3, [r5, #0x40]
+  177bbe:      	mov	r2, r0
+  177bc0:      	ldr	r1, [pc, #0x344]        @ 0x177f08 <SeedBank::Draw(Sexy::Graphics*)+0xc1c>
+  177bc2:      	cmp	r3, #0x0
+  177bc4:      	bne.w	0x17755e <SeedBank::Draw(Sexy::Graphics*)+0x272> @ imm = #-0x66a
+  177bc8:      	ldr	r0, [r5, #0x14]
+  177bca:      	movs	r6, #0x0
+  177bcc:      	bl	0x156570 <Board::GetSeedBankExtraWidth()> @ imm = #-0x21660
+  177bd0:      	ldr	r3, [pc, #0x328]        @ 0x177efc <SeedBank::Draw(Sexy::Graphics*)+0xc10>
+  177bd2:      	mov	lr, r0
+  177bd4:      	add.w	r10, lr, #0xc
+  177bd8:      	mov	r0, r4
+  177bda:      	mov	r2, r6
+  177bdc:      	ldr.w	r8, [r9, r3]
+  177be0:      	mov	r3, r6
+  177be2:      	ldr.w	r7, [r8]
+  177be6:      	ldr.w	r12, [r7, #0x24]
+  177bea:      	mov	r1, r7
+  177bec:      	ldr	r7, [r7, #0x28]
+  177bee:      	str.w	r10, [sp, #0x74]
+  177bf2:      	rsb	lr, lr, r12
+  177bf6:      	str	r6, [sp, #0x70]
+  177bf8:      	sub.w	lr, lr, #0xc
+  177bfc:      	str	r7, [sp, #0x78]
+  177bfe:      	str.w	lr, [sp, #0x6c]
+  177c02:      	add	r7, sp, #0x6c
+  177c04:      	bl	0x30d990 <Sexy::Graphics::DrawImage(Sexy::Image*, int, int)> @ imm = #0x195d88
+  177c08:      	ldr.w	r1, [r8]
+  177c0c:      	mov	r3, r6
+  177c0e:      	mov	r0, r4
+  177c10:      	ldr	r2, [r1, #0x24]
+  177c12:      	str	r7, [sp]
+  177c14:      	subs	r2, #0xc
+  177c16:      	bl	0x30d788 <Sexy::Graphics::DrawImage(Sexy::Image*, int, int, Sexy::TRect<int> const&)> @ imm = #0x195b6e
+  177c1a:      	b	0x17756c <SeedBank::Draw(Sexy::Graphics*)+0x280> @ imm = #-0x6b2
+  177c1c:      	ldr	r3, [pc, #0x2d8]        @ 0x177ef8 <SeedBank::Draw(Sexy::Graphics*)+0xc0c>
+  177c1e:      	mvn	r1, #0x4f
+  177c22:      	ldr.w	r3, [r9, r3]
+  177c26:      	b	0x177b2e <SeedBank::Draw(Sexy::Graphics*)+0x842> @ imm = #-0xfc
+  177c28:      	mov	r0, r8
+  177c2a:      	mov	r1, r4
+  177c2c:      	bl	0x1756b0 <SeedPacket::Draw(Sexy::Graphics*)> @ imm = #-0x2580
+  177c30:      	ldr.w	r3, [r8]
+  177c34:      	mov	r0, r8
+  177c36:      	mov	r1, r4
+  177c38:      	ldr	r3, [r3, #0xc]
+  177c3a:      	blx	r3
+  177c3c:      	b	0x177714 <SeedBank::Draw(Sexy::Graphics*)+0x428> @ imm = #-0x52c
+  177c3e:      	ldr	r3, [r4]
+  177c40:      	mov	r0, r4
+  177c42:      	ldr	r3, [r3, #0xc]
+  177c44:      	blx	r3
+  177c46:      	b	0x1778e0 <SeedBank::Draw(Sexy::Graphics*)+0x5f4> @ imm = #-0x36a
+  177c48:      	ldrb.w	r3, [r2, #0xf5]
+  177c4c:      	cmp	r3, #0x0
+  177c4e:      	beq.w	0x177754 <SeedBank::Draw(Sexy::Graphics*)+0x468> @ imm = #-0x4fe
+  177c52:      	ldr.w	r2, [r2, #0xf8]
+  177c56:      	cmp	r2, #0x5
+  177c58:      	str	r2, [sp, #0x20]
+  177c5a:      	bhi.w	0x177754 <SeedBank::Draw(Sexy::Graphics*)+0x468> @ imm = #-0x50a
+  177c5e:      	ldr	r1, [pc, #0x2ac]        @ 0x177f0c <SeedBank::Draw(Sexy::Graphics*)+0xc20>
+  177c60:      	add	r7, sp, #0x40
+  177c62:      	mov	r0, r7
+  177c64:      	ldr	r2, [sp, #0x20]
+  177c66:      	add	r6, sp, #0x44
+  177c68:      	add	r1, pc
+  177c6a:      	bl	0x2ff1e8 <Sexy::StrFormat(char const*, ...)> @ imm = #0x18757a
+  177c6e:      	ldr	r1, [pc, #0x2a0]        @ 0x177f10 <SeedBank::Draw(Sexy::Graphics*)+0xc24>
+  177c70:      	mov	r0, r6
+  177c72:      	ldr	r2, [sp, #0x20]
+  177c74:      	add	r1, pc
+  177c76:      	bl	0x2ff1e8 <Sexy::StrFormat(char const*, ...)> @ imm = #0x18756e
+  177c7a:      	add.w	r11, sp, #0x48
+  177c7e:      	mov	r1, r7
+  177c80:      	mov	r0, r11
+  177c82:      	ldr	r7, [r5, #0x44]
+  177c84:      	bl	0x1fdafc <TodStringTranslate(std::string const&)> @ imm = #0x85e74
+  177c88:      	mov	r0, r7
+  177c8a:      	mov	r1, r11
+  177c8c:      	bl	0x1eac68 <ToolTipWidget::SetLabel(std::string const&)> @ imm = #0x72fd8
+  177c90:      	ldr	r2, [pc, #0x238]        @ 0x177ecc <SeedBank::Draw(Sexy::Graphics*)+0xbe0>
+  177c92:      	ldr	r3, [sp, #0x48]
+  177c94:      	ldr.w	r10, [r9, r2]
+  177c98:      	sub.w	r0, r3, #0xc
+  177c9c:      	cmp	r0, r10
+  177c9e:      	bne.w	0x178242 <SeedBank::Draw(Sexy::Graphics*)+0xf56> @ imm = #0x5a0
+  177ca2:      	add.w	r8, sp, #0x5c
+  177ca6:      	mov	r1, r6
+  177ca8:      	mov	r0, r8
+  177caa:      	ldr	r6, [r5, #0x44]
+  177cac:      	bl	0x1fdafc <TodStringTranslate(std::string const&)> @ imm = #0x85e4c
+  177cb0:      	mov	r0, r6
+  177cb2:      	mov	r1, r8
+  177cb4:      	bl	0x1eacd4 <ToolTipWidget::SetTitle(std::string const&)> @ imm = #0x7301c
+  177cb8:      	ldr	r3, [sp, #0x5c]
+  177cba:      	sub.w	r0, r3, #0xc
+  177cbe:      	cmp	r0, r10
+  177cc0:      	bne.w	0x17820e <SeedBank::Draw(Sexy::Graphics*)+0xf22> @ imm = #0x54a
+  177cc4:      	add	r7, sp, #0x6c
+  177cc6:      	ldr	r1, [pc, #0x24c]        @ 0x177f14 <SeedBank::Draw(Sexy::Graphics*)+0xc28>
+  177cc8:      	mov	r2, r11
+  177cca:      	mov	r0, r7
+  177ccc:      	ldr	r6, [r5, #0x44]
+  177cce:      	add	r1, pc
+  177cd0:      	blx	0x2f13dc <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x6b34> @ imm = #0x179708
+  177cd4:      	mov	r0, r6
+  177cd6:      	mov	r1, r7
+  177cd8:      	bl	0x1ead40 <ToolTipWidget::SetWarningText(std::string const&)> @ imm = #0x73064
+  177cdc:      	ldr	r3, [sp, #0x6c]
+  177cde:      	sub.w	r0, r3, #0xc
+  177ce2:      	cmp	r0, r10
+  177ce4:      	bne.w	0x1781c2 <SeedBank::Draw(Sexy::Graphics*)+0xed6> @ imm = #0x4da
+  177ce8:      	ldr	r0, [r5, #0x44]
+  177cea:      	bl	0x1eab30 <ToolTipWidget::CalculateSize()> @ imm = #0x72e42
+  177cee:      	ldr	r2, [sp, #0x20]
+  177cf0:      	movs	r0, #0xae
+  177cf2:      	ldr	r3, [r5, #0x44]
+  177cf4:      	ldr	r1, [sp, #0x44]
+  177cf6:      	rsb	r6, r2, r2, lsl #4
+  177cfa:      	ldr	r2, [r3, #0x14]
+  177cfc:      	str	r0, [r3, #0x10]
+  177cfe:      	movs	r0, #0x1
+  177d00:      	lsls	r6, r6, #0x2
+  177d02:      	strb	r0, [r3, #0x1c]
+  177d04:      	sub.w	r0, r1, #0xc
+  177d08:      	add.w	r2, r2, r2, lsr #31
+  177d0c:      	adds	r6, #0x6c
+  177d0e:      	cmp	r0, r10
+  177d10:      	sub.w	r2, r6, r2, asr #1
+  177d14:      	str	r2, [r3, #0xc]
+  177d16:      	bne.w	0x1780d6 <SeedBank::Draw(Sexy::Graphics*)+0xdea> @ imm = #0x3bc
+  177d1a:      	ldr	r3, [sp, #0x40]
+  177d1c:      	sub.w	r0, r3, #0xc
+  177d20:      	cmp	r0, r10
+  177d22:      	bne.w	0x1780b0 <SeedBank::Draw(Sexy::Graphics*)+0xdc4> @ imm = #0x38a
+  177d26:      	ldr	r0, [r5, #0x44]
+  177d28:      	b	0x17775a <SeedBank::Draw(Sexy::Graphics*)+0x46e> @ imm = #-0x5d2
+  177d2a:      	ldr	r1, [pc, #0x1ec]        @ 0x177f18 <SeedBank::Draw(Sexy::Graphics*)+0xc2c>
+  177d2c:      	add	r7, sp, #0x4c
+  177d2e:      	ldr	r6, [pc, #0x198]        @ 0x177ec8 <SeedBank::Draw(Sexy::Graphics*)+0xbdc>
+  177d30:      	add.w	r8, sp, #0x5c
+  177d34:      	mov	r2, r7
+  177d36:      	mov	r0, r8
+  177d38:      	add	r1, pc
+  177d3a:      	str	r7, [sp, #0x1c]
+  177d3c:      	blx	0x2f13dc <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x6b34> @ imm = #0x17969c
+  177d40:      	ldr.w	r6, [r9, r6]
+  177d44:      	add	r7, sp, #0x6c
+  177d46:      	mov	r0, r7
+  177d48:      	movs	r1, #0xe0
+  177d4a:      	movs	r2, #0xbb
+  177d4c:      	movs	r3, #0x62
+  177d4e:      	ldr.w	r10, [r6]
+  177d52:      	bl	0x30b90c <Sexy::Color::Color(int, int, int)> @ imm = #0x193bb6
+  177d56:      	ldm.w	r7, {r0, r1, r2, r3}
+  177d5a:      	mov	r6, sp
+  177d5c:      	mov.w	lr, #0x2
+  177d60:      	str	r10, [r6], #4
+  177d64:      	stm.w	r6, {r0, r1, r2, r3}
+  177d68:      	mov	r1, r8
+  177d6a:      	str.w	lr, [sp, #0x14]
+  177d6e:      	mov	r0, r4
+  177d70:      	movs	r2, #0xdc
+  177d72:      	mvn	r3, #0xb
+  177d76:      	bl	0x1fa888 <TodDrawString(Sexy::Graphics*, std::string const&, int, int, Sexy::Font*, Sexy::Color, DrawStringJustification)> @ imm = #0x82b0e
+  177d7a:      	ldr	r2, [pc, #0x150]        @ 0x177ecc <SeedBank::Draw(Sexy::Graphics*)+0xbe0>
+  177d7c:      	ldr	r3, [sp, #0x5c]
+  177d7e:      	ldr.w	r10, [r9, r2]
+  177d82:      	sub.w	r0, r3, #0xc
+  177d86:      	cmp	r0, r10
+  177d88:      	bne.w	0x17807a <SeedBank::Draw(Sexy::Graphics*)+0xd8e> @ imm = #0x2ee
+  177d8c:      	ldr	r0, [r5, #0x10]
+  177d8e:      	b.w	0x1773ea <SeedBank::Draw(Sexy::Graphics*)+0xfe> @ imm = #-0x9a8
+  177d92:      	ldr	r1, [pc, #0x188]        @ 0x177f1c <SeedBank::Draw(Sexy::Graphics*)+0xc30>
+  177d94:      	mov	r0, r4
+  177d96:      	mov	r3, r7
+  177d98:      	movs	r2, #0x53
+  177d9a:      	ldr.w	r1, [r9, r1]
+  177d9e:      	ldr	r1, [r1]
+  177da0:      	bl	0x30d990 <Sexy::Graphics::DrawImage(Sexy::Image*, int, int)> @ imm = #0x195bec
+  177da4:      	ldr	r3, [r5, #0x3c]
+  177da6:      	movw	lr, #0xaaab
+  177daa:      	movt	lr, #0x2aaa
+  177dae:      	ldr	r2, [pc, #0x170]        @ 0x177f20 <SeedBank::Draw(Sexy::Graphics*)+0xc34>
+  177db0:      	mov	r0, r4
+  177db2:      	adds	r1, r3, #0x3
+  177db4:      	bics.w	r3, r3, r3, asr #32
+  177db8:      	it	hs
+  177dba:      	movhs	r3, r1
+  177dbc:      	ldr.w	r2, [r9, r2]
+  177dc0:      	asrs	r6, r3, #0x2
+  177dc2:      	str	r7, [sp]
+  177dc4:      	smull	r1, lr, lr, r6
+  177dc8:      	ldr	r1, [r2]
+  177dca:      	movs	r2, #0x5a
+  177dcc:      	sub.w	lr, lr, r3, asr #31
+  177dd0:      	movs	r3, #0x3f
+  177dd2:      	add.w	lr, lr, lr, lsl #1
+  177dd6:      	sub.w	r6, r6, lr, lsl #1
+  177dda:      	str	r6, [sp, #0x4]
+  177ddc:      	bl	0x30f0dc <Sexy::Graphics::DrawImageCel(Sexy::Image*, int, int, int, int)> @ imm = #0x1972fc
+  177de0:      	mov.w	r3, #0x258
+  177de4:      	mov	r2, r7
+  177de6:      	str	r3, [sp]
+  177de8:      	mov	r0, r4
+  177dea:      	movs	r1, #0x5a
+  177dec:      	movw	r3, #0x1f5
+  177df0:      	bl	0x30ef00 <Sexy::Graphics::SetClipRect(int, int, int, int)> @ imm = #0x19710c
+  177df4:      	b.w	0x17756c <SeedBank::Draw(Sexy::Graphics*)+0x280> @ imm = #-0x88c
+  177df8:      	ldr.w	r3, [r3, #0x230]
+  177dfc:      	b	0x177614 <SeedBank::Draw(Sexy::Graphics*)+0x328> @ imm = #-0x7ec
+  177dfe:      	mov	r0, r11
+  177e00:      	blx	0x2c95e8 <__cxa_guard_acquire> @ imm = #0x1517e4
+  177e04:      	cmp	r0, #0x0
+  177e06:      	beq.w	0x1774f6 <SeedBank::Draw(Sexy::Graphics*)+0x20a> @ imm = #-0x914
+  177e0a:      	ldr	r0, [pc, #0xcc]         @ 0x177ed8 <SeedBank::Draw(Sexy::Graphics*)+0xbec>
+  177e0c:      	add.w	r3, r10, #0xc
+  177e10:      	ldr	r1, [pc, #0x110]        @ 0x177f24 <SeedBank::Draw(Sexy::Graphics*)+0xc38>
+  177e12:      	movs	r2, #0x3
+  177e14:      	ldr.w	r8, [r9, r0]
+  177e18:      	add	r1, pc
+  177e1a:      	add.w	lr, r8, #0x14
+  177e1e:      	str.w	r3, [r8, #0x4]
+  177e22:      	str.w	r3, [r8, #0x8]
+  177e26:      	add.w	r0, r8, #0x4
+  177e2a:      	str.w	r3, [r8, #0xc]
+  177e2e:      	str.w	r5, [r8, #0x14]
+  177e32:      	str.w	r5, [r8, #0x18]
+  177e36:      	str.w	r5, [r8, #0x24]
+  177e3a:      	str.w	r5, [r8, #0x28]
+  177e3e:      	str.w	r5, [r8, #0x2c]
+  177e42:      	str.w	r5, [r8, #0x30]
+  177e46:      	str.w	lr, [r8, #0x1c]
+  177e4a:      	str.w	lr, [r8, #0x20]
+  177e4e:      	strb.w	r5, [r8]
+  177e52:      	blx	0x2f098c <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x60e4> @ imm = #0x178b38
+  177e56:      	ldr	r1, [pc, #0xd0]         @ 0x177f28 <SeedBank::Draw(Sexy::Graphics*)+0xc3c>
+  177e58:      	add.w	r0, r8, #0x8
+  177e5c:      	movs	r2, #0x4
+  177e5e:      	add	r1, pc
+  177e60:      	blx	0x2f098c <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x60e4> @ imm = #0x178b28
+  177e64:      	ldr	r1, [pc, #0xc4]         @ 0x177f2c <SeedBank::Draw(Sexy::Graphics*)+0xc40>
+  177e66:      	add.w	r0, r8, #0xc
+  177e6a:      	movs	r2, #0x1
+  177e6c:      	add	r1, pc
+  177e6e:      	blx	0x2f098c <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x60e4> @ imm = #0x178b1c
+  177e72:      	mov	r0, r11
+  177e74:      	blx	0x2c983c <__cxa_guard_release> @ imm = #0x1519c4
+  177e78:      	ldr	r3, [pc, #0xb4]         @ 0x177f30 <SeedBank::Draw(Sexy::Graphics*)+0xc44>
+  177e7a:      	mov	r0, r8
+  177e7c:      	ldr	r2, [pc, #0xb4]         @ 0x177f34 <SeedBank::Draw(Sexy::Graphics*)+0xc48>
+  177e7e:      	ldr.w	r1, [r9, r3]
+  177e82:      	add	r2, pc
+  177e84:      	blx	0x2cae18 <__cxa_rethrow+0xb0> @ imm = #0x152f90
+  177e88:      	b.w	0x1774fe <SeedBank::Draw(Sexy::Graphics*)+0x212> @ imm = #-0x98e
+  177e8c:      	ldr	r3, [pc, #0x3c]         @ 0x177ecc <SeedBank::Draw(Sexy::Graphics*)+0xbe0>
+  177e8e:      	ldr.w	r10, [r9, r3]
+  177e92:      	b	0x177896 <SeedBank::Draw(Sexy::Graphics*)+0x5aa> @ imm = #-0x600
+  177e94:      	ldr	r3, [r5, #0x34]
+  177e96:      	mov	r8, r6
+  177e98:      	b.w	0x1775d8 <SeedBank::Draw(Sexy::Graphics*)+0x2ec> @ imm = #-0x8c4
+  177e9c:      	add	r7, sp, #0x6c
+  177e9e:      	movs	r2, #0x0
+  177ea0:      	mov	r0, r7
+  177ea2:      	mov	r3, r2
+  177ea4:      	movs	r1, #0xff
+  177ea6:      	bl	0x30b90c <Sexy::Color::Color(int, int, int)> @ imm = #0x193a62
+  177eaa:      	ldm.w	r7, {r0, r1, r2, r3}
+  177eae:      	stm.w	r8, {r0, r1, r2, r3}
+  177eb2:      	b	0x1777f8 <SeedBank::Draw(Sexy::Graphics*)+0x50c> @ imm = #-0x6be
+  177eb4:      	add.w	r2, r2, #0x5600
+  177eb8:      	ldr	r6, [r2, #0x78]
+  177eba:      	bic.w	r6, r6, r6, asr #31
+  177ebe:      	b	0x1777aa <SeedBank::Draw(Sexy::Graphics*)+0x4be> @ imm = #-0x718
+  177ec0:      	strh	r4, [r2, #0x2c]
+  177ec2:      	lsls	r1, r2, #0x1
+  177ec4:      	ldr	r3, [pc, #0x58]         @ 0x177f20 <SeedBank::Draw(Sexy::Graphics*)+0xc34>
+  177ec6:      	lsls	r0, r0, #0x1
+  177ec8:      	svc	#0xb8
+  177eca:      	<unknown>
+  177ece:      	<unknown>
+  177ed2:      	<unknown>
+  177ed6:      	<unknown>
+  177eda:      	vshr.u32	q15, q6, #0x1
+  177ede:      	vrshr.u64	d30, d0, #0x1
+  177ee2:      	<unknown>
+  177ee6:      	lsls	r0, r0, #0x1
+  177ee8:      	adds	r2, r5, #0x5
+  177eea:      	lsls	r0, r0, #0x1
+  177eec:      	b	0x178418 <UserDialog::UserDialog(LawnApp*)+0x50> @ imm = #0x528
+  177eee:      	vrshr.u64	d30, d8, #0x1
+  177ef2:      	<unknown>
+  177ef6:      	lsls	r0, r0, #0x1
+  177ef8:      	ble	0x177e84 <SeedBank::Draw(Sexy::Graphics*)+0xb98> @ imm = #-0x78
+  177efa:      	<unknown>
+  177efe:      	vrshr.u64	d30, d12, #0x1
+  177f02:      	<unknown>
+  177f06:      	<unknown>
+  177f0a:      	<unknown>
+  177f0e:      	lsls	r0, r0, #0x1
+  177f10:      	orrs	r0, r1
+  177f12:      	lsls	r0, r0, #0x1
+  177f14:      	asrs	r0, r4, #0x1b
+  177f16:      	lsls	r0, r0, #0x1
+  177f18:      	rors	r0, r6
+  177f1a:      	lsls	r0, r0, #0x1
+  177f1c:      	b	0x178470 <UserDialog::UserDialog(LawnApp*)+0xa8> @ imm = #0x550
+  177f1e:      	<unknown>
+  177f22:      	<unknown>
+  177f26:      	lsls	r0, r0, #0x1
+  177f28:      	lsls	r6, r7
+  177f2a:      	lsls	r0, r0, #0x1
+  177f2c:      	lsls	r0, r7
+  177f2e:      	lsls	r0, r0, #0x1
+  177f30:      	b	0x178444 <UserDialog::UserDialog(LawnApp*)+0x7c> @ imm = #0x510
+  177f32:      	vsra.u32	q12, q13, #0x1
+  177f36:      	lsls	r1, r2, #0x1
+  177f38:      	ldr	r3, [pc, #0x340]        @ 0x17827c <SeedBank::Draw(Sexy::Graphics*)+0xf90>
+  177f3a:      	ldr.w	r11, [r9, r3]
+  177f3e:      	ldr.w	r3, [r11]
+  177f42:      	lsls	r0, r3, #0x1f
+  177f44:      	bpl	0x177f94 <SeedBank::Draw(Sexy::Graphics*)+0xca8> @ imm = #0x4c
+  177f46:      	ldr	r3, [pc, #0x338]        @ 0x178280 <SeedBank::Draw(Sexy::Graphics*)+0xf94>
+  177f48:      	ldr.w	r8, [r9, r3]
+  177f4c:      	ldr	r6, [pc, #0x334]        @ 0x178284 <SeedBank::Draw(Sexy::Graphics*)+0xf98>
+  177f4e:      	movs	r1, #0x0
+  177f50:      	add	r7, sp, #0x6c
+  177f52:      	mov	r2, r1
+  177f54:      	mov	r0, r7
+  177f56:      	mov	r3, r1
+  177f58:      	ldr.w	r6, [r9, r6]
+  177f5c:      	ldr	r6, [r6]
+  177f5e:      	bl	0x30b90c <Sexy::Color::Color(int, int, int)> @ imm = #0x1939aa
+  177f62:      	ldm.w	r7, {r0, r1, r2, r3}
+  177f66:      	mov	lr, sp
+  177f68:      	movs	r7, #0x2
+  177f6a:      	str	r6, [lr], #4
+  177f6e:      	stm.w	lr, {r0, r1, r2, r3}
+  177f72:      	add.w	r1, r8, #0xc
+  177f76:      	mov	r0, r4
+  177f78:      	movs	r2, #0x26
+  177f7a:      	movs	r3, #0x44
+  177f7c:      	str	r7, [sp, #0x14]
+  177f7e:      	bl	0x1fa888 <TodDrawString(Sexy::Graphics*, std::string const&, int, int, Sexy::Font*, Sexy::Color, DrawStringJustification)> @ imm = #0x82906
+  177f82:      	mov	r0, r4
+  177f84:      	movs	r1, #0x0
+  177f86:      	mvn	r2, #0x5f
+  177f8a:      	bl	0x30f04c <Sexy::Graphics::Translate(int, int)> @ imm = #0x1970be
+  177f8e:      	ldr	r0, [r5, #0x10]
+  177f90:      	b.w	0x17773c <SeedBank::Draw(Sexy::Graphics*)+0x450> @ imm = #-0x858
+  177f94:      	mov	r0, r11
+  177f96:      	blx	0x2c95e8 <__cxa_guard_acquire> @ imm = #0x151650
+  177f9a:      	cmp	r0, #0x0
+  177f9c:      	beq	0x177f46 <SeedBank::Draw(Sexy::Graphics*)+0xc5a> @ imm = #-0x5a
+  177f9e:      	ldr	r0, [pc, #0x2e0]        @ 0x178280 <SeedBank::Draw(Sexy::Graphics*)+0xf94>
+  177fa0:      	movs	r2, #0x3
+  177fa2:      	ldr	r3, [pc, #0x2e4]        @ 0x178288 <SeedBank::Draw(Sexy::Graphics*)+0xf9c>
+  177fa4:      	ldr	r1, [pc, #0x2e4]        @ 0x17828c <SeedBank::Draw(Sexy::Graphics*)+0xfa0>
+  177fa6:      	ldr.w	r8, [r9, r0]
+  177faa:      	add	r1, pc
+  177fac:      	strb.w	r6, [r8]
+  177fb0:      	ldr.w	r10, [r9, r3]
+  177fb4:      	add.w	r3, r8, #0x14
+  177fb8:      	str.w	r6, [r8, #0x14]
+  177fbc:      	str.w	r6, [r8, #0x18]
+  177fc0:      	add.w	r0, r10, #0xc
+  177fc4:      	str.w	r6, [r8, #0x24]
+  177fc8:      	str.w	r0, [r8, #0x4]
+  177fcc:      	str.w	r0, [r8, #0x8]
+  177fd0:      	str.w	r0, [r8, #0xc]
+  177fd4:      	add.w	r0, r8, #0x4
+  177fd8:      	str.w	r6, [r8, #0x28]
+  177fdc:      	str.w	r6, [r8, #0x2c]
+  177fe0:      	str.w	r6, [r8, #0x30]
+  177fe4:      	str.w	r3, [r8, #0x1c]
+  177fe8:      	str.w	r3, [r8, #0x20]
+  177fec:      	blx	0x2f098c <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x60e4> @ imm = #0x17899c
+  177ff0:      	ldr	r1, [pc, #0x29c]        @ 0x178290 <SeedBank::Draw(Sexy::Graphics*)+0xfa4>
+  177ff2:      	add.w	r0, r8, #0x8
+  177ff6:      	movs	r2, #0x4
+  177ff8:      	add	r1, pc
+  177ffa:      	blx	0x2f098c <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x60e4> @ imm = #0x178990
+  177ffe:      	ldr	r1, [pc, #0x294]        @ 0x178294 <SeedBank::Draw(Sexy::Graphics*)+0xfa8>
+  178000:      	add.w	r0, r8, #0xc
+  178004:      	movs	r2, #0x1
+  178006:      	add	r1, pc
+  178008:      	blx	0x2f098c <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x60e4> @ imm = #0x178980
+  17800c:      	mov	r0, r11
+  17800e:      	blx	0x2c983c <__cxa_guard_release> @ imm = #0x15182c
+  178012:      	ldr	r3, [pc, #0x284]        @ 0x178298 <SeedBank::Draw(Sexy::Graphics*)+0xfac>
+  178014:      	mov	r0, r8
+  178016:      	ldr	r2, [pc, #0x284]        @ 0x17829c <SeedBank::Draw(Sexy::Graphics*)+0xfb0>
+  178018:      	ldr.w	r1, [r9, r3]
+  17801c:      	add	r2, pc
+  17801e:      	blx	0x2cae18 <__cxa_rethrow+0xb0> @ imm = #0x152df8
+  178022:      	b	0x177f4c <SeedBank::Draw(Sexy::Graphics*)+0xc60> @ imm = #-0xda
+  178024:      	add	r6, sp, #0x44
+  178026:      	ldr	r0, [sp, #0x48]
+  178028:      	mov	r1, r6
+  17802a:      	subs	r0, #0xc
+  17802c:      	blx	0x2f0600 <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x5d58> @ imm = #0x1785d0
+  178030:      	blx	0x2c8aa8 <__cxa_end_cleanup> @ imm = #0x150a74
+  178034:      	ldr.w	r0, [r8, #0x28]
+  178038:      	cbz	r0, 0x17803e <SeedBank::Draw(Sexy::Graphics*)+0xd52> @ imm = #0x2
+  17803a:      	blx	0x2c9a44 <operator delete(void*)> @ imm = #0x151a08
+  17803e:      	add.w	r0, r8, #0x10
+  178042:      	ldr.w	r1, [r8, #0x18]
+  178046:      	bl	0x176ce8 <std::_Rb_tree<int, std::pair<int const, std::string>, std::_Select1st<std::pair<int const, std::string>>, std::less<int>, std::allocator<std::pair<int const, std::string>>>::_M_erase(std::_Rb_tree_node<std::pair<int const, std::string>>*)> @ imm = #-0x1362
+  17804a:      	ldr.w	r0, [r8, #0xc]
+  17804e:      	add	r4, sp, #0x6c
+  178050:      	mov	r1, r4
+  178052:      	subs	r0, #0xc
+  178054:      	blx	0x2f0600 <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x5d58> @ imm = #0x1785a8
+  178058:      	ldr.w	r0, [r8, #0x8]
+  17805c:      	mov	r1, r4
+  17805e:      	subs	r0, #0xc
+  178060:      	blx	0x2f0600 <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x5d58> @ imm = #0x17859c
+  178064:      	ldr.w	r0, [r8, #0x4]
+  178068:      	mov	r1, r4
+  17806a:      	subs	r0, #0xc
+  17806c:      	blx	0x2f0600 <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x5d58> @ imm = #0x178590
+  178070:      	mov	r0, r11
+  178072:      	blx	0x2c976c <__cxa_guard_abort> @ imm = #0x1516f8
+  178076:      	blx	0x2c8aa8 <__cxa_end_cleanup> @ imm = #0x150a30
+  17807a:      	subs	r3, #0x4
+  17807c:      	dmb	sy
+  178080:      	ldrex	r2, [r3]
+  178084:      	add.w	lr, r2, #0xffffffff
+  178088:      	strex	r1, lr, [r3]
+  17808c:      	cmp	r1, #0x0
+  17808e:      	bne	0x178080 <SeedBank::Draw(Sexy::Graphics*)+0xd94> @ imm = #-0x12
+  178090:      	cmp	r2, #0x0
+  178092:      	dmb	sy
+  178096:      	bgt.w	0x177d8c <SeedBank::Draw(Sexy::Graphics*)+0xaa0> @ imm = #-0x30e
+  17809a:      	mov	r1, r7
+  17809c:      	blx	0x2f05fc <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x5d54> @ imm = #0x17855c
+  1780a0:      	b	0x177d8c <SeedBank::Draw(Sexy::Graphics*)+0xaa0> @ imm = #-0x318
+  1780a2:      	ldr	r0, [sp, #0x5c]
+  1780a4:      	mov	r1, r7
+  1780a6:      	subs	r0, #0xc
+  1780a8:      	blx	0x2f0600 <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x5d58> @ imm = #0x178554
+  1780ac:      	blx	0x2c8aa8 <__cxa_end_cleanup> @ imm = #0x1509f8
+  1780b0:      	subs	r3, #0x4
+  1780b2:      	dmb	sy
+  1780b6:      	ldrex	r2, [r3]
+  1780ba:      	subs	r1, r2, #0x1
+  1780bc:      	strex	r6, r1, [r3]
+  1780c0:      	cmp	r6, #0x0
+  1780c2:      	bne	0x1780b6 <SeedBank::Draw(Sexy::Graphics*)+0xdca> @ imm = #-0x10
+  1780c4:      	cmp	r2, #0x0
+  1780c6:      	dmb	sy
+  1780ca:      	bgt.w	0x177d26 <SeedBank::Draw(Sexy::Graphics*)+0xa3a> @ imm = #-0x3a8
+  1780ce:      	mov	r1, r7
+  1780d0:      	blx	0x2f05fc <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x5d54> @ imm = #0x178528
+  1780d4:      	b	0x177d26 <SeedBank::Draw(Sexy::Graphics*)+0xa3a> @ imm = #-0x3b2
+  1780d6:      	subs	r1, #0x4
+  1780d8:      	dmb	sy
+  1780dc:      	ldrex	r3, [r1]
+  1780e0:      	subs	r6, r3, #0x1
+  1780e2:      	strex	lr, r6, [r1]
+  1780e6:      	cmp.w	lr, #0x0
+  1780ea:      	bne	0x1780dc <SeedBank::Draw(Sexy::Graphics*)+0xdf0> @ imm = #-0x12
+  1780ec:      	cmp	r3, #0x0
+  1780ee:      	dmb	sy
+  1780f2:      	bgt.w	0x177d1a <SeedBank::Draw(Sexy::Graphics*)+0xa2e> @ imm = #-0x3dc
+  1780f6:      	mov	r1, r7
+  1780f8:      	blx	0x2f05fc <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x5d54> @ imm = #0x178500
+  1780fc:      	b	0x177d1a <SeedBank::Draw(Sexy::Graphics*)+0xa2e> @ imm = #-0x3e6
+  1780fe:      	subs	r3, #0x4
+  178100:      	dmb	sy
+  178104:      	ldrex	r2, [r3]
+  178108:      	add.w	lr, r2, #0xffffffff
+  17810c:      	strex	r1, lr, [r3]
+  178110:      	cmp	r1, #0x0
+  178112:      	bne	0x178104 <SeedBank::Draw(Sexy::Graphics*)+0xe18> @ imm = #-0x12
+  178114:      	cmp	r2, #0x0
+  178116:      	dmb	sy
+  17811a:      	bgt.w	0x177482 <SeedBank::Draw(Sexy::Graphics*)+0x196> @ imm = #-0xc9c
+  17811e:      	mov	r1, r7
+  178120:      	blx	0x2f05fc <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x5d54> @ imm = #0x1784d8
+  178124:      	b.w	0x177482 <SeedBank::Draw(Sexy::Graphics*)+0x196> @ imm = #-0xca6
+  178128:      	b	0x1780a2 <SeedBank::Draw(Sexy::Graphics*)+0xdb6> @ imm = #-0x8a
+  17812a:      	b	0x1780a2 <SeedBank::Draw(Sexy::Graphics*)+0xdb6> @ imm = #-0x8c
+  17812c:      	subs	r3, #0x4
+  17812e:      	dmb	sy
+  178132:      	ldrex	r2, [r3]
+  178136:      	subs	r1, r2, #0x1
+  178138:      	strex	r6, r1, [r3]
+  17813c:      	cmp	r6, #0x0
+  17813e:      	bne	0x178132 <SeedBank::Draw(Sexy::Graphics*)+0xe46> @ imm = #-0x10
+  178140:      	cmp	r2, #0x0
+  178142:      	dmb	sy
+  178146:      	bgt.w	0x1778a2 <SeedBank::Draw(Sexy::Graphics*)+0x5b6> @ imm = #-0x8a8
+  17814a:      	add	r1, sp, #0x6c
+  17814c:      	blx	0x2f05fc <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x5d54> @ imm = #0x1784ac
+  178150:      	b.w	0x1778a2 <SeedBank::Draw(Sexy::Graphics*)+0x5b6> @ imm = #-0x8b2
+  178154:      	subs	r3, #0x4
+  178156:      	dmb	sy
+  17815a:      	ldrex	r2, [r3]
+  17815e:      	subs	r7, r2, #0x1
+  178160:      	strex	lr, r7, [r3]
+  178164:      	cmp.w	lr, #0x0
+  178168:      	bne	0x17815a <SeedBank::Draw(Sexy::Graphics*)+0xe6e> @ imm = #-0x12
+  17816a:      	cmp	r2, #0x0
+  17816c:      	dmb	sy
+  178170:      	bgt.w	0x177896 <SeedBank::Draw(Sexy::Graphics*)+0x5aa> @ imm = #-0x8de
+  178174:      	add	r1, sp, #0x44
+  178176:      	blx	0x2f05fc <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x5d54> @ imm = #0x178484
+  17817a:      	b.w	0x177896 <SeedBank::Draw(Sexy::Graphics*)+0x5aa> @ imm = #-0x8e8
+  17817e:      	ldr	r0, [sp, #0x6c]
+  178180:      	add	r6, sp, #0x44
+  178182:      	mov	r1, r6
+  178184:      	subs	r0, #0xc
+  178186:      	blx	0x2f0600 <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x5d58> @ imm = #0x178478
+  17818a:      	b	0x178026 <SeedBank::Draw(Sexy::Graphics*)+0xd3a> @ imm = #-0x168
+  17818c:      	ldr.w	r0, [r8, #0x28]
+  178190:      	cbz	r0, 0x178196 <SeedBank::Draw(Sexy::Graphics*)+0xeaa> @ imm = #0x2
+  178192:      	blx	0x2c9a44 <operator delete(void*)> @ imm = #0x1518b0
+  178196:      	add.w	r0, r8, #0x10
+  17819a:      	ldr.w	r1, [r8, #0x18]
+  17819e:      	bl	0x176ce8 <std::_Rb_tree<int, std::pair<int const, std::string>, std::_Select1st<std::pair<int const, std::string>>, std::less<int>, std::allocator<std::pair<int const, std::string>>>::_M_erase(std::_Rb_tree_node<std::pair<int const, std::string>>*)> @ imm = #-0x14ba
+  1781a2:      	ldr.w	r0, [r8, #0xc]
+  1781a6:      	mov	r1, r7
+  1781a8:      	subs	r0, #0xc
+  1781aa:      	blx	0x2f0600 <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x5d58> @ imm = #0x178454
+  1781ae:      	ldr.w	r0, [r8, #0x8]
+  1781b2:      	mov	r1, r7
+  1781b4:      	subs	r0, #0xc
+  1781b6:      	blx	0x2f0600 <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x5d58> @ imm = #0x178448
+  1781ba:      	ldr.w	r0, [r8, #0x4]
+  1781be:      	mov	r1, r7
+  1781c0:      	b	0x17806a <SeedBank::Draw(Sexy::Graphics*)+0xd7e> @ imm = #-0x15a
+  1781c2:      	subs	r3, #0x4
+  1781c4:      	dmb	sy
+  1781c8:      	ldrex	r2, [r3]
+  1781cc:      	add.w	lr, r2, #0xffffffff
+  1781d0:      	strex	r1, lr, [r3]
+  1781d4:      	cmp	r1, #0x0
+  1781d6:      	bne	0x1781c8 <SeedBank::Draw(Sexy::Graphics*)+0xedc> @ imm = #-0x12
+  1781d8:      	cmp	r2, #0x0
+  1781da:      	dmb	sy
+  1781de:      	bgt.w	0x177ce8 <SeedBank::Draw(Sexy::Graphics*)+0x9fc> @ imm = #-0x4fa
+  1781e2:      	mov	r1, r8
+  1781e4:      	blx	0x2f05fc <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x5d54> @ imm = #0x178414
+  1781e8:      	b	0x177ce8 <SeedBank::Draw(Sexy::Graphics*)+0x9fc> @ imm = #-0x504
+  1781ea:      	ldr	r0, [sp, #0x6c]
+  1781ec:      	mov	r1, r8
+  1781ee:      	subs	r0, #0xc
+  1781f0:      	blx	0x2f0600 <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x5d58> @ imm = #0x17840c
+  1781f4:      	ldr	r0, [sp, #0x44]
+  1781f6:      	add	r4, sp, #0x3c
+  1781f8:      	mov	r1, r4
+  1781fa:      	subs	r0, #0xc
+  1781fc:      	blx	0x2f0600 <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x5d58> @ imm = #0x178400
+  178200:      	ldr	r0, [sp, #0x40]
+  178202:      	mov	r1, r4
+  178204:      	subs	r0, #0xc
+  178206:      	blx	0x2f0600 <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x5d58> @ imm = #0x1783f8
+  17820a:      	blx	0x2c8aa8 <__cxa_end_cleanup> @ imm = #0x15089c
+  17820e:      	subs	r3, #0x4
+  178210:      	dmb	sy
+  178214:      	ldrex	r2, [r3]
+  178218:      	subs	r1, r2, #0x1
+  17821a:      	strex	r6, r1, [r3]
+  17821e:      	cmp	r6, #0x0
+  178220:      	bne	0x178214 <SeedBank::Draw(Sexy::Graphics*)+0xf28> @ imm = #-0x10
+  178222:      	cmp	r2, #0x0
+  178224:      	dmb	sy
+  178228:      	add	r7, sp, #0x6c
+  17822a:      	bgt.w	0x177cc6 <SeedBank::Draw(Sexy::Graphics*)+0x9da> @ imm = #-0x568
+  17822e:      	mov	r1, r7
+  178230:      	blx	0x2f05fc <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x5d54> @ imm = #0x1783c8
+  178234:      	b	0x177cc6 <SeedBank::Draw(Sexy::Graphics*)+0x9da> @ imm = #-0x572
+  178236:      	ldr	r0, [sp, #0x5c]
+  178238:      	add	r1, sp, #0x6c
+  17823a:      	subs	r0, #0xc
+  17823c:      	blx	0x2f0600 <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x5d58> @ imm = #0x1783c0
+  178240:      	b	0x1781f4 <SeedBank::Draw(Sexy::Graphics*)+0xf08> @ imm = #-0x50
+  178242:      	subs	r3, #0x4
+  178244:      	dmb	sy
+  178248:      	ldrex	r2, [r3]
+  17824c:      	subs	r7, r2, #0x1
+  17824e:      	strex	lr, r7, [r3]
+  178252:      	cmp.w	lr, #0x0
+  178256:      	bne	0x178248 <SeedBank::Draw(Sexy::Graphics*)+0xf5c> @ imm = #-0x12
+  178258:      	cmp	r2, #0x0
+  17825a:      	dmb	sy
+  17825e:      	bgt.w	0x177ca2 <SeedBank::Draw(Sexy::Graphics*)+0x9b6> @ imm = #-0x5c0
+  178262:      	add	r1, sp, #0x6c
+  178264:      	blx	0x2f05fc <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x5d54> @ imm = #0x178394
+  178268:      	b	0x177ca2 <SeedBank::Draw(Sexy::Graphics*)+0x9b6> @ imm = #-0x5ca
+  17826a:      	ldr	r0, [sp, #0x48]
+  17826c:      	add	r1, sp, #0x6c
+  17826e:      	subs	r0, #0xc
+  178270:      	blx	0x2f0600 <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x5d58> @ imm = #0x17838c
+  178274:      	b	0x1781f4 <SeedBank::Draw(Sexy::Graphics*)+0xf08> @ imm = #-0x84
+  178276:      	b	0x1781f4 <SeedBank::Draw(Sexy::Graphics*)+0xf08> @ imm = #-0x86
+  178278:      	add	r4, sp, #0x3c
+  17827a:      	b	0x178200 <SeedBank::Draw(Sexy::Graphics*)+0xf14> @ imm = #-0x7e
+  17827c:      	b	0x178750 <UserDialog::UserDialog(LawnApp*)+0x388> @ imm = #0x4d0
+  17827e:      	<unknown>
+  178282:      	vshr.u32	q15, q6, #0x1
+  178286:      	<unknown>
+  17828a:      	<unknown>
+  17828e:      	lsls	r0, r0, #0x1
+  178290:      	subs	r7, #0x24
+  178292:      	lsls	r0, r0, #0x1
+  178294:      	subs	r7, #0x1e
+  178296:      	lsls	r0, r0, #0x1
+  178298:      	b	0x1787ac <UserDialog::UserDialog(LawnApp*)+0x3e4> @ imm = #0x510
+  17829a:      	<unknown>
+  17829e:      	lsls	r1, r2, #0x1

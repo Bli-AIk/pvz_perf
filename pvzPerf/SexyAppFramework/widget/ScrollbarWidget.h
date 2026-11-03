@@ -90,6 +90,7 @@ public:
 	virtual void			MouseUp(int x, int y) { Widget::MouseUp(x, y); }
 	virtual void			MouseUp(int x, int y, int theBtnNum, int theClickCount);
 	virtual void			MouseDrag(int x, int y);
+    void TouchCanceled(const TouchEvent& event) override;
 };
 
 }

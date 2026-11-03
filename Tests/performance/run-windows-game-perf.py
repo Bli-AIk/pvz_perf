@@ -150,7 +150,9 @@ def run_case(directory, fixture, kind, scene, multiplier, seconds):
         settings = json.loads((PROJECT.parent / "settings.json").read_text(encoding="utf-8-sig"))
         settings.update(targetFps=100, screenMode="windowed", customScale=0, waitForVSync=0,
                         musicVolume=retail_settings["MusicVolume"],
-                        sfxVolume=retail_settings["SfxVolume"], muted=retail_settings["Muted"])
+                        # Retail stores mixer percent; current JSON stores slider percent.
+                        sfxVolume=round(max(0, min(100, retail_settings["SfxVolume"] / .65))),
+                        muted=retail_settings["Muted"])
         (case / "settings.json").write_text(json.dumps(settings))
         env.update(PVZ_APPDATA_DIR=str(data), PVZ_SETTINGS_FILE=str(case / "settings.json"),
                    PVZ_LOG_DIR=str(case / "diagnostics"))

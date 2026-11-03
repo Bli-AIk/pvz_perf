@@ -1,0 +1,45 @@
+HDR types=[2, 3] peak=668.0
+DEFAULT WINDOW
+instance 0 0
+surface 0 0
+Adreno (TM) 750
+formats 0 17
+format/colorspace 37 0
+format/colorspace 43 0
+format/colorspace 37 1000104013
+format/colorspace 43 1000104013
+format/colorspace 37 1000104005
+format/colorspace 37 1000104001
+format/colorspace 43 1000104001
+format/colorspace 4 0
+format/colorspace 4 1000104013
+format/colorspace 97 0
+format/colorspace 97 1000104013
+format/colorspace 97 1000104002
+format/colorspace 97 1000104014
+format/colorspace 64 0
+format/colorspace 64 1000104013
+format/colorspace 64 1000104001
+format/colorspace 9 1000104013
+HDR WINDOW
+instance 0 0
+surface 0 0
+Adreno (TM) 750
+formats 0 17
+format/colorspace 37 0
+format/colorspace 43 0
+format/colorspace 37 1000104013
+format/colorspace 43 1000104013
+format/colorspace 37 1000104005
+format/colorspace 37 1000104001
+format/colorspace 43 1000104001
+format/colorspace 4 0
+format/colorspace 4 1000104013
+format/colorspace 97 0
+format/colorspace 97 1000104013
+format/colorspace 97 1000104002
+format/colorspace 97 1000104014
+format/colorspace 64 0
+format/colorspace 64 1000104013
+format/colorspace 64 1000104001
+format/colorspace 9 1000104013

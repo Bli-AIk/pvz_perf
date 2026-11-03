@@ -4881,12 +4881,6 @@ void Zombie::Update(std::int64_t ownerNowNs, std::int64_t visualNowNs, std::int6
         doUpdate = true;
     }
 
-    for (const auto id : {mBodyReanimID, mSpecialHeadReanimID, mZombatarHeadReanimID,
-        mMoweredReanimID, mBossFireBallReanimID})
-        if (auto* animation = mApp->ReanimationTryToGet(id))
-        {
-            animation->PrepareTimeAt(animation->mIsAttachment ? animationNowNs : visualNowNs);
-        }
     if (doUpdate)
     {
         if (mZombiePhase == ZombiePhase::PHASE_ZOMBIE_BURNED)
@@ -5193,7 +5187,32 @@ void Zombie::UpdatePlaying(std::int64_t ownerNowNs, std::int64_t visualNowNs, st
 
     if (!IsImmobilizied(ownerNowNs))
     {
+        // 动作事件与动画相位的顺序是有意保留的规则，所有僵尸共用：
+        //   1. UpdateActions 读取上一拍动画更新留下的跨关键帧区间；
+        //   2. PrepareTimeAt 推进本拍相位；
+        //   3. UpdateZombiePosition 使用本拍相位求根运动，不让位移晚一拍。
+        // 后面的 UpdateReanim/附件更新负责完成动画更新、消费事件区间。
+        //
+        // 这是 ICE3/ICE4 可以成立的原因，不要把步骤 2 提前当成无行为差别的
+        // 优化。植物先于僵尸更新，投射物后于僵尸更新；在上一拍产生投掷/锤击
+        // 的待检查区间后，冰或黄油有机会先把僵尸定住。本拍会跳过动作检查，
+        // 但动画更新仍会消费该区间，并不把漏掉的事件积压到解冻后补发。
+        // 巨人因此可能漏投小鬼（ICE3）或空锤（ICE4），完成动作后由原有状态机
+        // 重新尝试。这里不特判巨人，其他僵尸也遵循相同的事件检查顺序；是否
+        // 重试、是否有可被定身打断的动作，仍由各自状态机决定。
+        //
+        // 若改版有意删除这类上一拍事件窗口：把下面完整的 PrepareTimeAt 循环
+        // 移回 Zombie::Update 的动作分派之前，并删除这里的循环，使动作直接
+        // 检查本拍相位。不要只改巨人的 0.74/0.64 阈值、增加类型分支，或者
+        // 在解冻时补发上一拍事件；这些做法会产生另一套动作语义。迁移后需要
+        // 重新验证冰/黄油、动画切换、循环边界与其他关键帧动作，并更新 ICE3/
+        // ICE4 的预期。此处保留的是按更新区间形成的窗口，不固定为某个时长；
+        // 纳秒相位精度与移动插值不变，也不为它增加成员或存档记录。
         UpdateActions(ownerNowNs, visualNowNs, animationNowNs);
+        for (const auto id : {mBodyReanimID, mSpecialHeadReanimID, mZombatarHeadReanimID,
+            mMoweredReanimID, mBossFireBallReanimID})
+            if (auto* animation = mApp->ReanimationTryToGet(id))
+                animation->PrepareTimeAt(animation->mIsAttachment ? animationNowNs : visualNowNs);
         UpdateZombiePosition(ownerNowNs, visualNowNs, animationNowNs);
         CheckIfPreyCaught(ownerNowNs, visualNowNs, animationNowNs);
         CheckForPool(ownerNowNs, visualNowNs, animationNowNs);

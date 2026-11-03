@@ -1,0 +1,9 @@
+Test project C:/Users/Administrator/CLionProjects/codex/PlantsVsZombiesModern/out/x64-win32-vulkan
+    Start 64: sexy_vulkan_scale_pipeline
+1/2 Test #64: sexy_vulkan_scale_pipeline .......   Passed    4.51 sec
+    Start 65: sexy_vulkan_scale_gpu
+2/2 Test #65: sexy_vulkan_scale_gpu ............   Passed    0.92 sec
+
+100% tests passed out of 2
+
+Total Test time (real) =   5.45 sec

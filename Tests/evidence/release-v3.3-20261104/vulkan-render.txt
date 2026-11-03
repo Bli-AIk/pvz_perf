@@ -1,0 +1,63 @@
+PASS: odd, cropped and letterboxed presentation defines every border pixel exactly once
+PASS surface extent policy: fixed/variable pixels, zero deferral, explicit malformed rejection
+PASS: shared viewport/input mapping, DPI, portrait/landscape, odd dimensions
+PASS two-frame queue: two reused command buffers, shared textures, 32 consecutive vertex frames, pending descriptor retirement, retained pixels and suspend/resize/reacquire
+PASS single-frame static slots: both current-frame overwrite rejections, pending creation/binding drains and old/new descriptor pixels
+PASS single-frame fonts: same/cross-frame metadata, immutable backing/slot snapshots, old/new pixels and image-only/main stream alternation
+PASS deferred WSI mode transaction: setters coalesced, explicit/implicit single commit
+PASS: BGRA, pitch, opacity, alpha/additive, nearest/linear, wrap/clamp, scissor, pixel edges
+canvas hash mixed-state=d41ff91a456335d5
+canvas hash fixed-frame-capacity=8b5b8c57b0ae9bba
+PASS fixed frame geometry: exact 65536-vertex boundary, cumulative/single overflow rejection, retained pixels and frame reuse
+PASS: swapchain resize preserves scene and texture content
+PASS native WSI suspension: resources retained, single restore commit, exact retained pixels
+PASS: repeated texture/descriptor allocation and deferred destruction
+PASS GPU coverage: all 65536 byte/alpha pairs exact, odd R8 pitch+BGRA alignment, source snapshot, clip/additive/pipeline switching, retirement
+PASS raw filter aliases: WHITE/WASHED/LESS nearest+linear match premultiplied cache edges
+PASS: generated HDR filters retain nonpositive-value black boundary
+PASS dynamic textures: 24 frames with stable handles and no retired textures; same-frame versions, coalescing, pitch, resize, alpha, suspension
+PASS caustic phase: authored endpoints, fractional phase, sign boundary and wrap; exact 40960 pixels
+pool GPU day-normal-nearest: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU night-normal-linear: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU day-additive-partial-fractional: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU night-additive-phase-wrap: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU day-opaque-partial-fractional: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU night-opaque-large-counter: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU feedback-float-source-pending-batch: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+PASS production GPU pool vs independent legacy CPU mesh: day/night, normal/additive/opaque, nearest/linear/repeat, phase wrap, destination scissor, fractional translation, ordinary painter order and float target feedback
+PASS mixed normal/additive: ordering, opaque input and transparent destination alpha
+PASS upload edges: 32 padded snapshots, released CPU sources, 4 MiB rollover, oversized image, pending retirement/minimize/teardown
+PASS: 1100 alpha dispatches retain distinct image bindings across transfer batches
+PASS canvas-resize-800-through-1400-resident-textures
+PASS: odd, cropped and letterboxed presentation defines every border pixel exactly once
+PASS surface extent policy: fixed/variable pixels, zero deferral, explicit malformed rejection
+PASS: shared viewport/input mapping, DPI, portrait/landscape, odd dimensions
+PASS two-frame queue: two reused command buffers, shared textures, 32 consecutive vertex frames, pending descriptor retirement, retained pixels and suspend/resize/reacquire
+PASS single-frame static slots: both current-frame overwrite rejections, pending creation/binding drains and old/new descriptor pixels
+PASS single-frame fonts: same/cross-frame metadata, immutable backing/slot snapshots, old/new pixels and image-only/main stream alternation
+PASS deferred WSI mode transaction: setters coalesced, explicit/implicit single commit
+PASS: BGRA, pitch, opacity, alpha/additive, nearest/linear, wrap/clamp, scissor, pixel edges
+canvas hash mixed-state=d41ff91a456335d5
+canvas hash fixed-frame-capacity=8b5b8c57b0ae9bba
+PASS fixed frame geometry: exact 65536-vertex boundary, cumulative/single overflow rejection, retained pixels and frame reuse
+PASS: swapchain resize preserves scene and texture content
+PASS native WSI suspension: resources retained, single restore commit, exact retained pixels
+PASS: repeated texture/descriptor allocation and deferred destruction
+PASS GPU coverage: all 65536 byte/alpha pairs exact, odd R8 pitch+BGRA alignment, source snapshot, clip/additive/pipeline switching, retirement
+PASS raw filter aliases: WHITE/WASHED/LESS nearest+linear match premultiplied cache edges
+PASS: generated HDR filters retain nonpositive-value black boundary
+PASS dynamic textures: 24 frames with stable handles and no retired textures; same-frame versions, coalescing, pitch, resize, alpha, suspension
+PASS caustic phase: authored endpoints, fractional phase, sign boundary and wrap; exact 40960 pixels
+pool GPU day-normal-nearest: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU night-normal-linear: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU day-additive-partial-fractional: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU night-additive-phase-wrap: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU day-opaque-partial-fractional: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU night-opaque-large-counter: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+pool GPU feedback-float-source-pending-batch: RGBA max=0 mean=0 poolMean=0 changedPixels=0 worst=(0,0) outsideBoundaryMax=0
+PASS production GPU pool vs independent legacy CPU mesh: day/night, normal/additive/opaque, nearest/linear/repeat, phase wrap, destination scissor, fractional translation, ordinary painter order and float target feedback
+PASS mixed normal/additive: ordering, opaque input and transparent destination alpha
+PASS upload edges: 32 padded snapshots, released CPU sources, 4 MiB rollover, oversized image, pending retirement/minimize/teardown
+PASS: 1100 alpha dispatches retain distinct image bindings across transfer batches
+PASS canvas-resize-800-through-1400-resident-textures
+PASS: native renderer resource teardown/reinitialization; zero validation errors

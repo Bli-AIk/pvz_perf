@@ -1,0 +1,25 @@
+
+C:/Users/Administrator/CLionProjects/codex/tv_assets/FREE_3.18.0_Phone/apk_contents/split_config.arm64_v8a/lib/arm64-v8a/libpvz.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+0000000001d687e4 <Sexy::Color::Color(int, int)>:
+ 1d687e4: d10043ff     	sub	sp, sp, #0x10
+ 1d687e8: f90007e0     	str	x0, [sp, #0x8]
+ 1d687ec: b90007e1     	str	w1, [sp, #0x4]
+ 1d687f0: b90003e2     	str	w2, [sp]
+ 1d687f4: f94007e9     	ldr	x9, [sp, #0x8]
+ 1d687f8: b94007e8     	ldr	w8, [sp, #0x4]
+ 1d687fc: 13107d08     	asr	w8, w8, #16
+ 1d68800: 12001d08     	and	w8, w8, #0xff
+ 1d68804: b9000128     	str	w8, [x9]
+ 1d68808: b94007e8     	ldr	w8, [sp, #0x4]
+ 1d6880c: 13087d08     	asr	w8, w8, #8
+ 1d68810: 12001d08     	and	w8, w8, #0xff
+ 1d68814: b9000528     	str	w8, [x9, #0x4]
+ 1d68818: 394013e8     	ldrb	w8, [sp, #0x4]
+ 1d6881c: b9000928     	str	w8, [x9, #0x8]
+ 1d68820: b94003e8     	ldr	w8, [sp]
+ 1d68824: b9000d28     	str	w8, [x9, #0xc]
+ 1d68828: 910043ff     	add	sp, sp, #0x10
+ 1d6882c: d65f03c0     	ret

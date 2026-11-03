@@ -36,6 +36,7 @@ constexpr int MAX_GRAVE_STONES = MAX_GRID_SIZE_X * MAX_GRID_SIZE_Y;
 class LawnApp;
 class CursorObject;
 class CursorPreview;
+struct BoardTouchState;
 class GameButton;
 class MessageWidget;
 class SeedBank;
@@ -125,6 +126,7 @@ public:
 	inline static bool sShownMoreSunTutorial = false;
     // Runtime-only ownership state; precedes the serialized tail at mPaused.
     bool mPoolIntroVisual;
+    BoardTouchState* mTouchState = nullptr;
 	LawnApp*						mApp;													//+0x8C
 	DataArray<Zombie>				mZombies;												//+0x90
 	DataArray<Plant>				mPlants;												//+0xAC
@@ -279,6 +281,21 @@ public:
 	void							SpawnZombiesFromGraves();
 	PlantingReason					CanPlantAt(int theGridX, int theGridY, SeedType theSeedType);	virtual void					MouseMove(int x, int y);
 	virtual void					MouseDrag(int x, int y);
+    void TouchBegan(const Sexy::TouchEvent& event) override;
+    const void* TouchHitTest(int x, int y) override;
+    void TouchMoved(const Sexy::TouchEvent& event) override;
+    void TouchEnded(const Sexy::TouchEvent& event) override;
+    void TouchCanceled(const Sexy::TouchEvent& event) override;
+    void UpdateTouchCursors();
+    void DrawTouchCursors(Sexy::Graphics* g);
+    void DrawTouchPreviews(Sexy::Graphics* g);
+    void DrawTouchSelection(Sexy::Graphics* g);
+    void DrawFieldCardSelection(Sexy::Graphics* g, const Coin& coin);
+    bool UpdateTouchHighlights();
+    void DisposeTouchState();
+    void ClearTouchSelection();
+    void PrepareMouseSelection();
+    void ReindexTouchConveyorCards(int removedIndex);
 	virtual void					MouseDown(int x, int y, int theClickCount);
 	virtual void					MouseUp(int x, int y, int theClickCount);
 	virtual void					KeyChar(SexyChar theChar);
@@ -445,6 +462,7 @@ public:
 	void							UpdateFwoosh();
 	Plant*							SpecialPlantHitTest(int x, int y);
 	void							UpdateMousePosition();
+    void UpdatePointerHighlights(int x, int y);
 	/*inline*/ Plant*				ToolHitTestHelper(HitResult* theHitResult);
 	/*inline*/ Plant*				ToolHitTest(int theX, int theY);
 	bool							CanAddGraveStoneAt(int theGridX, int theGridY);

@@ -1,0 +1,10 @@
+{
+  "apk": "C:\\Users\\Administrator\\CLionProjects\\codex\\PlantsVsZombiesModern\\out\\arm64-android14-vulkan1.3\\hdr-white-calibration\\pvz_perf-hdr-white-calibration-arm64-android14-vulkan1.3.apk",
+  "members": {
+    "lib/arm64-v8a/libpvz_perf.so": "6ba7b2c12b38205b0c3224d4ebca9c9a3861006b32f4d9ff3c2c1fe8eeb16a42",
+    "assets/main.pak64": "eaa474681349eaf533d6c80f70fb362af6b0314af04c44e190303f5a68ff22e9",
+    "assets/shaders/game_hdr_linear_ps.spv": "9d3888142ee5815537f82b5434a57eebca6670a04ff71cdc29300767828372c1"
+  },
+  "phone_calibration_white_nits": 549.2,
+  "visual_result": "pending user confirmation"
+}

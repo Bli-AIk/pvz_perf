@@ -1,0 +1,34 @@
+{
+  "date": "2026-11-03",
+  "scope": "read-only field-card touch analysis; production code unchanged",
+  "free_native_sha256": "079a0c71a67ae61fa98cd797dbb527e1c16fa0e409fe7f980c459afe1488dff5",
+  "free_functions": [
+    {
+      "file": "Coin_MouseHitTest.asm.txt",
+      "address": "0x1a462d8",
+      "size": 1108,
+      "sha256": "5802ae3019c7b041448df12342d4f3e22e0aa4fb3e554f73acac616dda3e4c5d"
+    },
+    {
+      "file": "Coin_Collect.asm.txt",
+      "address": "0x1a41154",
+      "size": 3852,
+      "sha256": "c9770f7cc1fec3eb7e7b1f4cf59cbaed0e1c33b276374f2180dcc281d5db8742"
+    },
+    {
+      "file": "Coin_DroppedUsableSeed.asm.txt",
+      "address": "0x1a4672c",
+      "size": 96,
+      "sha256": "c3240859466dcbfba809cec140bc278424b3c17090c9f49cd493263bb50c9a02"
+    }
+  ],
+  "free_context": [
+    "Board_TouchBegan.asm.txt",
+    "Board_TouchMoved.asm.txt",
+    "Board_ProcessTouchEnded.asm.txt"
+  ],
+  "wp_coin_source": {
+    "url": "https://github.com/IsraelDXPP/PvZ-Windows-Phone-decomp/blob/26cbb77df48c674dca6cb6b1fa9ad6783903a5c4/Lawn/Coin.cs",
+    "sha256": "e53e66eeb3a7356b02b299fdebf66242392f19fadef074d27091a2be0862494d"
+  }
+}

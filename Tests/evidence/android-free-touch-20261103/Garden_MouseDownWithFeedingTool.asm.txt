@@ -1,0 +1,451 @@
+
+C:/Users/Administrator/CLionProjects/codex/tv_assets/FREE_3.18.0_Phone/apk_contents/split_config.arm64_v8a/lib/arm64-v8a/libpvz.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+0000000001c61b68 <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)>:
+ 1c61b68: d10303ff     	sub	sp, sp, #0xc0
+ 1c61b6c: a90b7bfd     	stp	x29, x30, [sp, #0xb0]
+ 1c61b70: 9102c3fd     	add	x29, sp, #0xb0
+ 1c61b74: d53bd048     	mrs	x8, TPIDR_EL0
+ 1c61b78: f9401508     	ldr	x8, [x8, #0x28]
+ 1c61b7c: f81f83a8     	stur	x8, [x29, #-0x8]
+ 1c61b80: f81d83a0     	stur	x0, [x29, #-0x28]
+ 1c61b84: b81d43a1     	stur	w1, [x29, #-0x2c]
+ 1c61b88: b81d03a2     	stur	w2, [x29, #-0x30]
+ 1c61b8c: b81cc3a3     	stur	w3, [x29, #-0x34]
+ 1c61b90: f85d83a8     	ldur	x8, [x29, #-0x28]
+ 1c61b94: aa0803e9     	mov	x9, x8
+ 1c61b98: f90017e9     	str	x9, [sp, #0x28]
+ 1c61b9c: f9408108     	ldr	x8, [x8, #0x100]
+ 1c61ba0: f9458900     	ldr	x0, [x8, #0xb10]
+ 1c61ba4: b85d43a1     	ldur	w1, [x29, #-0x2c]
+ 1c61ba8: b85d03a2     	ldur	w2, [x29, #-0x30]
+ 1c61bac: d10063a3     	sub	x3, x29, #0x18
+ 1c61bb0: 9444d954     	bl	0x2d98100 <_ZN5Board11ToolHitTestEiiP9HitResult@plt>
+ 1c61bb4: b85f03a8     	ldur	w8, [x29, #-0x10]
+ 1c61bb8: 71005108     	subs	w8, w8, #0x14
+ 1c61bbc: 1a9f17e8     	cset	w8, eq
+ 1c61bc0: 381cb3a8     	sturb	w8, [x29, #-0x35]
+ 1c61bc4: aa1f03e8     	mov	x8, xzr
+ 1c61bc8: f81c03a8     	stur	x8, [x29, #-0x40]
+ 1c61bcc: b85f03a8     	ldur	w8, [x29, #-0x10]
+ 1c61bd0: 71000508     	subs	w8, w8, #0x1
+ 1c61bd4: 540000a1     	b.ne	0x1c61be8 <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x80>
+ 1c61bd8: 14000001     	b	0x1c61bdc <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x74>
+ 1c61bdc: f85e83a8     	ldur	x8, [x29, #-0x18]
+ 1c61be0: f81c03a8     	stur	x8, [x29, #-0x40]
+ 1c61be4: 14000001     	b	0x1c61be8 <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x80>
+ 1c61be8: b85cc3a9     	ldur	w9, [x29, #-0x34]
+ 1c61bec: 2a1f03e8     	mov	w8, wzr
+ 1c61bf0: 71002529     	subs	w9, w9, #0x9
+ 1c61bf4: b90027e8     	str	w8, [sp, #0x24]
+ 1c61bf8: 54000141     	b.ne	0x1c61c20 <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0xb8>
+ 1c61bfc: 14000001     	b	0x1c61c00 <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x98>
+ 1c61c00: f94017e8     	ldr	x8, [sp, #0x28]
+ 1c61c04: f9408108     	ldr	x8, [x8, #0x100]
+ 1c61c08: f9461108     	ldr	x8, [x8, #0xc20]
+ 1c61c0c: b9458d08     	ldr	w8, [x8, #0x58c]
+ 1c61c10: 71000108     	subs	w8, w8, #0x0
+ 1c61c14: 1a9f07e8     	cset	w8, ne
+ 1c61c18: b90027e8     	str	w8, [sp, #0x24]
+ 1c61c1c: 14000001     	b	0x1c61c20 <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0xb8>
+ 1c61c20: b94027e8     	ldr	w8, [sp, #0x24]
+ 1c61c24: 12000108     	and	w8, w8, #0x1
+ 1c61c28: 381bf3a8     	sturb	w8, [x29, #-0x41]
+ 1c61c2c: f85c03a8     	ldur	x8, [x29, #-0x40]
+ 1c61c30: b40000e8     	cbz	x8, 0x1c61c4c <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0xe4>
+ 1c61c34: 14000001     	b	0x1c61c38 <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0xd0>
+ 1c61c38: f85c03a8     	ldur	x8, [x29, #-0x40]
+ 1c61c3c: b9415108     	ldr	w8, [x8, #0x150]
+ 1c61c40: 31000508     	adds	w8, w8, #0x1
+ 1c61c44: 540001c1     	b.ne	0x1c61c7c <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x114>
+ 1c61c48: 14000001     	b	0x1c61c4c <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0xe4>
+ 1c61c4c: 385bf3a8     	ldurb	w8, [x29, #-0x41]
+ 1c61c50: 37000168     	tbnz	w8, #0x0, 0x1c61c7c <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x114>
+ 1c61c54: 14000001     	b	0x1c61c58 <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0xf0>
+ 1c61c58: b85cc3a8     	ldur	w8, [x29, #-0x34]
+ 1c61c5c: 71003508     	subs	w8, w8, #0xd
+ 1c61c60: 540000e0     	b.eq	0x1c61c7c <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x114>
+ 1c61c64: 14000001     	b	0x1c61c68 <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x100>
+ 1c61c68: f94017e8     	ldr	x8, [sp, #0x28]
+ 1c61c6c: f9408500     	ldr	x0, [x8, #0x108]
+ 1c61c70: 2a1f03e1     	mov	w1, wzr
+ 1c61c74: 9444d687     	bl	0x2d97690 <_ZN5Board11ClearCursorEb@plt>
+ 1c61c78: 1400016f     	b	0x1c62234 <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x6cc>
+ 1c61c7c: aa1f03e8     	mov	x8, xzr
+ 1c61c80: f81e03a8     	stur	x8, [x29, #-0x20]
+ 1c61c84: 14000001     	b	0x1c61c88 <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x120>
+ 1c61c88: f94017e8     	ldr	x8, [sp, #0x28]
+ 1c61c8c: f9408500     	ldr	x0, [x8, #0x108]
+ 1c61c90: d10083a1     	sub	x1, x29, #0x20
+ 1c61c94: 9444d84b     	bl	0x2d97dc0 <_ZN5Board13IteratePlantsERP5Plant@plt>
+ 1c61c98: 36000200     	tbz	w0, #0x0, 0x1c61cd8 <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x170>
+ 1c61c9c: 14000001     	b	0x1c61ca0 <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x138>
+ 1c61ca0: f85e03a8     	ldur	x8, [x29, #-0x20]
+ 1c61ca4: 39456508     	ldrb	w8, [x8, #0x159]
+ 1c61ca8: 37000068     	tbnz	w8, #0x0, 0x1c61cb4 <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x14c>
+ 1c61cac: 14000001     	b	0x1c61cb0 <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x148>
+ 1c61cb0: 17fffff6     	b	0x1c61c88 <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x120>
+ 1c61cb4: f85e03a8     	ldur	x8, [x29, #-0x20]
+ 1c61cb8: b9415108     	ldr	w8, [x8, #0x150]
+ 1c61cbc: 31000508     	adds	w8, w8, #0x1
+ 1c61cc0: 54000061     	b.ne	0x1c61ccc <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x164>
+ 1c61cc4: 14000001     	b	0x1c61cc8 <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x160>
+ 1c61cc8: 17fffff0     	b	0x1c61c88 <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x120>
+ 1c61ccc: f85e03a8     	ldur	x8, [x29, #-0x20]
+ 1c61cd0: f81c03a8     	stur	x8, [x29, #-0x40]
+ 1c61cd4: 14000001     	b	0x1c61cd8 <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x170>
+ 1c61cd8: b85cc3a8     	ldur	w8, [x29, #-0x34]
+ 1c61cdc: 71003508     	subs	w8, w8, #0xd
+ 1c61ce0: 54000981     	b.ne	0x1c61e10 <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x2a8>
+ 1c61ce4: 14000001     	b	0x1c61ce8 <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x180>
+ 1c61ce8: f94017e0     	ldr	x0, [sp, #0x28]
+ 1c61cec: 9444d9a1     	bl	0x2d98370 <_ZN9ZenGarden9GetStinkyEv@plt>
+ 1c61cf0: f81b03a0     	stur	x0, [x29, #-0x50]
+ 1c61cf4: f85b03a8     	ldur	x8, [x29, #-0x50]
+ 1c61cf8: b40006a8     	cbz	x8, 0x1c61dcc <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x264>
+ 1c61cfc: 14000001     	b	0x1c61d00 <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x198>
+ 1c61d00: 385cb3a8     	ldurb	w8, [x29, #-0x35]
+ 1c61d04: 36000648     	tbz	w8, #0x0, 0x1c61dcc <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x264>
+ 1c61d08: 14000001     	b	0x1c61d0c <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x1a4>
+ 1c61d0c: f94017e0     	ldr	x0, [sp, #0x28]
+ 1c61d10: 9445159c     	bl	0x2da7380 <_ZN9ZenGarden10WakeStinkyEv@plt>
+ 1c61d14: f94017e8     	ldr	x8, [sp, #0x28]
+ 1c61d18: f9408108     	ldr	x8, [x8, #0x100]
+ 1c61d1c: f9000fe8     	str	x8, [sp, #0x18]
+ 1c61d20: f85b03a8     	ldur	x8, [x29, #-0x50]
+ 1c61d24: bd402d00     	ldr	s0, [x8, #0x2c]
+ 1c61d28: 9444f7fe     	bl	0x2d9fd20 <_ZN4Sexy7InverseEf@plt>
+ 1c61d2c: 52a84408     	mov	w8, #0x42200000         // =1109393408
+ 1c61d30: 1e270101     	fmov	s1, w8
+ 1c61d34: 1e212800     	fadd	s0, s0, s1
+ 1c61d38: bd0023e0     	str	s0, [sp, #0x20]
+ 1c61d3c: f85b03a8     	ldur	x8, [x29, #-0x50]
+ 1c61d40: bd403100     	ldr	s0, [x8, #0x30]
+ 1c61d44: 9444f7f7     	bl	0x2d9fd20 <_ZN4Sexy7InverseEf@plt>
+ 1c61d48: f9400fe0     	ldr	x0, [sp, #0x18]
+ 1c61d4c: 1e204001     	fmov	s1, s0
+ 1c61d50: bd4023e0     	ldr	s0, [sp, #0x20]
+ 1c61d54: 1e27d002     	fmov	s2, #30.00000000
+ 1c61d58: 1e222821     	fadd	s1, s1, s2
+ 1c61d5c: f85b03a8     	ldur	x8, [x29, #-0x50]
+ 1c61d60: b9402508     	ldr	w8, [x8, #0x24]
+ 1c61d64: 11000501     	add	w1, w8, #0x1
+ 1c61d68: 528008c2     	mov	w2, #0x46               // =70
+ 1c61d6c: 9444d801     	bl	0x2d97d70 <_ZN7LawnApp14AddTodParticleEffi14ParticleEffect@plt>
+ 1c61d70: aa1f03e0     	mov	x0, xzr
+ 1c61d74: 9444b41b     	bl	0x2d8ede0 <time@plt>
+ 1c61d78: f94017e8     	ldr	x8, [sp, #0x28]
+ 1c61d7c: f9408109     	ldr	x9, [x8, #0x100]
+ 1c61d80: f9461129     	ldr	x9, [x9, #0xc20]
+ 1c61d84: f9034d20     	str	x0, [x9, #0x698]
+ 1c61d88: f9408109     	ldr	x9, [x8, #0x100]
+ 1c61d8c: f946112a     	ldr	x10, [x9, #0xc20]
+ 1c61d90: b945b149     	ldr	w9, [x10, #0x5b0]
+ 1c61d94: 71000529     	subs	w9, w9, #0x1
+ 1c61d98: b905b149     	str	w9, [x10, #0x5b0]
+ 1c61d9c: f9408100     	ldr	x0, [x8, #0x100]
+ 1c61da0: 52800a41     	mov	w1, #0x52               // =82
+ 1c61da4: 94445313     	bl	0x2d769f0 <_ZN7LawnApp9PlayFoleyE9FoleyType@plt>
+ 1c61da8: f94017e8     	ldr	x8, [sp, #0x28]
+ 1c61dac: f9408100     	ldr	x0, [x8, #0x100]
+ 1c61db0: 90009668     	adrp	x8, 0x2f2d000
+ 1c61db4: f9467508     	ldr	x8, [x8, #0xce8]
+ 1c61db8: b9400101     	ldr	w1, [x8]
+ 1c61dbc: f9400008     	ldr	x8, [x0]
+ 1c61dc0: f940e108     	ldr	x8, [x8, #0x1c0]
+ 1c61dc4: d63f0100     	blr	x8
+ 1c61dc8: 14000001     	b	0x1c61dcc <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x264>
+ 1c61dcc: f85c03a8     	ldur	x8, [x29, #-0x40]
+ 1c61dd0: b40001e8     	cbz	x8, 0x1c61e0c <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x2a4>
+ 1c61dd4: 14000001     	b	0x1c61dd8 <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x270>
+ 1c61dd8: f94017e0     	ldr	x0, [sp, #0x28]
+ 1c61ddc: f9408008     	ldr	x8, [x0, #0x100]
+ 1c61de0: f9461109     	ldr	x9, [x8, #0xc20]
+ 1c61de4: b945b128     	ldr	w8, [x9, #0x5b0]
+ 1c61de8: 71000508     	subs	w8, w8, #0x1
+ 1c61dec: b905b128     	str	w8, [x9, #0x5b0]
+ 1c61df0: f85c03a1     	ldur	x1, [x29, #-0x40]
+ 1c61df4: 94451567     	bl	0x2da7390 <_ZN9ZenGarden20FeedChocolateToPlantEP5Plant@plt>
+ 1c61df8: f94017e8     	ldr	x8, [sp, #0x28]
+ 1c61dfc: f9408100     	ldr	x0, [x8, #0x100]
+ 1c61e00: 52800a41     	mov	w1, #0x52               // =82
+ 1c61e04: 944452fb     	bl	0x2d769f0 <_ZN7LawnApp9PlayFoleyE9FoleyType@plt>
+ 1c61e08: 14000001     	b	0x1c61e0c <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x2a4>
+ 1c61e0c: 14000001     	b	0x1c61e10 <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x2a8>
+ 1c61e10: f85c03a8     	ldur	x8, [x29, #-0x40]
+ 1c61e14: b50000a8     	cbnz	x8, 0x1c61e28 <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x2c0>
+ 1c61e18: 14000001     	b	0x1c61e1c <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x2b4>
+ 1c61e1c: 385bf3a8     	ldurb	w8, [x29, #-0x41]
+ 1c61e20: 36002008     	tbz	w8, #0x0, 0x1c62220 <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x6b8>
+ 1c61e24: 14000001     	b	0x1c61e28 <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x2c0>
+ 1c61e28: f94017e8     	ldr	x8, [sp, #0x28]
+ 1c61e2c: f9408508     	ldr	x8, [x8, #0x108]
+ 1c61e30: 91078100     	add	x0, x8, #0x1e0
+ 1c61e34: 9444d533     	bl	0x2d97300 <_ZN6TodLib9DataArrayI8GridItemE14DataArrayAllocEv@plt>
+ 1c61e38: f9002fe0     	str	x0, [sp, #0x58]
+ 1c61e3c: f9402fe9     	ldr	x9, [sp, #0x58]
+ 1c61e40: 52800128     	mov	w8, #0x9                // =9
+ 1c61e44: b9001128     	str	w8, [x9, #0x10]
+ 1c61e48: f85c03a8     	ldur	x8, [x29, #-0x40]
+ 1c61e4c: b40002e8     	cbz	x8, 0x1c61ea8 <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x340>
+ 1c61e50: 14000001     	b	0x1c61e54 <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x2ec>
+ 1c61e54: f85c03a8     	ldur	x8, [x29, #-0x40]
+ 1c61e58: b9403d08     	ldr	w8, [x8, #0x3c]
+ 1c61e5c: f9402fe9     	ldr	x9, [sp, #0x58]
+ 1c61e60: b9001928     	str	w8, [x9, #0x18]
+ 1c61e64: f85c03a8     	ldur	x8, [x29, #-0x40]
+ 1c61e68: b9402508     	ldr	w8, [x8, #0x24]
+ 1c61e6c: f9402fe9     	ldr	x9, [sp, #0x58]
+ 1c61e70: b9001d28     	str	w8, [x9, #0x1c]
+ 1c61e74: f85c03a8     	ldur	x8, [x29, #-0x40]
+ 1c61e78: b9401108     	ldr	w8, [x8, #0x10]
+ 1c61e7c: 1100a108     	add	w8, w8, #0x28
+ 1c61e80: 1e220100     	scvtf	s0, w8
+ 1c61e84: f9402fe8     	ldr	x8, [sp, #0x58]
+ 1c61e88: bd002d00     	str	s0, [x8, #0x2c]
+ 1c61e8c: f85c03a8     	ldur	x8, [x29, #-0x40]
+ 1c61e90: b9401508     	ldr	w8, [x8, #0x14]
+ 1c61e94: 1100a108     	add	w8, w8, #0x28
+ 1c61e98: 1e220100     	scvtf	s0, w8
+ 1c61e9c: f9402fe8     	ldr	x8, [sp, #0x58]
+ 1c61ea0: bd003100     	str	s0, [x8, #0x30]
+ 1c61ea4: 14000001     	b	0x1c61ea8 <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x340>
+ 1c61ea8: f9402fe9     	ldr	x9, [sp, #0x58]
+ 1c61eac: 52835008     	mov	w8, #0x1a80             // =6784
+ 1c61eb0: 72a000c8     	movk	w8, #0x6, lsl #16
+ 1c61eb4: b9002528     	str	w8, [x9, #0x24]
+ 1c61eb8: 385bf3a8     	ldurb	w8, [x29, #-0x41]
+ 1c61ebc: 360005c8     	tbz	w8, #0x0, 0x1c61f74 <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x40c>
+ 1c61ec0: 14000001     	b	0x1c61ec4 <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x35c>
+ 1c61ec4: f94017e8     	ldr	x8, [sp, #0x28]
+ 1c61ec8: bc5d43a0     	ldur	s0, [x29, #-0x2c]
+ 1c61ecc: 5e21d800     	scvtf	s0, s0
+ 1c61ed0: f9402fe9     	ldr	x9, [sp, #0x58]
+ 1c61ed4: bd002d20     	str	s0, [x9, #0x2c]
+ 1c61ed8: bc5d03a0     	ldur	s0, [x29, #-0x30]
+ 1c61edc: 5e21d800     	scvtf	s0, s0
+ 1c61ee0: f9402fe9     	ldr	x9, [sp, #0x58]
+ 1c61ee4: bd003120     	str	s0, [x9, #0x30]
+ 1c61ee8: f9408100     	ldr	x0, [x8, #0x100]
+ 1c61eec: b85d43a8     	ldur	w8, [x29, #-0x2c]
+ 1c61ef0: 71003908     	subs	w8, w8, #0xe
+ 1c61ef4: 1e220100     	scvtf	s0, w8
+ 1c61ef8: b85d03a8     	ldur	w8, [x29, #-0x30]
+ 1c61efc: 71003908     	subs	w8, w8, #0xe
+ 1c61f00: 1e220101     	scvtf	s1, w8
+ 1c61f04: 52800d02     	mov	w2, #0x68               // =104
+ 1c61f08: 2a1f03e3     	mov	w3, wzr
+ 1c61f0c: b90017e3     	str	w3, [sp, #0x14]
+ 1c61f10: 2a0303e1     	mov	w1, w3
+ 1c61f14: 9444d643     	bl	0x2d97820 <_ZN7LawnApp14AddReanimationEffi15ReanimationTypeb@plt>
+ 1c61f18: b94017e3     	ldr	w3, [sp, #0x14]
+ 1c61f1c: f9002be0     	str	x0, [sp, #0x50]
+ 1c61f20: f9402be0     	ldr	x0, [sp, #0x50]
+ 1c61f24: 90009648     	adrp	x8, 0x2f29000
+ 1c61f28: f943cd08     	ldr	x8, [x8, #0x798]
+ 1c61f2c: f9400101     	ldr	x1, [x8]
+ 1c61f30: 52800062     	mov	w2, #0x3                // =3
+ 1c61f34: 1e241000     	fmov	s0, #8.00000000
+ 1c61f38: 9444dfc6     	bl	0x2d99e50 <_ZN11Reanimation10PlayReanimEPKc14ReanimLoopTypeif@plt>
+ 1c61f3c: f94017e8     	ldr	x8, [sp, #0x28]
+ 1c61f40: f9408100     	ldr	x0, [x8, #0x100]
+ 1c61f44: f9402be1     	ldr	x1, [sp, #0x50]
+ 1c61f48: 9444d63a     	bl	0x2d97830 <_ZN7LawnApp16ReanimationGetIDEP11Reanimation@plt>
+ 1c61f4c: f94017e8     	ldr	x8, [sp, #0x28]
+ 1c61f50: f9402fe9     	ldr	x9, [sp, #0x58]
+ 1c61f54: b9003d20     	str	w0, [x9, #0x3c]
+ 1c61f58: f9402fea     	ldr	x10, [sp, #0x58]
+ 1c61f5c: 52800249     	mov	w9, #0x12               // =18
+ 1c61f60: b9001549     	str	w9, [x10, #0x14]
+ 1c61f64: f9408100     	ldr	x0, [x8, #0x100]
+ 1c61f68: 52800981     	mov	w1, #0x4c               // =76
+ 1c61f6c: 944452a1     	bl	0x2d769f0 <_ZN7LawnApp9PlayFoleyE9FoleyType@plt>
+ 1c61f70: 140000ab     	b	0x1c6221c <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x6b4>
+ 1c61f74: b85cc3a8     	ldur	w8, [x29, #-0x34]
+ 1c61f78: 71002508     	subs	w8, w8, #0x9
+ 1c61f7c: 54000581     	b.ne	0x1c6202c <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x4c4>
+ 1c61f80: 14000001     	b	0x1c61f84 <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x41c>
+ 1c61f84: f94017e8     	ldr	x8, [sp, #0x28]
+ 1c61f88: f9408108     	ldr	x8, [x8, #0x100]
+ 1c61f8c: f9461108     	ldr	x8, [x8, #0xc20]
+ 1c61f90: b9458d08     	ldr	w8, [x8, #0x58c]
+ 1c61f94: 350004c8     	cbnz	w8, 0x1c6202c <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x4c4>
+ 1c61f98: 14000001     	b	0x1c61f9c <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x434>
+ 1c61f9c: f94017e8     	ldr	x8, [sp, #0x28]
+ 1c61fa0: f9408100     	ldr	x0, [x8, #0x100]
+ 1c61fa4: f85c03a8     	ldur	x8, [x29, #-0x40]
+ 1c61fa8: b9401109     	ldr	w9, [x8, #0x10]
+ 1c61fac: 11008129     	add	w9, w9, #0x20
+ 1c61fb0: 1e220120     	scvtf	s0, w9
+ 1c61fb4: bd401501     	ldr	s1, [x8, #0x14]
+ 1c61fb8: 5e21d821     	scvtf	s1, s1
+ 1c61fbc: 2a1f03e1     	mov	w1, wzr
+ 1c61fc0: b90013e1     	str	w1, [sp, #0x10]
+ 1c61fc4: 52800d02     	mov	w2, #0x68               // =104
+ 1c61fc8: 52800023     	mov	w3, #0x1                // =1
+ 1c61fcc: 9444d615     	bl	0x2d97820 <_ZN7LawnApp14AddReanimationEffi15ReanimationTypeb@plt>
+ 1c61fd0: b94013e3     	ldr	w3, [sp, #0x10]
+ 1c61fd4: f90027e0     	str	x0, [sp, #0x48]
+ 1c61fd8: f94027e0     	ldr	x0, [sp, #0x48]
+ 1c61fdc: d0009628     	adrp	x8, 0x2f27000
+ 1c61fe0: f9448908     	ldr	x8, [x8, #0x910]
+ 1c61fe4: f9400101     	ldr	x1, [x8]
+ 1c61fe8: 52800062     	mov	w2, #0x3                // =3
+ 1c61fec: 2f00e400     	movi	d0, #0000000000000000
+ 1c61ff0: 9444df98     	bl	0x2d99e50 <_ZN11Reanimation10PlayReanimEPKc14ReanimLoopTypeif@plt>
+ 1c61ff4: f94017e8     	ldr	x8, [sp, #0x28]
+ 1c61ff8: f9408100     	ldr	x0, [x8, #0x100]
+ 1c61ffc: f94027e1     	ldr	x1, [sp, #0x48]
+ 1c62000: 9444d60c     	bl	0x2d97830 <_ZN7LawnApp16ReanimationGetIDEP11Reanimation@plt>
+ 1c62004: f94017e8     	ldr	x8, [sp, #0x28]
+ 1c62008: f9402fe9     	ldr	x9, [sp, #0x58]
+ 1c6200c: b9003d20     	str	w0, [x9, #0x3c]
+ 1c62010: f9402fea     	ldr	x10, [sp, #0x58]
+ 1c62014: 528001c9     	mov	w9, #0xe                // =14
+ 1c62018: b9001549     	str	w9, [x10, #0x14]
+ 1c6201c: f9408100     	ldr	x0, [x8, #0x100]
+ 1c62020: 52800981     	mov	w1, #0x4c               // =76
+ 1c62024: 94445273     	bl	0x2d769f0 <_ZN7LawnApp9PlayFoleyE9FoleyType@plt>
+ 1c62028: 1400007c     	b	0x1c62218 <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x6b0>
+ 1c6202c: b85cc3a8     	ldur	w8, [x29, #-0x34]
+ 1c62030: 71002908     	subs	w8, w8, #0xa
+ 1c62034: 540004e1     	b.ne	0x1c620d0 <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x568>
+ 1c62038: 14000001     	b	0x1c6203c <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x4d4>
+ 1c6203c: f94017e8     	ldr	x8, [sp, #0x28]
+ 1c62040: f9408100     	ldr	x0, [x8, #0x100]
+ 1c62044: f85c03a8     	ldur	x8, [x29, #-0x40]
+ 1c62048: b9401109     	ldr	w9, [x8, #0x10]
+ 1c6204c: 11002929     	add	w9, w9, #0xa
+ 1c62050: 1e220120     	scvtf	s0, w9
+ 1c62054: b9401508     	ldr	w8, [x8, #0x14]
+ 1c62058: 71007908     	subs	w8, w8, #0x1e
+ 1c6205c: 1e220101     	scvtf	s1, w8
+ 1c62060: 2a1f03e1     	mov	w1, wzr
+ 1c62064: 52800d62     	mov	w2, #0x6b               // =107
+ 1c62068: 52800023     	mov	w3, #0x1                // =1
+ 1c6206c: 9444d5ed     	bl	0x2d97820 <_ZN7LawnApp14AddReanimationEffi15ReanimationTypeb@plt>
+ 1c62070: f94017e8     	ldr	x8, [sp, #0x28]
+ 1c62074: f90023e0     	str	x0, [sp, #0x40]
+ 1c62078: f94023ea     	ldr	x10, [sp, #0x40]
+ 1c6207c: 52800069     	mov	w9, #0x3                // =3
+ 1c62080: b9001949     	str	w9, [x10, #0x18]
+ 1c62084: f9408100     	ldr	x0, [x8, #0x100]
+ 1c62088: f94023e1     	ldr	x1, [sp, #0x40]
+ 1c6208c: 9444d5e9     	bl	0x2d97830 <_ZN7LawnApp16ReanimationGetIDEP11Reanimation@plt>
+ 1c62090: f94017e8     	ldr	x8, [sp, #0x28]
+ 1c62094: f9402fe9     	ldr	x9, [sp, #0x58]
+ 1c62098: b9003d20     	str	w0, [x9, #0x3c]
+ 1c6209c: f9402fea     	ldr	x10, [sp, #0x58]
+ 1c620a0: 528001e9     	mov	w9, #0xf                // =15
+ 1c620a4: b9001549     	str	w9, [x10, #0x14]
+ 1c620a8: f9408100     	ldr	x0, [x8, #0x100]
+ 1c620ac: 52800a01     	mov	w1, #0x50               // =80
+ 1c620b0: 94445250     	bl	0x2d769f0 <_ZN7LawnApp9PlayFoleyE9FoleyType@plt>
+ 1c620b4: f94017e8     	ldr	x8, [sp, #0x28]
+ 1c620b8: f9408108     	ldr	x8, [x8, #0x100]
+ 1c620bc: f9461109     	ldr	x9, [x8, #0xc20]
+ 1c620c0: b9459128     	ldr	w8, [x9, #0x590]
+ 1c620c4: 71000508     	subs	w8, w8, #0x1
+ 1c620c8: b9059128     	str	w8, [x9, #0x590]
+ 1c620cc: 14000052     	b	0x1c62214 <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x6ac>
+ 1c620d0: b85cc3a8     	ldur	w8, [x29, #-0x34]
+ 1c620d4: 71002d08     	subs	w8, w8, #0xb
+ 1c620d8: 540004c1     	b.ne	0x1c62170 <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x608>
+ 1c620dc: 14000001     	b	0x1c620e0 <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x578>
+ 1c620e0: f94017e8     	ldr	x8, [sp, #0x28]
+ 1c620e4: f9408100     	ldr	x0, [x8, #0x100]
+ 1c620e8: f85c03a8     	ldur	x8, [x29, #-0x40]
+ 1c620ec: b9401109     	ldr	w9, [x8, #0x10]
+ 1c620f0: 1100d929     	add	w9, w9, #0x36
+ 1c620f4: 1e220120     	scvtf	s0, w9
+ 1c620f8: bd401501     	ldr	s1, [x8, #0x14]
+ 1c620fc: 5e21d821     	scvtf	s1, s1
+ 1c62100: 2a1f03e1     	mov	w1, wzr
+ 1c62104: 52800d22     	mov	w2, #0x69               // =105
+ 1c62108: 52800023     	mov	w3, #0x1                // =1
+ 1c6210c: 9444d5c5     	bl	0x2d97820 <_ZN7LawnApp14AddReanimationEffi15ReanimationTypeb@plt>
+ 1c62110: f94017e8     	ldr	x8, [sp, #0x28]
+ 1c62114: f9001fe0     	str	x0, [sp, #0x38]
+ 1c62118: f9401fea     	ldr	x10, [sp, #0x38]
+ 1c6211c: 52800069     	mov	w9, #0x3                // =3
+ 1c62120: b9001949     	str	w9, [x10, #0x18]
+ 1c62124: f9408100     	ldr	x0, [x8, #0x100]
+ 1c62128: f9401fe1     	ldr	x1, [sp, #0x38]
+ 1c6212c: 9444d5c1     	bl	0x2d97830 <_ZN7LawnApp16ReanimationGetIDEP11Reanimation@plt>
+ 1c62130: f94017e8     	ldr	x8, [sp, #0x28]
+ 1c62134: f9402fe9     	ldr	x9, [sp, #0x58]
+ 1c62138: b9003d20     	str	w0, [x9, #0x3c]
+ 1c6213c: f9402fea     	ldr	x10, [sp, #0x58]
+ 1c62140: 52800209     	mov	w9, #0x10               // =16
+ 1c62144: b9001549     	str	w9, [x10, #0x14]
+ 1c62148: f9408100     	ldr	x0, [x8, #0x100]
+ 1c6214c: 52800a61     	mov	w1, #0x53               // =83
+ 1c62150: 94445228     	bl	0x2d769f0 <_ZN7LawnApp9PlayFoleyE9FoleyType@plt>
+ 1c62154: f94017e8     	ldr	x8, [sp, #0x28]
+ 1c62158: f9408108     	ldr	x8, [x8, #0x100]
+ 1c6215c: f9461109     	ldr	x9, [x8, #0xc20]
+ 1c62160: b9459528     	ldr	w8, [x9, #0x594]
+ 1c62164: 71000508     	subs	w8, w8, #0x1
+ 1c62168: b9059528     	str	w8, [x9, #0x594]
+ 1c6216c: 14000029     	b	0x1c62210 <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x6a8>
+ 1c62170: b85cc3a8     	ldur	w8, [x29, #-0x34]
+ 1c62174: 71003108     	subs	w8, w8, #0xc
+ 1c62178: 540004a1     	b.ne	0x1c6220c <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x6a4>
+ 1c6217c: 14000001     	b	0x1c62180 <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x618>
+ 1c62180: f94017e8     	ldr	x8, [sp, #0x28]
+ 1c62184: f9408100     	ldr	x0, [x8, #0x100]
+ 1c62188: f85c03a8     	ldur	x8, [x29, #-0x40]
+ 1c6218c: b9401109     	ldr	w9, [x8, #0x10]
+ 1c62190: 11005129     	add	w9, w9, #0x14
+ 1c62194: 1e220120     	scvtf	s0, w9
+ 1c62198: b9401508     	ldr	w8, [x8, #0x14]
+ 1c6219c: 11008908     	add	w8, w8, #0x22
+ 1c621a0: 1e220101     	scvtf	s1, w8
+ 1c621a4: 2a1f03e1     	mov	w1, wzr
+ 1c621a8: b9000fe1     	str	w1, [sp, #0xc]
+ 1c621ac: 52800d42     	mov	w2, #0x6a               // =106
+ 1c621b0: 52800023     	mov	w3, #0x1                // =1
+ 1c621b4: 9444d59b     	bl	0x2d97820 <_ZN7LawnApp14AddReanimationEffi15ReanimationTypeb@plt>
+ 1c621b8: b9400fe9     	ldr	w9, [sp, #0xc]
+ 1c621bc: f94017e8     	ldr	x8, [sp, #0x28]
+ 1c621c0: f9001be0     	str	x0, [sp, #0x30]
+ 1c621c4: f9401beb     	ldr	x11, [sp, #0x30]
+ 1c621c8: 52a8340a     	mov	w10, #0x41a00000        // =1101004800
+ 1c621cc: b900096a     	str	w10, [x11, #0x8]
+ 1c621d0: f9401bea     	ldr	x10, [sp, #0x30]
+ 1c621d4: b9001949     	str	w9, [x10, #0x18]
+ 1c621d8: f9408100     	ldr	x0, [x8, #0x100]
+ 1c621dc: f9401be1     	ldr	x1, [sp, #0x30]
+ 1c621e0: 9444d594     	bl	0x2d97830 <_ZN7LawnApp16ReanimationGetIDEP11Reanimation@plt>
+ 1c621e4: f94017e8     	ldr	x8, [sp, #0x28]
+ 1c621e8: f9402fe9     	ldr	x9, [sp, #0x58]
+ 1c621ec: b9003d20     	str	w0, [x9, #0x3c]
+ 1c621f0: f9402fea     	ldr	x10, [sp, #0x58]
+ 1c621f4: 52800229     	mov	w9, #0x11               // =17
+ 1c621f8: b9001549     	str	w9, [x10, #0x14]
+ 1c621fc: f9408100     	ldr	x0, [x8, #0x100]
+ 1c62200: 52800c41     	mov	w1, #0x62               // =98
+ 1c62204: 944451fb     	bl	0x2d769f0 <_ZN7LawnApp9PlayFoleyE9FoleyType@plt>
+ 1c62208: 14000001     	b	0x1c6220c <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x6a4>
+ 1c6220c: 14000001     	b	0x1c62210 <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x6a8>
+ 1c62210: 14000001     	b	0x1c62214 <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x6ac>
+ 1c62214: 14000001     	b	0x1c62218 <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x6b0>
+ 1c62218: 14000001     	b	0x1c6221c <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x6b4>
+ 1c6221c: 14000001     	b	0x1c62220 <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x6b8>
+ 1c62220: f94017e8     	ldr	x8, [sp, #0x28]
+ 1c62224: f9408500     	ldr	x0, [x8, #0x108]
+ 1c62228: 2a1f03e1     	mov	w1, wzr
+ 1c6222c: 9444d519     	bl	0x2d97690 <_ZN5Board11ClearCursorEb@plt>
+ 1c62230: 14000001     	b	0x1c62234 <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x6cc>
+ 1c62234: d53bd048     	mrs	x8, TPIDR_EL0
+ 1c62238: f9401508     	ldr	x8, [x8, #0x28]
+ 1c6223c: f85f83a9     	ldur	x9, [x29, #-0x8]
+ 1c62240: eb090108     	subs	x8, x8, x9
+ 1c62244: 540000a1     	b.ne	0x1c62258 <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x6f0>
+ 1c62248: 14000001     	b	0x1c6224c <ZenGarden::MouseDownWithFeedingTool(int, int, CursorType)+0x6e4>
+ 1c6224c: a94b7bfd     	ldp	x29, x30, [sp, #0xb0]
+ 1c62250: 910303ff     	add	sp, sp, #0xc0
+ 1c62254: d65f03c0     	ret
+ 1c62258: 9444234a     	bl	0x2d6af80 <__stack_chk_fail@plt>

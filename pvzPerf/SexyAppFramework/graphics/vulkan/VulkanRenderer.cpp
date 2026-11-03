@@ -743,10 +743,9 @@ struct VulkanRenderer::Impl {
     void CheckPresentEncoding() const {
         if (hdr) {
             hdr->Validate();
-            if (window.swapchainColorSpace!=VK_COLOR_SPACE_HDR10_ST2084_EXT ||
-                (window.swapchainFormat!=VK_FORMAT_A2B10G10R10_UNORM_PACK32 &&
-                 window.swapchainFormat!=VK_FORMAT_A2R10G10B10_UNORM_PACK32))
-                throw std::runtime_error("HDR renderer requires a 10-bit HDR10 ST2084 surface");
+            if (window.swapchainColorSpace!=VK_COLOR_SPACE_EXTENDED_SRGB_LINEAR_EXT ||
+                window.swapchainFormat!=VK_FORMAT_R16G16B16A16_SFLOAT)
+                throw std::runtime_error("HDR renderer requires floating-point linear scRGB");
         } else if (window.swapchainColorSpace!=VK_COLOR_SPACE_SRGB_NONLINEAR_KHR ||
                    (window.swapchainFormat!=VK_FORMAT_B8G8R8A8_UNORM &&
                     window.swapchainFormat!=VK_FORMAT_R8G8B8A8_UNORM))
@@ -1251,7 +1250,7 @@ void VulkanRenderer::Impl::Initialize(const std::string& vsPath, const std::stri
     fontKernel.shaderPath=(std::filesystem::path(psPath).parent_path()/"game_font_cs.spv").string();
     colorKernel.shaderPath=(std::filesystem::path(psPath).parent_path()/"game_color_cs.spv").string();
     alphaKernel.shaderPath=(std::filesystem::path(psPath).parent_path()/"game_alpha_cs.spv").string();
-    if (hdr) createShader((std::filesystem::path(psPath).parent_path()/"game_hdr_ps.spv").string(),hdrFragmentShader);
+    if (hdr) createShader((std::filesystem::path(psPath).parent_path()/"game_hdr_linear_ps.spv").string(),hdrFragmentShader);
     VkCommandPoolCreateInfo pool{VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO};
     pool.flags = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
     pool.queueFamilyIndex = window.graphicsFamily;

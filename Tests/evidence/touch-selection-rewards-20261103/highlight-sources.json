@@ -1,0 +1,21 @@
+{
+  "wp": [
+    {
+      "path": "Lawn/Board.cs",
+      "sha256": "53acb118d5575d476eed1892a306ee1ce888f887e83ce12d1fbc8eb1065d2755",
+      "url": "https://github.com/IsraelDXPP/PvZ-Windows-Phone-decomp/blob/26cbb77df48c674dca6cb6b1fa9ad6783903a5c4/Lawn/Board.cs"
+    },
+    {
+      "path": "Lawn/CursorObject.cs",
+      "sha256": "4f2bdf438cb86dcbb56762b4531fe8a0c813f28026be41e9841bdd93ac57d797",
+      "url": "https://github.com/IsraelDXPP/PvZ-Windows-Phone-decomp/blob/26cbb77df48c674dca6cb6b1fa9ad6783903a5c4/Lawn/CursorObject.cs"
+    }
+  ],
+  "free": {
+    "version": "3.18.0",
+    "native_sha256": "079a0c71a67ae61fa98cd797dbb527e1c16fa0e409fe7f980c459afe1488dff5",
+    "function": "Board::DrawCelHighlight(Sexy::Graphics*, int, int, bool)",
+    "range": "0x1a0eed8..0x1a0f52c",
+    "evidence": "free-DrawCelHighlight.asm.txt"
+  }
+}

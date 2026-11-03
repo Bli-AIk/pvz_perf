@@ -4,6 +4,12 @@
 
 #include "LawnStrings.h"
 
+#if defined(__ANDROID__)
+const std::string LawnStrings::OPTIONS_DISPLAY_MODE = "HDR (disabled)";
+#else
+const std::string LawnStrings::OPTIONS_DISPLAY_MODE = "Full Screen";
+#endif
+
 const LawnStrings gStr =
 {
 	"Peashooter",  // PEASHOOTER

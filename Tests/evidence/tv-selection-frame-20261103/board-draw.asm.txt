@@ -1,0 +1,1932 @@
+
+C:\Users\ADMINI~1\AppData\Local\Temp/pvz-tv-draw-order-20261104/libGameMain.so:	file format elf32-littlearm
+
+Disassembly of section .text:
+
+00166ef4 <Board::DrawUITop(Sexy::Graphics*)>:
+  166ef4:      	push.w	{r4, r5, r6, r7, r8, r9, lr}
+  166ef8:      	sub	sp, #0xa4
+  166efa:      	ldr	r6, [pc, #0x2e0]        @ 0x1671dc <Board::DrawUITop(Sexy::Graphics*)+0x2e8>
+  166efc:      	mov	r5, r1
+  166efe:      	mov	r4, r0
+  166f00:      	add	r6, pc
+  166f02:      	bl	0x1601e4 <Board::StageHasFog()> @ imm = #-0x6d22
+  166f06:      	cmp	r0, #0x0
+  166f08:      	bne.w	0x167082 <Board::DrawUITop(Sexy::Graphics*)+0x18e> @ imm = #0x176
+  166f0c:      	ldr.w	r0, [r4, #0x114]
+  166f10:      	bl	0x2acd44 <Sexy::GamepadApp::HasGamepad()> @ imm = #0x145e30
+  166f14:      	cbnz	r0, 0x166f2a <Board::DrawUITop(Sexy::Graphics*)+0x36> @ imm = #0x12
+  166f16:      	ldr.w	r3, [r4, #0x114]
+  166f1a:      	ldrb.w	r2, [r3, #0x83d]
+  166f1e:      	cmp	r2, #0x0
+  166f20:      	beq	0x166fe8 <Board::DrawUITop(Sexy::Graphics*)+0xf4> @ imm = #0xc4
+  166f22:      	ldrb.w	r3, [r3, #0x899]
+  166f26:      	cmp	r3, #0x0
+  166f28:      	beq	0x166fe8 <Board::DrawUITop(Sexy::Graphics*)+0xf4> @ imm = #0xbc
+  166f2a:      	add.w	r3, r4, #0x5800
+  166f2e:      	ldr	r3, [r3, #0x68]
+  166f30:      	cmp	r3, #0x0
+  166f32:      	ble	0x166f58 <Board::DrawUITop(Sexy::Graphics*)+0x64> @ imm = #0x22
+  166f34:      	movs	r3, #0xd2
+  166f36:      	movs	r1, #0xc8
+  166f38:      	add	r7, sp, #0x10
+  166f3a:      	mov	r2, r1
+  166f3c:      	str	r3, [sp]
+  166f3e:      	mov	r0, r7
+  166f40:      	mov	r3, r1
+  166f42:      	bl	0x30b918 <Sexy::Color::Color(int, int, int, int)> @ imm = #0x1a49d2
+  166f46:      	mov	r0, r5
+  166f48:      	mov	r1, r7
+  166f4a:      	bl	0x30bf74 <Sexy::Graphics::SetColor(Sexy::Color const&)> @ imm = #0x1a5026
+  166f4e:      	ldr	r3, [pc, #0x290]        @ 0x1671e0 <Board::DrawUITop(Sexy::Graphics*)+0x2ec>
+  166f50:      	mov	r0, r5
+  166f52:      	ldr	r1, [r6, r3]
+  166f54:      	bl	0x30c324 <Sexy::Graphics::FillRect(Sexy::TRect<int> const&)> @ imm = #0x1a53cc
+  166f58:      	ldr.w	r0, [r4, #0x114]
+  166f5c:      	ldr.w	r3, [r0, #0x904]
+  166f60:      	cmp	r3, #0x3
+  166f62:      	ldr.w	r3, [r0, #0x900]
+  166f66:      	beq	0x166ffa <Board::DrawUITop(Sexy::Graphics*)+0x106> @ imm = #0x90
+  166f68:      	cmp	r3, #0x33
+  166f6a:      	beq	0x167000 <Board::DrawUITop(Sexy::Graphics*)+0x10c> @ imm = #0x92
+  166f6c:      	cmp	r3, #0x4b
+  166f6e:      	beq.w	0x167108 <Board::DrawUITop(Sexy::Graphics*)+0x214> @ imm = #0x196
+  166f72:      	sub.w	r2, r3, #0x48
+  166f76:      	cmp	r2, #0x1
+  166f78:      	bls	0x167028 <Board::DrawUITop(Sexy::Graphics*)+0x134> @ imm = #0xac
+  166f7a:      	cmp	r3, #0x49
+  166f7c:      	beq	0x16704e <Board::DrawUITop(Sexy::Graphics*)+0x15a> @ imm = #0xce
+  166f7e:      	cmp	r3, #0x4c
+  166f80:      	beq	0x167064 <Board::DrawUITop(Sexy::Graphics*)+0x170> @ imm = #0xe0
+  166f82:      	ldr	r3, [r0]
+  166f84:      	movs	r1, #0x47
+  166f86:      	ldr.w	r3, [r3, #0x19c]
+  166f8a:      	blx	r3
+  166f8c:      	cmp	r0, #0x0
+  166f8e:      	beq.w	0x16714c <Board::DrawUITop(Sexy::Graphics*)+0x258> @ imm = #0x1ba
+  166f92:      	ldr.w	r0, [r4, #0x208]
+  166f96:      	ldr.w	r3, [r0, #0x9c]
+  166f9a:      	cmp	r3, #0x10
+  166f9c:      	beq	0x166fa4 <Board::DrawUITop(Sexy::Graphics*)+0xb0> @ imm = #0x4
+  166f9e:      	mov	r1, r5
+  166fa0:      	bl	0x1a66f4 <MessageWidget::Draw(Sexy::Graphics*)> @ imm = #0x3f750
+  166fa4:      	ldr.w	r3, [r4, #0x114]
+  166fa8:      	ldr.w	r3, [r3, #0x900]
+  166fac:      	cmp	r3, #0x48
+  166fae:      	beq	0x166fba <Board::DrawUITop(Sexy::Graphics*)+0xc6> @ imm = #0x8
+  166fb0:      	ldr.w	r0, [r4, #0x248]
+  166fb4:      	mov	r1, r5
+  166fb6:      	bl	0x1eadb0 <ToolTipWidget::Draw(Sexy::Graphics*)> @ imm = #0x83df6
+  166fba:      	add.w	r7, r4, #0x5880
+  166fbe:      	ldrb.w	r3, [r7, #0x5c]
+  166fc2:      	cbz	r3, 0x166fd2 <Board::DrawUITop(Sexy::Graphics*)+0xde> @ imm = #0xc
+  166fc4:      	ldr.w	r0, [r4, #0x114]
+  166fc8:      	ldr.w	r8, [r0, #0x900]
+  166fcc:      	cmp.w	r8, #0x0
+  166fd0:      	beq	0x16708c <Board::DrawUITop(Sexy::Graphics*)+0x198> @ imm = #0xb8
+  166fd2:      	mov	r0, r4
+  166fd4:      	mov	r1, r5
+  166fd6:      	bl	0x15b384 <Board::DrawDebugText(Sexy::Graphics*)> @ imm = #-0xbc56
+  166fda:      	mov	r0, r4
+  166fdc:      	mov	r1, r5
+  166fde:      	bl	0x1589b8 <Board::DrawDebugObjectRects(Sexy::Graphics*)> @ imm = #-0xe62a
+  166fe2:      	add	sp, #0xa4
+  166fe4:      	pop.w	{r4, r5, r6, r7, r8, r9, pc}
+  166fe8:      	ldr.w	r3, [r4, #0x230]
+  166fec:      	ldr	r3, [r3, #0x60]
+  166fee:      	cmp	r3, #0x6
+  166ff0:      	itt	eq
+  166ff2:      	moveq	r3, #0xa0
+  166ff4:      	moveq	r1, #0x0
+  166ff6:      	beq	0x166f38 <Board::DrawUITop(Sexy::Graphics*)+0x44> @ imm = #-0xc2
+  166ff8:      	b	0x166f2a <Board::DrawUITop(Sexy::Graphics*)+0x36> @ imm = #-0xd2
+  166ffa:      	cmp	r3, #0x4b
+  166ffc:      	beq.w	0x167108 <Board::DrawUITop(Sexy::Graphics*)+0x214> @ imm = #0x108
+  167000:      	movw	r3, #0x23f
+  167004:      	mov.w	r2, #0x258
+  167008:      	mov	r0, r4
+  16700a:      	mov	r1, r5
+  16700c:      	bl	0x1599b8 <Board::DrawProgressMeter(Sexy::Graphics*, int, int)> @ imm = #-0xd658
+  167010:      	mov	r0, r4
+  167012:      	mov	r1, r5
+  167014:      	bl	0x15d5dc <Board::DrawLevel(Sexy::Graphics*)> @ imm = #-0x9a3c
+  167018:      	ldr.w	r0, [r4, #0x114]
+  16701c:      	ldr.w	r3, [r0, #0x900]
+  167020:      	sub.w	r2, r3, #0x48
+  167024:      	cmp	r2, #0x1
+  167026:      	bhi	0x166f7a <Board::DrawUITop(Sexy::Graphics*)+0x86> @ imm = #-0xb0
+  167028:      	ldr.w	r2, [r4, #0x250]
+  16702c:      	ldrb.w	r2, [r2, #0x40]
+  167030:      	cmp	r2, #0x0
+  167032:      	bne	0x167122 <Board::DrawUITop(Sexy::Graphics*)+0x22e> @ imm = #0xec
+  167034:      	cmp	r3, #0x48
+  167036:      	bne	0x166f7a <Board::DrawUITop(Sexy::Graphics*)+0x86> @ imm = #-0xc0
+  167038:      	ldr.w	r0, [r4, #0x250]
+  16703c:      	mov	r1, r5
+  16703e:      	bl	0x17e2b8 <CutScene::DrawUpsell(Sexy::Graphics*)> @ imm = #0x17276
+  167042:      	ldr.w	r0, [r4, #0x114]
+  167046:      	ldr.w	r3, [r0, #0x900]
+  16704a:      	cmp	r3, #0x49
+  16704c:      	bne	0x166f7e <Board::DrawUITop(Sexy::Graphics*)+0x8a> @ imm = #-0xd2
+  16704e:      	ldr.w	r0, [r4, #0x250]
+  167052:      	mov	r1, r5
+  167054:      	bl	0x17b190 <CutScene::DrawIntro(Sexy::Graphics*)> @ imm = #0x14138
+  167058:      	ldr.w	r0, [r4, #0x114]
+  16705c:      	ldr.w	r3, [r0, #0x900]
+  167060:      	cmp	r3, #0x4c
+  167062:      	bne	0x166f82 <Board::DrawUITop(Sexy::Graphics*)+0x8e> @ imm = #-0xe4
+  167064:      	ldr.w	r3, [r0, #0x904]
+  167068:      	cmp	r3, #0x8
+  16706a:      	beq.w	0x1671b4 <Board::DrawUITop(Sexy::Graphics*)+0x2c0> @ imm = #0x146
+  16706e:      	cmp	r3, #0x4
+  167070:      	bne	0x166f82 <Board::DrawUITop(Sexy::Graphics*)+0x8e> @ imm = #-0xf2
+  167072:      	ldr.w	r0, [r4, #0x250]
+  167076:      	mov	r1, r5
+  167078:      	bl	0x17b6ec <CutScene::DrawZombiesWonMP(Sexy::Graphics*)> @ imm = #0x14670
+  16707c:      	ldr.w	r0, [r4, #0x114]
+  167080:      	b	0x166f82 <Board::DrawUITop(Sexy::Graphics*)+0x8e> @ imm = #-0x102
+  167082:      	mov	r0, r4
+  167084:      	mov	r1, r5
+  167086:      	bl	0x155280 <Board::DrawTopRightUI(Sexy::Graphics*)> @ imm = #-0x11e0a
+  16708a:      	b	0x166f0c <Board::DrawUITop(Sexy::Graphics*)+0x18> @ imm = #-0x182
+  16708c:      	bl	0x2acd44 <Sexy::GamepadApp::HasGamepad()> @ imm = #0x145cb4
+  167090:      	cmp	r0, #0x0
+  167092:      	beq	0x166fd2 <Board::DrawUITop(Sexy::Graphics*)+0xde> @ imm = #-0xc4
+  167094:      	ldr.w	r3, [r4, #0x114]
+  167098:      	add.w	r1, r7, #0x64
+  16709c:      	vldr	s11, [pc, #304]         @ 0x1671d0 <Board::DrawUITop(Sexy::Graphics*)+0x2dc>
+  1670a0:      	mov.w	r9, #0x12c
+  1670a4:      	vldr	s14, [pc, #300]         @ 0x1671d4 <Board::DrawUITop(Sexy::Graphics*)+0x2e0>
+  1670a8:      	mov.w	r12, #0x96
+  1670ac:      	ldr.w	r3, [r3, #0x2e4]
+  1670b0:      	mov.w	lr, #0x5
+  1670b4:      	vldr	s12, [r5, #8]
+  1670b8:      	mov	r0, r5
+  1670ba:      	vldr	s15, [r5, #12]
+  1670be:      	add	r2, sp, #0x10
+  1670c0:      	ldrb.w	r7, [r3, #0x60]
+  1670c4:      	vldr	s13, [pc, #272]         @ 0x1671d8 <Board::DrawUITop(Sexy::Graphics*)+0x2e4>
+  1670c8:      	ldr	r3, [pc, #0x118]        @ 0x1671e4 <Board::DrawUITop(Sexy::Graphics*)+0x2f0>
+  1670ca:      	cmp	r7, #0x0
+  1670cc:      	ldr	r7, [pc, #0x118]        @ 0x1671e8 <Board::DrawUITop(Sexy::Graphics*)+0x2f4>
+  1670ce:      	str.w	r9, [sp, #0x18]
+  1670d2:      	it	ne
+  1670d4:      	vmovne.f32	s14, s11
+  1670d8:      	vsub.f32	s15, s13, s15
+  1670dc:      	vsub.f32	s14, s14, s12
+  1670e0:      	str.w	r12, [sp, #0x1c]
+  1670e4:      	vcvt.s32.f32	s15, s15
+  1670e8:      	vcvt.s32.f32	s14, s14
+  1670ec:      	vstr	s15, [sp, #20]
+  1670f0:      	vstr	s14, [sp, #16]
+  1670f4:      	ldr	r3, [r6, r3]
+  1670f6:      	ldr	r6, [r6, r7]
+  1670f8:      	str.w	r8, [sp, #0x8]
+  1670fc:      	ldr	r3, [r3]
+  1670fe:      	stm.w	sp, {r6, lr}
+  167102:      	bl	0x1fdc24 <TodDrawStringWrapped(Sexy::Graphics*, std::string const&, Sexy::TRect<int> const&, Sexy::Font*, Sexy::Color const&, DrawStringJustification, bool)> @ imm = #0x96b1e
+  167106:      	b	0x166fd2 <Board::DrawUITop(Sexy::Graphics*)+0xde> @ imm = #-0x138
+  167108:      	ldr	r3, [pc, #0xe0]         @ 0x1671ec <Board::DrawUITop(Sexy::Graphics*)+0x2f8>
+  16710a:      	ldr	r3, [r6, r3]
+  16710c:      	ldr	r0, [r3]
+  16710e:      	ldr	r3, [r0]
+  167110:      	ldr	r3, [r3, #0x10]
+  167112:      	blx	r3
+  167114:      	add.w	r0, r0, r0, lsr #31
+  167118:      	movs	r3, #0x40
+  16711a:      	asrs	r2, r0, #0x1
+  16711c:      	rsb.w	r2, r2, #0x190
+  167120:      	b	0x167008 <Board::DrawUITop(Sexy::Graphics*)+0x114> @ imm = #-0x11c
+  167122:      	movs	r1, #0x0
+  167124:      	add	r7, sp, #0x10
+  167126:      	mov	r2, r1
+  167128:      	mov	r3, r1
+  16712a:      	mov	r0, r7
+  16712c:      	bl	0x30b90c <Sexy::Color::Color(int, int, int)> @ imm = #0x1a47dc
+  167130:      	mov	r0, r5
+  167132:      	mov	r1, r7
+  167134:      	bl	0x30bf74 <Sexy::Graphics::SetColor(Sexy::Color const&)> @ imm = #0x1a4e3c
+  167138:      	ldr	r3, [pc, #0xa4]         @ 0x1671e0 <Board::DrawUITop(Sexy::Graphics*)+0x2ec>
+  16713a:      	mov	r0, r5
+  16713c:      	ldr	r1, [r6, r3]
+  16713e:      	bl	0x30c324 <Sexy::Graphics::FillRect(Sexy::TRect<int> const&)> @ imm = #0x1a51e2
+  167142:      	ldr.w	r0, [r4, #0x114]
+  167146:      	ldr.w	r3, [r0, #0x900]
+  16714a:      	b	0x167034 <Board::DrawUITop(Sexy::Graphics*)+0x140> @ imm = #-0x11a
+  16714c:      	ldr.w	r3, [r4, #0x114]
+  167150:      	ldr.w	r2, [r3, #0x904]
+  167154:      	cmp	r2, #0x2
+  167156:      	beq	0x167170 <Board::DrawUITop(Sexy::Graphics*)+0x27c> @ imm = #0x16
+  167158:      	ldr.w	r3, [r3, #0x900]
+  16715c:      	cmp	r3, #0x2c
+  16715e:      	beq	0x167170 <Board::DrawUITop(Sexy::Graphics*)+0x27c> @ imm = #0xe
+  167160:      	cmp	r3, #0x33
+  167162:      	beq	0x167170 <Board::DrawUITop(Sexy::Graphics*)+0x27c> @ imm = #0xa
+  167164:      	mov	r0, r4
+  167166:      	bl	0x155800 <Board::IsScaryPotterDaveTalking()> @ imm = #-0x1196a
+  16716a:      	cmp	r0, #0x0
+  16716c:      	beq.w	0x166f92 <Board::DrawUITop(Sexy::Graphics*)+0x9e> @ imm = #-0x1de
+  167170:      	add	r7, sp, #0x10
+  167172:      	mov	r1, r5
+  167174:      	mov	r0, r7
+  167176:      	bl	0x30ffb0 <Sexy::Graphics::Graphics(Sexy::Graphics const&)> @ imm = #0x1a8e36
+  16717a:      	vldr	s11, [r4, #52]
+  16717e:      	mov	r1, r7
+  167180:      	vldr	s12, [sp, #24]
+  167184:      	vldr	s13, [sp, #28]
+  167188:      	ldr.w	r0, [r4, #0x114]
+  16718c:      	vcvt.f32.s32	s14, s11
+  167190:      	vldr	s11, [r4, #56]
+  167194:      	vsub.f32	s14, s12, s14
+  167198:      	vcvt.f32.s32	s15, s11
+  16719c:      	vstr	s14, [sp, #24]
+  1671a0:      	vsub.f32	s15, s13, s15
+  1671a4:      	vstr	s15, [sp, #28]
+  1671a8:      	bl	0x2b4438 <LawnApp::DrawCrazyDave(Sexy::Graphics*)> @ imm = #0x14d28c
+  1671ac:      	mov	r0, r7
+  1671ae:      	bl	0x30ff14 <Sexy::Graphics::~Graphics()> @ imm = #0x1a8d62
+  1671b2:      	b	0x166f92 <Board::DrawUITop(Sexy::Graphics*)+0x9e> @ imm = #-0x224
+  1671b4:      	ldr.w	r0, [r4, #0x250]
+  1671b8:      	mov	r1, r5
+  1671ba:      	bl	0x17b6e4 <CutScene::DrawPlantsWonMP(Sexy::Graphics*)> @ imm = #0x14526
+  1671be:      	ldr.w	r0, [r4, #0x114]
+  1671c2:      	b	0x166f82 <Board::DrawUITop(Sexy::Graphics*)+0x8e> @ imm = #-0x244
+  1671c4:      	mov	r0, r7
+  1671c6:      	bl	0x30ff14 <Sexy::Graphics::~Graphics()> @ imm = #0x1a8d4a
+  1671ca:      	blx	0x2c8aa8 <__cxa_end_cleanup> @ imm = #0x1618dc
+  1671ce:      	nop
+  1671d0:      	strh	r0, [r0]
+  1671d2:      	add	r7, r9
+  1671d4:      	strh	r0, [r0]
+  1671d6:      	add	r5, r3
+  1671d8:      	movs	r0, r0
+  1671da:      	cmp	r6, r2
+  1671dc:      	ldrh	r4, [r2, #0xc]
+  1671de:      	lsls	r2, r2, #0x1
+  1671e0:      	ble	0x16716c <Board::DrawUITop(Sexy::Graphics*)+0x278> @ imm = #-0x78
+  1671e2:      	<unknown>
+  1671e6:      	<unknown>
+  1671ea:      	<unknown>
+  1671ee:      	vtbl.8	d30, {d15, d16}, d29
+
+001671f0 <Board::DrawGameObjects(Sexy::Graphics*)>:
+  1671f0:      	push.w	{r4, r5, r6, r7, r8, r9, r10, r11, lr}
+  1671f4:      	add.w	r3, r0, #0x8
+  1671f8:      	mov	r5, r0
+  1671fa:      	mov	r7, r0
+  1671fc:      	mov	r9, r1
+  1671fe:      	ldr.w	r0, [pc, #0xa10]        @ 0x167c10 <Board::DrawGameObjects(Sexy::Graphics*)+0xa20>
+  167202:      	ldr.w	lr, [pc, #0xa10]        @ 0x167c14 <Board::DrawGameObjects(Sexy::Graphics*)+0xa24>
+  167206:      	vpush	{d8}
+  16720a:      	sub.w	sp, sp, #0x6000
+  16720e:      	sub	sp, #0x24
+  167210:      	add	r0, pc
+  167212:      	str	r3, [sp, #0x8]
+  167214:      	add	lr, pc
+  167216:      	movs	r3, #0x0
+  167218:      	add.w	r8, sp, #0x20
+  16721c:      	str.w	lr, [sp, #0xc]
+  167220:      	add	r6, sp, #0x14
+  167222:      	str	r3, [r8, #-12]
+  167226:      	add	r4, sp, #0x18
+  167228:      	bl	0x2049bc <TodHesitationTrace(char const*, ...)> @ imm = #0x9d790
+  16722c:      	ldr.w	r10, [sp, #0x8]
+  167230:      	ldr.w	r3, [r7, #0x230]
+  167234:      	ldr.w	r2, [r3, #0x98]
+  167238:      	adds	r2, #0x1
+  16723a:      	beq	0x1672dc <Board::DrawGameObjects(Sexy::Graphics*)+0xec> @ imm = #0x9e
+  16723c:      	ldr.w	r2, [r5, #0x114]
+  167240:      	ldr.w	r2, [r2, #0x904]
+  167244:      	cmp	r2, #0x2
+  167246:      	it	ne
+  167248:      	cmpne	r2, #0x8
+  16724a:      	beq.w	0x167658 <Board::DrawGameObjects(Sexy::Graphics*)+0x468> @ imm = #0x40a
+  16724e:      	cmp	r2, #0x4
+  167250:      	beq.w	0x167658 <Board::DrawGameObjects(Sexy::Graphics*)+0x468> @ imm = #0x404
+  167254:      	adds	r3, #0x4
+  167256:      	movs	r2, #0x0
+  167258:      	mov	r0, r8
+  16725a:      	mov	r1, r6
+  16725c:      	bl	0x155044 <AddGameObjectRenderItem(RenderItem*, int&, RenderObjectType, GameObject*)> @ imm = #-0x1221c
+  167260:      	ldr	r3, [r6]
+  167262:      	mov	r0, r4
+  167264:      	ldr.w	r1, [r7, #0x230]
+  167268:      	subs	r3, #0x1
+  16726a:      	add.w	r3, r3, r3, lsl #1
+  16726e:      	add.w	r11, r8, r3, lsl #2
+  167272:      	bl	0x1c0870 <BaseGamepadControls::GetCursorGridPosition()> @ imm = #0x595fa
+  167276:      	vldr	s15, [r4, #4]
+  16727a:      	movw	r0, #0x9bb0
+  16727e:      	movt	r0, #0x4
+  167282:      	mvn	r2, #0x9
+  167286:      	vcvt.s32.f32	s15, s15
+  16728a:      	vmov	r1, s15
+  16728e:      	bl	0x15a798 <Board::MakeRenderOrder(RenderLayer, int, int)> @ imm = #-0xcafa
+  167292:      	ldr.w	r3, [r7, #0x230]
+  167296:      	str.w	r0, [r11, #0x4]
+  16729a:      	cbz	r3, 0x16729e <Board::DrawGameObjects(Sexy::Graphics*)+0xae> @ imm = #0x0
+  16729c:      	adds	r3, #0x4
+  16729e:      	movs	r2, #0x1
+  1672a0:      	mov	r0, r8
+  1672a2:      	mov	r1, r6
+  1672a4:      	bl	0x155044 <AddGameObjectRenderItem(RenderItem*, int&, RenderObjectType, GameObject*)> @ imm = #-0x12264
+  1672a8:      	ldr	r3, [r6]
+  1672aa:      	mov	r0, r4
+  1672ac:      	ldr.w	r1, [r7, #0x230]
+  1672b0:      	subs	r3, #0x1
+  1672b2:      	add.w	r3, r3, r3, lsl #1
+  1672b6:      	add.w	r11, r8, r3, lsl #2
+  1672ba:      	bl	0x1c0870 <BaseGamepadControls::GetCursorGridPosition()> @ imm = #0x595b2
+  1672be:      	vldr	s15, [r4, #4]
+  1672c2:      	movw	r0, #0x9f98
+  1672c6:      	movt	r0, #0x4
+  1672ca:      	movs	r2, #0x64
+  1672cc:      	vcvt.s32.f32	s15, s15
+  1672d0:      	vmov	r1, s15
+  1672d4:      	bl	0x15a798 <Board::MakeRenderOrder(RenderLayer, int, int)> @ imm = #-0xcb40
+  1672d8:      	str.w	r0, [r11, #0x4]
+  1672dc:      	adds	r7, #0x4
+  1672de:      	cmp	r7, r10
+  1672e0:      	bne	0x167230 <Board::DrawGameObjects(Sexy::Graphics*)+0x40> @ imm = #-0xb4
+  1672e2:      	movs	r3, #0x0
+  1672e4:      	mov.w	r11, #0x8
+  1672e8:      	str	r3, [r8, #-8]
+  1672ec:      	mov.w	r10, #0x9
+  1672f0:      	b	0x1672fe <Board::DrawGameObjects(Sexy::Graphics*)+0x10e> @ imm = #0xa
+  1672f2:      	ldr	r3, [r4]
+  1672f4:      	ldr.w	r7, [r3, #0x144]
+  1672f8:      	cmp	r7, #0x0
+  1672fa:      	beq.w	0x1675c4 <Board::DrawGameObjects(Sexy::Graphics*)+0x3d4> @ imm = #0x2c6
+  1672fe:      	mov	r0, r5
+  167300:      	mov	r1, r4
+  167302:      	bl	0x157210 <Board::IteratePlants(Plant*&)> @ imm = #-0x100f6
+  167306:      	cmp	r0, #0x0
+  167308:      	bne	0x1672f2 <Board::DrawGameObjects(Sexy::Graphics*)+0x102> @ imm = #-0x1a
+  16730a:      	str	r0, [r4]
+  16730c:      	b	0x167318 <Board::DrawGameObjects(Sexy::Graphics*)+0x128> @ imm = #0x8
+  16730e:      	mov	r1, r6
+  167310:      	movs	r2, #0x2
+  167312:      	ldr	r3, [r4]
+  167314:      	bl	0x155044 <AddGameObjectRenderItem(RenderItem*, int&, RenderObjectType, GameObject*)> @ imm = #-0x122d4
+  167318:      	mov	r0, r5
+  16731a:      	mov	r1, r4
+  16731c:      	bl	0x1584b8 <Board::IterateCoins(Coin*&)> @ imm = #-0xee68
+  167320:      	mov	r3, r0
+  167322:      	mov	r0, r8
+  167324:      	cmp	r3, #0x0
+  167326:      	bne	0x16730e <Board::DrawGameObjects(Sexy::Graphics*)+0x11e> @ imm = #-0x1c
+  167328:      	mov.w	r11, #0x5
+  16732c:      	movw	r10, #0x2710
+  167330:      	str	r3, [r4]
+  167332:      	str	r5, [sp, #0x4]
+  167334:      	mov	r1, r4
+  167336:      	ldr	r0, [sp, #0x4]
+  167338:      	bl	0x156e24 <Board::IterateZombies(Zombie*&)> @ imm = #-0x10518
+  16733c:      	mov	r3, r0
+  16733e:      	mov	r1, r6
+  167340:      	mov	r0, r8
+  167342:      	movs	r2, #0x4
+  167344:      	cmp	r3, #0x0
+  167346:      	beq	0x1673ca <Board::DrawGameObjects(Sexy::Graphics*)+0x1da> @ imm = #0x80
+  167348:      	ldr	r7, [r4]
+  16734a:      	ldr	r5, [r7, #0x34]
+  16734c:      	mov	r3, r7
+  16734e:      	cmp	r5, #0x19
+  167350:      	beq	0x1673be <Board::DrawGameObjects(Sexy::Graphics*)+0x1ce> @ imm = #0x6a
+  167352:      	bl	0x155044 <AddGameObjectRenderItem(RenderItem*, int&, RenderObjectType, GameObject*)> @ imm = #-0x12312
+  167356:      	ldr	r0, [r4]
+  167358:      	bl	0x1acfe0 <Zombie::HasShadow()> @ imm = #0x45c84
+  16735c:      	cbnz	r0, 0x167394 <Board::DrawGameObjects(Sexy::Graphics*)+0x1a4> @ imm = #0x34
+  16735e:      	ldr	r3, [r4]
+  167360:      	ldr	r2, [r3, #0x34]
+  167362:      	cmp	r2, #0x14
+  167364:      	bne	0x167334 <Board::DrawGameObjects(Sexy::Graphics*)+0x144> @ imm = #-0x34
+  167366:      	ldr	r7, [r6]
+  167368:      	movw	r0, #0xa768
+  16736c:      	ldr	r1, [r3, #0x2c]
+  16736e:      	movs	r2, #0x1
+  167370:      	movs	r3, #0x6
+  167372:      	movt	r0, #0x4
+  167376:      	add.w	r7, r7, r7, lsl #1
+  16737a:      	str.w	r3, [r8, r7, lsl #2]
+  16737e:      	add.w	r7, r8, r7, lsl #2
+  167382:      	bl	0x15a798 <Board::MakeRenderOrder(RenderLayer, int, int)> @ imm = #-0xcbee
+  167386:      	ldr	r2, [r6]
+  167388:      	ldr	r3, [r4]
+  16738a:      	str	r0, [r7, #0x4]
+  16738c:      	adds	r2, #0x1
+  16738e:      	str	r3, [r7, #0x8]
+  167390:      	str	r2, [r6]
+  167392:      	b	0x167334 <Board::DrawGameObjects(Sexy::Graphics*)+0x144> @ imm = #-0x62
+  167394:      	ldr	r2, [r4]
+  167396:      	ldr	r1, [r6]
+  167398:      	ldr	r0, [r2, #0x2c]
+  16739a:      	mov	r3, r2
+  16739c:      	add.w	r7, r1, r1, lsl #1
+  1673a0:      	adds	r1, #0x1
+  1673a2:      	str	r1, [r6]
+  1673a4:      	mul	r0, r10, r0
+  1673a8:      	add.w	r1, r8, r7, lsl #2
+  1673ac:      	str.w	r11, [r8, r7, lsl #2]
+  1673b0:      	str	r2, [r1, #0x8]
+  1673b2:      	add.w	r0, r0, #0x30c00
+  1673b6:      	addw	r0, r0, #0x143
+  1673ba:      	str	r0, [r1, #0x4]
+  1673bc:      	b	0x167360 <Board::DrawGameObjects(Sexy::Graphics*)+0x170> @ imm = #-0x60
+  1673be:      	ldr	r0, [sp, #0x4]
+  1673c0:      	mov	r1, r8
+  1673c2:      	mov	r2, r6
+  1673c4:      	bl	0x15a7a4 <Board::AddBossRenderItem(RenderItem*, int&, Zombie*)> @ imm = #-0xcc24
+  1673c8:      	b	0x167334 <Board::DrawGameObjects(Sexy::Graphics*)+0x144> @ imm = #-0x98
+  1673ca:      	ldr	r5, [sp, #0x4]
+  1673cc:      	mov.w	r10, #0x1d
+  1673d0:      	str	r3, [r4]
+  1673d2:      	movw	r7, #0x2710
+  1673d6:      	b	0x167404 <Board::DrawGameObjects(Sexy::Graphics*)+0x214> @ imm = #0x2a
+  1673d8:      	ldr	r3, [r4]
+  1673da:      	bl	0x155044 <AddGameObjectRenderItem(RenderItem*, int&, RenderObjectType, GameObject*)> @ imm = #-0x1239a
+  1673de:      	ldr	r1, [r4]
+  1673e0:      	ldr	r3, [r6]
+  1673e2:      	ldr	r2, [r1, #0x2c]
+  1673e4:      	adds	r0, r3, #0x1
+  1673e6:      	str	r0, [r6]
+  1673e8:      	add.w	r3, r3, r3, lsl #1
+  1673ec:      	mul	r0, r7, r2
+  1673f0:      	str.w	r10, [r8, r3, lsl #2]
+  1673f4:      	add.w	r2, r8, r3, lsl #2
+  1673f8:      	str	r1, [r2, #0x8]
+  1673fa:      	add.w	r3, r0, #0x30c00
+  1673fe:      	addw	r3, r3, #0x143
+  167402:      	str	r3, [r2, #0x4]
+  167404:      	mov	r1, r4
+  167406:      	mov	r0, r5
+  167408:      	bl	0x158444 <Board::IterateProjectiles(Projectile*&)> @ imm = #-0xefc8
+  16740c:      	mov	r3, r0
+  16740e:      	mov	r1, r6
+  167410:      	mov	r0, r8
+  167412:      	movs	r2, #0x3
+  167414:      	cmp	r3, #0x0
+  167416:      	bne	0x1673d8 <Board::DrawGameObjects(Sexy::Graphics*)+0x1e8> @ imm = #-0x42
+  167418:      	str	r3, [r4]
+  16741a:      	movs	r7, #0x1e
+  16741c:      	mov	r10, r4
+  16741e:      	b	0x16743c <Board::DrawGameObjects(Sexy::Graphics*)+0x24c> @ imm = #0x1a
+  167420:      	ldr	r3, [r6]
+  167422:      	ldr.w	r4, [r10]
+  167426:      	adds	r2, r3, #0x1
+  167428:      	add.w	r3, r3, r3, lsl #1
+  16742c:      	ldr	r1, [r4, #0x20]
+  16742e:      	str	r2, [r6]
+  167430:      	add.w	r2, r8, r3, lsl #2
+  167434:      	str.w	r7, [r8, r3, lsl #2]
+  167438:      	str	r1, [r2, #0x4]
+  16743a:      	str	r4, [r2, #0x8]
+  16743c:      	mov	r0, r5
+  16743e:      	mov	r1, r10
+  167440:      	bl	0x15874c <Board::IterateLawnMowers(LawnMower*&)> @ imm = #-0xecf8
+  167444:      	cmp	r0, #0x0
+  167446:      	bne	0x167420 <Board::DrawGameObjects(Sexy::Graphics*)+0x230> @ imm = #-0x2a
+  167448:      	mov	r4, r10
+  16744a:      	str.w	r0, [r10]
+  16744e:      	movs	r7, #0xc
+  167450:      	b	0x16745e <Board::DrawGameObjects(Sexy::Graphics*)+0x26e> @ imm = #0xa
+  167452:      	ldr	r3, [r4]
+  167454:      	ldrb.w	r2, [r3, #0x2d]
+  167458:      	cmp	r2, #0x0
+  16745a:      	beq.w	0x167624 <Board::DrawGameObjects(Sexy::Graphics*)+0x434> @ imm = #0x1c6
+  16745e:      	mov	r0, r5
+  167460:      	mov	r1, r4
+  167462:      	bl	0x15a414 <Board::IterateParticles(TodParticleSystem*&)> @ imm = #-0xd052
+  167466:      	cmp	r0, #0x0
+  167468:      	bne	0x167452 <Board::DrawGameObjects(Sexy::Graphics*)+0x262> @ imm = #-0x1a
+  16746a:      	str	r0, [r4]
+  16746c:      	movs	r7, #0xd
+  16746e:      	b	0x16747c <Board::DrawGameObjects(Sexy::Graphics*)+0x28c> @ imm = #0xa
+  167470:      	ldr	r3, [r4]
+  167472:      	ldrb.w	r2, [r3, #0x74]
+  167476:      	cmp	r2, #0x0
+  167478:      	beq.w	0x16763e <Board::DrawGameObjects(Sexy::Graphics*)+0x44e> @ imm = #0x1c2
+  16747c:      	mov	r0, r5
+  16747e:      	mov	r1, r4
+  167480:      	bl	0x15a464 <Board::IterateReanimations(Reanimation*&)> @ imm = #-0xd020
+  167484:      	cmp	r0, #0x0
+  167486:      	bne	0x167470 <Board::DrawGameObjects(Sexy::Graphics*)+0x280> @ imm = #-0x1a
+  167488:      	movs	r7, #0x21
+  16748a:      	mov.w	r10, #0x22
+  16748e:      	vmov.f32	s16, #3.000000e+01
+  167492:      	str	r0, [r4]
+  167494:      	mov	r0, r5
+  167496:      	mov	r1, r4
+  167498:      	bl	0x1592f0 <Board::IterateGridItems(GridItem*&)> @ imm = #-0xe1ac
+  16749c:      	cmp	r0, #0x0
+  16749e:      	beq	0x167516 <Board::DrawGameObjects(Sexy::Graphics*)+0x326> @ imm = #0x74
+  1674a0:      	ldr	r3, [r6]
+  1674a2:      	ldr	r2, [r4]
+  1674a4:      	ldr.w	lr, [r5, #0x114]
+  1674a8:      	adds	r1, r3, #0x1
+  1674aa:      	add.w	r3, r3, r3, lsl #1
+  1674ae:      	ldr.w	r12, [r2, #0x2c]
+  1674b2:      	str	r1, [r6]
+  1674b4:      	add.w	r0, r8, r3, lsl #2
+  1674b8:      	str.w	r7, [r8, r3, lsl #2]
+  1674bc:      	str	r2, [r0, #0x8]
+  1674be:      	ldr.w	r3, [lr, #0x900]
+  1674c2:      	str.w	r12, [r0, #0x4]
+  1674c6:      	cmp	r3, #0x2c
+  1674c8:      	bne	0x167494 <Board::DrawGameObjects(Sexy::Graphics*)+0x2a4> @ imm = #-0x38
+  1674ca:      	ldr	r3, [r2, #0x18]
+  1674cc:      	cmp	r3, #0xa
+  1674ce:      	bne	0x167494 <Board::DrawGameObjects(Sexy::Graphics*)+0x2a4> @ imm = #-0x3e
+  1674d0:      	vldr	s15, [r2, #56]
+  1674d4:      	add.w	lr, r1, r1, lsl #1
+  1674d8:      	movw	r0, #0xaf38
+  1674dc:      	movs	r1, #0x0
+  1674de:      	movt	r0, #0x4
+  1674e2:      	add.w	r11, r8, lr, lsl #2
+  1674e6:      	str.w	r10, [r8, lr, lsl #2]
+  1674ea:      	vsub.f32	s15, s15, s16
+  1674ee:      	vcvt.s32.f32	s15, s15
+  1674f2:      	vmov	r2, s15
+  1674f6:      	bl	0x15a798 <Board::MakeRenderOrder(RenderLayer, int, int)> @ imm = #-0xcd62
+  1674fa:      	ldr	r2, [r6]
+  1674fc:      	mov	r1, r4
+  1674fe:      	ldr	r3, [r4]
+  167500:      	str.w	r0, [r11, #0x4]
+  167504:      	mov	r0, r5
+  167506:      	adds	r2, #0x1
+  167508:      	str.w	r3, [r11, #0x8]
+  16750c:      	str	r2, [r6]
+  16750e:      	bl	0x1592f0 <Board::IterateGridItems(GridItem*&)> @ imm = #-0xe222
+  167512:      	cmp	r0, #0x0
+  167514:      	bne	0x1674a0 <Board::DrawGameObjects(Sexy::Graphics*)+0x2b0> @ imm = #-0x78
+  167516:      	mov	r4, r0
+  167518:      	mov	r10, r5
+  16751a:      	movs	r7, #0xe
+  16751c:      	b	0x167524 <Board::DrawGameObjects(Sexy::Graphics*)+0x334> @ imm = #0x4
+  16751e:      	adds	r4, #0x1
+  167520:      	cmp	r4, #0x6
+  167522:      	beq	0x16755c <Board::DrawGameObjects(Sexy::Graphics*)+0x36c> @ imm = #0x36
+  167524:      	ldr.w	r3, [r10, #0x738]
+  167528:      	add.w	r10, r10, #0x4
+  16752c:      	cmp	r3, #0x0
+  16752e:      	beq	0x16751e <Board::DrawGameObjects(Sexy::Graphics*)+0x32e> @ imm = #-0x14
+  167530:      	ldr	r3, [r6]
+  167532:      	mov	r1, r4
+  167534:      	mov	r0, r5
+  167536:      	add.w	r3, r3, r3, lsl #1
+  16753a:      	add.w	r11, r8, r3, lsl #2
+  16753e:      	str.w	r7, [r8, r3, lsl #2]
+  167542:      	str.w	r4, [r11, #0x8]
+  167546:      	adds	r4, #0x1
+  167548:      	bl	0x155030 <Board::GetIceZPos(int)> @ imm = #-0x1251c
+  16754c:      	ldr	r3, [r6]
+  16754e:      	cmp	r4, #0x6
+  167550:      	str.w	r0, [r11, #0x4]
+  167554:      	add.w	r3, r3, #0x1
+  167558:      	str	r3, [r6]
+  16755a:      	bne	0x167524 <Board::DrawGameObjects(Sexy::Graphics*)+0x334> @ imm = #-0x3a
+  16755c:      	movw	r0, #0xab50
+  167560:      	mov	r1, r4
+  167562:      	movs	r2, #0x0
+  167564:      	movt	r0, #0x4
+  167568:      	bl	0x15a798 <Board::MakeRenderOrder(RenderLayer, int, int)> @ imm = #-0xcdd4
+  16756c:      	mov	r1, r6
+  16756e:      	mov	r3, r0
+  167570:      	movs	r2, #0x23
+  167572:      	mov	r0, r8
+  167574:      	bl	0x155064 <AddUIRenderItem(RenderItem*, int&, RenderObjectType, int)> @ imm = #-0x12514
+  167578:      	ldr.w	r0, [r5, #0x114]
+  16757c:      	bl	0x2acd44 <Sexy::GamepadApp::HasGamepad()> @ imm = #0x1457c4
+  167580:      	cmp	r0, #0x0
+  167582:      	beq	0x167672 <Board::DrawGameObjects(Sexy::Graphics*)+0x482> @ imm = #0xec
+  167584:      	add.w	r3, r5, #0x5800
+  167588:      	ldr	r3, [r3, #0x68]
+  16758a:      	cmp	r3, #0x0
+  16758c:      	it	le
+  16758e:      	ldrle.w	r3, [r5, #0x114]
+  167592:      	bgt	0x167690 <Board::DrawGameObjects(Sexy::Graphics*)+0x4a0> @ imm = #0xfa
+  167594:      	ldr.w	r2, [r3, #0x904]
+  167598:      	subs	r2, #0x3
+  16759a:      	cmp	r2, #0x1
+  16759c:      	bls	0x1675b0 <Board::DrawGameObjects(Sexy::Graphics*)+0x3c0> @ imm = #0x10
+  16759e:      	ldr.w	r0, [r5, #0x250]
+  1675a2:      	bl	0x179724 <CutScene::IsAfterScrollLeft()> @ imm = #0x1217e
+  1675a6:      	cmp	r0, #0x0
+  1675a8:      	beq.w	0x167ba6 <Board::DrawGameObjects(Sexy::Graphics*)+0x9b6> @ imm = #0x5fa
+  1675ac:      	ldr.w	r3, [r5, #0x114]
+  1675b0:      	ldr.w	r3, [r3, #0x900]
+  1675b4:      	cmp	r3, #0x4c
+  1675b6:      	beq.w	0x167bc2 <Board::DrawGameObjects(Sexy::Graphics*)+0x9d2> @ imm = #0x608
+  1675ba:      	movw	r4, #0x86a2
+  1675be:      	movt	r4, #0x1
+  1675c2:      	b	0x167698 <Board::DrawGameObjects(Sexy::Graphics*)+0x4a8> @ imm = #0xd2
+  1675c4:      	mov	r0, r8
+  1675c6:      	mov	r1, r6
+  1675c8:      	movs	r2, #0x7
+  1675ca:      	bl	0x155044 <AddGameObjectRenderItem(RenderItem*, int&, RenderObjectType, GameObject*)> @ imm = #-0x1258a
+  1675ce:      	ldr.w	r3, [r5, #0x114]
+  1675d2:      	ldr.w	r3, [r3, #0x900]
+  1675d6:      	cmp	r3, #0x2c
+  1675d8:      	beq.w	0x167b66 <Board::DrawGameObjects(Sexy::Graphics*)+0x976> @ imm = #0x58a
+  1675dc:      	ldr	r2, [r4]
+  1675de:      	ldr	r3, [r2, #0x34]
+  1675e0:      	cmp	r3, #0x1f
+  1675e2:      	it	ne
+  1675e4:      	cmpne	r3, #0x2d
+  1675e6:      	bne.w	0x1672fe <Board::DrawGameObjects(Sexy::Graphics*)+0x10e> @ imm = #-0x2ec
+  1675ea:      	mov	r0, r2
+  1675ec:      	bl	0x16c100 <Plant::DrawMagnetItemsOnTop()> @ imm = #0x4b10
+  1675f0:      	cmp	r0, #0x0
+  1675f2:      	beq.w	0x1672fe <Board::DrawGameObjects(Sexy::Graphics*)+0x10e> @ imm = #-0x2f8
+  1675f6:      	ldr	r7, [r6]
+  1675f8:      	mov.w	r0, #0x1a80
+  1675fc:      	mov.w	r2, #0xffffffff
+  167600:      	movt	r0, #0x6
+  167604:      	movs	r1, #0x0
+  167606:      	add.w	r7, r7, r7, lsl #1
+  16760a:      	str.w	r10, [r8, r7, lsl #2]
+  16760e:      	add.w	r7, r8, r7, lsl #2
+  167612:      	bl	0x15a798 <Board::MakeRenderOrder(RenderLayer, int, int)> @ imm = #-0xce7e
+  167616:      	ldr	r2, [r6]
+  167618:      	ldr	r3, [r4]
+  16761a:      	str	r0, [r7, #0x4]
+  16761c:      	adds	r2, #0x1
+  16761e:      	str	r3, [r7, #0x8]
+  167620:      	str	r2, [r6]
+  167622:      	b	0x1672fe <Board::DrawGameObjects(Sexy::Graphics*)+0x10e> @ imm = #-0x328
+  167624:      	ldr	r2, [r6]
+  167626:      	ldr	r0, [r3, #0x30]
+  167628:      	adds	r1, r2, #0x1
+  16762a:      	add.w	r2, r2, r2, lsl #1
+  16762e:      	str	r1, [r6]
+  167630:      	add.w	r1, r8, r2, lsl #2
+  167634:      	str.w	r7, [r8, r2, lsl #2]
+  167638:      	str	r0, [r1, #0x4]
+  16763a:      	str	r3, [r1, #0x8]
+  16763c:      	b	0x16745e <Board::DrawGameObjects(Sexy::Graphics*)+0x26e> @ imm = #-0x1e2
+  16763e:      	ldr	r2, [r6]
+  167640:      	ldr	r0, [r3, #0x78]
+  167642:      	adds	r1, r2, #0x1
+  167644:      	add.w	r2, r2, r2, lsl #1
+  167648:      	str	r1, [r6]
+  16764a:      	add.w	r1, r8, r2, lsl #2
+  16764e:      	str.w	r7, [r8, r2, lsl #2]
+  167652:      	str	r0, [r1, #0x4]
+  167654:      	str	r3, [r1, #0x8]
+  167656:      	b	0x16747c <Board::DrawGameObjects(Sexy::Graphics*)+0x28c> @ imm = #-0x1de
+  167658:      	ldr.w	r0, [r5, #0x250]
+  16765c:      	bl	0x17a338 <CutScene::IsInShovelTutorial()> @ imm = #0x12cd8
+  167660:      	cmp	r0, #0x0
+  167662:      	beq.w	0x1672dc <Board::DrawGameObjects(Sexy::Graphics*)+0xec> @ imm = #-0x38a
+  167666:      	ldr.w	r3, [r7, #0x230]
+  16766a:      	cmp	r3, #0x0
+  16766c:      	bne.w	0x167254 <Board::DrawGameObjects(Sexy::Graphics*)+0x64> @ imm = #-0x41c
+  167670:      	b	0x167256 <Board::DrawGameObjects(Sexy::Graphics*)+0x66> @ imm = #-0x41e
+  167672:      	ldr.w	r3, [r5, #0x114]
+  167676:      	ldrb.w	r2, [r3, #0x83d]
+  16767a:      	cmp	r2, #0x0
+  16767c:      	bne	0x167738 <Board::DrawGameObjects(Sexy::Graphics*)+0x548> @ imm = #0xb8
+  16767e:      	add.w	r1, r5, #0x5800
+  167682:      	ldr.w	r2, [r5, #0x230]
+  167686:      	ldr	r1, [r1, #0x68]
+  167688:      	ldr	r2, [r2, #0x60]
+  16768a:      	cmp	r1, #0x0
+  16768c:      	ble.w	0x167b5e <Board::DrawGameObjects(Sexy::Graphics*)+0x96e> @ imm = #0x4ce
+  167690:      	mov.w	r4, #0x3500
+  167694:      	movt	r4, #0xc
+  167698:      	movw	r3, #0x86a0
+  16769c:      	mov	r0, r8
+  16769e:      	movt	r3, #0x1
+  1676a2:      	mov	r1, r6
+  1676a4:      	movs	r2, #0x1a
+  1676a6:      	bl	0x155064 <AddUIRenderItem(RenderItem*, int&, RenderObjectType, int)> @ imm = #-0x12646
+  1676aa:      	mov	r0, r8
+  1676ac:      	mov	r1, r6
+  1676ae:      	mov	r3, r4
+  1676b0:      	movs	r2, #0x19
+  1676b2:      	bl	0x155064 <AddUIRenderItem(RenderItem*, int&, RenderObjectType, int)> @ imm = #-0x12652
+  1676b6:      	mov.w	r3, #0x27c0
+  1676ba:      	mov	r0, r8
+  1676bc:      	mov	r1, r6
+  1676be:      	movs	r2, #0x1c
+  1676c0:      	movt	r3, #0x9
+  1676c4:      	bl	0x155064 <AddUIRenderItem(RenderItem*, int&, RenderObjectType, int)> @ imm = #-0x12664
+  1676c8:      	movw	r3, #0xae60
+  1676cc:      	mov	r0, r8
+  1676ce:      	mov	r1, r6
+  1676d0:      	movs	r2, #0xf
+  1676d2:      	movt	r3, #0xa
+  1676d6:      	bl	0x155064 <AddUIRenderItem(RenderItem*, int&, RenderObjectType, int)> @ imm = #-0x12676
+  1676da:      	movw	r3, #0xbba0
+  1676de:      	movs	r2, #0x1f
+  1676e0:      	movt	r3, #0xd
+  1676e4:      	mov	r0, r8
+  1676e6:      	mov	r1, r6
+  1676e8:      	bl	0x155064 <AddUIRenderItem(RenderItem*, int&, RenderObjectType, int)> @ imm = #-0x12688
+  1676ec:      	ldr.w	r3, [r5, #0x114]
+  1676f0:      	ldr.w	r2, [r3, #0x904]
+  1676f4:      	cmp	r2, #0x4
+  1676f6:      	beq.w	0x167b2c <Board::DrawGameObjects(Sexy::Graphics*)+0x93c> @ imm = #0x432
+  1676fa:      	mov	r0, r5
+  1676fc:      	bl	0x1601e4 <Board::StageHasFog()> @ imm = #-0x751c
+  167700:      	cmp	r0, #0x0
+  167702:      	bne.w	0x167b18 <Board::DrawGameObjects(Sexy::Graphics*)+0x928> @ imm = #0x412
+  167706:      	movs	r7, #0x1
+  167708:      	movs	r4, #0x0
+  16770a:      	cmp	r4, #0x0
+  16770c:      	beq.w	0x167bda <Board::DrawGameObjects(Sexy::Graphics*)+0x9ea> @ imm = #0x4ca
+  167710:      	movw	r0, #0xb320
+  167714:      	mov	r1, r4
+  167716:      	movs	r2, #0x0
+  167718:      	movt	r0, #0x4
+  16771c:      	bl	0x15a798 <Board::MakeRenderOrder(RenderLayer, int, int)> @ imm = #-0xcf88
+  167720:      	mov	r1, r6
+  167722:      	mov	r3, r0
+  167724:      	add.w	r2, r4, #0x10
+  167728:      	mov	r0, r8
+  16772a:      	bl	0x155064 <AddUIRenderItem(RenderItem*, int&, RenderObjectType, int)> @ imm = #-0x126ca
+  16772e:      	cmp	r7, #0x7
+  167730:      	beq	0x167744 <Board::DrawGameObjects(Sexy::Graphics*)+0x554> @ imm = #0x10
+  167732:      	adds	r4, #0x1
+  167734:      	adds	r7, #0x1
+  167736:      	b	0x16770a <Board::DrawGameObjects(Sexy::Graphics*)+0x51a> @ imm = #-0x30
+  167738:      	ldrb.w	r2, [r3, #0x899]
+  16773c:      	cmp	r2, #0x0
+  16773e:      	bne.w	0x167584 <Board::DrawGameObjects(Sexy::Graphics*)+0x394> @ imm = #-0x1be
+  167742:      	b	0x16767e <Board::DrawGameObjects(Sexy::Graphics*)+0x48e> @ imm = #-0xc8
+  167744:      	ldr.w	r0, [r5, #0x114]
+  167748:      	bl	0x2b2868 <LawnApp::IsStormyNightLevel()> @ imm = #0x14b11c
+  16774c:      	cmp	r0, #0x0
+  16774e:      	bne.w	0x167af8 <Board::DrawGameObjects(Sexy::Graphics*)+0x908> @ imm = #0x3a6
+  167752:      	ldr.w	r3, [r5, #0x114]
+  167756:      	ldr.w	r3, [r3, #0x900]
+  16775a:      	cmp	r3, #0x5a
+  16775c:      	beq.w	0x167af8 <Board::DrawGameObjects(Sexy::Graphics*)+0x908> @ imm = #0x398
+  167760:      	ldr	r7, [sp, #0x8]
+  167762:      	mov	r4, r5
+  167764:      	ldr.w	r3, [r4, #0x230]
+  167768:      	ldr.w	r2, [r3, #0x98]
+  16776c:      	adds	r2, #0x1
+  16776e:      	beq	0x167794 <Board::DrawGameObjects(Sexy::Graphics*)+0x5a4> @ imm = #0x22
+  167770:      	ldr.w	r2, [r5, #0x114]
+  167774:      	ldr.w	r2, [r2, #0x904]
+  167778:      	cmp	r2, #0x2
+  16777a:      	it	ne
+  16777c:      	cmpne	r2, #0x8
+  16777e:      	beq.w	0x167ade <Board::DrawGameObjects(Sexy::Graphics*)+0x8ee> @ imm = #0x35c
+  167782:      	cmp	r2, #0x4
+  167784:      	beq.w	0x167ade <Board::DrawGameObjects(Sexy::Graphics*)+0x8ee> @ imm = #0x356
+  167788:      	adds	r3, #0x4
+  16778a:      	mov	r0, r8
+  16778c:      	mov	r1, r6
+  16778e:      	movs	r2, #0xb
+  167790:      	bl	0x155044 <AddGameObjectRenderItem(RenderItem*, int&, RenderObjectType, GameObject*)> @ imm = #-0x12750
+  167794:      	adds	r4, #0x4
+  167796:      	cmp	r4, r7
+  167798:      	bne	0x167764 <Board::DrawGameObjects(Sexy::Graphics*)+0x574> @ imm = #-0x38
+  16779a:      	ldr.w	r0, [r5, #0x250]
+  16779e:      	mov	r1, r8
+  1677a0:      	mov	r2, r6
+  1677a2:      	bl	0x17b714 <CutScene::DrawGameObjectsHook(RenderItem*, int&)> @ imm = #0x13f6e
+  1677a6:      	ldr.w	r0, [pc, #0x470]        @ 0x167c18 <Board::DrawGameObjects(Sexy::Graphics*)+0xa28>
+  1677aa:      	add	r0, pc
+  1677ac:      	bl	0x2049bc <TodHesitationTrace(char const*, ...)> @ imm = #0x9d20c
+  1677b0:      	ldr	r7, [r8, #-12]
+  1677b4:      	add.w	r7, r7, r7, lsl #1
+  1677b8:      	add.w	r7, r8, r7, lsl #2
+  1677bc:      	cmp	r7, r8
+  1677be:      	beq	0x16781a <Board::DrawGameObjects(Sexy::Graphics*)+0x62a> @ imm = #0x58
+  1677c0:      	rsb	r4, r8, r7
+  1677c4:      	ldr.w	lr, [pc, #0x454]        @ 0x167c1c <Board::DrawGameObjects(Sexy::Graphics*)+0xa2c>
+  1677c8:      	movw	r3, #0xaaab
+  1677cc:      	asrs	r2, r4, #0x2
+  1677ce:      	movt	r3, #0xaaaa
+  1677d2:      	mul	r2, r3, r2
+  1677d6:      	mov	r3, lr
+  1677d8:      	ldr.w	lr, [sp, #0xc]
+  1677dc:      	mov	r0, r8
+  1677de:      	mov	r1, r7
+  1677e0:      	ldr.w	r10, [lr, r3]
+  1677e4:      	clz	r2, r2
+  1677e8:      	rsb.w	r2, r2, #0x1f
+  1677ec:      	lsls	r2, r2, #0x1
+  1677ee:      	mov	r3, r10
+  1677f0:      	bl	0x164d98 <void std::__introsort_loop<RenderItem*, int, bool (*)(RenderItem const&, RenderItem const&)>(RenderItem*, RenderItem*, int, bool (*)(RenderItem const&, RenderItem const&))> @ imm = #-0x2a5c
+  1677f4:      	cmp	r4, #0xcb
+  1677f6:      	ble.w	0x167b0c <Board::DrawGameObjects(Sexy::Graphics*)+0x91c> @ imm = #0x312
+  1677fa:      	add.w	r4, r8, #0xc0
+  1677fe:      	mov	r0, r8
+  167800:      	mov	r1, r4
+  167802:      	mov	r2, r10
+  167804:      	bl	0x163598 <void std::__insertion_sort<RenderItem*, bool (*)(RenderItem const&, RenderItem const&)>(RenderItem*, RenderItem*, bool (*)(RenderItem const&, RenderItem const&))> @ imm = #-0x4270
+  167808:      	cmp	r7, r4
+  16780a:      	beq	0x16781a <Board::DrawGameObjects(Sexy::Graphics*)+0x62a> @ imm = #0xc
+  16780c:      	mov	r0, r4
+  16780e:      	mov	r1, r10
+  167810:      	adds	r4, #0xc
+  167812:      	bl	0x163554 <void std::__unguarded_linear_insert<RenderItem*, bool (*)(RenderItem const&, RenderItem const&)>(RenderItem*, bool (*)(RenderItem const&, RenderItem const&))> @ imm = #-0x42c2
+  167816:      	cmp	r7, r4
+  167818:      	bne	0x16780c <Board::DrawGameObjects(Sexy::Graphics*)+0x61c> @ imm = #-0x10
+  16781a:      	ldr.w	r0, [pc, #0x404]        @ 0x167c20 <Board::DrawGameObjects(Sexy::Graphics*)+0xa30>
+  16781e:      	add	r0, pc
+  167820:      	bl	0x2049bc <TodHesitationTrace(char const*, ...)> @ imm = #0x9d198
+  167824:      	ldr	r3, [r8, #-12]
+  167828:      	cmp	r3, #0x0
+  16782a:      	it	gt
+  16782c:      	movgt	r4, #0x0
+  16782e:      	ble	0x16789a <Board::DrawGameObjects(Sexy::Graphics*)+0x6aa> @ imm = #0x68
+  167830:      	ldr.w	r2, [r8]
+  167834:      	cmp	r2, #0x23
+  167836:      	bhi	0x16788e <Board::DrawGameObjects(Sexy::Graphics*)+0x69e> @ imm = #0x54
+  167838:      	tbh	[pc, r2, lsl #1]
+  16783c:      	lsls	r2, r5, #0x4
+  16783e:      	lsls	r1, r4, #0x4
+  167840:      	lsls	r2, r0, #0x5
+  167842:      	lsls	r3, r6, #0x4
+  167844:      	lsls	r2, r2, #0x4
+  167846:      	lsls	r3, r0, #0x4
+  167848:      	lsls	r5, r7, #0x3
+  16784a:      	lsls	r6, r5, #0x3
+  16784c:      	lsls	r3, r3, #0x3
+  16784e:      	lsls	r4, r1, #0x3
+  167850:      	movs	r1, r5
+  167852:      	lsls	r6, r5, #0x2
+  167854:      	lsls	r0, r5, #0x2
+  167856:      	lsls	r2, r4, #0x2
+  167858:      	lsls	r3, r3, #0x2
+  16785a:      	lsls	r6, r2, #0x2
+  16785c:      	lsls	r0, r2, #0x2
+  16785e:      	lsls	r0, r2, #0x2
+  167860:      	lsls	r0, r2, #0x2
+  167862:      	lsls	r0, r2, #0x2
+  167864:      	lsls	r0, r2, #0x2
+  167866:      	lsls	r0, r2, #0x2
+  167868:      	lsls	r0, r2, #0x2
+  16786a:      	lsls	r3, r1, #0x2
+  16786c:      	lsls	r5, r0, #0x2
+  16786e:      	lsls	r0, r0, #0x2
+  167870:      	lsls	r3, r7, #0x1
+  167872:      	lsls	r6, r6, #0x1
+  167874:      	lsls	r1, r6, #0x1
+  167876:      	lsls	r3, r4, #0x1
+  167878:      	lsls	r5, r3, #0x1
+  16787a:      	lsls	r0, r3, #0x1
+  16787c:      	lsls	r0, r0, #0x1
+  16787e:      	movs	r2, r7
+  167880:      	movs	r4, r4
+  167882:      	lsls	r6, r0, #0x3
+  167884:      	ldr.w	r0, [r8, #0x8]
+  167888:      	mov	r1, r9
+  16788a:      	bl	0x13e600 <GridItem::DrawGridItemOverlay(Sexy::Graphics*)> @ imm = #-0x2928e
+  16788e:      	ldr	r3, [r6]
+  167890:      	adds	r4, #0x1
+  167892:      	add.w	r8, r8, #0xc
+  167896:      	cmp	r3, r4
+  167898:      	bgt	0x167830 <Board::DrawGameObjects(Sexy::Graphics*)+0x640> @ imm = #-0x6c
+  16789a:      	ldr	r0, [pc, #0x388]        @ 0x167c24 <Board::DrawGameObjects(Sexy::Graphics*)+0xa34>
+  16789c:      	add	r0, pc
+  16789e:      	bl	0x2049bc <TodHesitationTrace(char const*, ...)> @ imm = #0x9d11a
+  1678a2:      	add.w	sp, sp, #0x6000
+  1678a6:      	add	sp, #0x24
+  1678a8:      	vpop	{d8}
+  1678ac:      	pop.w	{r4, r5, r6, r7, r8, r9, r10, r11, pc}
+  1678b0:      	ldr.w	r0, [r8, #0x8]
+  1678b4:      	mov	r1, r9
+  1678b6:      	bl	0x140120 <GridItem::DrawGridItem(Sexy::Graphics*)> @ imm = #-0x2779a
+  1678ba:      	b	0x16788e <Board::DrawGameObjects(Sexy::Graphics*)+0x69e> @ imm = #-0x30
+  1678bc:      	mov	r0, r5
+  1678be:      	bl	0x15b108 <Board::GetBossZombie()> @ imm = #-0xc7ba
+  1678c2:      	mov	r7, r0
+  1678c4:      	cmp	r0, #0x0
+  1678c6:      	beq	0x16788e <Board::DrawGameObjects(Sexy::Graphics*)+0x69e> @ imm = #-0x3c
+  1678c8:      	ldr	r3, [r0]
+  1678ca:      	mov	r1, r9
+  1678cc:      	ldr	r3, [r3, #0x8]
+  1678ce:      	blx	r3
+  1678d0:      	cmp	r0, #0x0
+  1678d2:      	beq	0x16788e <Board::DrawGameObjects(Sexy::Graphics*)+0x69e> @ imm = #-0x48
+  1678d4:      	mov	r0, r7
+  1678d6:      	mov	r1, r9
+  1678d8:      	ldr.w	r2, [r8, #0x8]
+  1678dc:      	bl	0x1b4ef0 <Zombie::DrawBossPart(Sexy::Graphics*, BossPart)> @ imm = #0x4d610
+  1678e0:      	ldr	r3, [r7]
+  1678e2:      	mov	r0, r7
+  1678e4:      	mov	r1, r9
+  1678e6:      	ldr	r3, [r3, #0xc]
+  1678e8:      	blx	r3
+  1678ea:      	b	0x16788e <Board::DrawGameObjects(Sexy::Graphics*)+0x69e> @ imm = #-0x60
+  1678ec:      	mov	r0, r5
+  1678ee:      	mov	r1, r9
+  1678f0:      	bl	0x15dea4 <Board::DrawFadeOut(Sexy::Graphics*)> @ imm = #-0x9a50
+  1678f4:      	b	0x16788e <Board::DrawGameObjects(Sexy::Graphics*)+0x69e> @ imm = #-0x6a
+  1678f6:      	ldr.w	r0, [r8, #0x8]
+  1678fa:      	mov	r1, r9
+  1678fc:      	bl	0x17e818 <LawnMower::Draw(Sexy::Graphics*)> @ imm = #0x16f18
+  167900:      	b	0x16788e <Board::DrawGameObjects(Sexy::Graphics*)+0x69e> @ imm = #-0x76
+  167902:      	ldr.w	r0, [r8, #0x8]
+  167906:      	mov	r1, r9
+  167908:      	ldr	r3, [r0]
+  16790a:      	ldr	r3, [r3, #0x8]
+  16790c:      	blx	r3
+  16790e:      	cmp	r0, #0x0
+  167910:      	beq	0x16788e <Board::DrawGameObjects(Sexy::Graphics*)+0x69e> @ imm = #-0x86
+  167912:      	ldr.w	r0, [r8, #0x8]
+  167916:      	mov	r1, r9
+  167918:      	bl	0x194ef4 <Projectile::DrawShadow(Sexy::Graphics*)> @ imm = #0x2d5d8
+  16791c:      	b	0x1679ba <Board::DrawGameObjects(Sexy::Graphics*)+0x7ca> @ imm = #0x9a
+  16791e:      	mov	r0, r5
+  167920:      	mov	r1, r9
+  167922:      	bl	0x1552b8 <Board::DrawUICoinBank(Sexy::Graphics*)> @ imm = #-0x1266e
+  167926:      	b	0x16788e <Board::DrawGameObjects(Sexy::Graphics*)+0x69e> @ imm = #-0x9c
+  167928:      	mov	r0, r5
+  16792a:      	mov	r1, r9
+  16792c:      	bl	0x1551f0 <Board::DrawHouseDoorTop(Sexy::Graphics*)> @ imm = #-0x12740
+  167930:      	b	0x16788e <Board::DrawGameObjects(Sexy::Graphics*)+0x69e> @ imm = #-0xa6
+  167932:      	mov	r0, r5
+  167934:      	mov	r1, r9
+  167936:      	bl	0x155e80 <Board::DrawBackdrop(Sexy::Graphics*)> @ imm = #-0x11aba
+  16793a:      	b	0x16788e <Board::DrawGameObjects(Sexy::Graphics*)+0x69e> @ imm = #-0xb0
+  16793c:      	mov	r0, r5
+  16793e:      	mov	r1, r9
+  167940:      	bl	0x1602d4 <Board::DrawUIBottom(Sexy::Graphics*)> @ imm = #-0x7670
+  167944:      	b	0x16788e <Board::DrawGameObjects(Sexy::Graphics*)+0x69e> @ imm = #-0xba
+  167946:      	ldr.w	r0, [r5, #0x254]
+  16794a:      	mov	r1, r9
+  16794c:      	bl	0x183c18 <Challenge::DrawWeather(Sexy::Graphics*)> @ imm = #0x1c2c8
+  167950:      	b	0x16788e <Board::DrawGameObjects(Sexy::Graphics*)+0x69e> @ imm = #-0xc6
+  167952:      	mov	r0, r5
+  167954:      	mov	r1, r9
+  167956:      	bl	0x155420 <Board::DrawFog(Sexy::Graphics*)> @ imm = #-0x1253a
+  16795a:      	b	0x16788e <Board::DrawGameObjects(Sexy::Graphics*)+0x69e> @ imm = #-0xd0
+  16795c:      	subs	r2, #0x10
+  16795e:      	mov	r0, r5
+  167960:      	mov	r1, r9
+  167962:      	bl	0x1556c8 <Board::DrawCoverLayer(Sexy::Graphics*, int)> @ imm = #-0x1229e
+  167966:      	b	0x16788e <Board::DrawGameObjects(Sexy::Graphics*)+0x69e> @ imm = #-0xdc
+  167968:      	mov	r0, r5
+  16796a:      	mov	r1, r9
+  16796c:      	bl	0x166ef4 <Board::DrawUITop(Sexy::Graphics*)> @ imm = #-0xa7c
+  167970:      	b	0x16788e <Board::DrawGameObjects(Sexy::Graphics*)+0x69e> @ imm = #-0xe6
+  167972:      	mov	r0, r5
+  167974:      	mov	r1, r9
+  167976:      	ldr.w	r2, [r8, #0x8]
+  16797a:      	bl	0x156b78 <Board::DrawIce(Sexy::Graphics*, int)> @ imm = #-0x10e06
+  16797e:      	b	0x16788e <Board::DrawGameObjects(Sexy::Graphics*)+0x69e> @ imm = #-0xf4
+  167980:      	ldr.w	r0, [r8, #0x8]
+  167984:      	mov	r1, r9
+  167986:      	bl	0x1f7978 <Reanimation::Draw(Sexy::Graphics*)> @ imm = #0x8ffee
+  16798a:      	b	0x16788e <Board::DrawGameObjects(Sexy::Graphics*)+0x69e> @ imm = #-0x100
+  16798c:      	ldr.w	r0, [r8, #0x8]
+  167990:      	mov	r1, r9
+  167992:      	bl	0x2061bc <TodParticleSystem::Draw(Sexy::Graphics*)> @ imm = #0x9e826
+  167996:      	b	0x16788e <Board::DrawGameObjects(Sexy::Graphics*)+0x69e> @ imm = #-0x10c
+  167998:      	ldr.w	r0, [r8, #0x8]
+  16799c:      	mov	r1, r9
+  16799e:      	ldr	r3, [r0]
+  1679a0:      	ldr	r3, [r3, #0x8]
+  1679a2:      	blx	r3
+  1679a4:      	ldr.w	r0, [r8, #0x8]
+  1679a8:      	cmp	r0, #0x0
+  1679aa:      	beq.w	0x167ba0 <Board::DrawGameObjects(Sexy::Graphics*)+0x9b0> @ imm = #0x1f2
+  1679ae:      	ldr	r3, [r0, #-4]
+  1679b2:      	subs	r0, #0x4
+  1679b4:      	ldr	r3, [r3, #0x1c]
+  1679b6:      	mov	r1, r9
+  1679b8:      	blx	r3
+  1679ba:      	ldr.w	r0, [r8, #0x8]
+  1679be:      	mov	r1, r9
+  1679c0:      	ldr	r3, [r0]
+  1679c2:      	ldr	r3, [r3, #0xc]
+  1679c4:      	blx	r3
+  1679c6:      	b	0x16788e <Board::DrawGameObjects(Sexy::Graphics*)+0x69e> @ imm = #-0x13c
+  1679c8:      	ldr.w	r0, [r5, #0x254]
+  1679cc:      	mov	r1, r9
+  1679ce:      	bl	0x187dbc <Challenge::DrawTank(Sexy::Graphics*)> @ imm = #0x203ea
+  1679d2:      	b	0x16788e <Board::DrawGameObjects(Sexy::Graphics*)+0x69e> @ imm = #-0x148
+  1679d4:      	ldr.w	r0, [r8, #0x8]
+  1679d8:      	mov	r1, r9
+  1679da:      	ldr	r3, [r0]
+  1679dc:      	ldr	r3, [r3, #0x8]
+  1679de:      	blx	r3
+  1679e0:      	cmp	r0, #0x0
+  1679e2:      	beq.w	0x16788e <Board::DrawGameObjects(Sexy::Graphics*)+0x69e> @ imm = #-0x158
+  1679e6:      	ldr.w	r0, [r8, #0x8]
+  1679ea:      	mov	r1, r9
+  1679ec:      	bl	0x16f1b0 <Plant::DrawMagnetItems(Sexy::Graphics*)> @ imm = #0x77c0
+  1679f0:      	b	0x1679ba <Board::DrawGameObjects(Sexy::Graphics*)+0x7ca> @ imm = #-0x3a
+  1679f2:      	ldr.w	r0, [r8, #0x8]
+  1679f6:      	mov	r1, r9
+  1679f8:      	ldr	r3, [r0]
+  1679fa:      	ldr	r3, [r3, #0x8]
+  1679fc:      	blx	r3
+  1679fe:      	cmp	r0, #0x0
+  167a00:      	beq.w	0x16788e <Board::DrawGameObjects(Sexy::Graphics*)+0x69e> @ imm = #-0x176
+  167a04:      	ldr.w	r3, [r5, #0x114]
+  167a08:      	mov	r1, r9
+  167a0a:      	ldr.w	r2, [r8, #0x8]
+  167a0e:      	ldr.w	r0, [r3, #0x924]
+  167a12:      	bl	0x1a1608 <ZenGarden::DrawPlantOverlay(Sexy::Graphics*, Plant*)> @ imm = #0x39bf2
+  167a16:      	b	0x1679ba <Board::DrawGameObjects(Sexy::Graphics*)+0x7ca> @ imm = #-0x60
+  167a18:      	ldr.w	r0, [r8, #0x8]
+  167a1c:      	mov	r1, r9
+  167a1e:      	ldr	r3, [r0]
+  167a20:      	ldr	r3, [r3, #0x8]
+  167a22:      	blx	r3
+  167a24:      	cmp	r0, #0x0
+  167a26:      	beq.w	0x16788e <Board::DrawGameObjects(Sexy::Graphics*)+0x69e> @ imm = #-0x19c
+  167a2a:      	ldr.w	r0, [r8, #0x8]
+  167a2e:      	mov	r1, r9
+  167a30:      	bl	0x17022c <Plant::Draw(Sexy::Graphics*)> @ imm = #0x87f8
+  167a34:      	b	0x1679ba <Board::DrawGameObjects(Sexy::Graphics*)+0x7ca> @ imm = #-0x7e
+  167a36:      	ldr.w	r0, [r8, #0x8]
+  167a3a:      	mov	r1, r9
+  167a3c:      	bl	0x1abe34 <Zombie::DrawBungeeTarget(Sexy::Graphics*)> @ imm = #0x443f4
+  167a40:      	b	0x16788e <Board::DrawGameObjects(Sexy::Graphics*)+0x69e> @ imm = #-0x1b6
+  167a42:      	ldr.w	r0, [r8, #0x8]
+  167a46:      	mov	r1, r9
+  167a48:      	ldr	r3, [r0]
+  167a4a:      	ldr	r3, [r3, #0x8]
+  167a4c:      	blx	r3
+  167a4e:      	cmp	r0, #0x0
+  167a50:      	beq.w	0x16788e <Board::DrawGameObjects(Sexy::Graphics*)+0x69e> @ imm = #-0x1c6
+  167a54:      	ldr.w	r0, [r8, #0x8]
+  167a58:      	mov	r1, r9
+  167a5a:      	bl	0x1ad594 <Zombie::DrawShadow(Sexy::Graphics*)> @ imm = #0x45b36
+  167a5e:      	b	0x1679ba <Board::DrawGameObjects(Sexy::Graphics*)+0x7ca> @ imm = #-0xa8
+  167a60:      	ldr.w	r0, [r8, #0x8]
+  167a64:      	mov	r1, r9
+  167a66:      	ldr	r3, [r0]
+  167a68:      	ldr	r3, [r3, #0x8]
+  167a6a:      	blx	r3
+  167a6c:      	cmp	r0, #0x0
+  167a6e:      	beq.w	0x16788e <Board::DrawGameObjects(Sexy::Graphics*)+0x69e> @ imm = #-0x1e4
+  167a72:      	ldr.w	r0, [r8, #0x8]
+  167a76:      	mov	r1, r9
+  167a78:      	bl	0x1aeebc <Zombie::Draw(Sexy::Graphics*)> @ imm = #0x47440
+  167a7c:      	b	0x1679ba <Board::DrawGameObjects(Sexy::Graphics*)+0x7ca> @ imm = #-0xc6
+  167a7e:      	ldr.w	r0, [r8, #0x8]
+  167a82:      	cbz	r0, 0x167a86 <Board::DrawGameObjects(Sexy::Graphics*)+0x896> @ imm = #0x0
+  167a84:      	subs	r0, #0x4
+  167a86:      	mov	r1, r9
+  167a88:      	movs	r2, #0x1
+  167a8a:      	bl	0x1c093c <BaseGamepadControls::DrawFrame(Sexy::Graphics*, BaseGamepadControls::FrameRenderPhase)> @ imm = #0x58eae
+  167a8e:      	b	0x16788e <Board::DrawGameObjects(Sexy::Graphics*)+0x69e> @ imm = #-0x204
+  167a90:      	ldr.w	r0, [r8, #0x8]
+  167a94:      	cbz	r0, 0x167a98 <Board::DrawGameObjects(Sexy::Graphics*)+0x8a8> @ imm = #0x0
+  167a96:      	subs	r0, #0x4
+  167a98:      	mov	r1, r9
+  167a9a:      	movs	r2, #0x0
+  167a9c:      	bl	0x1c093c <BaseGamepadControls::DrawFrame(Sexy::Graphics*, BaseGamepadControls::FrameRenderPhase)> @ imm = #0x58e9c
+  167aa0:      	b	0x16788e <Board::DrawGameObjects(Sexy::Graphics*)+0x69e> @ imm = #-0x216
+  167aa2:      	ldr.w	r0, [r8, #0x8]
+  167aa6:      	mov	r1, r9
+  167aa8:      	ldr	r3, [r0]
+  167aaa:      	ldr	r3, [r3, #0x8]
+  167aac:      	blx	r3
+  167aae:      	cmp	r0, #0x0
+  167ab0:      	beq.w	0x16788e <Board::DrawGameObjects(Sexy::Graphics*)+0x69e> @ imm = #-0x226
+  167ab4:      	ldr.w	r0, [r8, #0x8]
+  167ab8:      	mov	r1, r9
+  167aba:      	bl	0x196b6c <Projectile::Draw(Sexy::Graphics*)> @ imm = #0x2f0ae
+  167abe:      	b	0x1679ba <Board::DrawGameObjects(Sexy::Graphics*)+0x7ca> @ imm = #-0x108
+  167ac0:      	ldr.w	r0, [r8, #0x8]
+  167ac4:      	mov	r1, r9
+  167ac6:      	ldr	r3, [r0]
+  167ac8:      	ldr	r3, [r3, #0x8]
+  167aca:      	blx	r3
+  167acc:      	cmp	r0, #0x0
+  167ace:      	beq.w	0x16788e <Board::DrawGameObjects(Sexy::Graphics*)+0x69e> @ imm = #-0x244
+  167ad2:      	ldr.w	r0, [r8, #0x8]
+  167ad6:      	mov	r1, r9
+  167ad8:      	bl	0x19a410 <Coin::Draw(Sexy::Graphics*)> @ imm = #0x32934
+  167adc:      	b	0x1679ba <Board::DrawGameObjects(Sexy::Graphics*)+0x7ca> @ imm = #-0x126
+  167ade:      	ldr.w	r0, [r5, #0x250]
+  167ae2:      	bl	0x17a338 <CutScene::IsInShovelTutorial()> @ imm = #0x12852
+  167ae6:      	cmp	r0, #0x0
+  167ae8:      	beq.w	0x167794 <Board::DrawGameObjects(Sexy::Graphics*)+0x5a4> @ imm = #-0x358
+  167aec:      	ldr.w	r3, [r4, #0x230]
+  167af0:      	cmp	r3, #0x0
+  167af2:      	bne.w	0x167788 <Board::DrawGameObjects(Sexy::Graphics*)+0x598> @ imm = #-0x36e
+  167af6:      	b	0x16778a <Board::DrawGameObjects(Sexy::Graphics*)+0x59a> @ imm = #-0x370
+  167af8:      	movw	r3, #0xa123
+  167afc:      	mov	r0, r8
+  167afe:      	movt	r3, #0x7
+  167b02:      	mov	r1, r6
+  167b04:      	movs	r2, #0x18
+  167b06:      	bl	0x155064 <AddUIRenderItem(RenderItem*, int&, RenderObjectType, int)> @ imm = #-0x12aa6
+  167b0a:      	b	0x167760 <Board::DrawGameObjects(Sexy::Graphics*)+0x570> @ imm = #-0x3ae
+  167b0c:      	mov	r1, r7
+  167b0e:      	mov	r2, r10
+  167b10:      	mov	r0, r8
+  167b12:      	bl	0x163598 <void std::__insertion_sort<RenderItem*, bool (*)(RenderItem const&, RenderItem const&)>(RenderItem*, RenderItem*, bool (*)(RenderItem const&, RenderItem const&))> @ imm = #-0x457e
+  167b16:      	b	0x16781a <Board::DrawGameObjects(Sexy::Graphics*)+0x62a> @ imm = #-0x300
+  167b18:      	movw	r3, #0xa120
+  167b1c:      	mov	r0, r8
+  167b1e:      	movt	r3, #0x7
+  167b22:      	mov	r1, r6
+  167b24:      	movs	r2, #0x17
+  167b26:      	bl	0x155064 <AddUIRenderItem(RenderItem*, int&, RenderObjectType, int)> @ imm = #-0x12ac6
+  167b2a:      	b	0x167706 <Board::DrawGameObjects(Sexy::Graphics*)+0x516> @ imm = #-0x428
+  167b2c:      	add.w	r3, r5, #0x5600
+  167b30:      	movw	r0, #0x97c8
+  167b34:      	ldr	r3, [r3, #0x60]
+  167b36:      	subs	r3, #0x4
+  167b38:      	cmp	r3, #0x1
+  167b3a:      	iteet	ls
+  167b3c:      	movls	r1, #0x0
+  167b3e:      	movhi	r1, #0x3
+  167b40:      	movhi	r2, #0x2
+  167b42:      	movtls	r0, #0x4
+  167b46:      	it	hi
+  167b48:      	movthi	r0, #0x4
+  167b4c:      	bl	0x15a798 <Board::MakeRenderOrder(RenderLayer, int, int)> @ imm = #-0xd3b8
+  167b50:      	mov	r1, r6
+  167b52:      	mov	r3, r0
+  167b54:      	movs	r2, #0x1b
+  167b56:      	mov	r0, r8
+  167b58:      	bl	0x155064 <AddUIRenderItem(RenderItem*, int&, RenderObjectType, int)> @ imm = #-0x12af8
+  167b5c:      	b	0x1676fa <Board::DrawGameObjects(Sexy::Graphics*)+0x50a> @ imm = #-0x466
+  167b5e:      	cmp	r2, #0x6
+  167b60:      	bne.w	0x167594 <Board::DrawGameObjects(Sexy::Graphics*)+0x3a4> @ imm = #-0x5d0
+  167b64:      	b	0x167690 <Board::DrawGameObjects(Sexy::Graphics*)+0x4a0> @ imm = #-0x4d8
+  167b66:      	ldr	r3, [r4]
+  167b68:      	mov	r1, r7
+  167b6a:      	movw	r0, #0xaf38
+  167b6e:      	movt	r0, #0x4
+  167b72:      	ldr.w	r7, [r3, #0x14c]
+  167b76:      	mov	r2, r3
+  167b78:      	adds	r7, #0x1
+  167b7a:      	beq.w	0x1675de <Board::DrawGameObjects(Sexy::Graphics*)+0x3ee> @ imm = #-0x5a0
+  167b7e:      	ldr	r7, [r6]
+  167b80:      	ldr	r2, [r3, #0x1c]
+  167b82:      	add.w	r7, r7, r7, lsl #1
+  167b86:      	str.w	r11, [r8, r7, lsl #2]
+  167b8a:      	add.w	r7, r8, r7, lsl #2
+  167b8e:      	bl	0x15a798 <Board::MakeRenderOrder(RenderLayer, int, int)> @ imm = #-0xd3fa
+  167b92:      	ldr	r3, [r6]
+  167b94:      	ldr	r2, [r4]
+  167b96:      	str	r0, [r7, #0x4]
+  167b98:      	adds	r3, #0x1
+  167b9a:      	str	r2, [r7, #0x8]
+  167b9c:      	str	r3, [r6]
+  167b9e:      	b	0x1675de <Board::DrawGameObjects(Sexy::Graphics*)+0x3ee> @ imm = #-0x5c4
+  167ba0:      	ldr	r3, [r0]
+  167ba2:      	ldr	r3, [r3, #0x1c]
+  167ba4:      	b	0x1679b6 <Board::DrawGameObjects(Sexy::Graphics*)+0x7c6> @ imm = #-0x1f2
+  167ba6:      	ldr.w	r0, [r5, #0x250]
+  167baa:      	bl	0x17a338 <CutScene::IsInShovelTutorial()> @ imm = #0x1278a
+  167bae:      	cmp	r0, #0x0
+  167bb0:      	bne.w	0x1675ac <Board::DrawGameObjects(Sexy::Graphics*)+0x3bc> @ imm = #-0x608
+  167bb4:      	add.w	r3, r5, #0x5700
+  167bb8:      	ldr	r3, [r3, #0xc]
+  167bba:      	cmp	r3, #0x3f
+  167bbc:      	bne.w	0x167690 <Board::DrawGameObjects(Sexy::Graphics*)+0x4a0> @ imm = #-0x530
+  167bc0:      	b	0x1675ac <Board::DrawGameObjects(Sexy::Graphics*)+0x3bc> @ imm = #-0x618
+  167bc2:      	ldr.w	r0, [r5, #0x250]
+  167bc6:      	movw	r4, #0xae62
+  167bca:      	bl	0x179724 <CutScene::IsAfterScrollLeft()> @ imm = #0x11b56
+  167bce:      	movt	r4, #0xa
+  167bd2:      	cmp	r0, #0x0
+  167bd4:      	beq.w	0x167698 <Board::DrawGameObjects(Sexy::Graphics*)+0x4a8> @ imm = #-0x540
+  167bd8:      	b	0x1675ba <Board::DrawGameObjects(Sexy::Graphics*)+0x3ca> @ imm = #-0x622
+  167bda:      	ldr.w	r0, [r5, #0x114]
+  167bde:      	ldr.w	r3, [r0, #0x900]
+  167be2:      	cmp	r3, #0x4c
+  167be4:      	beq	0x167bf0 <Board::DrawGameObjects(Sexy::Graphics*)+0xa00> @ imm = #0x8
+  167be6:      	bl	0x2b259c <LawnApp::IsCoopMode()> @ imm = #0x14a9b2
+  167bea:      	cmp	r0, #0x0
+  167bec:      	beq.w	0x167710 <Board::DrawGameObjects(Sexy::Graphics*)+0x520> @ imm = #-0x4e0
+  167bf0:      	movw	r0, #0x86a0
+  167bf4:      	movs	r1, #0x0
+  167bf6:      	movs	r2, #0x1
+  167bf8:      	movt	r0, #0x1
+  167bfc:      	bl	0x15a798 <Board::MakeRenderOrder(RenderLayer, int, int)> @ imm = #-0xd468
+  167c00:      	mov	r1, r6
+  167c02:      	mov	r3, r0
+  167c04:      	movs	r2, #0x10
+  167c06:      	mov	r0, r8
+  167c08:      	bl	0x155064 <AddUIRenderItem(RenderItem*, int&, RenderObjectType, int)> @ imm = #-0x12ba8
+  167c0c:      	b	0x167732 <Board::DrawGameObjects(Sexy::Graphics*)+0x542> @ imm = #-0x4de
+  167c0e:      	nop
+  167c10:      	asrs	r0, r1
+  167c12:      	lsls	r1, r0, #0x1
+  167c14:      	strh	r0, [r0, #0x34]
+  167c16:      	lsls	r2, r2, #0x1
+  167c18:      	subs	r3, #0x86
+  167c1a:      	lsls	r1, r0, #0x1
+  167c1c:      	b	0x167ed8 <Board::Draw(Sexy::Graphics*)+0x2b0> @ imm = #0x2b8
+  167c1e:      	<unknown>
+  167c22:      	lsls	r1, r0, #0x1
+  167c24:      	subs	r2, #0xb8
+  167c26:      	lsls	r1, r0, #0x1
+
+00167c28 <Board::Draw(Sexy::Graphics*)>:
+  167c28:      	push.w	{r4, r5, r6, r7, r8, r9, r10, r11, lr}
+  167c2c:      	mov	r4, r0
+  167c2e:      	ldr.w	r0, [r0, #0x114]
+  167c32:      	mov	r6, r1
+  167c34:      	movs	r1, #0x6
+  167c36:      	ldr	r5, [pc, #0x3d4]        @ 0x16800c <Board::Draw(Sexy::Graphics*)+0x3e4>
+  167c38:      	ldr	r3, [r0]
+  167c3a:      	vpush	{d8, d9, d10}
+  167c3e:      	sub	sp, #0x1c4
+  167c40:      	add	r5, pc
+  167c42:      	str	r5, [sp, #0x1c]
+  167c44:      	ldr.w	r3, [r3, #0x19c]
+  167c48:      	blx	r3
+  167c4a:      	cbz	r0, 0x167c56 <Board::Draw(Sexy::Graphics*)+0x2e> @ imm = #0x8
+  167c4c:      	add	sp, #0x1c4
+  167c4e:      	vpop	{d8, d9, d10}
+  167c52:      	pop.w	{r4, r5, r6, r7, r8, r9, r10, r11, pc}
+  167c56:      	ldr.w	r0, [r4, #0x114]
+  167c5a:      	movs	r1, #0x5
+  167c5c:      	ldr	r3, [r0]
+  167c5e:      	ldr.w	r3, [r3, #0x19c]
+  167c62:      	blx	r3
+  167c64:      	cmp	r0, #0x0
+  167c66:      	bne	0x167c4c <Board::Draw(Sexy::Graphics*)+0x24> @ imm = #-0x1e
+  167c68:      	mov	r0, r6
+  167c6a:      	movs	r1, #0x1
+  167c6c:      	add.w	r9, r4, #0x5680
+  167c70:      	bl	0x30bfc4 <Sexy::Graphics::SetLinearBlend(bool)> @ imm = #0x1a4350
+  167c74:      	ldr.w	r3, [r9, #0xc]
+  167c78:      	cbz	r3, 0x167c88 <Board::Draw(Sexy::Graphics*)+0x60> @ imm = #0xc
+  167c7a:      	ldr.w	r3, [r4, #0x250]
+  167c7e:      	ldrb.w	r3, [r3, #0x34]
+  167c82:      	cmp	r3, #0x0
+  167c84:      	bne.w	0x167e90 <Board::Draw(Sexy::Graphics*)+0x268> @ imm = #0x208
+  167c88:      	mov	r0, r4
+  167c8a:      	bl	0x15e2a0 <Board::ResetFPSStats()> @ imm = #-0x99ee
+  167c8e:      	ldr.w	r3, [r9, #0xc]
+  167c92:      	ldr	r1, [pc, #0x37c]        @ 0x168010 <Board::Draw(Sexy::Graphics*)+0x3e8>
+  167c94:      	adds	r3, #0x1
+  167c96:      	add.w	r8, sp, #0xbc
+  167c9a:      	str.w	r3, [r9, #0xc]
+  167c9e:      	mov	r0, r8
+  167ca0:      	add	r1, pc
+  167ca2:      	bl	0x204ab0 <TodHesitationBracket::TodHesitationBracket(char const*, ...)> @ imm = #0x9ce0a
+  167ca6:      	mov	r0, r4
+  167ca8:      	mov	r1, r6
+  167caa:      	bl	0x1671f0 <Board::DrawGameObjects(Sexy::Graphics*)> @ imm = #-0xabe
+  167cae:      	ldr.w	r0, [r4, #0x114]
+  167cb2:      	ldr.w	r3, [r0, #0x900]
+  167cb6:      	cmp	r3, #0x4b
+  167cb8:      	beq	0x167da6 <Board::Draw(Sexy::Graphics*)+0x17e> @ imm = #0xea
+  167cba:      	cmp	r3, #0x20
+  167cbc:      	beq	0x167ce4 <Board::Draw(Sexy::Graphics*)+0xbc> @ imm = #0x24
+  167cbe:      	cmp	r3, #0x2c
+  167cc0:      	bne	0x167ccc <Board::Draw(Sexy::Graphics*)+0xa4> @ imm = #0x8
+  167cc2:      	ldr.w	r3, [r9, #0x20]
+  167cc6:      	cmp	r3, #0x1b
+  167cc8:      	beq.w	0x167eea <Board::Draw(Sexy::Graphics*)+0x2c2> @ imm = #0x21e
+  167ccc:      	mov	r0, r4
+  167cce:      	movs	r1, #0x63
+  167cd0:      	bl	0x3b3bf8 <Sexy::Widget::DeferOverlay(int)> @ imm = #0x24bf24
+  167cd4:      	mov	r0, r8
+  167cd6:      	bl	0x204b70 <TodHesitationBracket::~TodHesitationBracket()> @ imm = #0x9ce96
+  167cda:      	add	sp, #0x1c4
+  167cdc:      	vpop	{d8, d9, d10}
+  167ce0:      	pop.w	{r4, r5, r6, r7, r8, r9, r10, r11, pc}
+  167ce4:      	ldr.w	r3, [r4, #0x254]
+  167ce8:      	ldr	r3, [r3, #0x68]
+  167cea:      	cmp	r3, #0xa
+  167cec:      	beq	0x167ccc <Board::Draw(Sexy::Graphics*)+0xa4> @ imm = #-0x24
+  167cee:      	ldr.w	r3, [r0, #0x904]
+  167cf2:      	cmp	r3, #0x3
+  167cf4:      	bne	0x167ccc <Board::Draw(Sexy::Graphics*)+0xa4> @ imm = #-0x2c
+  167cf6:      	ldr	r7, [pc, #0x31c]        @ 0x168014 <Board::Draw(Sexy::Graphics*)+0x3ec>
+  167cf8:      	add.w	r11, sp, #0x64
+  167cfc:      	ldr.w	r10, [sp, #0x1c]
+  167d00:      	mov	r0, r11
+  167d02:      	movs	r1, #0xfd
+  167d04:      	movs	r2, #0xf5
+  167d06:      	movs	r3, #0xad
+  167d08:      	ldr.w	r7, [r10, r7]
+  167d0c:      	ldr	r5, [r7, #0x8]
+  167d0e:      	bl	0x30b90c <Sexy::Color::Color(int, int, int)> @ imm = #0x1a3bfa
+  167d12:      	ldr	r1, [pc, #0x304]        @ 0x168018 <Board::Draw(Sexy::Graphics*)+0x3f0>
+  167d14:      	add	r7, sp, #0x54
+  167d16:      	mov	r0, r7
+  167d18:      	str	r7, [sp, #0x24]
+  167d1a:      	add	r1, pc
+  167d1c:      	bl	0x1fdb84 <TodStringTranslate(char const*)> @ imm = #0x95e64
+  167d20:      	rsb.w	r3, r5, #0x320
+  167d24:      	movs	r2, #0x80
+  167d26:      	add.w	r3, r3, r3, lsr #31
+  167d2a:      	str	r2, [sp]
+  167d2c:      	add	r7, sp, #0x74
+  167d2e:      	str	r5, [r7, #0x8]
+  167d30:      	asrs	r2, r3, #0x1
+  167d32:      	movs	r1, #0x0
+  167d34:      	mov.w	r3, #0x1c2
+  167d38:      	add.w	r10, sp, #0x98
+  167d3c:      	mov.w	lr, #0x78
+  167d40:      	str	r2, [r7]
+  167d42:      	mov	r0, r10
+  167d44:      	str	r3, [r7, #0x4]
+  167d46:      	mov	r2, r1
+  167d48:      	mov	r3, r1
+  167d4a:      	str.w	lr, [r7, #0xc]
+  167d4e:      	bl	0x30b918 <Sexy::Color::Color(int, int, int, int)> @ imm = #0x1a3bc6
+  167d52:      	mov	r0, r6
+  167d54:      	mov	r1, r10
+  167d56:      	bl	0x30bf74 <Sexy::Graphics::SetColor(Sexy::Color const&)> @ imm = #0x1a421a
+  167d5a:      	mov	r0, r6
+  167d5c:      	mov	r1, r7
+  167d5e:      	bl	0x30c324 <Sexy::Graphics::FillRect(Sexy::TRect<int> const&)> @ imm = #0x1a45c2
+  167d62:      	ldr	r3, [r7, #0x4]
+  167d64:      	mov.w	r12, #0x5
+  167d68:      	ldr	r1, [pc, #0x2b0]        @ 0x16801c <Board::Draw(Sexy::Graphics*)+0x3f4>
+  167d6a:      	mov.w	lr, #0x0
+  167d6e:      	ldr	r5, [sp, #0x1c]
+  167d70:      	mov	r2, r7
+  167d72:      	subs	r3, #0x4
+  167d74:      	mov	r0, r6
+  167d76:      	str	r3, [r7, #0x4]
+  167d78:      	ldr	r3, [r5, r1]
+  167d7a:      	stm.w	sp, {r11, r12}
+  167d7e:      	ldr	r1, [sp, #0x24]
+  167d80:      	ldr	r3, [r3]
+  167d82:      	str.w	lr, [sp, #0x8]
+  167d86:      	bl	0x1fdc24 <TodDrawStringWrapped(Sexy::Graphics*, std::string const&, Sexy::TRect<int> const&, Sexy::Font*, Sexy::Color const&, DrawStringJustification, bool)> @ imm = #0x95e9a
+  167d8a:      	ldr	r7, [sp, #0x24]
+  167d8c:      	ldr	r2, [pc, #0x290]        @ 0x168020 <Board::Draw(Sexy::Graphics*)+0x3f8>
+  167d8e:      	ldr	r3, [r7]
+  167d90:      	ldr	r2, [r5, r2]
+  167d92:      	sub.w	r0, r3, #0xc
+  167d96:      	cmp	r0, r2
+  167d98:      	bne.w	0x16837e <Board::Draw(Sexy::Graphics*)+0x756> @ imm = #0x5e2
+  167d9c:      	ldr.w	r0, [r4, #0x114]
+  167da0:      	ldr.w	r3, [r0, #0x900]
+  167da4:      	b	0x167cbe <Board::Draw(Sexy::Graphics*)+0x96> @ imm = #-0xea
+  167da6:      	ldr.w	r3, [r0, #0x904]
+  167daa:      	cmp	r3, #0x3
+  167dac:      	beq.w	0x168038 <Board::Draw(Sexy::Graphics*)+0x410> @ imm = #0x288
+  167db0:      	cmp	r3, #0x8
+  167db2:      	bne	0x167ccc <Board::Draw(Sexy::Graphics*)+0xa4> @ imm = #-0xea
+  167db4:      	ldr	r1, [pc, #0x26c]        @ 0x168024 <Board::Draw(Sexy::Graphics*)+0x3fc>
+  167db6:      	add.w	r11, sp, #0x64
+  167dba:      	mov	r0, r11
+  167dbc:      	add	r1, pc
+  167dbe:      	bl	0x1fdb84 <TodStringTranslate(char const*)> @ imm = #0x95dc2
+  167dc2:      	add.w	r10, sp, #0x98
+  167dc6:      	add	r7, sp, #0x74
+  167dc8:      	mov	r0, r10
+  167dca:      	bl	0x345990 <Sexy::SexyMatrix3::SexyMatrix3()> @ imm = #0x1ddbc2
+  167dce:      	vldr	s12, [r6, #8]
+  167dd2:      	mov.w	r3, #0x40000000
+  167dd6:      	vldr	s14, [r6, #12]
+  167dda:      	mov	r0, r10
+  167ddc:      	vldr	s13, [pc, #540]         @ 0x167ffc <Board::Draw(Sexy::Graphics*)+0x3d4>
+  167de0:      	add	r7, sp, #0x74
+  167de2:      	vldr	s15, [pc, #540]         @ 0x168000 <Board::Draw(Sexy::Graphics*)+0x3d8>
+  167de6:      	str	r3, [sp]
+  167de8:      	vadd.f32	s13, s12, s13
+  167dec:      	vadd.f32	s15, s14, s15
+  167df0:      	vmov	r1, s13
+  167df4:      	vmov	r2, s15
+  167df8:      	bl	0x1f9df4 <TodScaleTransformMatrix(Sexy::SexyMatrix3&, float, float, float, float)> @ imm = #0x91ff8
+  167dfc:      	ldr	r3, [pc, #0x228]        @ 0x168028 <Board::Draw(Sexy::Graphics*)+0x400>
+  167dfe:      	mov	r1, r11
+  167e00:      	ldr	r5, [sp, #0x1c]
+  167e02:      	add	r7, sp, #0x74
+  167e04:      	ldr	r3, [r5, r3]
+  167e06:      	ldr	r0, [r3]
+  167e08:      	str	r3, [sp, #0x20]
+  167e0a:      	ldr	r3, [r0]
+  167e0c:      	ldr	r3, [r3, #0x20]
+  167e0e:      	blx	r3
+  167e10:      	ldr	r7, [sp, #0x20]
+  167e12:      	add.w	r0, r0, r0, lsr #31
+  167e16:      	asrs	r3, r0, #0x1
+  167e18:      	ldr	r2, [r7]
+  167e1a:      	add	r7, sp, #0x74
+  167e1c:      	rsbs	r3, r3, #0
+  167e1e:      	ldr	r1, [r2]
+  167e20:      	mov	r0, r2
+  167e22:      	vmov	s13, r3
+  167e26:      	vcvt.f32.s32	s16, s13
+  167e2a:      	ldr	r2, [r1, #0x14]
+  167e2c:      	blx	r2
+  167e2e:      	add.w	r3, r0, r0, lsr #31
+  167e32:      	vmov	r1, s16
+  167e36:      	mov	r0, r10
+  167e38:      	asrs	r2, r3, #0x1
+  167e3a:      	add	r7, sp, #0x74
+  167e3c:      	vmov	s14, r2
+  167e40:      	vcvt.f32.s32	s14, s14
+  167e44:      	vmov	r2, s14
+  167e48:      	bl	0x1fa100 <SexyMatrix3Translation(Sexy::SexyMatrix3&, float, float)> @ imm = #0x922b4
+  167e4c:      	ldr	r5, [sp, #0x20]
+  167e4e:      	movs	r1, #0xff
+  167e50:      	add	r7, sp, #0x74
+  167e52:      	mov	r2, r1
+  167e54:      	mov	r0, r7
+  167e56:      	mov	r3, r1
+  167e58:      	ldr	r5, [r5]
+  167e5a:      	str	r5, [sp, #0x20]
+  167e5c:      	bl	0x30b90c <Sexy::Color::Color(int, int, int)> @ imm = #0x1a3aac
+  167e60:      	str	r7, [sp]
+  167e62:      	mov	r2, r10
+  167e64:      	ldr	r1, [sp, #0x20]
+  167e66:      	mov	r0, r6
+  167e68:      	mov	r3, r11
+  167e6a:      	bl	0x1fc2c0 <TodDrawStringMatrix(Sexy::Graphics*, Sexy::Font*, Sexy::SexyMatrix3 const&, std::string const&, Sexy::Color const&)> @ imm = #0x94452
+  167e6e:      	ldr	r2, [pc, #0x1b0]        @ 0x168020 <Board::Draw(Sexy::Graphics*)+0x3f8>
+  167e70:      	ldr.w	r10, [sp, #0x1c]
+  167e74:      	ldr.w	r3, [r11]
+  167e78:      	ldr.w	r2, [r10, r2]
+  167e7c:      	sub.w	r0, r3, #0xc
+  167e80:      	cmp	r0, r2
+  167e82:      	bne.w	0x1683b4 <Board::Draw(Sexy::Graphics*)+0x78c> @ imm = #0x52e
+  167e86:      	ldr.w	r0, [r4, #0x114]
+  167e8a:      	ldr.w	r3, [r0, #0x900]
+  167e8e:      	b	0x167cba <Board::Draw(Sexy::Graphics*)+0x92> @ imm = #-0x1d8
+  167e90:      	bl	0x2ff834 <Sexy::GetTickCount()> @ imm = #0x1979a0
+  167e94:      	add.w	r2, r4, #0x5880
+  167e98:      	movw	r7, #0x2710
+  167e9c:      	ldr	r1, [r2, #0x20]
+  167e9e:      	ldr.w	lr, [r2, #0x24]
+  167ea2:      	ldr.w	r3, [r9, #0xc]
+  167ea6:      	subs	r1, r0, r1
+  167ea8:      	cmp	r1, r7
+  167eaa:      	ble.w	0x167c92 <Board::Draw(Sexy::Graphics*)+0x6a> @ imm = #-0x21c
+  167eae:      	rsb	lr, lr, r3
+  167eb2:      	vldr	s12, [pc, #336]         @ 0x168004 <Board::Draw(Sexy::Graphics*)+0x3dc>
+  167eb6:      	vldr	s15, [pc, #336]         @ 0x168008 <Board::Draw(Sexy::Graphics*)+0x3e0>
+  167eba:      	vmov	s13, lr
+  167ebe:      	vcvt.f32.s32	s11, s13
+  167ec2:      	vmov	s14, r1
+  167ec6:      	vcvt.f32.s32	s13, s14
+  167eca:      	str	r3, [r2, #0x24]
+  167ecc:      	vmla.f32	s15, s11, s12
+  167ed0:      	vldr	s14, [r2, #40]
+  167ed4:      	str	r0, [r2, #0x20]
+  167ed6:      	vdiv.f32	s15, s15, s13
+  167eda:      	vcmpe.f32	s15, s14
+  167ede:      	vmrs	APSR_nzcv, fpscr
+  167ee2:      	it	mi
+  167ee4:      	vstrmi	s15, [r2, #40]
+  167ee8:      	b	0x167c92 <Board::Draw(Sexy::Graphics*)+0x6a> @ imm = #-0x25a
+  167eea:      	bl	0x2acd44 <Sexy::GamepadApp::HasGamepad()> @ imm = #0x144e56
+  167eee:      	cmp	r0, #0x0
+  167ef0:      	bne	0x167f7e <Board::Draw(Sexy::Graphics*)+0x356> @ imm = #0x8a
+  167ef2:      	ldr.w	r3, [r4, #0x114]
+  167ef6:      	ldrb.w	r2, [r3, #0x83d]
+  167efa:      	cbz	r2, 0x167f04 <Board::Draw(Sexy::Graphics*)+0x2dc> @ imm = #0x6
+  167efc:      	ldrb.w	r3, [r3, #0x899]
+  167f00:      	cmp	r3, #0x0
+  167f02:      	bne	0x167f7e <Board::Draw(Sexy::Graphics*)+0x356> @ imm = #0x78
+  167f04:      	ldr	r1, [pc, #0x124]        @ 0x16802c <Board::Draw(Sexy::Graphics*)+0x404>
+  167f06:      	add.w	r10, sp, #0x98
+  167f0a:      	mov	r0, r10
+  167f0c:      	add	r2, sp, #0x64
+  167f0e:      	add	r1, pc
+  167f10:      	blx	0x2f13dc <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x6b34> @ imm = #0x1894c8
+  167f14:      	ldr	r5, [sp, #0x1c]
+  167f16:      	mov	r7, sp
+  167f18:      	ldr	r3, [pc, #0x100]        @ 0x16801c <Board::Draw(Sexy::Graphics*)+0x3f4>
+  167f1a:      	mov.w	lr, #0x2
+  167f1e:      	ldr	r2, [pc, #0x110]        @ 0x168030 <Board::Draw(Sexy::Graphics*)+0x408>
+  167f20:      	ldr	r3, [r5, r3]
+  167f22:      	ldr	r3, [r3]
+  167f24:      	str	r3, [r7], #4
+  167f28:      	ldr	r3, [r5, r2]
+  167f2a:      	ldm	r3, {r0, r1, r2, r3}
+  167f2c:      	stm.w	r7, {r0, r1, r2, r3}
+  167f30:      	mov	r0, r6
+  167f32:      	str.w	lr, [sp, #0x14]
+  167f36:      	mov	r1, r10
+  167f38:      	mov.w	r2, #0x190
+  167f3c:      	mov.w	r3, #0x1f4
+  167f40:      	bl	0x1fa888 <TodDrawString(Sexy::Graphics*, std::string const&, int, int, Sexy::Font*, Sexy::Color, DrawStringJustification)> @ imm = #0x92944
+  167f44:      	ldr	r2, [pc, #0xd8]         @ 0x168020 <Board::Draw(Sexy::Graphics*)+0x3f8>
+  167f46:      	ldr.w	r3, [r10]
+  167f4a:      	ldr	r2, [r5, r2]
+  167f4c:      	sub.w	r0, r3, #0xc
+  167f50:      	cmp	r0, r2
+  167f52:      	beq.w	0x167ccc <Board::Draw(Sexy::Graphics*)+0xa4> @ imm = #-0x28a
+  167f56:      	subs	r3, #0x4
+  167f58:      	dmb	sy
+  167f5c:      	ldrex	r2, [r3]
+  167f60:      	subs	r7, r2, #0x1
+  167f62:      	strex	r10, r7, [r3]
+  167f66:      	cmp.w	r10, #0x0
+  167f6a:      	bne	0x167f5c <Board::Draw(Sexy::Graphics*)+0x334> @ imm = #-0x12
+  167f6c:      	cmp	r2, #0x0
+  167f6e:      	dmb	sy
+  167f72:      	bgt.w	0x167ccc <Board::Draw(Sexy::Graphics*)+0xa4> @ imm = #-0x2aa
+  167f76:      	add	r1, sp, #0x74
+  167f78:      	blx	0x2f05fc <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x5d54> @ imm = #0x188680
+  167f7c:      	b	0x167ccc <Board::Draw(Sexy::Graphics*)+0xa4> @ imm = #-0x2b4
+  167f7e:      	ldr	r1, [pc, #0xb4]         @ 0x168034 <Board::Draw(Sexy::Graphics*)+0x40c>
+  167f80:      	add	r7, sp, #0x74
+  167f82:      	mov	r0, r7
+  167f84:      	add	r2, sp, #0x64
+  167f86:      	add	r1, pc
+  167f88:      	blx	0x2f13dc <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x6b34> @ imm = #0x189450
+  167f8c:      	ldr.w	r10, [sp, #0x1c]
+  167f90:      	mov	lr, sp
+  167f92:      	ldr	r3, [pc, #0x88]         @ 0x16801c <Board::Draw(Sexy::Graphics*)+0x3f4>
+  167f94:      	mov.w	r12, #0x2
+  167f98:      	ldr	r2, [pc, #0x94]         @ 0x168030 <Board::Draw(Sexy::Graphics*)+0x408>
+  167f9a:      	ldr.w	r3, [r10, r3]
+  167f9e:      	ldr	r3, [r3]
+  167fa0:      	str	r3, [lr], #4
+  167fa4:      	ldr.w	r3, [r10, r2]
+  167fa8:      	ldm	r3, {r0, r1, r2, r3}
+  167faa:      	stm.w	lr, {r0, r1, r2, r3}
+  167fae:      	mov	r0, r6
+  167fb0:      	str.w	r12, [sp, #0x14]
+  167fb4:      	mov	r1, r7
+  167fb6:      	mov.w	r2, #0x190
+  167fba:      	mov.w	r3, #0x1f4
+  167fbe:      	bl	0x1fa888 <TodDrawString(Sexy::Graphics*, std::string const&, int, int, Sexy::Font*, Sexy::Color, DrawStringJustification)> @ imm = #0x928c6
+  167fc2:      	ldr	r2, [pc, #0x5c]         @ 0x168020 <Board::Draw(Sexy::Graphics*)+0x3f8>
+  167fc4:      	ldr	r3, [r7]
+  167fc6:      	ldr.w	r2, [r10, r2]
+  167fca:      	sub.w	r0, r3, #0xc
+  167fce:      	cmp	r0, r2
+  167fd0:      	beq.w	0x167ccc <Board::Draw(Sexy::Graphics*)+0xa4> @ imm = #-0x308
+  167fd4:      	subs	r3, #0x4
+  167fd6:      	dmb	sy
+  167fda:      	ldrex	r2, [r3]
+  167fde:      	subs	r1, r2, #0x1
+  167fe0:      	strex	r5, r1, [r3]
+  167fe4:      	cmp	r5, #0x0
+  167fe6:      	bne	0x167fda <Board::Draw(Sexy::Graphics*)+0x3b2> @ imm = #-0x10
+  167fe8:      	cmp	r2, #0x0
+  167fea:      	dmb	sy
+  167fee:      	bgt.w	0x167ccc <Board::Draw(Sexy::Graphics*)+0xa4> @ imm = #-0x326
+  167ff2:      	add	r1, sp, #0x98
+  167ff4:      	blx	0x2f05fc <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x5d54> @ imm = #0x188604
+  167ff8:      	b	0x167ccc <Board::Draw(Sexy::Graphics*)+0xa4> @ imm = #-0x330
+  167ffa:      	nop
+  167ffc:      	movs	r0, r0
+  167ffe:      	mvns	r0, r1
+  168000:      	movs	r0, r0
+  168002:      	bics	r6, r2
+  168004:      	movs	r0, r0
+  168006:      	add	r2, pc
+  168008:      	movs	r0, r0
+  16800a:      	mvns	r2, r7
+  16800c:      	ldrb	r4, [r2, #0x11]
+  16800e:      	lsls	r2, r2, #0x1
+  168010:      	adds	r6, #0xc0
+  168012:      	lsls	r1, r0, #0x1
+  168014:      	ble	0x167fa0 <Board::Draw(Sexy::Graphics*)+0x378> @ imm = #-0x78
+  168016:      	<unknown>
+  16801a:      	lsls	r1, r0, #0x1
+  16801c:      	ble	0x167fc0 <Board::Draw(Sexy::Graphics*)+0x398> @ imm = #-0x60
+  16801e:      	<unknown>
+  168022:      	vsli.64	d19, d28, #0x3f
+  168026:      	lsls	r1, r0, #0x1
+  168028:      	udf	#0x8
+  16802a:      	vsri.64	d19, d2, #0x1
+  16802e:      	lsls	r1, r0, #0x1
+  168030:      	ble	0x167ffc <Board::Draw(Sexy::Graphics*)+0x3d4> @ imm = #-0x38
+  168032:      	<unknown>
+  168036:      	lsls	r1, r0, #0x1
+  168038:      	bl	0x2ff834 <Sexy::GetTickCount()> @ imm = #0x1977f8
+  16803c:      	ldr	r7, [sp, #0x1c]
+  16803e:      	add	r5, sp, #0x48
+  168040:      	ldr	r3, [pc, #0x3bc]        @ 0x168400 <Board::Draw(Sexy::Graphics*)+0x7d8>
+  168042:      	add.w	r10, sp, #0x54
+  168046:      	ldr.w	r2, [r4, #0x254]
+  16804a:      	mov	r1, r10
+  16804c:      	str	r5, [sp, #0x2c]
+  16804e:      	movw	r12, #0x4dd3
+  168052:      	ldr	r5, [r7, r3]
+  168054:      	movt	r12, #0x1062
+  168058:      	ldr.w	r3, [r2, #0xe4]
+  16805c:      	movw	lr, #0x8889
+  168060:      	str.w	r10, [sp, #0x24]
+  168064:      	movt	lr, #0x8888
+  168068:      	ldr.w	r11, [r5]
+  16806c:      	movs	r2, #0x10
+  16806e:      	rsb	r10, r3, r0
+  168072:      	ldr	r3, [pc, #0x390]        @ 0x168404 <Board::Draw(Sexy::Graphics*)+0x7dc>
+  168074:      	add	r0, sp, #0x48
+  168076:      	rsb	r11, r10, r11
+  16807a:      	mov	r5, r11
+  16807c:      	add	r3, pc
+  16807e:      	umull	r5, r12, r12, r5
+  168082:      	str.w	r11, [sp, #0x3c]
+  168086:      	lsr.w	r12, r12, #0x6
+  16808a:      	umull	r7, lr, lr, r12
+  16808e:      	lsr.w	r5, lr, #0x5
+  168092:      	rsb	lr, r5, r5, lsl #4
+  168096:      	str	r5, [sp]
+  168098:      	str	r5, [sp, #0x28]
+  16809a:      	sub.w	r7, r12, lr, lsl #2
+  16809e:      	str	r7, [sp, #0x4]
+  1680a0:      	str	r7, [sp, #0x34]
+  1680a2:      	bl	0x2ff1e8 <Sexy::StrFormat(char const*, ...)> @ imm = #0x197142
+  1680a6:      	ldr	r2, [pc, #0x360]        @ 0x168408 <Board::Draw(Sexy::Graphics*)+0x7e0>
+  1680a8:      	ldr.w	r10, [sp, #0x1c]
+  1680ac:      	ldr	r3, [sp, #0x48]
+  1680ae:      	ldr.w	r2, [r10, r2]
+  1680b2:      	sub.w	r0, r3, #0xc
+  1680b6:      	cmp	r0, r2
+  1680b8:      	str	r2, [sp, #0x30]
+  1680ba:      	bne.w	0x16834a <Board::Draw(Sexy::Graphics*)+0x722> @ imm = #0x28c
+  1680be:      	ldr.w	r10, [sp, #0x1c]
+  1680c2:      	add	r7, sp, #0x4c
+  1680c4:      	ldr	r3, [pc, #0x344]        @ 0x16840c <Board::Draw(Sexy::Graphics*)+0x7e4>
+  1680c6:      	add	r0, sp, #0x4c
+  1680c8:      	str	r7, [sp, #0x2c]
+  1680ca:      	add	r7, sp, #0x74
+  1680cc:      	mov	r2, r7
+  1680ce:      	ldr	r1, [sp, #0x24]
+  1680d0:      	ldr.w	r3, [r10, r3]
+  1680d4:      	ldr.w	r10, [r3]
+  1680d8:      	str	r3, [sp, #0x20]
+  1680da:      	ldr.w	r3, [r10]
+  1680de:      	ldr.w	r11, [r3, #0x20]
+  1680e2:      	blx	0x2f13dc <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x6b34> @ imm = #0x1892f8
+  1680e6:      	mov	r0, r10
+  1680e8:      	add	r1, sp, #0x4c
+  1680ea:      	blx	r11
+  1680ec:      	ldr	r3, [sp, #0x4c]
+  1680ee:      	ldr	r5, [sp, #0x30]
+  1680f0:      	str	r0, [sp, #0x40]
+  1680f2:      	sub.w	r0, r3, #0xc
+  1680f6:      	cmp	r0, r5
+  1680f8:      	bne.w	0x1682f4 <Board::Draw(Sexy::Graphics*)+0x6cc> @ imm = #0x1f8
+  1680fc:      	ldr	r5, [sp, #0x20]
+  1680fe:      	ldr	r0, [r5]
+  168100:      	ldr	r3, [r0]
+  168102:      	ldr	r3, [r3, #0x14]
+  168104:      	blx	r3
+  168106:      	vldr	s18, [r6, #8]
+  16810a:      	vldr	s14, [pc, #744]         @ 0x1683f4 <Board::Draw(Sexy::Graphics*)+0x7cc>
+  16810e:      	vldr	s17, [r6, #12]
+  168112:      	vldr	s15, [pc, #740]         @ 0x1683f8 <Board::Draw(Sexy::Graphics*)+0x7d0>
+  168116:      	vmov	s16, r0
+  16811a:      	mov	r0, r7
+  16811c:      	vadd.f32	s18, s18, s14
+  168120:      	vadd.f32	s17, s17, s15
+  168124:      	bl	0x345990 <Sexy::SexyMatrix3::SexyMatrix3()> @ imm = #0x1dd868
+  168128:      	mov.w	r2, #0x3f800000
+  16812c:      	mov	r0, r7
+  16812e:      	mov	r3, r2
+  168130:      	str	r2, [sp]
+  168132:      	vmov	r1, s18
+  168136:      	vmov	r2, s17
+  16813a:      	bl	0x1f9df4 <TodScaleTransformMatrix(Sexy::SexyMatrix3&, float, float, float, float)> @ imm = #0x91cb6
+  16813e:      	ldr.w	r10, [sp, #0x40]
+  168142:      	mov	r0, r7
+  168144:      	vcvt.f32.s32	s16, s16
+  168148:      	vmov.f32	s15, #5.000000e-01
+  16814c:      	rsb.w	r3, r10, #0x0
+  168150:      	vmov	s13, r3
+  168154:      	vcvt.f32.s32	s14, s13
+  168158:      	vmul.f32	s16, s16, s15
+  16815c:      	vmul.f32	s14, s14, s15
+  168160:      	vmov	r2, s16
+  168164:      	vmov	r1, s14
+  168168:      	bl	0x1fa100 <SexyMatrix3Translation(Sexy::SexyMatrix3&, float, float)> @ imm = #0x91f94
+  16816c:      	ldr.w	r10, [sp, #0x20]
+  168170:      	add	r5, sp, #0x50
+  168172:      	add.w	r11, sp, #0x64
+  168176:      	mov	r2, r5
+  168178:      	mov	r0, r11
+  16817a:      	ldr	r1, [sp, #0x24]
+  16817c:      	str	r5, [sp, #0x38]
+  16817e:      	ldr.w	r5, [r10]
+  168182:      	blx	0x2f13dc <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x6b34> @ imm = #0x189258
+  168186:      	movs	r1, #0xff
+  168188:      	add.w	r10, sp, #0x98
+  16818c:      	mov	r0, r10
+  16818e:      	mov	r2, r1
+  168190:      	mov	r3, r1
+  168192:      	bl	0x30b90c <Sexy::Color::Color(int, int, int)> @ imm = #0x1a3776
+  168196:      	str.w	r10, [sp]
+  16819a:      	mov	r1, r5
+  16819c:      	mov	r2, r7
+  16819e:      	mov	r0, r6
+  1681a0:      	mov	r3, r11
+  1681a2:      	bl	0x1fc2c0 <TodDrawStringMatrix(Sexy::Graphics*, Sexy::Font*, Sexy::SexyMatrix3 const&, std::string const&, Sexy::Color const&)> @ imm = #0x9411a
+  1681a6:      	ldr.w	r3, [r11]
+  1681aa:      	ldr	r5, [sp, #0x30]
+  1681ac:      	sub.w	r0, r3, #0xc
+  1681b0:      	cmp	r0, r5
+  1681b2:      	bne.w	0x1682ce <Board::Draw(Sexy::Graphics*)+0x6a6> @ imm = #0x118
+  1681b6:      	ldr	r5, [sp, #0x28]
+  1681b8:      	cmp	r5, #0x0
+  1681ba:      	bne.w	0x167e86 <Board::Draw(Sexy::Graphics*)+0x25e> @ imm = #-0x338
+  1681be:      	ldr	r7, [sp, #0x34]
+  1681c0:      	cmp	r7, #0xa
+  1681c2:      	it	ne
+  1681c4:      	cmpne	r7, #0x1e
+  1681c6:      	beq	0x1681d0 <Board::Draw(Sexy::Graphics*)+0x5a8> @ imm = #0x6
+  1681c8:      	subs	r3, r7, #0x1
+  1681ca:      	cmp	r3, #0x4
+  1681cc:      	bhi.w	0x167e86 <Board::Draw(Sexy::Graphics*)+0x25e> @ imm = #-0x34a
+  1681d0:      	ldr	r3, [pc, #0x23c]        @ 0x168410 <Board::Draw(Sexy::Graphics*)+0x7e8>
+  1681d2:      	ldr	r5, [sp, #0x34]
+  1681d4:      	add	r3, pc
+  1681d6:      	ldr	r3, [r3]
+  1681d8:      	cmp	r3, r5
+  1681da:      	beq	0x1681f8 <Board::Draw(Sexy::Graphics*)+0x5d0> @ imm = #0x1a
+  1681dc:      	ldr	r7, [sp, #0x1c]
+  1681de:      	movs	r2, #0x1
+  1681e0:      	ldr.w	r0, [r4, #0x114]
+  1681e4:      	ldr	r3, [pc, #0x22c]        @ 0x168414 <Board::Draw(Sexy::Graphics*)+0x7ec>
+  1681e6:      	ldr	r1, [r0]
+  1681e8:      	ldr	r3, [r7, r3]
+  1681ea:      	ldr.w	r7, [r1, #0x2a8]
+  1681ee:      	ldr	r1, [r3]
+  1681f0:      	blx	r7
+  1681f2:      	ldr	r3, [pc, #0x224]        @ 0x168418 <Board::Draw(Sexy::Graphics*)+0x7f0>
+  1681f4:      	add	r3, pc
+  1681f6:      	str	r5, [r3]
+  1681f8:      	ldr	r5, [sp, #0x34]
+  1681fa:      	mov.w	r0, #0x3e8
+  1681fe:      	mov.w	r1, #0x3f800000
+  168202:      	movs	r3, #0x1
+  168204:      	str	r1, [sp]
+  168206:      	str	r3, [sp, #0x4]
+  168208:      	movs	r3, #0x0
+  16820a:      	mul	r0, r0, r5
+  16820e:      	ldr	r2, [sp, #0x3c]
+  168210:      	add.w	r1, r0, #0x3e8
+  168214:      	bl	0x1f9c48 <TodAnimateCurveFloat(int, int, int, float, float, TodCurves)> @ imm = #0x91a30
+  168218:      	vmov.f32	s19, #2.000000e+00
+  16821c:      	vmov	s20, r0
+  168220:      	mov	r0, r10
+  168222:      	vsub.f32	s19, s19, s20
+  168226:      	bl	0x345990 <Sexy::SexyMatrix3::SexyMatrix3()> @ imm = #0x1dd766
+  16822a:      	vstr	s19, [sp]
+  16822e:      	mov	r0, r10
+  168230:      	vmov	r1, s18
+  168234:      	vmov	r2, s17
+  168238:      	vmov	r3, s19
+  16823c:      	bl	0x1f9df4 <TodScaleTransformMatrix(Sexy::SexyMatrix3&, float, float, float, float)> @ imm = #0x91bb4
+  168240:      	vldr	s15, [sp, #64]
+  168244:      	mov	r0, r10
+  168246:      	vmul.f32	s16, s19, s16
+  16824a:      	vcvt.f32.s32	s15, s15, #1
+  16824e:      	vmov	r2, s16
+  168252:      	vnmul.f32	s15, s19, s15
+  168256:      	vmov	r1, s15
+  16825a:      	bl	0x1fa100 <SexyMatrix3Translation(Sexy::SexyMatrix3&, float, float)> @ imm = #0x91ea2
+  16825e:      	ldr	r5, [sp, #0x20]
+  168260:      	add	r2, sp, #0x4c
+  168262:      	ldr	r1, [sp, #0x24]
+  168264:      	add	r0, sp, #0x50
+  168266:      	ldr	r7, [r5]
+  168268:      	blx	0x2f13dc <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x6b34> @ imm = #0x189170
+  16826c:      	vldr	s15, [pc, #396]         @ 0x1683fc <Board::Draw(Sexy::Graphics*)+0x7d4>
+  168270:      	movs	r1, #0xff
+  168272:      	mov	r2, r1
+  168274:      	mov	r3, r1
+  168276:      	mov	r0, r11
+  168278:      	vmul.f32	s20, s20, s15
+  16827c:      	vcvt.s32.f32	s20, s20
+  168280:      	vstr	s20, [sp]
+  168284:      	bl	0x30b918 <Sexy::Color::Color(int, int, int, int)> @ imm = #0x1a3690
+  168288:      	str.w	r11, [sp]
+  16828c:      	mov	r1, r7
+  16828e:      	mov	r2, r10
+  168290:      	mov	r0, r6
+  168292:      	add	r3, sp, #0x50
+  168294:      	bl	0x1fc2c0 <TodDrawStringMatrix(Sexy::Graphics*, Sexy::Font*, Sexy::SexyMatrix3 const&, std::string const&, Sexy::Color const&)> @ imm = #0x94028
+  168298:      	ldr	r3, [sp, #0x50]
+  16829a:      	ldr	r7, [sp, #0x30]
+  16829c:      	sub.w	r0, r3, #0xc
+  1682a0:      	cmp	r0, r7
+  1682a2:      	beq.w	0x167e86 <Board::Draw(Sexy::Graphics*)+0x25e> @ imm = #-0x420
+  1682a6:      	subs	r3, #0x4
+  1682a8:      	dmb	sy
+  1682ac:      	ldrex	r2, [r3]
+  1682b0:      	add.w	r10, r2, #0xffffffff
+  1682b4:      	strex	r1, r10, [r3]
+  1682b8:      	cmp	r1, #0x0
+  1682ba:      	bne	0x1682ac <Board::Draw(Sexy::Graphics*)+0x684> @ imm = #-0x12
+  1682bc:      	cmp	r2, #0x0
+  1682be:      	dmb	sy
+  1682c2:      	bgt.w	0x167e86 <Board::Draw(Sexy::Graphics*)+0x25e> @ imm = #-0x440
+  1682c6:      	mov	r1, r11
+  1682c8:      	blx	0x2f05fc <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x5d54> @ imm = #0x188330
+  1682cc:      	b	0x167e86 <Board::Draw(Sexy::Graphics*)+0x25e> @ imm = #-0x44a
+  1682ce:      	subs	r3, #0x4
+  1682d0:      	dmb	sy
+  1682d4:      	ldrex	r2, [r3]
+  1682d8:      	subs	r7, r2, #0x1
+  1682da:      	strex	r1, r7, [r3]
+  1682de:      	cmp	r1, #0x0
+  1682e0:      	bne	0x1682d4 <Board::Draw(Sexy::Graphics*)+0x6ac> @ imm = #-0x10
+  1682e2:      	cmp	r2, #0x0
+  1682e4:      	dmb	sy
+  1682e8:      	bgt.w	0x1681b6 <Board::Draw(Sexy::Graphics*)+0x58e> @ imm = #-0x136
+  1682ec:      	mov	r1, r10
+  1682ee:      	blx	0x2f05fc <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x5d54> @ imm = #0x18830c
+  1682f2:      	b	0x1681b6 <Board::Draw(Sexy::Graphics*)+0x58e> @ imm = #-0x140
+  1682f4:      	subs	r3, #0x4
+  1682f6:      	dmb	sy
+  1682fa:      	ldrex	r2, [r3]
+  1682fe:      	add.w	r10, r2, #0xffffffff
+  168302:      	strex	r1, r10, [r3]
+  168306:      	cmp	r1, #0x0
+  168308:      	bne	0x1682fa <Board::Draw(Sexy::Graphics*)+0x6d2> @ imm = #-0x12
+  16830a:      	cmp	r2, #0x0
+  16830c:      	dmb	sy
+  168310:      	bgt.w	0x1680fc <Board::Draw(Sexy::Graphics*)+0x4d4> @ imm = #-0x218
+  168314:      	add	r1, sp, #0x98
+  168316:      	blx	0x2f05fc <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x5d54> @ imm = #0x1882e4
+  16831a:      	b	0x1680fc <Board::Draw(Sexy::Graphics*)+0x4d4> @ imm = #-0x222
+  16831c:      	ldr	r0, [sp, #0x4c]
+  16831e:      	add	r1, sp, #0x98
+  168320:      	subs	r0, #0xc
+  168322:      	blx	0x2f0600 <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x5d58> @ imm = #0x1882dc
+  168326:      	mov	r0, r8
+  168328:      	bl	0x204b70 <TodHesitationBracket::~TodHesitationBracket()> @ imm = #0x9c844
+  16832c:      	blx	0x2c8aa8 <__cxa_end_cleanup> @ imm = #0x160778
+  168330:      	ldr.w	r0, [r11]
+  168334:      	mov	r1, r10
+  168336:      	subs	r0, #0xc
+  168338:      	blx	0x2f0600 <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x5d58> @ imm = #0x1882c4
+  16833c:      	b	0x168326 <Board::Draw(Sexy::Graphics*)+0x6fe> @ imm = #-0x1a
+  16833e:      	ldr	r0, [sp, #0x50]
+  168340:      	mov	r1, r11
+  168342:      	subs	r0, #0xc
+  168344:      	blx	0x2f0600 <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x5d58> @ imm = #0x1882b8
+  168348:      	b	0x168326 <Board::Draw(Sexy::Graphics*)+0x6fe> @ imm = #-0x26
+  16834a:      	subs	r3, #0x4
+  16834c:      	dmb	sy
+  168350:      	ldrex	r2, [r3]
+  168354:      	subs	r1, r2, #0x1
+  168356:      	strex	r5, r1, [r3]
+  16835a:      	cmp	r5, #0x0
+  16835c:      	bne	0x168350 <Board::Draw(Sexy::Graphics*)+0x728> @ imm = #-0x10
+  16835e:      	cmp	r2, #0x0
+  168360:      	dmb	sy
+  168364:      	bgt.w	0x1680be <Board::Draw(Sexy::Graphics*)+0x496> @ imm = #-0x2aa
+  168368:      	add	r1, sp, #0x98
+  16836a:      	blx	0x2f05fc <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x5d54> @ imm = #0x188290
+  16836e:      	b	0x1680be <Board::Draw(Sexy::Graphics*)+0x496> @ imm = #-0x2b4
+  168370:      	ldr.w	r0, [r10]
+  168374:      	add	r1, sp, #0x74
+  168376:      	subs	r0, #0xc
+  168378:      	blx	0x2f0600 <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x5d58> @ imm = #0x188284
+  16837c:      	b	0x168326 <Board::Draw(Sexy::Graphics*)+0x6fe> @ imm = #-0x5a
+  16837e:      	subs	r3, #0x4
+  168380:      	dmb	sy
+  168384:      	ldrex	r2, [r3]
+  168388:      	subs	r1, r2, #0x1
+  16838a:      	strex	r5, r1, [r3]
+  16838e:      	cmp	r5, #0x0
+  168390:      	bne	0x168384 <Board::Draw(Sexy::Graphics*)+0x75c> @ imm = #-0x10
+  168392:      	cmp	r2, #0x0
+  168394:      	dmb	sy
+  168398:      	bgt.w	0x167d9c <Board::Draw(Sexy::Graphics*)+0x174> @ imm = #-0x600
+  16839c:      	mov	r1, r10
+  16839e:      	blx	0x2f05fc <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x5d54> @ imm = #0x18825c
+  1683a2:      	b	0x167d9c <Board::Draw(Sexy::Graphics*)+0x174> @ imm = #-0x60a
+  1683a4:      	ldr	r5, [sp, #0x24]
+  1683a6:      	mov	r1, r10
+  1683a8:      	ldr	r0, [r5]
+  1683aa:      	subs	r0, #0xc
+  1683ac:      	blx	0x2f0600 <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x5d58> @ imm = #0x188250
+  1683b0:      	b	0x168326 <Board::Draw(Sexy::Graphics*)+0x6fe> @ imm = #-0x8e
+  1683b2:      	b	0x168326 <Board::Draw(Sexy::Graphics*)+0x6fe> @ imm = #-0x90
+  1683b4:      	subs	r3, #0x4
+  1683b6:      	dmb	sy
+  1683ba:      	ldrex	r2, [r3]
+  1683be:      	subs	r1, r2, #0x1
+  1683c0:      	strex	r5, r1, [r3]
+  1683c4:      	cmp	r5, #0x0
+  1683c6:      	bne	0x1683ba <Board::Draw(Sexy::Graphics*)+0x792> @ imm = #-0x10
+  1683c8:      	cmp	r2, #0x0
+  1683ca:      	dmb	sy
+  1683ce:      	bgt.w	0x167e86 <Board::Draw(Sexy::Graphics*)+0x25e> @ imm = #-0x54c
+  1683d2:      	mov	r1, r7
+  1683d4:      	blx	0x2f05fc <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x5d54> @ imm = #0x188224
+  1683d8:      	b	0x167e86 <Board::Draw(Sexy::Graphics*)+0x25e> @ imm = #-0x556
+  1683da:      	ldr.w	r0, [r11]
+  1683de:      	mov	r1, r7
+  1683e0:      	subs	r0, #0xc
+  1683e2:      	blx	0x2f0600 <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x5d58> @ imm = #0x18821c
+  1683e6:      	b	0x168326 <Board::Draw(Sexy::Graphics*)+0x6fe> @ imm = #-0xc4
+  1683e8:      	ldr	r0, [r7]
+  1683ea:      	add	r1, sp, #0x98
+  1683ec:      	subs	r0, #0xc
+  1683ee:      	blx	0x2f0600 <void std::__convert_to_v<long double>(char const*, long double&, std::_Ios_Iostate&, int* const&)+0x5d58> @ imm = #0x188210
+  1683f2:      	b	0x168326 <Board::Draw(Sexy::Graphics*)+0x6fe> @ imm = #-0xd0
+  1683f4:      	movs	r0, r0
+  1683f6:      	mvns	r0, r1
+  1683f8:      	movs	r0, r0
+  1683fa:      	cmp	r0, r7
+  1683fc:      	movs	r0, r0
+  1683fe:      	muls	r7, r7, r7
+  168400:      	b	0x1685c4 <Board::dumpLevelConfiguration()+0x160> @ imm = #0x1c0
+  168402:      	<unknown>
+  168406:      	lsls	r1, r0, #0x1
+  168408:      	ble	0x168364 <Board::Draw(Sexy::Graphics*)+0x73c> @ imm = #-0xa8
+  16840a:      	<unknown>
+  16840e:      	<unknown>
+  168412:      	lsls	r2, r2, #0x1
+  168414:      	b	0x1686d8 <Board::dumpLevelConfiguration()+0x274> @ imm = #0x2c0
+  168416:      	<unknown>
+  16841a:      	lsls	r2, r2, #0x1

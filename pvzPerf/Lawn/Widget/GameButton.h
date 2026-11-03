@@ -80,6 +80,7 @@ public:
 	void                    DrawAtlas(Graphics* g, const Sexy::TextureSource& texture,
                                 const TextureRegion* overlay = nullptr);
 	/*inline*/ bool			IsMouseOver();
+    bool HitTest(int x, int y, Widget* eventOwner = nullptr); // Null owner means window logical coordinates.
 	void					Update();
 };
 

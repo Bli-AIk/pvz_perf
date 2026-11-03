@@ -171,7 +171,7 @@ void ButtonWidget::Draw(Graphics* g)
 				DrawButtonImage(g,mOverImage,mOverRegion,0,0);
 				g->mColorizeImages = false;
 			}
-			else if ((mIsOver || mIsDown) && HaveButtonImage(mOverImage,mOverRegion))
+			else if (mIsOver && HaveButtonImage(mOverImage,mOverRegion))
 			{
 				DrawButtonImage(g,mOverImage,mOverRegion,0,0);
 			}
@@ -266,7 +266,7 @@ void ButtonWidget::Update()
 		mButtonListener->ButtonDownTick(mId);
 
 
-    if (!mIsDown && !mIsOver && mOverAlphaSpeed <= 0) mOverAlpha = 0;
+    if ((mWidgetManager && !mWidgetManager->mMouseHoverEnabled && !mIsOver) || (!mIsDown && !mIsOver && mOverAlphaSpeed <= 0)) mOverAlpha = 0;
     const double rate = !mIsDown && !mIsOver && mOverAlpha > 0 && mOverAlphaSpeed > 0
         ? -mOverAlphaSpeed : mIsOver && mOverAlphaFadeInSpeed > 0 && mOverAlpha < 1
         ? mOverAlphaFadeInSpeed : 0;

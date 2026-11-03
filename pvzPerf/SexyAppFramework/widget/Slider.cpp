@@ -169,6 +169,11 @@ void Slider::MouseUp(int x, int y)
 	mListener->SliderVal(mId, mVal);
 }
 
+void Slider::TouchCanceled(const TouchEvent&)
+{
+    mDragging = false;
+}
+
 void Slider::MouseLeave()
 {
 	if (!mDragging)

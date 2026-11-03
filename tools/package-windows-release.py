@@ -108,7 +108,7 @@ def package(args):
             if path.is_file() and path.suffix.lower() in extensions:
                 # HDR regression tests share the build output directory; their
                 # probe is not a runtime shader or a release dependency.
-                if path.stem == "hdr_probe" or path.stem.startswith("game_reanim"):
+                if path.stem in {"hdr_probe", "hdr_linear_probe", "game_hdr_ps"} or path.stem.startswith("game_reanim"):
                     # Removed GPU animation pipelines can remain in incremental build trees.
                     continue
                 include(path, path.relative_to(release).as_posix())

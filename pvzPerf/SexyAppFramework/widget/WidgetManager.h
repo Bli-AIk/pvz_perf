@@ -2,6 +2,8 @@
 #include "Common.h"
 #include "misc/KeyCodes.h"
 #include "WidgetContainer.h"
+#include "TouchEvent.h"
+#include <array>
 
 namespace Sexy
 {
@@ -55,6 +57,19 @@ public:
 	bool					mHasFocus;
 	Widget*					mFocusWidget;
 	Widget*					mLastDownWidget;
+    // Runtime input state, independent of mouse capture and save records.
+    std::array<TouchCapture, 10> mTouches{};
+    unsigned int mTouchCount = 0;
+    PointerInputSource mLastPointerInput = PointerInputSource::None;
+    bool mMouseHoverEnabled = true;
+    void NoteTouchInput();
+    void NoteMouseInput();
+    void TouchBegan(const TouchEvent& event);
+    void TouchMoved(const TouchEvent& event);
+    void TouchEnded(const TouchEvent& event);
+    void TouchCanceled(const TouchEvent& event);
+    void CancelTouches(Widget* target = nullptr);
+    void RefreshPointerState(Widget& widget);
 	Widget*					mOverWidget;
 	Widget*					mBaseModalWidget;
 	FlagsMod				mLostFocusFlagsMod;

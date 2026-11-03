@@ -2,6 +2,7 @@
 #include "Sexy.TodLib/EffectSystem.h"
 #include "Sexy.TodLib/Reanimator.h"
 #include "Board.h"
+#include "BoardTouch.h"
 #include "Cutscene.h"
 #include "Challenge.h"
 #include "SeedPacket.h"
@@ -556,7 +557,12 @@ void DrawSeedPacket(Graphics* g, float x, float y, SeedType theSeedType, SeedTyp
 void SeedPacket::Draw(Graphics* g)
 {
 	float aPercentDark = 0.0f;
-	if (!mActive)
+	const auto selected = [&](const CursorObject* cursor) {
+		return cursor && cursor->mCursorType == CURSOR_TYPE_PLANT_FROM_BANK && cursor->mSeedBankIndex == mIndex;
+	};
+	const bool held = selected(mBoard->mCursorObject) || (mBoard->mTouchState && mBoard->mTouchState->selection &&
+		selected(mBoard->mTouchState->selection->cursor));
+	if (!mActive && !held)
 	{
 		if (mRefreshTime == 0)
 		{
@@ -1115,6 +1121,7 @@ void SeedBank::RemoveSeed(int theIndex)
 		aSeedPacket->mRefreshing = false;
 		aSeedPacket->mActive = true;
 	}
+    mBoard->ReindexTouchConveyorCards(theIndex);
 }
 
 //0x489B20

@@ -114,7 +114,7 @@ void GameButton::Draw(Graphics* g)
 		return;
 
 	bool isDown = IsButtonDown() ^ mInverted;
-	bool isHighLighted = IsMouseOver();
+	bool isHighLighted = mIsOver || IsMouseOver();
 	if (mDrawStoneButton)
 	{
 		DrawStoneButton(g, mX, mY, mWidth, mHeight, isDown, isHighLighted, mLabel);
@@ -198,7 +198,7 @@ void GameButton::DrawAtlas(Graphics* g, const Sexy::TextureSource& texture, cons
 	if (mBtnNoDraw)
 		return;
 	const bool down = IsButtonDown() ^ mInverted;
-	const bool highlighted = IsMouseOver();
+	const bool highlighted = mIsOver || IsMouseOver();
 	if (!mFont && !mLabel.empty())
 		throw FontNotConfigured{};
 	int fontX = mTextOffsetX;
@@ -263,24 +263,31 @@ void GameButton::DrawAtlas(Graphics* g, const Sexy::TextureSource& texture, cons
 //0x448130
 bool GameButton::IsMouseOver()
 {
+    if (!mApp->mWidgetManager->mMouseHoverEnabled) return false;
+    return HitTest(mApp->mWidgetManager->mLastMouseX,
+        mApp->mWidgetManager->mLastMouseY);
+}
+
+bool GameButton::HitTest(int x, int y, Widget* eventOwner)
+{
 	if (mDisabled || mBtnNoDraw)
 		return false;
 
-	// Input can arrive before the next Update; query the current logical mouse
-	// position without advancing the button's press or highlight animation.
+	// Input can arrive before Update. Hit-test this event without changing any
+	// mouse position or advancing the button's highlight animation.
 	WidgetManager* aManager = mApp->mWidgetManager;
 	const bool aFocusMatches = aManager->mFocusWidget && aManager->mFocusWidget == mParentWidget;
 	if (!aFocusMatches && mApp->GetDialogCount() > 0)
 		return false;
 
-	int aMouseX = aManager->mLastMouseX, aMouseY = aManager->mLastMouseY;
-	if (mParentWidget)
-	{
-		Point anAbsPos = mParentWidget->GetAbsPos();
-		aMouseX -= anAbsPos.mX;
-		aMouseY -= anAbsPos.mY;
-	}
-	return Rect(mX, mY, mWidth, mHeight).Contains(aMouseX, aMouseY);
+    if (eventOwner != mParentWidget)
+    {
+        const auto source = eventOwner ? eventOwner->GetAbsPos() : Point(0, 0);
+        const auto target = mParentWidget ? mParentWidget->GetAbsPos() : Point(0, 0);
+        x += source.mX - target.mX;
+        y += source.mY - target.mY;
+    }
+	return Rect(mX, mY, mWidth, mHeight).Contains(x, y);
 }
 
 //0x448330
@@ -288,18 +295,25 @@ bool GameButton::IsMouseOver()
 void GameButton::Update()
 {
 	WidgetManager* aManager = mApp->mWidgetManager;
-	int aMouseX = aManager->mLastMouseX, aMouseY = aManager->mLastMouseY;
-	if (mParentWidget)
-	{
-		Point anAbsPos = mParentWidget->GetAbsPos();
-		aMouseX -= anAbsPos.mX;
-		aMouseY -= anAbsPos.mY;
-	}
+	const Point origin = mParentWidget ? mParentWidget->GetAbsPos() : Point(0, 0);
+	const int aMouseX = aManager->mLastMouseX - origin.mX;
+	const int aMouseY = aManager->mLastMouseY - origin.mY;
 
 	if ((aManager->mFocusWidget && aManager->mFocusWidget == mParentWidget) || mApp->GetDialogCount() <= 0)
 	{
-		mIsOver = Rect(mX, mY, mWidth, mHeight).Contains(aMouseX, aMouseY);
+		mIsOver = aManager->mMouseHoverEnabled && Rect(mX, mY, mWidth, mHeight).Contains(aMouseX, aMouseY);
 		mIsDown = aManager->mDownButtons & 5;
+        if (aManager->mTouchCount != 0)
+            for (const auto& contact : aManager->mTouches)
+                if (contact.widget && contact.pressedTarget == this)
+                {
+                    if (Rect(mX, mY, mWidth, mHeight).Contains(
+                        contact.event.x - origin.mX, contact.event.y - origin.mY))
+                    {
+                        mIsOver = mIsDown = true;
+                        break;
+                    }
+                }
 	}
 	else
 	{
@@ -308,7 +322,7 @@ void GameButton::Update()
 	}
 
 
-    if (!mIsDown && !mIsOver && mOverAlphaSpeed < 0) mOverAlpha = 0;
+    if ((!aManager->mMouseHoverEnabled && !mIsOver) || (!mIsDown && !mIsOver && mOverAlphaSpeed < 0)) mOverAlpha = 0;
     const double rate = !mIsDown && !mIsOver && mOverAlpha > 0 && mOverAlphaSpeed > 0
         ? -mOverAlphaSpeed : mIsOver && mOverAlphaFadeInSpeed > 0 && mOverAlpha < 1
         ? mOverAlphaFadeInSpeed : 0;

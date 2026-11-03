@@ -1,0 +1,32 @@
+
+..\tv_assets\FREE_3.18.0_Phone\apk_contents\split_config.arm64_v8a\lib\arm64-v8a\libpvz.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+00000000019fe344 <Board::RemoveAllTouches()>:
+ 19fe344:      	sub	sp, sp, #0x20
+ 19fe348:      	str	x0, [sp, #0x18]
+ 19fe34c:      	ldr	x8, [sp, #0x18]
+ 19fe350:      	str	x8, [sp, #0x8]
+ 19fe354:      	str	wzr, [sp, #0x14]
+ 19fe358:      	b	0x19fe35c <Board::RemoveAllTouches()+0x18>
+ 19fe35c:      	ldr	w8, [sp, #0x14]
+ 19fe360:      	subs	w8, w8, #0xb
+ 19fe364:      	b.ge	0x19fe39c <Board::RemoveAllTouches()+0x58>
+ 19fe368:      	b	0x19fe36c <Board::RemoveAllTouches()+0x28>
+ 19fe36c:      	ldr	x8, [sp, #0x8]
+ 19fe370:      	add	x8, x8, #0x2b0
+ 19fe374:      	ldrsw	x9, [sp, #0x14]
+ 19fe378:      	mov	x10, #0x28              // =40
+ 19fe37c:      	mul	x9, x9, x10
+ 19fe380:      	add	x8, x8, x9
+ 19fe384:      	str	xzr, [x8, #0x20]
+ 19fe388:      	b	0x19fe38c <Board::RemoveAllTouches()+0x48>
+ 19fe38c:      	ldr	w8, [sp, #0x14]
+ 19fe390:      	add	w8, w8, #0x1
+ 19fe394:      	str	w8, [sp, #0x14]
+ 19fe398:      	b	0x19fe35c <Board::RemoveAllTouches()+0x18>
+ 19fe39c:      	ldr	x8, [sp, #0x8]
+ 19fe3a0:      	str	wzr, [x8, #0x468]
+ 19fe3a4:      	add	sp, sp, #0x20
+ 19fe3a8:      	ret

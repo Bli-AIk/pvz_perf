@@ -139,9 +139,13 @@ enum class Sprite : std::uint16_t {
     SEEDCHOOSER_BUTTON_GLOW = 21,
     SEEDCHOOSER_BUTTON2 = 22,
     SEEDCHOOSER_BUTTON2_GLOW = 23,
-    Count = 24,
+    TOUCH_FRAME_TL = 24,
+    TOUCH_FRAME_TR = 25,
+    TOUCH_FRAME_BL = 26,
+    TOUCH_FRAME_BR = 27,
+    Count = 28,
 };
-inline constexpr std::size_t Count = 24;
+inline constexpr std::size_t Count = 28;
 extern const Sexy::TextureRegion Images[Count];
 void Load();
 void Free();

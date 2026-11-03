@@ -1,0 +1,16 @@
+{
+  "date": "2026-11-03",
+  "result": "PASS",
+  "frame_reference_max_channel_difference": 0,
+  "frame": "FixedUI atlas, four compiler-generated regions; source PNG retained outside runtime resource entries",
+  "save": "DAT64 v4 unchanged",
+  "platform": "Windows Vulkan Release /GL /LTCG; Android not rebuilt or installed in this change",
+  "hashes": {
+    "pvzPerf/Lawn/BoardTouch.cpp": "801ef57da5dccaf0091a4f36b5023e15ce9c513f694458604d4e9f5652a2d340",
+    "pvzPerf/Lawn/SeedPacket.cpp": "308513db32447432bceaf3e8b5e40af6eef8a45c01fcc9502f32a7db51580c3b",
+    "pvzPerf/Lawn/Coin.cpp": "4edf9701ecb9dcde5dc6ac51573b4e5aab4b2b2b613923dab0c4b0a3b3902419",
+    "tools/scene_atlas.py": "0674dbaa25de9ae9b3f966c3e6e80927a6b431c5e9d8933c8803e1c8f2568a69",
+    "out/x64-win32-vulkan/Release/pvz_perf.exe": "db7ccd1deb470daa7a036e40c7cb3d0632c0994d8e9c973000bb736fbc72dad9",
+    "out/x64-win32-vulkan/Release/main.pak64": "b472ceb365211ba6e1de9f8f4fb4d9b799609ef3aeac5109165f5d270240553c"
+  }
+}

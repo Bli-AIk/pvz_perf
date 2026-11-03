@@ -1,0 +1,54 @@
+
+..\tv_assets\FREE_3.18.0_Phone\apk_contents\split_config.arm64_v8a\lib\arm64-v8a\libpvz.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+00000000019fe13c <Board::NewTouchInfo(Sexy::Touch*)>:
+ 19fe13c:      	sub	sp, sp, #0x30
+ 19fe140:      	str	x0, [sp, #0x20]
+ 19fe144:      	str	x1, [sp, #0x18]
+ 19fe148:      	ldr	x9, [sp, #0x20]
+ 19fe14c:      	str	x9, [sp, #0x8]
+ 19fe150:      	ldr	w8, [x9, #0x468]
+ 19fe154:      	add	w8, w8, #0x1
+ 19fe158:      	str	w8, [x9, #0x468]
+ 19fe15c:      	str	wzr, [sp, #0x14]
+ 19fe160:      	b	0x19fe164 <Board::NewTouchInfo(Sexy::Touch*)+0x28>
+ 19fe164:      	ldr	w8, [sp, #0x14]
+ 19fe168:      	subs	w8, w8, #0xb
+ 19fe16c:      	b.ge	0x19fe1e8 <Board::NewTouchInfo(Sexy::Touch*)+0xac>
+ 19fe170:      	b	0x19fe174 <Board::NewTouchInfo(Sexy::Touch*)+0x38>
+ 19fe174:      	ldr	x8, [sp, #0x8]
+ 19fe178:      	add	x8, x8, #0x2b0
+ 19fe17c:      	ldrsw	x9, [sp, #0x14]
+ 19fe180:      	mov	x10, #0x28              // =40
+ 19fe184:      	mul	x9, x9, x10
+ 19fe188:      	add	x8, x8, x9
+ 19fe18c:      	ldr	x8, [x8, #0x20]
+ 19fe190:      	cbnz	x8, 0x19fe1d4 <Board::NewTouchInfo(Sexy::Touch*)+0x98>
+ 19fe194:      	b	0x19fe198 <Board::NewTouchInfo(Sexy::Touch*)+0x5c>
+ 19fe198:      	ldr	x8, [sp, #0x8]
+ 19fe19c:      	ldr	x9, [sp, #0x18]
+ 19fe1a0:      	ldr	x9, [x9]
+ 19fe1a4:      	add	x11, x8, #0x2b0
+ 19fe1a8:      	ldrsw	x12, [sp, #0x14]
+ 19fe1ac:      	mov	x10, #0x28              // =40
+ 19fe1b0:      	mul	x12, x12, x10
+ 19fe1b4:      	add	x11, x11, x12
+ 19fe1b8:      	str	x9, [x11, #0x20]
+ 19fe1bc:      	add	x8, x8, #0x2b0
+ 19fe1c0:      	ldrsw	x9, [sp, #0x14]
+ 19fe1c4:      	mul	x9, x9, x10
+ 19fe1c8:      	add	x8, x8, x9
+ 19fe1cc:      	str	x8, [sp, #0x28]
+ 19fe1d0:      	b	0x19fe1f0 <Board::NewTouchInfo(Sexy::Touch*)+0xb4>
+ 19fe1d4:      	b	0x19fe1d8 <Board::NewTouchInfo(Sexy::Touch*)+0x9c>
+ 19fe1d8:      	ldr	w8, [sp, #0x14]
+ 19fe1dc:      	add	w8, w8, #0x1
+ 19fe1e0:      	str	w8, [sp, #0x14]
+ 19fe1e4:      	b	0x19fe164 <Board::NewTouchInfo(Sexy::Touch*)+0x28>
+ 19fe1e8:      	str	xzr, [sp, #0x28]
+ 19fe1ec:      	b	0x19fe1f0 <Board::NewTouchInfo(Sexy::Touch*)+0xb4>
+ 19fe1f0:      	ldr	x0, [sp, #0x28]
+ 19fe1f4:      	add	sp, sp, #0x30
+ 19fe1f8:      	ret
