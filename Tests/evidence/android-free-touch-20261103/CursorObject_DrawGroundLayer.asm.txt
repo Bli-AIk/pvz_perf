@@ -1,0 +1,229 @@
+
+C:/Users/Administrator/CLionProjects/codex/tv_assets/FREE_3.18.0_Phone/apk_contents/split_config.arm64_v8a/lib/arm64-v8a/libpvz.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+0000000001a743c4 <CursorObject::DrawGroundLayer(Sexy::Graphics*)>:
+ 1a743c4: d101c3ff     	sub	sp, sp, #0x70
+ 1a743c8: a9067bfd     	stp	x29, x30, [sp, #0x60]
+ 1a743cc: 910183fd     	add	x29, sp, #0x60
+ 1a743d0: d53bd048     	mrs	x8, TPIDR_EL0
+ 1a743d4: f9401508     	ldr	x8, [x8, #0x28]
+ 1a743d8: f81f83a8     	stur	x8, [x29, #-0x8]
+ 1a743dc: f81e03a0     	stur	x0, [x29, #-0x20]
+ 1a743e0: f81d83a1     	stur	x1, [x29, #-0x28]
+ 1a743e4: f85e03a8     	ldur	x8, [x29, #-0x20]
+ 1a743e8: aa0803e9     	mov	x9, x8
+ 1a743ec: f90007e9     	str	x9, [sp, #0x8]
+ 1a743f0: b9404508     	ldr	w8, [x8, #0x44]
+ 1a743f4: 34001928     	cbz	w8, 0x1a74718 <CursorObject::DrawGroundLayer(Sexy::Graphics*)+0x354>
+ 1a743f8: 14000001     	b	0x1a743fc <CursorObject::DrawGroundLayer(Sexy::Graphics*)+0x38>
+ 1a743fc: f94007e8     	ldr	x8, [sp, #0x8]
+ 1a74400: b9404508     	ldr	w8, [x8, #0x44]
+ 1a74404: 71001d08     	subs	w8, w8, #0x7
+ 1a74408: 54001880     	b.eq	0x1a74718 <CursorObject::DrawGroundLayer(Sexy::Graphics*)+0x354>
+ 1a7440c: 14000001     	b	0x1a74410 <CursorObject::DrawGroundLayer(Sexy::Graphics*)+0x4c>
+ 1a74410: f85d83a0     	ldur	x0, [x29, #-0x28]
+ 1a74414: 944c92eb     	bl	0x2d98fc0 <_ZN4Sexy8Graphics13ClearClipRectEv@plt>
+ 1a74418: f94007e8     	ldr	x8, [sp, #0x8]
+ 1a7441c: b9401100     	ldr	w0, [x8, #0x10]
+ 1a74420: 944c8f30     	bl	0x2d980e0 <_ZN4Sexy7InverseEi@plt>
+ 1a74424: f94007e8     	ldr	x8, [sp, #0x8]
+ 1a74428: b9002fe0     	str	w0, [sp, #0x2c]
+ 1a7442c: b9401500     	ldr	w0, [x8, #0x14]
+ 1a74430: 944c8f2c     	bl	0x2d980e0 <_ZN4Sexy7InverseEi@plt>
+ 1a74434: f94007e8     	ldr	x8, [sp, #0x8]
+ 1a74438: b9002be0     	str	w0, [sp, #0x28]
+ 1a7443c: b9404508     	ldr	w8, [x8, #0x44]
+ 1a74440: 71000508     	subs	w8, w8, #0x1
+ 1a74444: 540000e0     	b.eq	0x1a74460 <CursorObject::DrawGroundLayer(Sexy::Graphics*)+0x9c>
+ 1a74448: 14000001     	b	0x1a7444c <CursorObject::DrawGroundLayer(Sexy::Graphics*)+0x88>
+ 1a7444c: f94007e8     	ldr	x8, [sp, #0x8]
+ 1a74450: b9404508     	ldr	w8, [x8, #0x44]
+ 1a74454: 71000908     	subs	w8, w8, #0x2
+ 1a74458: 54000401     	b.ne	0x1a744d8 <CursorObject::DrawGroundLayer(Sexy::Graphics*)+0x114>
+ 1a7445c: 14000001     	b	0x1a74460 <CursorObject::DrawGroundLayer(Sexy::Graphics*)+0x9c>
+ 1a74460: f94007e8     	ldr	x8, [sp, #0x8]
+ 1a74464: 39418108     	ldrb	w8, [x8, #0x60]
+ 1a74468: 36000068     	tbz	w8, #0x0, 0x1a74474 <CursorObject::DrawGroundLayer(Sexy::Graphics*)+0xb0>
+ 1a7446c: 14000001     	b	0x1a74470 <CursorObject::DrawGroundLayer(Sexy::Graphics*)+0xac>
+ 1a74470: 140000aa     	b	0x1a74718 <CursorObject::DrawGroundLayer(Sexy::Graphics*)+0x354>
+ 1a74474: f94007e8     	ldr	x8, [sp, #0x8]
+ 1a74478: f9400500     	ldr	x0, [x8, #0x8]
+ 1a7447c: b9402fe1     	ldr	w1, [sp, #0x2c]
+ 1a74480: b9402be2     	ldr	w2, [sp, #0x28]
+ 1a74484: b9403d03     	ldr	w3, [x8, #0x3c]
+ 1a74488: 944c8f3e     	bl	0x2d98180 <_ZN5Board20PlantingPixelToGridXEii8SeedType@plt>
+ 1a7448c: f94007e8     	ldr	x8, [sp, #0x8]
+ 1a74490: b81d43a0     	stur	w0, [x29, #-0x2c]
+ 1a74494: f9400500     	ldr	x0, [x8, #0x8]
+ 1a74498: b9402fe1     	ldr	w1, [sp, #0x2c]
+ 1a7449c: b9402be2     	ldr	w2, [sp, #0x28]
+ 1a744a0: b9403d03     	ldr	w3, [x8, #0x3c]
+ 1a744a4: 944c8f3b     	bl	0x2d98190 <_ZN5Board20PlantingPixelToGridYEii8SeedType@plt>
+ 1a744a8: f94007e8     	ldr	x8, [sp, #0x8]
+ 1a744ac: b90033e0     	str	w0, [sp, #0x30]
+ 1a744b0: f9400500     	ldr	x0, [x8, #0x8]
+ 1a744b4: b85d43a1     	ldur	w1, [x29, #-0x2c]
+ 1a744b8: b94033e2     	ldr	w2, [sp, #0x30]
+ 1a744bc: b9403d03     	ldr	w3, [x8, #0x3c]
+ 1a744c0: 2a1f03e4     	mov	w4, wzr
+ 1a744c4: 944c8e7b     	bl	0x2d97eb0 <_ZN5Board10CanPlantAtEii8SeedTypeb@plt>
+ 1a744c8: 34000060     	cbz	w0, 0x1a744d4 <CursorObject::DrawGroundLayer(Sexy::Graphics*)+0x110>
+ 1a744cc: 14000001     	b	0x1a744d0 <CursorObject::DrawGroundLayer(Sexy::Graphics*)+0x10c>
+ 1a744d0: 14000092     	b	0x1a74718 <CursorObject::DrawGroundLayer(Sexy::Graphics*)+0x354>
+ 1a744d4: 14000027     	b	0x1a74570 <CursorObject::DrawGroundLayer(Sexy::Graphics*)+0x1ac>
+ 1a744d8: f94007e8     	ldr	x8, [sp, #0x8]
+ 1a744dc: f9400500     	ldr	x0, [x8, #0x8]
+ 1a744e0: b9402fe1     	ldr	w1, [sp, #0x2c]
+ 1a744e4: b9402be2     	ldr	w2, [sp, #0x28]
+ 1a744e8: 944c8eee     	bl	0x2d980a0 <_ZN5Board12PixelToGridXEii@plt>
+ 1a744ec: f94007e8     	ldr	x8, [sp, #0x8]
+ 1a744f0: b81d43a0     	stur	w0, [x29, #-0x2c]
+ 1a744f4: f9400500     	ldr	x0, [x8, #0x8]
+ 1a744f8: b9402fe1     	ldr	w1, [sp, #0x2c]
+ 1a744fc: b9402be2     	ldr	w2, [sp, #0x28]
+ 1a74500: 944c8f5c     	bl	0x2d98270 <_ZN5Board12PixelToGridYEii@plt>
+ 1a74504: f94007e8     	ldr	x8, [sp, #0x8]
+ 1a74508: b90033e0     	str	w0, [sp, #0x30]
+ 1a7450c: f9400500     	ldr	x0, [x8, #0x8]
+ 1a74510: b9401101     	ldr	w1, [x8, #0x10]
+ 1a74514: b9401502     	ldr	w2, [x8, #0x14]
+ 1a74518: d10063a3     	sub	x3, x29, #0x18
+ 1a7451c: 944c8ef9     	bl	0x2d98100 <_ZN5Board11ToolHitTestEiiP9HitResult@plt>
+ 1a74520: f94007e8     	ldr	x8, [sp, #0x8]
+ 1a74524: 12000009     	and	w9, w0, #0x1
+ 1a74528: 39009fe9     	strb	w9, [sp, #0x27]
+ 1a7452c: b9404508     	ldr	w8, [x8, #0x44]
+ 1a74530: 71001908     	subs	w8, w8, #0x6
+ 1a74534: 540001c1     	b.ne	0x1a7456c <CursorObject::DrawGroundLayer(Sexy::Graphics*)+0x1a8>
+ 1a74538: 14000001     	b	0x1a7453c <CursorObject::DrawGroundLayer(Sexy::Graphics*)+0x178>
+ 1a7453c: f94007e8     	ldr	x8, [sp, #0x8]
+ 1a74540: 39418108     	ldrb	w8, [x8, #0x60]
+ 1a74544: 37000128     	tbnz	w8, #0x0, 0x1a74568 <CursorObject::DrawGroundLayer(Sexy::Graphics*)+0x1a4>
+ 1a74548: 14000001     	b	0x1a7454c <CursorObject::DrawGroundLayer(Sexy::Graphics*)+0x188>
+ 1a7454c: 39409fe8     	ldrb	w8, [sp, #0x27]
+ 1a74550: 360000c8     	tbz	w8, #0x0, 0x1a74568 <CursorObject::DrawGroundLayer(Sexy::Graphics*)+0x1a4>
+ 1a74554: 14000001     	b	0x1a74558 <CursorObject::DrawGroundLayer(Sexy::Graphics*)+0x194>
+ 1a74558: b85f03a8     	ldur	w8, [x29, #-0x10]
+ 1a7455c: 71000d08     	subs	w8, w8, #0x3
+ 1a74560: 54000061     	b.ne	0x1a7456c <CursorObject::DrawGroundLayer(Sexy::Graphics*)+0x1a8>
+ 1a74564: 14000001     	b	0x1a74568 <CursorObject::DrawGroundLayer(Sexy::Graphics*)+0x1a4>
+ 1a74568: 1400006c     	b	0x1a74718 <CursorObject::DrawGroundLayer(Sexy::Graphics*)+0x354>
+ 1a7456c: 14000001     	b	0x1a74570 <CursorObject::DrawGroundLayer(Sexy::Graphics*)+0x1ac>
+ 1a74570: b94033e8     	ldr	w8, [sp, #0x30]
+ 1a74574: 37f80188     	tbnz	w8, #0x1f, 0x1a745a4 <CursorObject::DrawGroundLayer(Sexy::Graphics*)+0x1e0>
+ 1a74578: 14000001     	b	0x1a7457c <CursorObject::DrawGroundLayer(Sexy::Graphics*)+0x1b8>
+ 1a7457c: b85d43a8     	ldur	w8, [x29, #-0x2c]
+ 1a74580: 37f80128     	tbnz	w8, #0x1f, 0x1a745a4 <CursorObject::DrawGroundLayer(Sexy::Graphics*)+0x1e0>
+ 1a74584: 14000001     	b	0x1a74588 <CursorObject::DrawGroundLayer(Sexy::Graphics*)+0x1c4>
+ 1a74588: f94007e8     	ldr	x8, [sp, #0x8]
+ 1a7458c: f9400500     	ldr	x0, [x8, #0x8]
+ 1a74590: b85d43a1     	ldur	w1, [x29, #-0x2c]
+ 1a74594: b94033e2     	ldr	w2, [sp, #0x30]
+ 1a74598: 944c8a2a     	bl	0x2d96e40 <_ZN5Board12GridToPixelYEii@plt>
+ 1a7459c: 36f80060     	tbz	w0, #0x1f, 0x1a745a8 <CursorObject::DrawGroundLayer(Sexy::Graphics*)+0x1e4>
+ 1a745a0: 14000001     	b	0x1a745a4 <CursorObject::DrawGroundLayer(Sexy::Graphics*)+0x1e0>
+ 1a745a4: 1400005d     	b	0x1a74718 <CursorObject::DrawGroundLayer(Sexy::Graphics*)+0x354>
+ 1a745a8: f85d83a8     	ldur	x8, [x29, #-0x28]
+ 1a745ac: bd401100     	ldr	s0, [x8, #0x10]
+ 1a745b0: 1e380008     	fcvtzs	w8, s0
+ 1a745b4: b90023e8     	str	w8, [sp, #0x20]
+ 1a745b8: f85d83a8     	ldur	x8, [x29, #-0x28]
+ 1a745bc: bd401500     	ldr	s0, [x8, #0x14]
+ 1a745c0: 1e380008     	fcvtzs	w8, s0
+ 1a745c4: b9001fe8     	str	w8, [sp, #0x1c]
+ 1a745c8: bd4023e0     	ldr	s0, [sp, #0x20]
+ 1a745cc: 5e21d801     	scvtf	s1, s0
+ 1a745d0: f85d83a8     	ldur	x8, [x29, #-0x28]
+ 1a745d4: bd401100     	ldr	s0, [x8, #0x10]
+ 1a745d8: 1e213800     	fsub	s0, s0, s1
+ 1a745dc: bd001100     	str	s0, [x8, #0x10]
+ 1a745e0: bd401fe0     	ldr	s0, [sp, #0x1c]
+ 1a745e4: 5e21d801     	scvtf	s1, s0
+ 1a745e8: f85d83a8     	ldur	x8, [x29, #-0x28]
+ 1a745ec: bd401500     	ldr	s0, [x8, #0x14]
+ 1a745f0: 1e213800     	fsub	s0, s0, s1
+ 1a745f4: bd001500     	str	s0, [x8, #0x14]
+ 1a745f8: 2a1f03e8     	mov	w8, wzr
+ 1a745fc: b9001be8     	str	w8, [sp, #0x18]
+ 1a74600: 14000001     	b	0x1a74604 <CursorObject::DrawGroundLayer(Sexy::Graphics*)+0x240>
+ 1a74604: b9401be8     	ldr	w8, [sp, #0x18]
+ 1a74608: 71002108     	subs	w8, w8, #0x8
+ 1a7460c: 540001cc     	b.gt	0x1a74644 <CursorObject::DrawGroundLayer(Sexy::Graphics*)+0x280>
+ 1a74610: 14000001     	b	0x1a74614 <CursorObject::DrawGroundLayer(Sexy::Graphics*)+0x250>
+ 1a74614: f94007e8     	ldr	x8, [sp, #0x8]
+ 1a74618: f9400500     	ldr	x0, [x8, #0x8]
+ 1a7461c: f85d83a1     	ldur	x1, [x29, #-0x28]
+ 1a74620: b9401be2     	ldr	w2, [sp, #0x18]
+ 1a74624: b94033e3     	ldr	w3, [sp, #0x30]
+ 1a74628: 2a1f03e4     	mov	w4, wzr
+ 1a7462c: 944c9285     	bl	0x2d99040 <_ZN5Board16DrawCelHighlightEPN4Sexy8GraphicsEiib@plt>
+ 1a74630: 14000001     	b	0x1a74634 <CursorObject::DrawGroundLayer(Sexy::Graphics*)+0x270>
+ 1a74634: b9401be8     	ldr	w8, [sp, #0x18]
+ 1a74638: 11000508     	add	w8, w8, #0x1
+ 1a7463c: b9001be8     	str	w8, [sp, #0x18]
+ 1a74640: 17fffff1     	b	0x1a74604 <CursorObject::DrawGroundLayer(Sexy::Graphics*)+0x240>
+ 1a74644: f94007e8     	ldr	x8, [sp, #0x8]
+ 1a74648: f9400500     	ldr	x0, [x8, #0x8]
+ 1a7464c: 944c8c85     	bl	0x2d97860 <_ZN5Board13StageHas6RowsEv@plt>
+ 1a74650: 72000008     	ands	w8, w0, #0x1
+ 1a74654: 528000a8     	mov	w8, #0x5                // =5
+ 1a74658: 1a880508     	cinc	w8, w8, ne
+ 1a7465c: b90017e8     	str	w8, [sp, #0x14]
+ 1a74660: 2a1f03e8     	mov	w8, wzr
+ 1a74664: b90013e8     	str	w8, [sp, #0x10]
+ 1a74668: 14000001     	b	0x1a7466c <CursorObject::DrawGroundLayer(Sexy::Graphics*)+0x2a8>
+ 1a7466c: b94013e8     	ldr	w8, [sp, #0x10]
+ 1a74670: b94017e9     	ldr	w9, [sp, #0x14]
+ 1a74674: 6b090108     	subs	w8, w8, w9
+ 1a74678: 5400028a     	b.ge	0x1a746c8 <CursorObject::DrawGroundLayer(Sexy::Graphics*)+0x304>
+ 1a7467c: 14000001     	b	0x1a74680 <CursorObject::DrawGroundLayer(Sexy::Graphics*)+0x2bc>
+ 1a74680: b94013e8     	ldr	w8, [sp, #0x10]
+ 1a74684: b94033e9     	ldr	w9, [sp, #0x30]
+ 1a74688: 6b090108     	subs	w8, w8, w9
+ 1a7468c: 54000140     	b.eq	0x1a746b4 <CursorObject::DrawGroundLayer(Sexy::Graphics*)+0x2f0>
+ 1a74690: 14000001     	b	0x1a74694 <CursorObject::DrawGroundLayer(Sexy::Graphics*)+0x2d0>
+ 1a74694: f94007e8     	ldr	x8, [sp, #0x8]
+ 1a74698: f9400500     	ldr	x0, [x8, #0x8]
+ 1a7469c: f85d83a1     	ldur	x1, [x29, #-0x28]
+ 1a746a0: b85d43a2     	ldur	w2, [x29, #-0x2c]
+ 1a746a4: b94013e3     	ldr	w3, [sp, #0x10]
+ 1a746a8: 2a1f03e4     	mov	w4, wzr
+ 1a746ac: 944c9265     	bl	0x2d99040 <_ZN5Board16DrawCelHighlightEPN4Sexy8GraphicsEiib@plt>
+ 1a746b0: 14000001     	b	0x1a746b4 <CursorObject::DrawGroundLayer(Sexy::Graphics*)+0x2f0>
+ 1a746b4: 14000001     	b	0x1a746b8 <CursorObject::DrawGroundLayer(Sexy::Graphics*)+0x2f4>
+ 1a746b8: b94013e8     	ldr	w8, [sp, #0x10]
+ 1a746bc: 11000508     	add	w8, w8, #0x1
+ 1a746c0: b90013e8     	str	w8, [sp, #0x10]
+ 1a746c4: 17ffffea     	b	0x1a7466c <CursorObject::DrawGroundLayer(Sexy::Graphics*)+0x2a8>
+ 1a746c8: f94007e8     	ldr	x8, [sp, #0x8]
+ 1a746cc: f9400500     	ldr	x0, [x8, #0x8]
+ 1a746d0: f85d83a1     	ldur	x1, [x29, #-0x28]
+ 1a746d4: b85d43a2     	ldur	w2, [x29, #-0x2c]
+ 1a746d8: b94033e3     	ldr	w3, [sp, #0x30]
+ 1a746dc: 52800024     	mov	w4, #0x1                // =1
+ 1a746e0: 944c9258     	bl	0x2d99040 <_ZN5Board16DrawCelHighlightEPN4Sexy8GraphicsEiib@plt>
+ 1a746e4: bd4023e0     	ldr	s0, [sp, #0x20]
+ 1a746e8: 5e21d801     	scvtf	s1, s0
+ 1a746ec: f85d83a8     	ldur	x8, [x29, #-0x28]
+ 1a746f0: bd401100     	ldr	s0, [x8, #0x10]
+ 1a746f4: 1e212800     	fadd	s0, s0, s1
+ 1a746f8: bd001100     	str	s0, [x8, #0x10]
+ 1a746fc: bd401fe0     	ldr	s0, [sp, #0x1c]
+ 1a74700: 5e21d801     	scvtf	s1, s0
+ 1a74704: f85d83a8     	ldur	x8, [x29, #-0x28]
+ 1a74708: bd401500     	ldr	s0, [x8, #0x14]
+ 1a7470c: 1e212800     	fadd	s0, s0, s1
+ 1a74710: bd001500     	str	s0, [x8, #0x14]
+ 1a74714: 14000001     	b	0x1a74718 <CursorObject::DrawGroundLayer(Sexy::Graphics*)+0x354>
+ 1a74718: d53bd048     	mrs	x8, TPIDR_EL0
+ 1a7471c: f9401508     	ldr	x8, [x8, #0x28]
+ 1a74720: f85f83a9     	ldur	x9, [x29, #-0x8]
+ 1a74724: eb090108     	subs	x8, x8, x9
+ 1a74728: 540000a1     	b.ne	0x1a7473c <CursorObject::DrawGroundLayer(Sexy::Graphics*)+0x378>
+ 1a7472c: 14000001     	b	0x1a74730 <CursorObject::DrawGroundLayer(Sexy::Graphics*)+0x36c>
+ 1a74730: a9467bfd     	ldp	x29, x30, [sp, #0x60]
+ 1a74734: 9101c3ff     	add	sp, sp, #0x70
+ 1a74738: d65f03c0     	ret
+ 1a7473c: 944bda11     	bl	0x2d6af80 <__stack_chk_fail@plt>

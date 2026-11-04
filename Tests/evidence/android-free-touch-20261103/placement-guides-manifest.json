@@ -1,0 +1,26 @@
+{
+  "date": "2026-11-04",
+  "analysis": "Read-only planting crosshair control-flow verification; no runtime code changed",
+  "free": {
+    "version": "3.18.0",
+    "native_sha256": "079a0c71a67ae61fa98cd797dbb527e1c16fa0e409fe7f980c459afe1488dff5",
+    "function": "CursorObject::DrawGroundLayer(Sexy::Graphics*)",
+    "address": "0x1a743c4",
+    "file": "CursorObject_DrawGroundLayer.asm.txt",
+    "plant_cursor_values": [
+      1,
+      2
+    ],
+    "can_plant_call": "0x1a744c4",
+    "nonzero_result_exit": "0x1a744d0 -> 0x1a74718",
+    "row_draw_call": "0x1a7462c",
+    "column_draw_call": "0x1a746ac"
+  },
+  "wp": {
+    "commit": "26cbb77df48c674dca6cb6b1fa9ad6783903a5c4",
+    "path": "Lawn/CursorObject.cs",
+    "sha256": "4f2bdf438cb86dcbb56762b4531fe8a0c813f28026be41e9841bdd93ac57d797",
+    "url": "https://github.com/IsraelDXPP/PvZ-Windows-Phone-decomp/blob/26cbb77df48c674dca6cb6b1fa9ad6783903a5c4/Lawn/CursorObject.cs",
+    "result": "DrawGroundLayer checks CanPlantAt only for CURSOR_TYPE_PLANT_FROM_BANK; failure returns before both row/column loops; shovel requires ToolHitTest; this is a decompiled modern port, not independent original-release IL verification"
+  }
+}
