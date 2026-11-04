@@ -160,10 +160,10 @@ AlmanacDialog::AlmanacDialog(LawnApp* theApp) : LawnDialog(theApp, DIALOG_ALMANA
 
 	mPlantButton = new GameButton(AlmanacDialog::ALMANAC_BUTTON_PLANT);
 	mPlantButton->mLabel = gStr.VIEW_PLANTS;
-	mPlantButton->mNormalRegion = FixedUIAtlas::Images[size_t(FixedUIAtlas::Sprite::SEEDCHOOSER_BUTTON)];
+	mPlantButton->mNormalRegion = CommonUIAtlas::Images[size_t(CommonUIAtlas::Sprite::SEEDCHOOSER_BUTTON)];
 	mPlantButton->mOverImage = nullptr;
 	mPlantButton->mDownImage = nullptr;
-	mPlantButton->mDisabledRegion = FixedUIAtlas::Images[size_t(FixedUIAtlas::Sprite::SEEDCHOOSER_BUTTON_DISABLED)];
+	mPlantButton->mDisabledRegion = CommonUIAtlas::Images[size_t(CommonUIAtlas::Sprite::SEEDCHOOSER_BUTTON_DISABLED)];
 	mPlantButton->SetFont(Sexy::FONT_DWARVENTODCRAFT18YELLOW);
 	mPlantButton->mColors[ButtonWidget::COLOR_LABEL] = Color::White;
 	mPlantButton->mColors[ButtonWidget::COLOR_LABEL_HILITE] = Color::White;
@@ -722,9 +722,9 @@ void AlmanacDialog::Draw(Graphics* g)
 	const TextureSource aTexture{AlmanacAtlas::Texture, 0};
 	mCloseButton->DrawAtlas(g,aTexture);
 	mIndexButton->DrawAtlas(g,aTexture);
-	const Sexy::TextureSource fixedUI{FixedUIAtlas::Texture, 0};
+	const Sexy::TextureSource fixedUI{CommonUIAtlas::Texture, 0};
 	mPlantButton->DrawAtlas(g, fixedUI,
-		&FixedUIAtlas::Images[size_t(FixedUIAtlas::Sprite::SEEDCHOOSER_BUTTON_GLOW)]);
+		&CommonUIAtlas::Images[size_t(CommonUIAtlas::Sprite::SEEDCHOOSER_BUTTON_GLOW)]);
 	mZombieButton->Draw(g);
 }
 

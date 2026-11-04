@@ -117,7 +117,7 @@ class ProgramAtlasMetadataTests(unittest.TestCase):
 
     def test_configured_groups_share_program_images_across_definition_kinds(self):
         configured = resource_build_config.resolve_atlases(self.config, set(self.member_reports))
-        configured.setdefault("fixed_ui", [scene_atlas.record_path("FixedUI")])
+        configured.setdefault("common_ui", [scene_atlas.record_path("CommonUI")])
         groups = self.report["atlas_groups"]
         grouped, mixed = set(), []
         for group, members in configured.items():

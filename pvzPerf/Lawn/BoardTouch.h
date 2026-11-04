@@ -19,6 +19,8 @@ struct BoardTouchContact {
     bool toggleSelectionOnRelease = false;
     bool fieldCardPress = false; // Source is already held by cursor->mCoinID; never sweep-select another card.
     bool fieldCardDragged = false;
+    bool collected = false; // Only aquarium feeding reads this; other touch commands still run.
+    bool aquariumFeed = false; // Empty-space press; movement permanently cancels this tap.
 };
 
 // Owned by Board, outside its serialized tail. Reused across gestures.

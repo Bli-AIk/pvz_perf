@@ -1,4 +1,5 @@
 #include "BoardTouch.h"
+#include "LandscapeHud.h"
 #include "Board.h"
 #include "CursorObject.h"
 #include "SeedPacket.h"
@@ -81,25 +82,33 @@ bool Interactive(const Board& board)
         (board.mApp->mGameScene == SCENE_PLAYING || board.mCutScene->IsInShovelTutorial());
 }
 
-bool CollectAlongTouch(Board& board, int fromX, int fromY, int toX, int toY)
+struct TouchCollection {
+    bool collected = false;
+    bool leftBoard = false;
+};
+
+TouchCollection CollectAlongTouch(Board& board, int fromX, int fromY, int toX, int toY)
 {
-    if (!Interactive(board)) return false;
+    TouchCollection result;
+    if (!Interactive(board)) return result;
     Coin* coin = nullptr;
     while (board.IterateCoins(coin))
         if (coin->TouchHitTest(fromX, fromY, toX, toY))
         {
             const bool award = coin->IsLevelAward();
             coin->MouseDown(toX, toY, 1);
+            result.collected |= coin->mIsBeingCollected;
             if (award && coin->mIsBeingCollected)
             {
                 // A reward may start the next screen or fan out new coins.
                 // Do not continue this scan or commit the held plant/cannon.
                 board.mApp->mWidgetManager->CancelTouches(&board);
                 board.ClearTouchSelection();
-                return true;
+                result.leftBoard = true;
+                return result;
             }
         }
-    return false;
+    return result;
 }
 
 bool FieldCardContains(const Coin& coin, int x, int y)
@@ -276,12 +285,12 @@ void DrawRoofGuide(Board& board, Sexy::Graphics& graphics, int col, int firstRow
 
 void DrawTouchGuides(Board& board, const BoardTouchContact& contact, const Sexy::Graphics& graphics)
 {
-    const bool shovel = board.mCursorObject->mCursorType == CURSOR_TYPE_SHOVEL;
-    if ((!board.IsPlantInCursor() && !shovel) || !Interactive(board) ||
+    // Preview update already checks CanPlantAt; reuse its result instead of
+    // repeating planting rules during drawing. Shovels use plant glow only.
+    if (!board.IsPlantInCursor() || !contact.preview->mVisible || !Interactive(board) ||
         board.mApp->mGameMode == GAMEMODE_LIMBO_ZEN_GARDEN) return;
-    if (shovel && !board.ToolHitTest(contact.x, contact.y)) return;
-    const int col = shovel ? board.PixelToGridX(contact.x, contact.y) : contact.preview->mGridX;
-    const int row = shovel ? board.PixelToGridY(contact.x, contact.y) : contact.preview->mGridY;
+    const int col = contact.preview->mGridX;
+    const int row = contact.preview->mGridY;
     const int rows = board.StageHasPool() ? 6 : 5;
     if (col < 0 || col >= MAX_GRID_SIZE_X || row < 0 || row >= rows) return;
     const int cellWidth = board.GridToPixelX(1, 0) - board.GridToPixelX(0, 0);
@@ -303,18 +312,34 @@ void DrawTouchGuides(Board& board, const BoardTouchContact& contact, const Sexy:
     }
 }
 
-void DrawSelectionFrame(Sexy::Graphics& graphics, const Sexy::Rect& bounds)
+void DrawSelectionFrame(Sexy::Graphics& graphics, const Sexy::Rect& bounds, bool native = false)
 {
+    if(native) {
+        // WP's native yellow/orange corner art supplies contrast without a
+        // wider solid stroke. Reposition the corners; never scale the pixels.
+        static constexpr auto first=static_cast<unsigned int>(LandscapeUIAtlas::Sprite::SELECTED_TL);
+        graphics.mColorizeImages=false;
+        graphics.mLinearBlend=false;
+        for(unsigned int corner=0;corner<4;++corner) {
+            const bool right=corner&1,bottom=corner&2;
+            const int x=bounds.mX+(right?bounds.mWidth-27:-5);
+            const int y=bounds.mY+(bottom?bounds.mHeight-28:-2);
+            Sexy::DrawAtlasImage(&graphics,{LandscapeUIAtlas::Texture,0},
+                LandscapeUIAtlas::Images[first+corner],x,y);
+        }
+        return;
+    }
     // Original TV image: four 42x36 corners in a 104x144 image. Draw each
-    // corner at half size, preserving its shape on both cards and the shovel.
-    static constexpr auto first = static_cast<unsigned int>(FixedUIAtlas::Sprite::TOUCH_FRAME_TL);
+    // corner at half size on the classic HUD.
+    static constexpr auto first = static_cast<unsigned int>(CommonUIAtlas::Sprite::TOUCH_FRAME_TL);
     graphics.mColorizeImages = false;
     for (unsigned int i = 0; i < 4; ++i)
     {
         const int x = i & 1 ? bounds.mX + bounds.mWidth - 18 : bounds.mX - 3;
         const int y = i & 2 ? bounds.mY + bounds.mHeight - 15 : bounds.mY - 3;
-        Sexy::DrawAtlasImage(&graphics, {FixedUIAtlas::Texture, 0},
-            FixedUIAtlas::Images[first + i], Sexy::Rect(x, y, 21, 18), Sexy::Rect(0, 0, 42, 36));
+        Sexy::DrawAtlasImage(&graphics, {CommonUIAtlas::Texture, 0},
+            CommonUIAtlas::Images[first + i], Sexy::Rect(x, y, 21, 18),
+            Sexy::Rect(0,0,42,36));
     }
 }
 }
@@ -338,7 +363,8 @@ void Board::TouchBegan(const Sexy::TouchEvent& event)
     if (FindContact(*this, event.id)) return;
     if (mCursorObject->mCursorType == CURSOR_TYPE_COBCANNON_TARGET)
         ClearCursor(); // Touch input cancels the mouse's pending cannon target.
-    if (CollectAlongTouch(*this, event.x, event.y, event.x, event.y)) return;
+    const auto collection = CollectAlongTouch(*this, event.x, event.y, event.x, event.y);
+    if (collection.leftBoard) return;
     if (!mTouchState)
     {
         mTouchState = new BoardTouchState;
@@ -376,6 +402,8 @@ void Board::TouchBegan(const Sexy::TouchEvent& event)
         contact.ignoreUp = false;
         contact.toggleSelectionOnRelease = false;
         contact.fieldCardPress = contact.fieldCardDragged = false;
+        contact.collected = collection.collected;
+        contact.aquariumFeed = false;
         ++mTouchState->activeCount;
         if (!mTouchState->selection)
         {
@@ -501,7 +529,16 @@ void Board::TouchBegan(const Sexy::TouchEvent& event)
                 }
                 else if (mCursorObject->mCursorType == CURSOR_TYPE_NORMAL ||
                     mCursorObject->mCursorType == CURSOR_TYPE_HAMMER)
-                    MouseDown(event.x, event.y, 1);
+                {
+                    // Empty aquarium space feeds on a completed tap. A sun
+                    // collected above is already absent from MouseHitTest.
+                    HitResult hit;
+                    if (mApp->mGameMode == GAMEMODE_MINIGAME_ZOMBIQUARIUM &&
+                        !MouseHitTest(event.x, event.y, &hit))
+                        contact.aquariumFeed = Interactive(*this);
+                    else
+                        MouseDown(event.x, event.y, 1);
+                }
             }
             // A retained selection acts on release. Pressing the lawn must not
             // plant once on down and a second time on up.
@@ -515,7 +552,11 @@ void Board::TouchMoved(const Sexy::TouchEvent& event)
     Sexy::WidgetLifetimeHold lifetime(*this);
     if (auto* contact = FindContact(*this, event.id))
     {
-        if (CollectAlongTouch(*this, contact->x, contact->y, event.x, event.y)) return;
+        const auto collection = CollectAlongTouch(*this, contact->x, contact->y, event.x, event.y);
+        if (collection.leftBoard) return;
+        contact->collected |= collection.collected;
+        if (contact->aquariumFeed && FieldCardDragged(*contact, event.x, event.y))
+            contact->aquariumFeed = false;
         contact->x = event.x;
         contact->y = event.y;
         if (contact->fieldCardPress)
@@ -534,13 +575,15 @@ void Board::TouchEnded(const Sexy::TouchEvent& event)
     Sexy::WidgetLifetimeHold lifetime(*this);
     auto* contact = FindContact(*this, event.id);
     if (!contact) return;
-    if (CollectAlongTouch(*this, contact->x, contact->y, event.x, event.y))
+    const auto collection = CollectAlongTouch(*this, contact->x, contact->y, event.x, event.y);
+    if (collection.leftBoard)
     {
         // WidgetManager retires the up capture before dispatch, so its
         // CancelTouches cannot cancel this last Board-side contact.
         TouchCanceled(event);
         return;
     }
+    contact->collected |= collection.collected;
     contact->x = event.x;
     contact->y = event.y;
     if (contact->fieldCardPress)
@@ -553,7 +596,14 @@ void Board::TouchEnded(const Sexy::TouchEvent& event)
         ValidateSelection(*this);
         if (Interactive(*this) && !contact->ignoreUp)
         {
-            if (contact->fieldCardPress && (!contact->fieldCardDragged || IsSelectedControl(*this, event.x, event.y)))
+            if (contact->aquariumFeed)
+            {
+                HitResult hit;
+                if (!contact->collected && !FieldCardDragged(*contact, event.x, event.y) &&
+                    !MouseHitTest(event.x, event.y, &hit))
+                    mChallenge->MouseDown(event.x, event.y, 1, &hit);
+            }
+            else if (contact->fieldCardPress && (!contact->fieldCardDragged || IsSelectedControl(*this, event.x, event.y)))
             {
                 // A tap changes selection only, even when the card lies over an empty planting cell.
                 if (contact->toggleSelectionOnRelease && !contact->fieldCardDragged && IsSelectedControl(*this, event.x, event.y))
@@ -696,12 +746,16 @@ void Board::DrawTouchSelection(Sexy::Graphics* g)
         cursor.mSeedBankIndex >= 0 && cursor.mSeedBankIndex < mSeedBank->mNumPackets)
     {
         const auto& packet = mSeedBank->mSeedPackets[cursor.mSeedBankIndex];
-        bounds = Sexy::Rect(mApp->mScreenBounds.mX + mSeedBank->mX + packet.mX + packet.mOffsetX,
-            mSeedBank->mY + packet.mY, packet.mWidth, packet.mHeight);
+        bounds = mLandscapeHud ? LandscapeHud::PacketBounds(*this,cursor.mSeedBankIndex) :
+            Sexy::Rect(mApp->mScreenBounds.mX - mX + mSeedBank->mX + packet.mX + packet.mOffsetX,
+            mSeedBank->mY + packet.mY - mY, packet.mWidth, packet.mHeight);
+        // Hit/slot pitch is 48, but the authored card face is 53 pixels high.
+        // Frame the full artwork so the bottom corners clear the price label.
+        if (mLandscapeHud) bounds.mHeight=53;
     }
     else return;
     Sexy::Graphics local(*g);
-    DrawSelectionFrame(local, bounds);
+    DrawSelectionFrame(local, bounds, mLandscapeHud);
 }
 
 void Board::DrawFieldCardSelection(Sexy::Graphics* g, const Coin& coin)

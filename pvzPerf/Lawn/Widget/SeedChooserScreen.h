@@ -2,6 +2,7 @@
 #include "misc/TimeCounter.h"
 #include "ConstEnums.h"
 #include "widget/Widget.h"
+#include "widget/InertialScroll.h"
 #include <cstdint>
 using namespace Sexy;
 
@@ -34,6 +35,11 @@ public:
     bool                    mCrazyDavePicked;                  //+0x38
 };
 
+struct SeedChooserCardLayout {
+    Rect viewport;
+    int originX, originY, columns, pitchX, pitchY, cardWidth, cardHeight;
+};
+
 class SeedChooserScreen : public Widget
 {
 private:
@@ -49,6 +55,16 @@ private:
     };
 
 public:
+    const SeedChooserCardLayout* mCardLayout = nullptr;
+    int mCardCount = 0;
+    float mCardScrollMinimum = 0;
+    void RefreshCardLayout();
+    InertialScroll mCardScroll;
+    SeedType mTouchSeed = SEED_NONE;
+    void ScrollCardsTo(float position);
+    void MouseWheel(int delta) override;
+    void TouchMoved(const TouchEvent& event) override;
+    void TouchCanceled(const TouchEvent& event) override;
     GameButton*             mStartButton;                       //+0x88
     GameButton*             mRandomButton;                      //+0x8C
     GameButton*             mViewLawnButton;                    //+0x90

@@ -16,7 +16,7 @@
 #include "Sexy.TodLib/generated/SceneAtlasData.h"
 #include <chrono>
 
-namespace { using enum FixedUIAtlas::Sprite; }
+namespace { using enum CommonUIAtlas::Sprite; }
 
 //0x456A80
 LawnDialog::LawnDialog(LawnApp* theApp, int theId, bool isModal, const SexyString& theDialogHeader, const SexyString& theDialogLines, const SexyString& theDialogFooter, int theButtonMode) :
@@ -78,8 +78,8 @@ void LawnDialog::CalcSize(int theExtraX, int theExtraY)
     // 最小宽度需要额外考虑到标题字符串的宽度
     if (mDialogHeader.size() > 0) aWidth += mHeaderFont->StringWidth(mDialogHeader);
     // 对话框贴图的最小宽度
-    int aTopMidWidth = FixedUIAtlas::Images[size_t(DIALOG_TOPMIDDLE)].mWidth;
-    int aImageWidth = FixedUIAtlas::Images[size_t(DIALOG_TOPLEFT)].mWidth + FixedUIAtlas::Images[size_t(DIALOG_TOPRIGHT)].mWidth + aTopMidWidth;
+    int aTopMidWidth = CommonUIAtlas::Images[size_t(DIALOG_TOPMIDDLE)].mWidth;
+    int aImageWidth = CommonUIAtlas::Images[size_t(DIALOG_TOPLEFT)].mWidth + CommonUIAtlas::Images[size_t(DIALOG_TOPRIGHT)].mWidth + aTopMidWidth;
     // 计算最终的宽度
     if (aWidth <= aImageWidth)
     {
@@ -111,8 +111,8 @@ void LawnDialog::CalcSize(int theExtraX, int theExtraY)
     }
     aHeight += mButtonHeight;
     // 对话框贴图的最小高度
-    int aBottomHeight = FixedUIAtlas::Images[size_t(mTallBottom ? DIALOG_BIGBOTTOMLEFT : DIALOG_BOTTOMLEFT)].mHeight;
-    int aImageHeight = FixedUIAtlas::Images[size_t(DIALOG_TOPLEFT)].mHeight + aBottomHeight + DIALOG_HEADER_OFFSET;
+    int aBottomHeight = CommonUIAtlas::Images[size_t(mTallBottom ? DIALOG_BIGBOTTOMLEFT : DIALOG_BOTTOMLEFT)].mHeight;
+    int aImageHeight = CommonUIAtlas::Images[size_t(DIALOG_TOPLEFT)].mHeight + aBottomHeight + DIALOG_HEADER_OFFSET;
     // 计算最终的高度
     if (aHeight < aImageHeight)
     {
@@ -120,7 +120,7 @@ void LawnDialog::CalcSize(int theExtraX, int theExtraY)
     }
     else
     {
-        int aCenterHeight = FixedUIAtlas::Images[size_t(DIALOG_CENTERLEFT)].mHeight;
+        int aCenterHeight = CommonUIAtlas::Images[size_t(DIALOG_CENTERLEFT)].mHeight;
         int anExtraHeight = (aHeight - aImageHeight) % aCenterHeight;
         if (anExtraHeight) aHeight += aCenterHeight - anExtraHeight;
     }
@@ -222,12 +222,12 @@ void LawnDialog::Resize(int theX, int theY, int theWidth, int theHeight)
     Dialog::Resize(theX, theY, theWidth, theHeight);
 
     int aButtonAreaX = mContentInsets.mLeft + mBackgroundInsets.mLeft - 5;
-    int aButtonAreaY = mHeight - mContentInsets.mBottom - mBackgroundInsets.mBottom - FixedUIAtlas::Images[size_t(BUTTON_LEFT)].mHeight + 2;
+    int aButtonAreaY = mHeight - mContentInsets.mBottom - mBackgroundInsets.mBottom - CommonUIAtlas::Images[size_t(BUTTON_LEFT)].mHeight + 2;
     int aButtonAreaWidth = mWidth - mContentInsets.mRight - mBackgroundInsets.mRight - mBackgroundInsets.mLeft - mContentInsets.mLeft + 8;
     // 按钮贴图限制下，按钮的最小宽度
-    int aButtonMinWidth = FixedUIAtlas::Images[size_t(BUTTON_LEFT)].mWidth + FixedUIAtlas::Images[size_t(BUTTON_RIGHT)].mWidth;
+    int aButtonMinWidth = CommonUIAtlas::Images[size_t(BUTTON_LEFT)].mWidth + CommonUIAtlas::Images[size_t(BUTTON_RIGHT)].mWidth;
     // 按钮区域额外空余的宽度
-    int aBtnMidWidth = FixedUIAtlas::Images[size_t(BUTTON_MIDDLE)].mWidth;
+    int aBtnMidWidth = CommonUIAtlas::Images[size_t(BUTTON_MIDDLE)].mWidth;
     int aButtonExtraWidth = (aButtonAreaWidth - 10) / 2 - aBtnMidWidth - aButtonMinWidth + 1;
     // 计算按钮可以拓展的额外宽度
     if (aButtonExtraWidth <= 0)
@@ -253,8 +253,8 @@ void LawnDialog::Resize(int theX, int theY, int theWidth, int theHeight)
 
     if (mYesButton && mNoButton)
     {
-        mYesButton->Resize(aButtonAreaX, aButtonAreaY, aButtonWidth, FixedUIAtlas::Images[size_t(BUTTON_LEFT)].mHeight);
-        mNoButton->Resize(aButtonAreaWidth - aButtonWidth + aButtonAreaX, aButtonAreaY, aButtonWidth, FixedUIAtlas::Images[size_t(BUTTON_LEFT)].mHeight);
+        mYesButton->Resize(aButtonAreaX, aButtonAreaY, aButtonWidth, CommonUIAtlas::Images[size_t(BUTTON_LEFT)].mHeight);
+        mNoButton->Resize(aButtonAreaWidth - aButtonWidth + aButtonAreaX, aButtonAreaY, aButtonWidth, CommonUIAtlas::Images[size_t(BUTTON_LEFT)].mHeight);
     }
     else if (mYesButton)
     {
@@ -273,7 +273,7 @@ void LawnDialog::Resize(int theX, int theY, int theWidth, int theHeight)
         }
         int aButtonWidth = aButtonMinWidth + aButtonExtraWidth;
 
-        mYesButton->Resize(aButtonAreaX + (aButtonAreaWidth - aButtonWidth) / 2, aButtonAreaY, aButtonWidth, FixedUIAtlas::Images[size_t(BUTTON_LEFT)].mHeight);
+        mYesButton->Resize(aButtonAreaX + (aButtonAreaWidth - aButtonWidth) / 2, aButtonAreaY, aButtonWidth, CommonUIAtlas::Images[size_t(BUTTON_LEFT)].mHeight);
     }
 
     if (mReanimation->mReanim)
@@ -288,17 +288,17 @@ void LawnDialog::Draw(Graphics* g)
     if (!mDrawStandardBack)
         return;
 
-    const TextureRegion& bottomLeft = FixedUIAtlas::Images[size_t(mTallBottom ? DIALOG_BIGBOTTOMLEFT : DIALOG_BOTTOMLEFT)];
-    const TextureRegion& bottomMiddle = FixedUIAtlas::Images[size_t(mTallBottom ? DIALOG_BIGBOTTOMMIDDLE : DIALOG_BOTTOMMIDDLE)];
-    const TextureRegion& bottomRight = FixedUIAtlas::Images[size_t(mTallBottom ? DIALOG_BIGBOTTOMRIGHT : DIALOG_BOTTOMRIGHT)];
-    const TextureRegion& topLeft = FixedUIAtlas::Images[size_t(DIALOG_TOPLEFT)];
-    const TextureRegion& topMiddle = FixedUIAtlas::Images[size_t(DIALOG_TOPMIDDLE)];
-    const TextureRegion& topRight = FixedUIAtlas::Images[size_t(DIALOG_TOPRIGHT)];
-    const TextureRegion& centerLeft = FixedUIAtlas::Images[size_t(DIALOG_CENTERLEFT)];
-    const TextureRegion& centerMiddle = FixedUIAtlas::Images[size_t(DIALOG_CENTERMIDDLE)];
-    const TextureRegion& centerRight = FixedUIAtlas::Images[size_t(DIALOG_CENTERRIGHT)];
-    const TextureRegion& header = FixedUIAtlas::Images[size_t(DIALOG_HEADER)];
-    const Sexy::TextureSource texture{FixedUIAtlas::Texture, 0};
+    const TextureRegion& bottomLeft = CommonUIAtlas::Images[size_t(mTallBottom ? DIALOG_BIGBOTTOMLEFT : DIALOG_BOTTOMLEFT)];
+    const TextureRegion& bottomMiddle = CommonUIAtlas::Images[size_t(mTallBottom ? DIALOG_BIGBOTTOMMIDDLE : DIALOG_BOTTOMMIDDLE)];
+    const TextureRegion& bottomRight = CommonUIAtlas::Images[size_t(mTallBottom ? DIALOG_BIGBOTTOMRIGHT : DIALOG_BOTTOMRIGHT)];
+    const TextureRegion& topLeft = CommonUIAtlas::Images[size_t(DIALOG_TOPLEFT)];
+    const TextureRegion& topMiddle = CommonUIAtlas::Images[size_t(DIALOG_TOPMIDDLE)];
+    const TextureRegion& topRight = CommonUIAtlas::Images[size_t(DIALOG_TOPRIGHT)];
+    const TextureRegion& centerLeft = CommonUIAtlas::Images[size_t(DIALOG_CENTERLEFT)];
+    const TextureRegion& centerMiddle = CommonUIAtlas::Images[size_t(DIALOG_CENTERMIDDLE)];
+    const TextureRegion& centerRight = CommonUIAtlas::Images[size_t(DIALOG_CENTERRIGHT)];
+    const TextureRegion& header = CommonUIAtlas::Images[size_t(DIALOG_HEADER)];
+    const Sexy::TextureSource texture{CommonUIAtlas::Texture, 0};
 
     int aRepeatX = (mWidth - topRight.mWidth - topLeft.mWidth) / topMiddle.mWidth;
     int aRepeatY = (mHeight - topLeft.mHeight - bottomLeft.mHeight - DIALOG_HEADER_OFFSET) / centerLeft.mHeight;

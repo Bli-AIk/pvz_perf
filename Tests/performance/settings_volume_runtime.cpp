@@ -38,6 +38,7 @@ int main(int argc, char** argv) try {
         if (std::abs(app.mMusicVolume - value / 100.0) > 1e-7 ||
             std::abs(app.mSfxVolume - value / 100.0 * .65) > 1e-12)
             throw std::runtime_error("Config percentages were not clamped/mapped to mixer gains");
+        if(app.mLandscapeUI) throw std::runtime_error("Missing landscapeUI must default to false");
         app.WriteToRegistry();
         JsonDoc result;
         if (!result.LoadFile(path) || result.GetInt("musicVolume", -1) != value ||
@@ -52,6 +53,13 @@ int main(int argc, char** argv) try {
         if (!result.LoadFile(path) || result.GetInt("musicVolume", -1) != value ||
             result.GetInt("sfxVolume", -1) != value)
             throw std::runtime_error("Slider value lost precision while saving");
+    }
+    for (bool enabled : {true,false}) {
+        JsonDoc source;source.SetBool("landscapeUI",enabled);source.SaveFile(path);
+        app.ReadFromRegistry();
+        if(app.mLandscapeUI!=enabled) throw std::runtime_error("landscapeUI input lost");
+        app.WriteToRegistry();JsonDoc result;result.LoadFile(path);
+        if(result.GetBool("landscapeUI",!enabled)!=enabled) throw std::runtime_error("landscapeUI did not round-trip");
     }
     std::cout << "PASS production settings: clamped input, 0..100 sliders, original SFX gain, all 101 integer round-trips\n";
     return 0;

@@ -1,12 +1,13 @@
 #version 450
-#extension GL_EXT_nonuniform_qualifier : require
+#extension GL_GOOGLE_include_directive : require
+#include "texture_bindings.glsl"
 // Textured fragment math follows PvZ-Portable SHADER_CODE (LGPL-3.0).
 // See PvZ-Portable.LICENSE.txt. Dual-source blending additionally preserves
 // the engine's original alpha accumulation for both normal and additive draws.
 precision mediump float;
 precision highp int;
-layout(set = 0, binding = 0) uniform texture2D images[4096];
-layout(set = 1, binding = 0) uniform sampler samplers[4];
+layout(set = 0, binding = 0) uniform texture2D images[PVZ_IMAGE_COUNT];
+layout(set = 1, binding = 0) uniform sampler samplers[PVZ_SAMPLER_COUNT];
 layout(location = 0) in vec4 color;
 layout(location = 1) in vec2 uv;
 layout(location = 2) flat in uint slot;

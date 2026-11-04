@@ -50,7 +50,9 @@ WindowTrackLimits WindowClientLimits(const SexyAppBase& app) {
         const auto output=app.mDDInterface->mRenderInterface->mRenderer->ScaleOutput(false);
         if(output.height>0) height=int(output.height);
     }
-    return WindowTrackLimits::FromScaleOutputHeight(height);
+    auto limits=WindowTrackLimits::FromScaleOutputHeight(app.mLandscapeUI?std::max(600,height):height);
+    if(app.mLandscapeUI)limits.minimumWidth=int((890LL*limits.height+300)/600);
+    return limits;
 }
 Point LogicalMouse(SexyAppBase& app,double x,double y) {
     int sx=0,sy=0;

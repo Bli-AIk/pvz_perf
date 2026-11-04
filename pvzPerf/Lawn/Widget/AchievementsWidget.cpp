@@ -81,6 +81,10 @@ AchievementsWidget::~AchievementsWidget() {
 
 // GOTY @Patoke: 0x401A10
 void AchievementsWidget::Update() {
+    if(mTouchScroll.pressed || mTouchScroll.velocity!=0) {
+        mTouchScroll.Advance(ScrollTimeNs(),2*mApp->mHeight+50-mHeight,static_cast<float>(mApp->mHeight));
+        Move(mX,FloatRoundToInt(mTouchScroll.position));MarkDirty();return;
+    }
 	if (mScrollValue <= 0)
 		return;
 
@@ -115,9 +119,18 @@ void AchievementsWidget::Draw(Graphics* g) {
 		return;
 
 	const Point anAbsolutePosition = GetAbsPos();
-	const Point aMousePosition(
+	Point aMousePosition(
 		mWidgetManager->mLastMouseX - anAbsolutePosition.mX,
 		mWidgetManager->mLastMouseY - anAbsolutePosition.mY);
+    if(!mWidgetManager->mMouseHoverEnabled) {
+        aMousePosition=Point(-1,-1);
+        if(mTouchScroll.pressed && !mTouchScroll.dragging)
+            for(const auto& touch:mWidgetManager->mTouches) if(touch.widget==this && touch.event.id==mTouchScroll.touchId) {
+                const Point held(touch.event.x-anAbsolutePosition.mX,touch.event.y-anAbsolutePosition.mY);
+                if((aBackButtonRect.Contains(mTouchPressX,mTouchPressY)&&aBackButtonRect.Contains(held)) ||
+                   (mMoreRockRect.Contains(mTouchPressX,mTouchPressY)&&mMoreRockRect.Contains(held))) aMousePosition=held;
+            }
+    }
 
 	// Opaque underpaint also covers the original artwork's antialiased edges.
 	g->mColor = Color(55, 37, 19);
@@ -193,6 +206,7 @@ void AchievementsWidget::Draw(Graphics* g) {
 
 // GOTY @Patoke: 0x4019D0
 void AchievementsWidget::KeyDown(KeyCode theKey) {
+    mTouchScroll.Cancel();
 	if (theKey == KEYCODE_UP) {
 		mScrollValue = mDefaultScrollValue;
 		mScrollDirection = 1;
@@ -218,6 +232,7 @@ void AchievementsWidget::MouseUp(int x, int y, int theClickCount) {
 	(void)theClickCount;
 	Point aPos = Point(x, y);
 	if (aBackButtonRect.Contains(aPos)) {
+        mTouchScroll.Cancel();
 		mScrollValue = 0;
 		mDidPressMoreButton = false;
 		Move(mX, mApp->mHeight);
@@ -228,6 +243,7 @@ void AchievementsWidget::MouseUp(int x, int y, int theClickCount) {
 	}
 
 	if (mMoreRockRect.Contains(aPos)) {
+        mTouchScroll.Cancel();
 		mDidPressMoreButton = !mDidPressMoreButton;
 		mScrollDirection = mDidPressMoreButton ? -1 : 1;
 		mScrollValue = 2000.0f;
@@ -245,6 +261,7 @@ void AchievementsWidget::MouseLeave() {
 
 // GOTY @Patoke: 0x4019A0
 void AchievementsWidget::MouseWheel(int theDelta) {
+    mTouchScroll.Cancel();
 	if (theDelta == 0)
 		return;
 	mScrollValue = mDefaultScrollValue;
@@ -253,6 +270,34 @@ void AchievementsWidget::MouseWheel(int theDelta) {
 		mScrollDirection = 1;
 	else if (theDelta < 0)
 		mScrollDirection = -1;
+}
+
+const void* AchievementsWidget::TouchHitTest(int,int) { return this; }
+void AchievementsWidget::TouchBegan(const TouchEvent& event) {
+    if(mTouchScroll.pressed)return;
+    const auto origin=GetAbsPos();
+    mScrollValue=0;mScrollRemainderY=0;mTouchScroll.position=static_cast<float>(mY);
+    mTouchPressX=event.x;mTouchPressY=event.y;
+    mTouchScroll.Begin(event.id,event.x+origin.mX,event.y+origin.mY,ScrollTimeNs());
+    MouseDown(event.x,event.y,1);
+}
+void AchievementsWidget::TouchMoved(const TouchEvent& event) {
+    if(!mTouchScroll.pressed || mTouchScroll.touchId!=event.id)return;
+    const auto origin=GetAbsPos();
+    mTouchScroll.Move(event.id,event.x+origin.mX,event.y+origin.mY,ScrollTimeNs(),
+                      2*mApp->mHeight+50-mHeight,static_cast<float>(mApp->mHeight));
+    Move(mX,FloatRoundToInt(mTouchScroll.position));MarkDirty();
+}
+void AchievementsWidget::TouchEnded(const TouchEvent& event) {
+    if(!mTouchScroll.pressed || mTouchScroll.touchId!=event.id)return;
+    TouchMoved(event);
+    const bool moved=mTouchScroll.End(event.id,ScrollTimeNs());
+    if(!moved && ((aBackButtonRect.Contains(mTouchPressX,mTouchPressY)&&aBackButtonRect.Contains(event.x,event.y)) ||
+                 (mMoreRockRect.Contains(mTouchPressX,mTouchPressY)&&mMoreRockRect.Contains(event.x,event.y))))
+        MouseUp(event.x,event.y,1);
+}
+void AchievementsWidget::TouchCanceled(const TouchEvent& event) {
+    if(mTouchScroll.pressed && mTouchScroll.touchId==event.id)mTouchScroll.Cancel();
 }
 
 // GOTY @Patoke: 0x459670

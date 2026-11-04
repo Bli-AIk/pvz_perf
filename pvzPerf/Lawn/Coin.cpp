@@ -1,4 +1,5 @@
 #include "Coin.h"
+#include "LandscapeHud.h"
 #include "Sexy.TodLib/ReanimClock.h"
 #include "Board.h"
 #include "Cutscene.h"
@@ -618,6 +619,13 @@ void Coin::UpdateCollected()
     {
         aDestX = 15;
         aDestY = 0;
+        if (mBoard && mApp->mLandscapeUIActive) {
+            const auto sun=LandscapeHud::SunBounds(*mBoard);
+            aDestX=sun.mX+8;aDestY=sun.mY;
+        } else if(mBoard) {
+            aDestX+=mApp->mScreenBounds.mX-mBoard->mX;
+            aDestY-=mBoard->mY;
+        }
     }
     else if (IsMoney())
     {
@@ -819,14 +827,15 @@ void Coin::Draw(Graphics* g)
     if (mIsBeingCollected && mApp->mScreenBounds.mX != 0 &&
         mApp->mDialogMap.find((int)Dialogs::DIALOG_STORE) == mApp->mDialogMap.end())
     {
-        const bool aSun = IsSun();
+        // Sun movement already targets the actual HUD in Board coordinates.
+        // Applying the legacy projection again would shift it off the left edge.
         const bool aOrdinaryMoney = IsMoney() &&
             mApp->mGameMode != GameMode::GAMEMODE_LIMBO_ZEN_GARDEN &&
             mApp->mCrazyDaveState == CrazyDaveState::CRAZY_DAVE_OFF;
-        if (aSun || aOrdinaryMoney)
+        if (aOrdinaryMoney)
         {
-            const float aFlightX = (aSun ? 15.0f : 39.0f) - mCollectX;
-            const float aFlightY = (aSun ? 0.0f : 558.0f) - mCollectY;
+            const float aFlightX = 39.0f - mCollectX;
+            const float aFlightY = 558.0f - mCollectY;
             const float aFlightLengthSquared = aFlightX * aFlightX + aFlightY * aFlightY;
             // Project the simulated flight onto its original vector; shift only rendering.
             const float aProgress = aFlightLengthSquared > 0.0f ?

@@ -180,10 +180,14 @@ int DDInterface::Init(NativeWindowHandle theWindow, bool isWindowed)
     mIsWindowed = isWindowed;
     const auto client = QueryNativeClientExtent(mHWnd);
     mDisplayWidth=client.width;mDisplayHeight=client.height;
-    auto viewport = GameViewport::Fit(client.width, client.height);
-    const Rect& worldBounds = mApp->mViewportWorldBounds;
-    if (worldBounds.mWidth > 0)
-        viewport = viewport.WithinWorld(worldBounds.mX, worldBounds.mX + worldBounds.mWidth);
+#if defined(__ANDROID__)
+    constexpr bool mobile=true;
+#else
+    constexpr bool mobile=false;
+#endif
+    mApp->mLandscapeUIActive=SelectLandscapeUI(mApp->mLandscapeUI,mobile,client.width,client.height);
+    auto viewport = GameViewport::Fit(client.width,client.height);
+    if(mApp->mLandscapeUIActive && viewport.width<890)viewport=GameViewport::Fit(890,600);
     mWidth = viewport.width;
     mHeight = viewport.height;
     mAspect = Ratio(mWidth, mHeight);
@@ -243,10 +247,8 @@ int DDInterface::ResizePreparedPresent()
     const auto [width, height] = QueryNativeClientExtent(mHWnd);
     if(mApp->mPhysMinimized || width<=0 || height<=0) return RESULT_DEFERRED;
     if (!mRenderInterface->ResizePresent(width,height)) return RESULT_DEFERRED;
-    auto viewport = GameViewport::Fit(width, height);
-    const Rect& worldBounds = mApp->mViewportWorldBounds;
-    if (worldBounds.mWidth > 0)
-        viewport = viewport.WithinWorld(worldBounds.mX, worldBounds.mX + worldBounds.mWidth);
+    auto viewport = GameViewport::Fit(width,height);
+    if(mApp->mLandscapeUIActive && viewport.width<890)viewport=GameViewport::Fit(890,600);
     if (viewport.width != mWidth || viewport.height != mHeight) {
         mRenderInterface->ResizeScene(viewport.width, viewport.height);
         mWidth = viewport.width;

@@ -75,16 +75,21 @@ namespace
 void RefreshGameViewport(LawnApp& app)
 {
 	const int width = app.mScreenBounds.mWidth;
-	Sexy::GameViewport view{width, BOARD_HEIGHT, (BOARD_WIDTH - width) / 2};
+	auto view=Sexy::GameViewport::Fit(width,BOARD_HEIGHT);
 	const bool battle = app.mBoard && app.mBoard->mBackground >= BACKGROUND_1_DAY &&
 		app.mBoard->mBackground <= BACKGROUND_6_BOSS &&
 		(app.mGameScene == SCENE_PLAYING || app.mGameScene == SCENE_LEVEL_INTRO ||
 		 app.mGameScene == SCENE_ZOMBIES_WON);
-	app.mViewportWorldBounds = battle ?
-		Rect(-BOARD_OFFSET, 0, BOARD_OFFSET + BOARD_IMAGE_WIDTH_OFFSET, BOARD_HEIGHT) : Rect();
-	if (battle)
+	if (battle && !app.GetDialog(DIALOG_STORE) && !app.GetDialog(DIALOG_ALMANAC))
+		view=Sexy::SelectGameViewport(width,BOARD_HEIGHT,app.mLandscapeUIActive);
+	// Preserve the chosen UI expansion. Fit the world behind it to the complete
+	// native backdrop, including after loading a save made at another width.
+	// Window HUD anchors subtract this Board translation independently.
+	if (battle && app.mGameScene == SCENE_PLAYING && app.mBoard->mShakeCounter == 0)
 	{
-		view = view.WithinWorld(-BOARD_OFFSET, BOARD_IMAGE_WIDTH_OFFSET);
+		const auto world=view.WithinWorld(-BOARD_OFFSET,BOARD_IMAGE_WIDTH_OFFSET);
+		const int restX=view.left-world.left;
+		if (app.mBoard->mX != restX || app.mBoard->mY != 0)app.mBoard->Move(restX,0);
 	}
 	if (app.mScreenBounds.mX == view.left &&
 		app.mWidgetManager->mMouseDestRect.mX == view.left &&
@@ -159,7 +164,7 @@ LawnApp::LawnApp()
 	mDebugKeysEnabled = false;
 	mFullCompanyName = "PopCap Games";
 	mProdName = "PopCap\\PlantsVsZombies";
-	mProductVersion = "3.3";
+	mProductVersion = "3.3.1";
 	std::string aTitleName = "pvz_perf";
 #ifdef _DEBUG
 	aTitleName += " BETA ";
@@ -1284,7 +1289,13 @@ bool LawnApp::KillDialog(int theDialogId)
 	{
 		if (mDialogMap.size() == 0 && !aKeepModalFocus)
 		{
-			if (mBoard)
+			// While choosing seeds, Board remains alive behind the chooser. Wheel
+			// input belongs to the chooser, including after Menu/Almanac/Store.
+			if (mSeedChooserScreen && mSeedChooserScreen->mWidgetManager == mWidgetManager)
+			{
+				mWidgetManager->SetFocus(mSeedChooserScreen);
+			}
+			else if (mBoard)
 			{
 				mWidgetManager->SetFocus(mBoard);
 			}
@@ -1814,7 +1825,7 @@ void LawnApp::LoadingThreadProc()
 	ReanimatorLoadAllDefinitionData();
 	ProjectileLoadResources();
 	ZombatarLoadResources();
-	LoadSceneAtlases();
+	LoadSceneAtlases(mLandscapeUIActive);
 
 
 	static constexpr ResourceGroupId groups[] = { ResourceGroupId::LoadingFonts, ResourceGroupId::LoadingImages, ResourceGroupId::LoadingSounds };

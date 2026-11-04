@@ -57,6 +57,9 @@ public:
 	// Static storage only; constexpr definitions and all handlers live in .cpp.
 	static const std::array<UpdateFn, NUM_GAME_MODES> kChallengeUpdates;
 	static const std::array<UpdateFn, NUM_LEVELS> kAdventureChallengeUpdates;
+	using MouseDownFn = int (*)(Challenge&, int, int, int, HitResult&);
+	static const std::array<MouseDownFn, NUM_GAME_MODES> kChallengeMouseDowns;
+	static const std::array<MouseDownFn, NUM_LEVELS> kAdventureChallengeMouseDowns;
 
 	LawnApp*				mApp;                                               //+0x0
 	Board*					mBoard;                                             //+0x4

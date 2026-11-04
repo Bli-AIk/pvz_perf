@@ -297,7 +297,9 @@ struct StaticSnapshot
         Add(MagnetAtlas::Scales,MagnetAtlas::Count,"magnet scene scales");
         Add(AlmanacAtlas::Images,AlmanacAtlas::Count,"almanac scene rectangles");
         Add(AchievementsAtlas::Images,AchievementsAtlas::Count,"achievement scene rectangles");
-        Add(FixedUIAtlas::Images,FixedUIAtlas::Count,"fixed UI scene rectangles");
+        Add(CommonUIAtlas::Images,CommonUIAtlas::Count,"common UI scene rectangles");
+        Add(DesktopUIAtlas::Images,DesktopUIAtlas::Count,"desktop UI scene rectangles");
+        Add(LandscapeUIAtlas::Images,LandscapeUIAtlas::Count,"landscape UI scene rectangles");
         for (const auto& definition : Definitions::Reanimations)
         {
             Add(definition.mTracks.tracks, definition.mTracks.count, "reanimation tracks");
@@ -421,7 +423,9 @@ void CheckSceneTextures(TestApp& app,bool loaded)
         {MagnetAtlas::Texture,MagnetAtlas::Images,MagnetAtlas::Count},
         {AlmanacAtlas::Texture,AlmanacAtlas::Images,AlmanacAtlas::Count},
         {AchievementsAtlas::Texture,AchievementsAtlas::Images,AchievementsAtlas::Count},
-        {FixedUIAtlas::Texture,FixedUIAtlas::Images,FixedUIAtlas::Count}};
+        {CommonUIAtlas::Texture,CommonUIAtlas::Images,CommonUIAtlas::Count},
+        {DesktopUIAtlas::Texture,DesktopUIAtlas::Images,DesktopUIAtlas::Count},
+        {LandscapeUIAtlas::Texture,LandscapeUIAtlas::Images,LandscapeUIAtlas::Count}};
     std::set<GpuTexture*> textures;
     std::size_t rectangles=0;
     for (const auto& scene:scenes)
@@ -448,8 +452,8 @@ void CheckSceneTextures(TestApp& app,bool loaded)
                 "Scene atlas retained an ordinary image wrapper instead of a direct GPU pointer");
         }
     }
-    Require(rectangles==99,"Scene fixture must cover all 99 authored/fixed UI views");
-    Require(!loaded || textures.size()==4,"Scene fixture omitted one of the four GPU atlases");
+    Require(rectangles==MagnetAtlas::Count+AlmanacAtlas::Count+AchievementsAtlas::Count+CommonUIAtlas::Count+DesktopUIAtlas::Count+LandscapeUIAtlas::Count,"Scene fixture must cover all authored UI views");
+    Require(!loaded || textures.size()==6,"Scene fixture omitted a GPU atlas");
 }
 
 std::size_t FontBindingCount()
@@ -485,7 +489,8 @@ void ReleaseAll(TestApp& app)
 
 void LoadAll(TestApp& app)
 {
-    LoadSceneAtlases();
+    LoadSceneAtlases(false);
+    LandscapeUIAtlas::Load();
     // Exercise the consuming upload boundary with every real scene PNG.
     // Definition loading uses this same Image*& contract; it must clear the
     // decode owner immediately, even while the GPU atlas remains drawable.
@@ -504,8 +509,8 @@ void LoadAll(TestApp& app)
     ReanimatorLoadAllDefinitionData();
     const auto tasks = app.mCompletedLoadingThreadTasks.load();
     const auto projectile = Definitions::Projectiles.mTexture;
-    const std::array<GpuTexture*,4> scenes{
-        MagnetAtlas::Texture,AlmanacAtlas::Texture,AchievementsAtlas::Texture,FixedUIAtlas::Texture};
+    const std::array<GpuTexture*,6> scenes{
+        MagnetAtlas::Texture,AlmanacAtlas::Texture,AchievementsAtlas::Texture,CommonUIAtlas::Texture,DesktopUIAtlas::Texture,LandscapeUIAtlas::Texture};
     CheckSceneTextures(app,true);
     std::vector<GpuTexture*> textures;
     for (const auto& definition : Definitions::Reanimations)
@@ -518,7 +523,8 @@ void LoadAll(TestApp& app)
     TodParticleLoadDefinitions(gLawnParticleArray, ParticleEffect::NUM_PARTICLES);
     ReanimatorLoadAllDefinitionData();
     Definitions::LoadAllImages();
-    LoadSceneAtlases();
+    LoadSceneAtlases(false);
+    LandscapeUIAtlas::Load();
     std::vector<GpuTexture*> repeated;
     for (const auto& definition : Definitions::Reanimations)
         repeated.insert(repeated.end(), definition.mTextures,
@@ -528,8 +534,8 @@ void LoadAll(TestApp& app)
             definition.mTextures + definition.mVariantCount);
     Require(repeated == textures && Definitions::Projectiles.mTexture == projectile &&
         app.mCompletedLoadingThreadTasks == tasks, "Repeated bulk load changed live handles or progress");
-    Require(scenes==std::array<GpuTexture*,4>{MagnetAtlas::Texture,AlmanacAtlas::Texture,
-        AchievementsAtlas::Texture,FixedUIAtlas::Texture},"Repeated scene load replaced live GPU pointers");
+    Require(scenes==std::array<GpuTexture*,6>{MagnetAtlas::Texture,AlmanacAtlas::Texture,
+        AchievementsAtlas::Texture,CommonUIAtlas::Texture,DesktopUIAtlas::Texture,LandscapeUIAtlas::Texture},"Repeated scene load replaced live GPU pointers");
     CheckSceneTextures(app,true);
     Require(gReanimatorDefArray == Definitions::Reanimations &&
         gParticleDefArray == Definitions::Particles && gParticleDefCount == 106 &&
@@ -561,13 +567,15 @@ void LoadAll(TestApp& app)
         draw(MagnetAtlas::Texture,MagnetAtlas::Images,MagnetAtlas::Count);
         draw(AlmanacAtlas::Texture,AlmanacAtlas::Images,AlmanacAtlas::Count);
         draw(AchievementsAtlas::Texture,AchievementsAtlas::Images,AchievementsAtlas::Count);
-        draw(FixedUIAtlas::Texture,FixedUIAtlas::Images,FixedUIAtlas::Count);
+        draw(CommonUIAtlas::Texture,CommonUIAtlas::Images,CommonUIAtlas::Count);
+        draw(DesktopUIAtlas::Texture,DesktopUIAtlas::Images,DesktopUIAtlas::Count);
+        draw(LandscapeUIAtlas::Texture,LandscapeUIAtlas::Images,LandscapeUIAtlas::Count);
     }
     render.Flush();
     const auto scenePixels=render.ReadImagePixels(*sceneTarget);
-    Require(drawn==99 && std::any_of(scenePixels.pixels.begin(),scenePixels.pixels.end(),
+    Require(drawn==MagnetAtlas::Count+AlmanacAtlas::Count+AchievementsAtlas::Count+CommonUIAtlas::Count+DesktopUIAtlas::Count+LandscapeUIAtlas::Count && std::any_of(scenePixels.pixels.begin(),scenePixels.pixels.end(),
         [](unsigned pixel) { return pixel!=0xff000000u; }),
-        "Real scene consumers failed to draw the complete 99-view catalog");
+        "Real scene consumers failed to draw the complete scene view catalog");
 }
 
 std::vector<unsigned> Sample(TestApp& app, GpuTexture* texture, const TextureRegion& rectangle)

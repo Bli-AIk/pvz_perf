@@ -12,8 +12,8 @@ import build_numeric_runtime_pak64 as pak
 import definition_atlas
 from static_definition_codegen import cpp_float, cpp_string, texture_region
 
-MODULES = ("Magnet", "Almanac", "Achievements", "FixedUI")
-FIXED_UI_NAMES = (
+MODULES = ("Magnet", "Almanac", "Achievements", "DesktopUI", "LandscapeUI", "CommonUI")
+COMMON_UI_NAMES = (
     "BUTTON_LEFT", "BUTTON_MIDDLE", "BUTTON_RIGHT",
     "BUTTON_DOWN_LEFT", "BUTTON_DOWN_MIDDLE", "BUTTON_DOWN_RIGHT",
     "DIALOG_TOPLEFT", "DIALOG_TOPMIDDLE", "DIALOG_TOPRIGHT",
@@ -102,9 +102,9 @@ def parse(text: str) -> dict:
     return {"name": name, "sprites": sprites}
 
 
-def fixed_ui() -> dict:
-    return {"name": "FixedUI", "sprites": [
-        {"name": name, "image": "IMAGE_" + name, "scale": 1.0} for name in FIXED_UI_NAMES] + [
+def common_ui() -> dict:
+    return {"name": "CommonUI", "sprites": [
+        {"name": name, "image": "IMAGE_" + name, "scale": 1.0} for name in COMMON_UI_NAMES] + [
         {"name": "TOUCH_FRAME_" + name, "image": "IMAGE_TOUCH_SELECTION_FRAME_BLUE",
          "rect": rect, "scale": 1.0} for name, rect in (
             ("TL", [0, 0, 42, 36]), ("TR", [62, 0, 42, 36]),
@@ -243,8 +243,11 @@ def generate(reports: dict) -> dict[str, bytes]:
                 cpp_string(report["atlas_path"]), cpp_string(image["source"]),
                 f"{x}u", f"{y}u", f"{width}u", f"{height}u",
                 cpp_string(image["rgba_sha256"])]) + "},")
-    header += ["void LoadSceneAtlases();", "void FreeSceneAtlases();"]
-    cpp += ["void LoadSceneAtlases() {", *(f"    {module}Atlas::Load();" for module in MODULES), "}",
+    header += ["void LoadSceneAtlases(bool landscapeUI);", "void FreeSceneAtlases();"]
+    cpp += ["void LoadSceneAtlases(bool landscapeUI) {",
+            *(f"    {module}Atlas::Load();" for module in MODULES if module not in {"DesktopUI", "LandscapeUI"}),
+            "    if (landscapeUI) LandscapeUIAtlas::Load();",
+            "    else DesktopUIAtlas::Load();", "}",
             "void FreeSceneAtlases() {", *(f"    {module}Atlas::Free();" for module in reversed(MODULES)), "}"]
     audit = ["// Offline scene extent audit; not included by the game.", "#pragma once", "#include <array>",
              "namespace SceneAtlasBindings {", "struct Extent { const char* image; unsigned width,height; };",

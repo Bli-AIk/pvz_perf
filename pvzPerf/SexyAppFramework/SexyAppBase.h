@@ -290,6 +290,8 @@ public:
 	int						mFrameTime;
 	FrameTiming				mFrameTiming{};
 	bool                    mAutoDetectFrameRate = true;
+    bool                    mLandscapeUI = false; // settings.json preference; keep on mobile fallback.
+    bool                    mLandscapeUIActive = false; // Resolved once at native-window initialization.
 
 		bool					mIsDrawing;
 		bool					mRedrawInProgress;
@@ -393,7 +395,6 @@ public:
 	bool					mWidescreenAware;
 	Rect					mScreenBounds;
 	// Optional source-art bounds for horizontal framing; zero width means centered.
-	Rect					mViewportWorldBounds;
 	bool					mEnableWindowAspect;
 	Ratio					mWindowAspect;
 	int						mWindowScale;

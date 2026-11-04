@@ -20,6 +20,13 @@ validation; no experimental paper-white or normalization path is shipped.
 Windows Vulkan/DX12 HDR uses linear RGBA16F, with output math and desktop WSI
 validated. The retired PQ equations remain only in test reference probes.
 
+The opt-in `PVZ_ANDROID_HDR_TEST` build remains in the repository for investigation;
+it is OFF by default and the Android HDR settings row stays disabled. Testing on
+the nubia phone produced gray/dark output; the Xiaomi/Xring O1 tablet accepted
+RGBA16F + linear scRGB but the user reported overexposure, including after the
+experimental reference-white normalization. Neither device passed visual calibration.
+Do not enable this experiment in a release based only on advertised HDR capabilities.
+
 Android currently supports built-in presentation resizing only. HLSL/compute
 scale-effect chains are deliberately unsupported; nonempty effects arrays are
 rejected by the Android configuration reader. Do not equate ordinary bilinear
@@ -143,12 +150,32 @@ not directly in `out/`. The current signed package is
 `tools/build-android-apk.ps1` copies Gradle output into this directory by default;
 `-OutputDirectory` can select another package directory. Unsigned Gradle Release
 output keeps the `-release-unsigned.apk` suffix and does not replace the current
-signed package. Sign and align it before installation.
+signed package. Use `-Sign` (or `-Install`, which also signs) to zipalign with
+16 KiB page alignment, sign with the local Android development keystore and
+verify the APK. A file ending in `-unsigned.apk` cannot be installed directly.
 
 The distribution identifier is `arm64-android14-vulkan1.3`; it names the Android
-14 test target, not a change to Gradle's minimum supported API. The current CPU
-baseline remains Armv9-A without SVE/SVE2. Native intermediates and layout caches
-remain in the single active `out/android-arm64` tree.
+14 minimum (API 34). Its CPU baseline remains Armv9-A without SVE/SVE2.
+Native intermediates remain in `out/android-arm64`.
+
+The separate legacy build uses `PVZ_VULKAN_LEGACY=ON`, NDK API 24 and
+`PVZ_ANDROID_CPU_BASELINE=armv8-a`. Its build and APK output are isolated in
+`out/arm64-android7-vulkan1.0`. Gradle reads the native build cache to set the
+APK minimum to API 24 and stages that tree's library, PAK and SPIR-V together.
+Java glue is compiled for Java 8 bytecode; the host build can still use JDK 17.
+The legacy shaders target Vulkan 1.0 / SPIR-V 1.0, with one sampled image and
+one sampler bound per adjacent texture/sampler run, preserving painter order.
+Core `vkQueueSubmit` and `vkCmdPipelineBarrier` replace synchronization2.
+No descriptor indexing or Vulkan 1.1+ import is required. Pipeline caches use
+separate v10/v13 filenames. OpenAL dynamically loads AAudio where available;
+API 24/25 links OpenSL ES without a hard dependency on libaaudio.
+
+Validation includes the desktop forced-1.0 initialization and renderer pixel/lifetime
+suite. It does not establish compatibility with every Android 7 vendor driver;
+an Android 7 physical device has not been tested. A device must provide a working
+Vulkan driver and the renderer's required formats, including RGBA16F render images.
+The Vulkan 1.3 binary retains its bindless implementation and no legacy run-splitting
+code is compiled into its draw loop.
 
 The activity uses `sensorLandscape` to support both landscape orientations.
 Native resize events carry the current window extent and update the cached

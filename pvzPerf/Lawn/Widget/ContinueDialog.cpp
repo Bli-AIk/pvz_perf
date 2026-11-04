@@ -57,9 +57,9 @@ void ContinueDialog::Resize(int theX, int theY, int theWidth, int theHeight)
 {
     LawnDialog::Resize(theX, theY, theWidth, theHeight);
 
-    int aBtnWidth = FixedUIAtlas::Images[size_t(FixedUIAtlas::Sprite::BUTTON_LEFT)].mWidth +
-        FixedUIAtlas::Images[size_t(FixedUIAtlas::Sprite::BUTTON_MIDDLE)].mWidth * 3 +
-        FixedUIAtlas::Images[size_t(FixedUIAtlas::Sprite::BUTTON_RIGHT)].mWidth;
+    int aBtnWidth = CommonUIAtlas::Images[size_t(CommonUIAtlas::Sprite::BUTTON_LEFT)].mWidth +
+        CommonUIAtlas::Images[size_t(CommonUIAtlas::Sprite::BUTTON_MIDDLE)].mWidth * 3 +
+        CommonUIAtlas::Images[size_t(CommonUIAtlas::Sprite::BUTTON_RIGHT)].mWidth;
     int aBtnHeight = mYesButton->mHeight;
 
     /*

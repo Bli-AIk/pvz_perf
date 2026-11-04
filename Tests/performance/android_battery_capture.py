@@ -114,6 +114,8 @@ def main():
     parser.add_argument('--device', default='FY241471004E')
     parser.add_argument('--package', default='com.openpvz.perf')
     parser.add_argument('--symbol', required=True, help='gLawnApp address in the installed ELF, hexadecimal')
+    parser.add_argument('--verify-endless', action='store_true',
+                        help='Require the paused canonical endless checkpoint before starting')
     parser.add_argument('--output', required=True, type=Path)
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=False)
@@ -138,6 +140,16 @@ def main():
     (args.output/'capture.json').write_text(json.dumps(metadata, indent=2)+'\n')
     print('Prepare Continue/Paused. KEEP USB CONNECTED until recording starts.', flush=True)
     input('Press Enter to START recording on the phone: ')
+    pids = command('shell', 'pidof '+shlex.quote(args.package)).split()
+    if len(pids) != 1:
+        raise RuntimeError('Expected one running game before recording')
+    initial = json.loads(command('shell', 'run-as '+shlex.quote(args.package)+
+        ' files/pvz-counter-reader '+pids[0]+' '+shlex.quote(args.symbol)))
+    if args.verify_endless and any(initial.get(key) != value for key, value in dict(
+            scene=3, paused=True, board_time_ns=2291960000000, wave=0).items()):
+        raise RuntimeError('Not at the paused canonical endless checkpoint: '+str(initial))
+    metadata['initial_state'] = initial
+    (args.output/'capture.json').write_text(json.dumps(metadata, indent=2)+'\n')
     # One USB transaction starts and acknowledges the recorder. After the
     # STARTED message no further USB query is needed until export.
     ready = command('shell', 'nohup sh '+shlex.quote(remote+'/sampler.sh')+' '+shlex.quote(args.package)+

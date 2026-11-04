@@ -27,8 +27,11 @@ void Run() {
     VulkanTest::Window native(64,64);
     const auto swapchain = VulkanTest::SwapchainConfig();
 
-    // Until the separate legacy path exists, reject a downgraded instance
-    // before creating a device that cannot legally use core Submit2/barrier2.
+#if defined(PVZ_VULKAN_LEGACY)
+    Require(config.appInfo.apiVersion == VK_API_VERSION_1_0, "Legacy instance version is not 1.0");
+#else
+    // The modern implementation must not downgrade its instance version while
+    // continuing to use descriptor indexing and core Submit2/barrier2.
     auto legacy = config;
     legacy.appInfo.apiVersion = VK_API_VERSION_1_2;
     bool rejectedLegacy = false;
@@ -38,6 +41,7 @@ void Run() {
     }
     Require(rejectedLegacy, "Vulkan 1.3 requirement was bypassed");
     NoSharedDevice();
+#endif
 
     for (int attempt = 0; attempt < 3; ++attempt) {
         bool caught = false;

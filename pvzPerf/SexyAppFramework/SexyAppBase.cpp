@@ -1,6 +1,7 @@
 #include "graphics/GpuBackend.h"
 #include <stdexcept>
 #include "SexyAppBase.h"
+#include "misc/FloatingPointMode.h"
 #include <optional>
 #include "misc/SEHCatcher.h"
 #include "widget/WidgetManager.h"
@@ -1352,6 +1353,7 @@ void SexyAppBase::WriteToRegistry()
 	JsonDoc aDoc;
 	aDoc.SetInt("targetFps", mFrameTiming.mTargetFps);
 	aDoc.SetBool("autoDetectFrameRate",mAutoDetectFrameRate);
+    aDoc.SetBool("landscapeUI",mLandscapeUI);
 #if defined(__ANDROID__)
     aDoc.SetBool("hdr", false);
 #endif
@@ -1724,6 +1726,7 @@ void SexyAppBase::ReadFromRegistry()
 	if (!aDoc.LoadFile(SettingsPath().c_str()))
 		return;
 	mAutoDetectFrameRate=aDoc.GetBool("autoDetectFrameRate",true);
+    mLandscapeUI=aDoc.GetBool("landscapeUI",false);
 	bool settingsChanged=!aDoc.Has("autoDetectFrameRate");
 	if (settingsChanged) aDoc.SetBool("autoDetectFrameRate",true);
 
@@ -3081,6 +3084,7 @@ void SexyAppBase::LoadingThreadCompleted()
 
 void SexyAppBase::LoadingThreadProcStub(void *theArg)
 {
+	EnableDenormalFlushForCurrentThread();
 	SexyAppBase* aSexyApp = (SexyAppBase*) theArg;
 	try
 	{

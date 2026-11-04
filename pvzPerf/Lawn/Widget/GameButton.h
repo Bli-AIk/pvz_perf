@@ -114,5 +114,5 @@ public:
 
 LawnStoneButton*			MakeButton(int theId, ButtonListener* theListener, const SexyString& theText);
 NewLawnButton*				MakeNewButton(int theId, ButtonListener* theListener, const SexyString& theText, _Font* theFont, Image* theImageNormal, Image* theImageOver, Image* theImageDown);
-NewLawnButton* MakeFixedUIBackButton(int id, ButtonListener* listener, const SexyString& text);
+NewLawnButton* MakeCommonUIBackButton(int id, ButtonListener* listener, const SexyString& text);
 

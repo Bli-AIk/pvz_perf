@@ -71,7 +71,7 @@ class SceneAtlasCorpusTests(unittest.TestCase):
         cls.files = runtime_asset_sources.inventory(ROOT)
         cls.modules, cls.sources = scene.prepare(
             [scene.parse(path.read_text("utf-8-sig")) for path in cls.config.sources["scene"]]
-            + [scene.fixed_ui()], (ROOT / "assets/definitions/resources.json").read_bytes(), cls.files)
+            + [scene.common_ui()], (ROOT / "assets/definitions/resources.json").read_bytes(), cls.files)
 
     def test_exact_scene_membership_and_native_static_rectangles(self):
         self.assertEqual(set(self.scenes), set(self.modules))

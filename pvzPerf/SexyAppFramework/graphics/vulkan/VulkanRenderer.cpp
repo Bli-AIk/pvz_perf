@@ -1,6 +1,13 @@
 #include "VulkanRenderer.h"
 #include "SexyAppFramework/graphics/PoolMesh.h"
 #if defined(__ANDROID__)
+namespace {
+#if defined(PVZ_VULKAN_LEGACY)
+constexpr const char* kPipelineCacheName="pipeline_cache_v10.bin";
+#else
+constexpr const char* kPipelineCacheName="pipeline_cache_v13.bin";
+#endif
+}
 #include "SexyAppFramework/Common.h"
 #include <chrono>
 #endif
@@ -253,6 +260,9 @@ struct VulkanTexture {
     VkFramebuffer framebuffer = VK_NULL_HANDLE;
     VkDescriptorPool computePool = VK_NULL_HANDLE;
     VkDescriptorSet computeSet = VK_NULL_HANDLE;
+#if defined(PVZ_VULKAN_LEGACY)
+    VkDescriptorSet imageSet = VK_NULL_HANDLE;
+#endif
     std::unique_ptr<Buffer> computeMetadata;
     // bindless：纹理不再持有独立描述符集，只占纹理数组的一个槽位。
     // 槽位在创建时写入数组元素，销毁走 retired → ReapRetired 后回收
@@ -335,7 +345,12 @@ struct VulkanRenderer::Impl {
     std::string poolShaderPath;
     std::optional<VulkanHdrParams> hdr;
     std::array<VkSampler, 4> samplers{};
+#if defined(PVZ_VULKAN_LEGACY)
+    std::array<VkDescriptorSet,4> samplerSets{};
+    std::vector<VkDescriptorSet> freeImageSets;
+#else
     VkDescriptorSet samplerSet = VK_NULL_HANDLE;  // 4 采样器一数组，逐顶点声明
+#endif
     std::vector<VkDescriptorPool> pools;
     std::vector<uint32_t> poolFreeSets;
     // bindless 发号器（2026-10-05 用户两轮裁决终态：复用 + 永不烧穿）。
@@ -371,8 +386,10 @@ struct VulkanRenderer::Impl {
     }
     // 全场纹理数组描述符：binding0 = SAMPLED_IMAGE[kCount]，PARTIALLY_BOUND
     // +UPDATE_AFTER_BIND，每纹理创建时写自己的元素，绘制时顶点携带槽位号。
+#if !defined(PVZ_VULKAN_LEGACY)
     VkDescriptorPool textureArrayPool = VK_NULL_HANDLE;
     VkDescriptorSet textureArray = VK_NULL_HANDLE;
+#endif
     VkFormat presentFormat = VK_FORMAT_UNDEFINED;
     VkCommandPool transferPool = VK_NULL_HANDLE;
     VkFence transferFence = VK_NULL_HANDLE;
@@ -575,7 +592,9 @@ struct VulkanRenderer::Impl {
         if (hdrFragmentShader) vkDestroyShaderModule(device, hdrFragmentShader, nullptr);
         for (auto pool : pools) vkDestroyDescriptorPool(device, pool, nullptr);
         for (auto sampler : samplers) if (sampler) vkDestroySampler(device, sampler, nullptr);
+#if !defined(PVZ_VULKAN_LEGACY)
         if (textureArrayPool) vkDestroyDescriptorPool(device, textureArrayPool, nullptr);
+#endif
         if (imageLayout) vkDestroyDescriptorSetLayout(device, imageLayout, nullptr);
         if (samplerLayout) vkDestroyDescriptorSetLayout(device, samplerLayout, nullptr);
         if (transferFence) vkDestroyFence(device, transferFence, nullptr);
@@ -611,6 +630,25 @@ struct VulkanRenderer::Impl {
         return set;
     }
 
+    void UpdateImageDescriptor(VulkanTexture& image) {
+        const VkDescriptorImageInfo binding{VK_NULL_HANDLE,image.view,image.sampledLayout};
+        VkWriteDescriptorSet write{VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET};
+#if defined(PVZ_VULKAN_LEGACY)
+        if (!image.imageSet) {
+            if (freeImageSets.empty()) image.imageSet=AllocateSet(imageLayout);
+            else {image.imageSet=freeImageSets.back();freeImageSets.pop_back();}
+        }
+        write.dstSet=image.imageSet;
+#else
+        write.dstSet=textureArray;
+        write.dstArrayElement=image.slot;
+#endif
+        write.descriptorCount=1;
+        write.descriptorType=VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
+        write.pImageInfo=&binding;
+        vkUpdateDescriptorSets(device,1,&write,0,nullptr);
+    }
+
     void ReapRetired() {
         // Retire includes the recording submission even when an old backing
         // was only copied, not sampled. Never free a recording resource after merely
@@ -618,6 +656,9 @@ struct VulkanRenderer::Impl {
         if (!retired.empty() || !retiredDescriptorPools.empty()) CompleteTransfers();
         std::erase_if(retired, [&](const auto& texture) {
             if (texture->retireAfterSerial > window.completedSerial) return false;
+#if defined(PVZ_VULKAN_LEGACY)
+            if (texture->imageSet) freeImageSets.push_back(texture->imageSet);
+#endif
             if (texture->slot < kTextureSlots) {
                 if (slotOwners[texture->slot] == texture.get()) slotOwners[texture->slot] = nullptr;
                 if (texture->slot < staticBase) freeSlots.push_back(texture->slot);
@@ -811,16 +852,7 @@ struct VulkanRenderer::Impl {
         if (image->slot >= kTextureSlots)
             throw std::runtime_error("Static texture slot out of range");
         if (staticSlot != 0xFFFFFFFFu) GuardStaticSlot(image->slot);
-        VkDescriptorImageInfo binding{};
-        binding.imageView = image->view;
-        binding.imageLayout = sampledLayout;
-        VkWriteDescriptorSet write{VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET};
-        write.dstSet = textureArray;
-        write.dstArrayElement = image->slot;
-        write.descriptorCount = 1;
-        write.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
-        write.pImageInfo = &binding;
-        vkUpdateDescriptorSets(device, 1, &write, 0, nullptr);
+        UpdateImageDescriptor(*image);
         slotOwners[image->slot] = image.get();
         image->slotOwner = &slotOwners[image->slot];
         return image;
@@ -1079,6 +1111,9 @@ struct VulkanRenderer::Impl {
     template<bool Quads>
     void AppendRun(DrawStream*, VkDeviceSize, uint32_t, VkPipeline,
         VkRect2D, int, int
+#if defined(PVZ_VULKAN_LEGACY)
+        , VkDescriptorSet, VkDescriptorSet
+#endif
     );
     // P5 游程合并（2026-10-05）：连续同状态（流连续+管线/描述符/剪刀/视口未变）
     // 的提交延迟 BindVertexBuffers+Draw 合一——图元顺序逐字保持（三角列表同序
@@ -1129,7 +1164,7 @@ void VulkanRenderer::Impl::Initialize(const std::string& vsPath, const std::stri
         std::error_code cacheError;
         std::filesystem::remove(GetExecutableDirectory()+"pipeline_cache.bin", cacheError);
         std::vector<std::byte> cached;
-        if (std::ifstream in(GetExecutableDirectory()+"pipeline_cache_v13.bin", std::ios::binary); in) {
+        if (std::ifstream in(GetExecutableDirectory()+kPipelineCacheName, std::ios::binary); in) {
             in.seekg(0, std::ios::end);
             const auto size = in.tellg();
             in.seekg(0);
@@ -1149,7 +1184,11 @@ void VulkanRenderer::Impl::Initialize(const std::string& vsPath, const std::stri
     // 采样器数组（4 元素）：与纹理数组同法消除采样器切换断点——
     // bit0=线性过滤 bit1=重复寻址，索引由顶点携带
     VkDescriptorSetLayoutBinding binding{};
+#if defined(PVZ_VULKAN_LEGACY)
+    binding.descriptorCount = 1;
+#else
     binding.descriptorCount = 4;
+#endif
     binding.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLER;
     binding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT | VK_SHADER_STAGE_COMPUTE_BIT;
     VkDescriptorSetLayoutCreateInfo layout{VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO};
@@ -1161,21 +1200,30 @@ void VulkanRenderer::Impl::Initialize(const std::string& vsPath, const std::stri
     // 写入而不打断在途帧。需要设备特性 descriptor indexing（见 VulkanContext）。
     VkDescriptorSetLayoutBinding arrayBinding{};
     arrayBinding.binding = 0;
+#if defined(PVZ_VULKAN_LEGACY)
+    arrayBinding.descriptorCount = 1;
+#else
     arrayBinding.descriptorCount = kTextureSlots;
+#endif
     arrayBinding.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
     arrayBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT | VK_SHADER_STAGE_COMPUTE_BIT;
+#if !defined(PVZ_VULKAN_LEGACY)
     VkDescriptorBindingFlags bindFlags = VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT |
         VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT;
     VkDescriptorSetLayoutBindingFlagsCreateInfo bindingFlags{
         VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO};
     bindingFlags.bindingCount = 1;
     bindingFlags.pBindingFlags = &bindFlags;
+#endif
     VkDescriptorSetLayoutCreateInfo arrayLayout{VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO};
+#if !defined(PVZ_VULKAN_LEGACY)
     arrayLayout.pNext = &bindingFlags;
     arrayLayout.flags = VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT;
+#endif
     arrayLayout.bindingCount = 1;
     arrayLayout.pBindings = &arrayBinding;
     VK_REQUIRE(vkCreateDescriptorSetLayout(device, &arrayLayout, nullptr, &imageLayout));
+#if !defined(PVZ_VULKAN_LEGACY)
     VkDescriptorPoolSize arraySize{VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, kTextureSlots};
     VkDescriptorPoolCreateInfo arrayPool{VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO};
     arrayPool.flags = VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT;
@@ -1188,6 +1236,7 @@ void VulkanRenderer::Impl::Initialize(const std::string& vsPath, const std::stri
     arrayAlloc.descriptorSetCount = 1;
     arrayAlloc.pSetLayouts = &imageLayout;
     VK_REQUIRE(vkAllocateDescriptorSets(device, &arrayAlloc, &textureArray));
+#endif
     for (unsigned i = 0; i < 4; ++i) {
         VkSamplerCreateInfo sampler{VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO};
         sampler.magFilter = sampler.minFilter = (i & 1) ? VK_FILTER_LINEAR : VK_FILTER_NEAREST;
@@ -1195,13 +1244,20 @@ void VulkanRenderer::Impl::Initialize(const std::string& vsPath, const std::stri
             VK_SAMPLER_ADDRESS_MODE_REPEAT : VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
         VK_REQUIRE(vkCreateSampler(device, &sampler, nullptr, &samplers[i]));
     }
+#if !defined(PVZ_VULKAN_LEGACY)
     samplerSet = AllocateSet(samplerLayout);
+#endif
     for (unsigned i = 0; i < 4; ++i) {
         VkDescriptorImageInfo imageBinding{};
         imageBinding.sampler = samplers[i];
         VkWriteDescriptorSet write{VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET};
+#if defined(PVZ_VULKAN_LEGACY)
+        samplerSets[i]=AllocateSet(samplerLayout);
+        write.dstSet=samplerSets[i];
+#else
         write.dstSet = samplerSet;
         write.dstArrayElement = i;
+#endif
         write.descriptorCount = 1;
         write.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLER;
         write.pImageInfo = &imageBinding;
@@ -1346,7 +1402,9 @@ void VulkanRenderer::Impl::InitImagePass() {
     constexpr VkFormatFeatureFlags required = VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT |
         VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT | VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT |
         VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT |
+#if !defined(PVZ_VULKAN_LEGACY)
         VK_FORMAT_FEATURE_TRANSFER_SRC_BIT | VK_FORMAT_FEATURE_TRANSFER_DST_BIT |
+#endif
         VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT;
     constexpr VkImageUsageFlags usage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT |
         VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT |
@@ -1454,6 +1512,9 @@ void VulkanRenderer::Impl::SnapshotRenderImage(VulkanTexture* image, bool force)
     next->uploaded = true;
     std::swap(image->image, next->image);
     std::swap(image->view, next->view);
+#if defined(PVZ_VULKAN_LEGACY)
+    std::swap(image->imageSet, next->imageSet);
+#endif
     std::swap(image->memory, next->memory);
     std::swap(image->framebuffer, next->framebuffer);
     std::swap(image->slot, next->slot);
@@ -1886,16 +1947,7 @@ VulkanTexture* VulkanRenderer::AdoptComposedTexture(VulkanTexture* composed) {
     auto* handle=texture.get();
     handle->slot=s.AllocSlot();
     if(handle->slot>=s.kTextureSlots) throw std::runtime_error("Out of texture slots");
-    VkDescriptorImageInfo binding{};
-    binding.imageView=handle->view;
-    binding.imageLayout=handle->sampledLayout;
-    VkWriteDescriptorSet write{VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET};
-    write.dstSet=s.textureArray;
-    write.dstArrayElement=handle->slot;
-    write.descriptorCount=1;
-    write.descriptorType=VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
-    write.pImageInfo=&binding;
-    vkUpdateDescriptorSets(s.device,1,&write,0,nullptr);
+    s.UpdateImageDescriptor(*handle);
     s.slotOwners[handle->slot]=handle;
     handle->slotOwner=&s.slotOwners[handle->slot];
     s.textures.emplace(handle,std::move(texture));
@@ -1922,11 +1974,7 @@ void VulkanRenderer::BindStaticTexture(VulkanTexture* texture,uint32_t staticSlo
     s.CompleteTransfers();
     s.slotOwners[texture->slot]=nullptr;s.freeSlots.push_back(texture->slot);
     texture->slot=slot;s.slotOwners[slot]=texture;texture->slotOwner=&s.slotOwners[slot];
-    const VkDescriptorImageInfo image{VK_NULL_HANDLE,texture->view,texture->sampledLayout};
-    VkWriteDescriptorSet write{VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET};
-    write.dstSet=s.textureArray;write.dstArrayElement=slot;write.descriptorCount=1;
-    write.descriptorType=VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;write.pImageInfo=&image;
-    vkUpdateDescriptorSets(s.device,1,&write,0,nullptr);
+    s.UpdateImageDescriptor(*texture);
 }
 
 VulkanTexture* VulkanRenderer::CopyTextureRegion(VulkanTexture* source,int x,int y,int width,int height) {
@@ -2022,7 +2070,11 @@ VulkanTexture* VulkanRenderer::ProcessImage(VulkanTexture* source,
     Barrier(cmd,handle->image,VK_IMAGE_LAYOUT_UNDEFINED,VK_IMAGE_LAYOUT_GENERAL,
         VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,0,VK_ACCESS_SHADER_WRITE_BIT);
     vkCmdBindPipeline(cmd,VK_PIPELINE_BIND_POINT_COMPUTE,s.colorKernel.pipeline);
+#if defined(PVZ_VULKAN_LEGACY)
+    const VkDescriptorSet sets[]={source->imageSet,s.samplerSets[0],handle->computeSet};
+#else
     const VkDescriptorSet sets[]={s.textureArray,s.samplerSet,handle->computeSet};
+#endif
     vkCmdBindDescriptorSets(cmd,VK_PIPELINE_BIND_POINT_COMPUTE,s.colorKernel.layout,0,3,sets,0,nullptr);
     static_assert(sizeof(VulkanImageProcessing)==36);
     vkCmdPushConstants(cmd,s.colorKernel.layout,VK_SHADER_STAGE_COMPUTE_BIT,
@@ -2092,7 +2144,11 @@ void VulkanRenderer::RenderFontAtlas(VulkanTexture* target,VulkanTexture* source
         VK_ACCESS_MEMORY_READ_BIT|VK_ACCESS_MEMORY_WRITE_BIT,VK_ACCESS_SHADER_WRITE_BIT);
     target->layout=VK_IMAGE_LAYOUT_GENERAL;
     vkCmdBindPipeline(s.frame.cmd,VK_PIPELINE_BIND_POINT_COMPUTE,s.fontKernel.pipeline);
+#if defined(PVZ_VULKAN_LEGACY)
+    const VkDescriptorSet sets[]={source->imageSet,s.samplerSets[0],target->computeSet};
+#else
     const VkDescriptorSet sets[]={s.textureArray,s.samplerSet,target->computeSet};
+#endif
     vkCmdBindDescriptorSets(s.frame.cmd,VK_PIPELINE_BIND_POINT_COMPUTE,s.fontKernel.layout,
         0,3,sets,0,nullptr);
     struct Push { VulkanFontGlyph glyph;uint32_t white; };
@@ -2348,6 +2404,27 @@ void VulkanRenderer::Impl::Draw(std::span<const VulkanVertex> vertices, VulkanTe
     if (vertices.empty()) { return; }
     if (vertices.size() % (Quads ? 4 : 3) || vertices.size() > UINT32_MAX)
         throw std::invalid_argument("Expected a triangle list");
+#if defined(PVZ_VULKAN_LEGACY)
+    // Preserve painter order. Only adjacent primitives with the same image
+    // and sampler can share a Vulkan 1.0 draw; no nonuniform indexing feature.
+    constexpr size_t primitiveSize=Quads?4:3;
+    size_t first=0;
+    while (first<vertices.size()) {
+        const auto slot=vertices[first].slot & kSlotMask;
+        const auto sampler=vertices[first].sampler;
+        size_t end=first;
+        do {
+            for(size_t v=0;v<primitiveSize;++v)
+                if ((vertices[end+v].slot & kSlotMask)!=slot || vertices[end+v].sampler!=sampler)
+                    throw std::invalid_argument("A primitive cannot sample different image bindings");
+            end+=primitiveSize;
+        } while(end<vertices.size() && (vertices[end].slot & kSlotMask)==slot && vertices[end].sampler==sampler);
+        if (first==0 && end==vertices.size()) break;
+        Draw<Quads>(vertices.subspan(first,end-first),slotOwners[slot],pipeline,clip,vw,vh);
+        first=end;
+    }
+    if (first!=0) return;
+#endif
     int64_t left = 0, top = 0, right = vw, bottom = vh;
     if (clip) {
         left = std::max<int64_t>(0, clip->x);
@@ -2460,18 +2537,28 @@ void VulkanRenderer::Impl::Draw(std::span<const VulkanVertex> vertices, VulkanTe
     VkRect2D scissor{{static_cast<int32_t>(left), static_cast<int32_t>(top)},
         {static_cast<uint32_t>(right-left), static_cast<uint32_t>(bottom-top)}};
     AppendRun<Quads>(stream,offset,static_cast<uint32_t>(vertices.size()),pipeline,scissor,vw,vh
+#if defined(PVZ_VULKAN_LEGACY)
+        , slotOwners[copiedVertices[0].slot & kSlotMask]->imageSet,samplerSets[copiedVertices[0].sampler]
+#endif
     );
 }
 
 template<bool Quads>
 void VulkanRenderer::Impl::AppendRun(DrawStream* stream, VkDeviceSize offset, uint32_t count,
     VkPipeline pipeline, VkRect2D scissor, int vw, int vh
+#if defined(PVZ_VULKAN_LEGACY)
+    , VkDescriptorSet imageSet, VkDescriptorSet selectedSampler
+#endif
 ) {
     auto cmd = frame.cmd;
     // P5 游程：状态变化检测前置（先判后绑）。bindless+采样器数组后描述符
     // 对恒为 {纹理数组, 采样器数组}——首绘绑定一次，帧内不再变化；断点
     // 只剩 管线/剪刀/视口
+#if defined(PVZ_VULKAN_LEGACY)
+    const std::array sets{imageSet,selectedSampler};
+#else
     const std::array sets{textureArray,samplerSet};
+#endif
     const bool aVpChange = drawState.width!=vw || drawState.height!=vh;
     const bool aScChange = !drawState.hasScissor || drawState.scissor.offset.x!=scissor.offset.x ||
         drawState.scissor.offset.y!=scissor.offset.y || drawState.scissor.extent.width!=scissor.extent.width ||
@@ -2636,7 +2723,7 @@ void VulkanRenderer::Impl::SavePipelineCache() {
     std::vector<std::byte> data(size);
     if (vkGetPipelineCacheData(device, pipelineCache, &size, data.data()) != VK_SUCCESS)
         return;
-    std::ofstream out(GetExecutableDirectory()+"pipeline_cache_v13.bin",
+    std::ofstream out(GetExecutableDirectory()+kPipelineCacheName,
         std::ios::binary | std::ios::trunc);
     if (out) out.write(reinterpret_cast<const char*>(data.data()), static_cast<std::streamsize>(size));
 #endif
@@ -2734,7 +2821,11 @@ void VulkanRenderer::SubmitPool(VulkanTexture* texture,const GpuPoolParams& p) {
     vkCmdSetViewport(s.frame.cmd,0,1,&viewport);
     vkCmdSetScissor(s.frame.cmd,0,1,&scissor);
     vkCmdBindPipeline(s.frame.cmd,VK_PIPELINE_BIND_POINT_GRAPHICS,pipelines.at(size_t(p.blend)));
+#if defined(PVZ_VULKAN_LEGACY)
+    const VkDescriptorSet sets[]{texture->imageSet,s.samplerSets[p.sampler]};
+#else
     const VkDescriptorSet sets[]{s.textureArray,s.samplerSet};
+#endif
     vkCmdBindDescriptorSets(s.frame.cmd,VK_PIPELINE_BIND_POINT_GRAPHICS,s.poolLayout,0,2,sets,0,nullptr);
     std::array<PoolMeshVertex,96> vertices;
     BuildPoolMesh(p,vertices);
@@ -2929,11 +3020,7 @@ void VulkanRenderer::PrepareScale(bool fullscreen,std::span<const VulkanScaleSte
         texture.layout = texture.sampledLayout;
         s.slotOwners[texture.slot] = &texture;
         texture.slotOwner = &s.slotOwners[texture.slot];
-        const VkDescriptorImageInfo image{VK_NULL_HANDLE,texture.view,VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL};
-        VkWriteDescriptorSet write{VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET};
-        write.dstSet=s.textureArray; write.dstArrayElement=texture.slot; write.descriptorCount=1;
-        write.descriptorType=VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE; write.pImageInfo=&image;
-        vkUpdateDescriptorSets(s.device,1,&write,0,nullptr);
+        s.UpdateImageDescriptor(texture);
     }
     s.window.WaitForFrame();
     s.ReleaseScale(unsigned(fullscreen));

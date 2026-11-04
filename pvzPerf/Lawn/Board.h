@@ -127,6 +127,8 @@ public:
     // Runtime-only ownership state; precedes the serialized tail at mPaused.
     bool mPoolIntroVisual;
     BoardTouchState* mTouchState = nullptr;
+    bool mLandscapeHud = false;
+    std::array<std::int64_t, SEEDBANK_MAX> mHudFlashStartNs{};
 	LawnApp*						mApp;													//+0x8C
 	DataArray<Zombie>				mZombies;												//+0x90
 	DataArray<Plant>				mPlants;												//+0xAC
@@ -290,6 +292,8 @@ public:
     void DrawTouchCursors(Sexy::Graphics* g);
     void DrawTouchPreviews(Sexy::Graphics* g);
     void DrawTouchSelection(Sexy::Graphics* g);
+    void DrawCardHud(Graphics* g);
+    void UpdateScreenShake();
     void DrawFieldCardSelection(Sexy::Graphics* g, const Coin& coin);
     bool UpdateTouchHighlights();
     void DisposeTouchState();
@@ -489,7 +493,7 @@ public:
 	void							DrawHouseDoorTop(Graphics* g);
 	void							DrawHouseDoorBottom(Graphics* g);
 	Zombie*							GetBossZombie();
-	bool							HasConveyorBeltSeedBank();
+	bool							HasConveyorBeltSeedBank() const;
 	/*inline*/ bool					StageHasRoof();
 	void							SpawnZombiesFromPool();
 	void							SpawnZombiesFromSky();

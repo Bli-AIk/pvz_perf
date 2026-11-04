@@ -10,6 +10,9 @@ echo $$ >"$directory/sampler.pid"
 getconf CLK_TCK >"$directory/clock-ticks.txt"
 dumpsys package "$package" >"$directory/package.txt"
 cmd package list packages -U "$package" >"$directory/uid.txt"
+for policy in /sys/devices/system/cpu/cpufreq/policy*; do
+    echo "$policy cpus=$(cat "$policy/related_cpus") max=$(cat "$policy/cpuinfo_max_freq")"
+done >"$directory/cpu-topology.txt"
 valid=0
 missing=0
 battle=0

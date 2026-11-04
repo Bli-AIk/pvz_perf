@@ -1,3 +1,4 @@
+#include "LandscapeHud.h"
 #include "LawnCommon.h"
 #include "Coin.h"
 #include "Board.h"
@@ -1342,98 +1343,147 @@ void Challenge::AdvanceCrazyDaveDialog()
 	}
 }
 
+namespace
+{
+int MouseDownChallengeDefault(Challenge&, int, int, int, HitResult&)
+{
+	return false;
+}
+
+int MouseDownChallengeBeghouled(Challenge& c, int x, int y, int, HitResult& hit)
+{
+	if (c.mChallengeState != STATECHALLENGE_NORMAL || hit.mObjectType != OBJECT_TYPE_PLANT)
+		return false;
+	c.BeghouledDragStart(x, y);
+	return true;
+}
+
+int MouseDownChallengeTwist(Challenge& c, int x, int y, int, HitResult&)
+{
+	if (c.mChallengeState != STATECHALLENGE_NORMAL)
+		return false;
+	c.BeghouledTwistMouseDown(x, y);
+	// The original twist path also lets Board process the hit afterwards.
+	return false;
+}
+
+int MouseDownChallengeSlotMachine(Challenge& c, int, int, int, HitResult& hit)
+{
+	auto& board = *c.mBoard;
+	if (hit.mObjectType != OBJECT_TYPE_SLOT_MACHINE_HANDLE ||
+		board.mCursorObject->mCursorType != CURSOR_TYPE_NORMAL || c.mChallengeState != STATECHALLENGE_NORMAL)
+		return false;
+	if (board.TakeSunMoney(25))
+	{
+		for (int i = 0; i < 3; ++i)
+			board.mSeedBank->mSeedPackets[i].SlotMachineStart();
+		c.mApp->ReanimationGet(c.mReanimChallenge)->PlayReanim(ReanimTrackId::anim_pull, REANIM_PLAY_ONCE_AND_HOLD, 0, 36.0f);
+		c.mChallengeState = STATECHALLENGE_SLOT_MACHINE_ROLLING;
+		board.SetTutorialState(TUTORIAL_SLOT_MACHINE_COMPLETED);
+		board.ClearAdvice(ADVICE_NONE);
+		++c.mSlotMachineRollCount;
+		c.mApp->PlaySample(Sexy::SOUND_SLOT_MACHINE);
+	}
+	return true;
+}
+
+int MouseDownChallengeWhack(Challenge& c, int x, int y, int clicks, HitResult& hit)
+{
+	if (hit.mObjectType == OBJECT_TYPE_NONE &&
+		c.mBoard->mCursorObject->mCursorType == CURSOR_TYPE_HAMMER && clicks >= 0)
+	{
+		c.MouseDownWhackAZombie(x, y);
+		return true;
+	}
+	return false;
+}
+
+int MouseDownChallengeAquarium(Challenge& c, int x, int y, int clicks, HitResult& hit)
+{
+	// 1073 00424C2E: right click only taps glass; left click on empty
+	// aquarium space reaches the paid feeding path (00424C5C).
+	if (clicks < 0)
+	{
+		c.mApp->PlaySample(Sexy::SOUND_TAPGLASS);
+		return true;
+	}
+	if (hit.mObjectType == OBJECT_TYPE_NONE)
+	{
+		c.ZombiquariumMouseDown(x, y);
+		return true;
+	}
+	return false;
+}
+
+int MouseDownChallengeVases(Challenge& c, int, int, int, HitResult& hit)
+{
+	if (hit.mObjectType == OBJECT_TYPE_SCARY_POT)
+	{
+		c.ScaryPotterMalletPot(static_cast<GridItem*>(hit.mObject));
+		return true;
+	}
+	return false;
+}
+
+int MouseDownChallengeAdventure(Challenge& c, int x, int y, int clicks, HitResult& hit)
+{
+	// Adventure predicates use the profile level, including out-of-range no-ops.
+	const auto index = static_cast<unsigned int>(c.mApp->mPlayerInfo->mLevel) - 1;
+	if (index < Challenge::kAdventureChallengeMouseDowns.size())
+		return Challenge::kAdventureChallengeMouseDowns[index](c, x, y, clicks, hit);
+	return false;
+}
+
+int MouseDownChallengeGarden(Challenge& c, int x, int y, int clicks, HitResult& hit)
+{
+	return c.mApp->mZenGarden->MouseDownZenGarden(x, y, clicks, &hit);
+}
+
+template<Challenge::MouseDownFn Handler>
+int MouseDownChallengePlaying(Challenge& c, int x, int y, int clicks, HitResult& hit)
+{
+	// Shared precedence stays identical for every gameplay handler. Garden
+	// bypasses this wrapper, just as it preceded the original scene guard.
+	if (c.mApp->mGameScene != SCENE_PLAYING)
+		return false;
+	if (c.mBoard->IsScaryPotterDaveTalking() && c.mApp->mCrazyDaveMessageIndex != -1)
+	{
+		c.AdvanceCrazyDaveDialog();
+		return true;
+	}
+	if (hit.mObjectType == OBJECT_TYPE_COIN && clicks >= 0)
+		return false;
+	return Handler(c, x, y, clicks, hit);
+}
+}
+
+constexpr std::array<Challenge::MouseDownFn, NUM_LEVELS> Challenge::kAdventureChallengeMouseDowns = [] {
+	std::array<MouseDownFn, NUM_LEVELS> handlers{};
+	handlers.fill(MouseDownChallengeDefault);
+	handlers[15 - 1] = MouseDownChallengeWhack;
+	handlers[35 - 1] = MouseDownChallengeVases;
+	return handlers;
+}();
+
+constexpr std::array<Challenge::MouseDownFn, NUM_GAME_MODES> Challenge::kChallengeMouseDowns = [] {
+	std::array<MouseDownFn, NUM_GAME_MODES> handlers{};
+	handlers.fill(MouseDownChallengePlaying<MouseDownChallengeDefault>);
+	handlers[GAMEMODE_ADVENTURE] = MouseDownChallengePlaying<MouseDownChallengeAdventure>;
+	handlers[GAMEMODE_MINIGAME_BEGHOULED] = MouseDownChallengePlaying<MouseDownChallengeBeghouled>;
+	handlers[GAMEMODE_MINIGAME_BEGHOULED_TWIST] = MouseDownChallengePlaying<MouseDownChallengeTwist>;
+	handlers[GAMEMODE_MINIGAME_SLOT_MACHINE] = MouseDownChallengePlaying<MouseDownChallengeSlotMachine>;
+	handlers[GAMEMODE_MINIGAME_WHACK_A_ZOMBIE] = MouseDownChallengePlaying<MouseDownChallengeWhack>;
+	handlers[GAMEMODE_MINIGAME_ZOMBIQUARIUM] = MouseDownChallengePlaying<MouseDownChallengeAquarium>;
+	for (int mode = GAMEMODE_SCARY_POTTER_1; mode <= GAMEMODE_SCARY_POTTER_ENDLESS; ++mode)
+		handlers[mode] = MouseDownChallengePlaying<MouseDownChallengeVases>;
+	handlers[GAMEMODE_LIMBO_ZEN_GARDEN] = MouseDownChallengeGarden;
+	return handlers;
+}();
+
 //0x421F10
 int Challenge::MouseDown(int x, int y, int theClickCount, HitResult* theHitResult)
 {
-	if (mApp->mGameMode == GAMEMODE_LIMBO_ZEN_GARDEN)
-	{
-		return mApp->mZenGarden->MouseDownZenGarden(x, y, theClickCount, theHitResult);
-	}
-
-	if (mApp->mGameScene != SCENE_PLAYING)
-		return false;
-
-	if (mBoard->IsScaryPotterDaveTalking() && mApp->mCrazyDaveMessageIndex != -1)
-	{
-		AdvanceCrazyDaveDialog();
-		return true;
-	}
-
-	if (theHitResult->mObjectType == OBJECT_TYPE_COIN && theClickCount >= 0)
-		return false;
-
-	if (mApp->mGameMode == GAMEMODE_MINIGAME_BEGHOULED)
-	{
-		if (mChallengeState != STATECHALLENGE_NORMAL)
-			return false;
-
-		if (theHitResult->mObjectType == OBJECT_TYPE_PLANT)
-		{
-			BeghouledDragStart(x, y);
-			return true;
-		}
-	}
-
-	if (mApp->mGameMode == GAMEMODE_MINIGAME_BEGHOULED_TWIST)
-	{
-		if (mChallengeState != STATECHALLENGE_NORMAL)
-			return false;
-
-		BeghouledTwistMouseDown(x, y);
-	}
-
-	if (mApp->IsSlotMachineLevel() && theHitResult->mObjectType == OBJECT_TYPE_SLOT_MACHINE_HANDLE &&
-		mBoard->mCursorObject->mCursorType == CURSOR_TYPE_NORMAL && mChallengeState == STATECHALLENGE_NORMAL)
-	{
-		if (mBoard->TakeSunMoney(25))
-		{
-			for (int i = 0; i < 3; i++)
-			{
-				mBoard->mSeedBank->mSeedPackets[i].SlotMachineStart();
-			}
-
-			mApp->ReanimationGet(mReanimChallenge)->PlayReanim(ReanimTrackId::anim_pull, REANIM_PLAY_ONCE_AND_HOLD, 0, 36.0f);
-			mChallengeState = STATECHALLENGE_SLOT_MACHINE_ROLLING;
-			mBoard->SetTutorialState(TUTORIAL_SLOT_MACHINE_COMPLETED);
-			mBoard->ClearAdvice(ADVICE_NONE);
-
-			mSlotMachineRollCount++;
-			mApp->PlaySample(Sexy::SOUND_SLOT_MACHINE);
-		}
-
-		return true;
-	}
-
-	if (mApp->IsWhackAZombieLevel() && theHitResult->mObjectType == OBJECT_TYPE_NONE &&
-		mBoard->mCursorObject->mCursorType == CURSOR_TYPE_HAMMER && theClickCount >= 0)
-	{
-		MouseDownWhackAZombie(x, y);
-		return true;
-	}
-
-	if (mApp->mGameMode == GAMEMODE_MINIGAME_ZOMBIQUARIUM)
-	{
-		// 1073 00424C2E: right click only taps glass; left click on empty
-		// aquarium space reaches the paid feeding path (00424C5C).
-		if (theClickCount < 0)
-		{
-			mApp->PlaySample(Sexy::SOUND_TAPGLASS);
-			return true;
-		}
-		if (theHitResult->mObjectType == OBJECT_TYPE_NONE)
-		{
-			ZombiquariumMouseDown(x, y);
-			return true;
-		}
-	}
-
-	if (mApp->IsScaryPotterLevel() && theHitResult->mObjectType == OBJECT_TYPE_SCARY_POT)
-	{
-		ScaryPotterMalletPot((GridItem*)theHitResult->mObject);
-		return true;
-	}
-
-	return false;
+	return kChallengeMouseDowns[mApp->mGameMode](*this, x, y, theClickCount, *theHitResult);
 }
 
 //0x4221B0
@@ -3913,6 +3963,7 @@ void Challenge::ZombiquariumUpdate()
 		mBoard->mTutorialState = TUTORIAL_ZOMBIQUARIUM_BUY_SNORKEL;
 		float aPosX = mBoard->mSeedBank->mX + mBoard->mSeedBank->mSeedPackets[0].mX;
 		float aPosY = mBoard->mSeedBank->mY + mBoard->mSeedBank->mSeedPackets[0].mY;
+        if(mBoard->mLandscapeHud) {const auto card=LandscapeHud::PacketBounds(*mBoard,0);aPosX=card.mX-mApp->mScreenBounds.mX;aPosY=card.mY;}
 		mBoard->TutorialArrowShow(aPosX, aPosY);
 		mBoard->DisplayAdvice(gStr.ADVICE_ZOMBIQUARIUM_BUY_SNORKEL, MESSAGE_STYLE_HINT_TALL_FAST, ADVICE_ZOMBIQUARIUM_BUY_SNORKEL);
 	}
@@ -3927,6 +3978,7 @@ void Challenge::ZombiquariumUpdate()
 		mBoard->mTutorialState = TUTORIAL_ZOMBIQUARIUM_CLICK_TROPHY;
 		float aPosX = mBoard->mSeedBank->mX + mBoard->mSeedBank->mSeedPackets[1].mX;
 		float aPosY = mBoard->mSeedBank->mY + mBoard->mSeedBank->mSeedPackets[1].mY;
+        if(mBoard->mLandscapeHud) {const auto card=LandscapeHud::PacketBounds(*mBoard,1);aPosX=card.mX-mApp->mScreenBounds.mX;aPosY=card.mY;}
 		mBoard->TutorialArrowShow(aPosX, aPosY);
 		mBoard->DisplayAdvice(gStr.ADVICE_ZOMBIQUARIUM_CLICK_TROPHY, MESSAGE_STYLE_HINT_TALL_FAST, ADVICE_ZOMBIQUARIUM_CLICK_TROPHY);
 	}

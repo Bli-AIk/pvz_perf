@@ -5,6 +5,7 @@
 
 #include "SexyAppFramework/platform/ErrorDialog.h"
 #include "SexyAppFramework/Common.h"
+#include "SexyAppFramework/misc/FloatingPointMode.h"
 #include "SexyAppFramework/JsonDoc.h"
 #include <android/log.h>
 #include <cerrno>
@@ -85,6 +86,7 @@ void ExtractAssetDirectory(AAssetManager* manager, const char* directory,
 }
 
 void android_main(android_app* state) {
+    Sexy::EnableDenormalFlushForCurrentThread();
     state->onAppCmd = AndroidAppCommand;
     state->onInputEvent = AndroidAppInput;
     BindAndroidApp(state);

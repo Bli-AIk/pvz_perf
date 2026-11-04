@@ -25,6 +25,8 @@ source_group("Lawn\\Board\\Board Include" FILES ${Lawn__Board__Board_Include})
 set(Lawn__Board__Board_Source
     "../Lawn/Board.cpp"
     "../Lawn/BoardTouch.cpp"
+    "../Lawn/LandscapeHud.cpp"
+    "../Lawn/LandscapeHud.h"
     "../Lawn/Challenge.cpp"
     "../Lawn/Coin.cpp"
     "../Lawn/CursorObject.cpp"
@@ -260,6 +262,11 @@ add_subdirectory(imagelib)
 target_sources(${PROJECT_NAME} PRIVATE
     "Common.h"
     "Common.cpp"
+    "graphics/GameViewport.cpp"
+    "widget/InertialScroll.cpp"
+    "widget/InertialScroll.h"
+    "misc/FloatingPointMode.cpp"
+    "misc/FloatingPointMode.h"
     "SexyApp.cpp"
     "SexyApp.h"
     "SexyAppBase.cpp"

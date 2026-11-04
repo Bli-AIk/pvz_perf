@@ -15,11 +15,11 @@ static Color gGameButtonColors[6] = { Color(0, 0, 0), Color(0, 0, 0), Color(0, 0
 //0x447B00
 static void DrawStoneButton(Graphics* g, int x, int y, int theWidth, int theHeight, bool isDown, bool isHighLighted, const SexyString& theLabel)
 {
-	using enum FixedUIAtlas::Sprite;
-	const TextureRegion& left = FixedUIAtlas::Images[static_cast<size_t>(isDown ? BUTTON_DOWN_LEFT : BUTTON_LEFT)];
-	const TextureRegion& middle = FixedUIAtlas::Images[static_cast<size_t>(isDown ? BUTTON_DOWN_MIDDLE : BUTTON_MIDDLE)];
-	const TextureRegion& right = FixedUIAtlas::Images[static_cast<size_t>(isDown ? BUTTON_DOWN_RIGHT : BUTTON_RIGHT)];
-	const Sexy::TextureSource texture{FixedUIAtlas::Texture, 0};
+	using enum CommonUIAtlas::Sprite;
+	const TextureRegion& left = CommonUIAtlas::Images[static_cast<size_t>(isDown ? BUTTON_DOWN_LEFT : BUTTON_LEFT)];
+	const TextureRegion& middle = CommonUIAtlas::Images[static_cast<size_t>(isDown ? BUTTON_DOWN_MIDDLE : BUTTON_MIDDLE)];
+	const TextureRegion& right = CommonUIAtlas::Images[static_cast<size_t>(isDown ? BUTTON_DOWN_RIGHT : BUTTON_RIGHT)];
+	const Sexy::TextureSource texture{CommonUIAtlas::Texture, 0};
 	int aFontX = x;
 	int aFontY = y;
 	int aImageX = x;
@@ -485,15 +485,15 @@ NewLawnButton* MakeNewButton(int theId, ButtonListener* theListener, const SexyS
 }
 
 namespace {
-class FixedUIBackButton final : public NewLawnButton
+class CommonUIBackButton final : public NewLawnButton
 {
 public:
-	FixedUIBackButton(int id, ButtonListener* listener, const SexyString& text)
+	CommonUIBackButton(int id, ButtonListener* listener, const SexyString& text)
 		: NewLawnButton(nullptr, id, listener)
 	{
-		using enum FixedUIAtlas::Sprite;
-		mNormalRegion = FixedUIAtlas::Images[static_cast<size_t>(SEEDCHOOSER_BUTTON2)];
-		mOverRegion = FixedUIAtlas::Images[static_cast<size_t>(SEEDCHOOSER_BUTTON2_GLOW)];
+		using enum CommonUIAtlas::Sprite;
+		mNormalRegion = CommonUIAtlas::Images[static_cast<size_t>(SEEDCHOOSER_BUTTON2)];
+		mOverRegion = CommonUIAtlas::Images[static_cast<size_t>(SEEDCHOOSER_BUTTON2_GLOW)];
 		mLabel = text;
 		SetFont(Sexy::FONT_BRIANNETOD12);
 		mWidth = mNormalRegion.mWidth;
@@ -507,7 +507,7 @@ public:
 		if (mBtnNoDraw)
 			return;
 		const Sexy::TextureSource texture{
-			FixedUIAtlas::Texture, 0};
+			CommonUIAtlas::Texture, 0};
 		const bool down = (mIsDown && mIsOver && !mDisabled) ^ mInverted;
 		int fontX = mTextOffsetX + mTranslateX;
 		int fontY = mTextOffsetY + mTranslateY;
@@ -547,8 +547,8 @@ public:
 };
 }
 
-NewLawnButton* MakeFixedUIBackButton(int id, ButtonListener* listener, const SexyString& text)
+NewLawnButton* MakeCommonUIBackButton(int id, ButtonListener* listener, const SexyString& text)
 {
-	return new FixedUIBackButton(id, listener, text);
+	return new CommonUIBackButton(id, listener, text);
 }
 

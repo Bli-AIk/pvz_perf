@@ -3,7 +3,8 @@
 // NonUniformResourceIndex 内建（数组采样装饰必需），GLSL 的
 // nonuniformEXT() 原生可用——合并游程里同一绘制跨三角携带不同槽位/采样器，
 // 索引必须声明非一致，否则驱动按动态一致优化属未定义行为。
-#extension GL_EXT_nonuniform_qualifier : require
+#extension GL_GOOGLE_include_directive : require
+#include "texture_bindings.glsl"
 precision mediump float;
 precision highp int;
 
@@ -11,8 +12,8 @@ precision highp int;
 // kTextureSlots）。采样器同理：4 个（bit0=线性过滤 bit1=重复寻址）装一个
 // 数组描述符，逐顶点声明——纹理与采样器都不再是绑定状态。
 // 定长数组免 runtimeDescriptorArray 特性位。
-layout(set = 0, binding = 0) uniform texture2D images[4096];
-layout(set = 1, binding = 0) uniform sampler samplers[4];
+layout(set = 0, binding = 0) uniform texture2D images[PVZ_IMAGE_COUNT];
+layout(set = 1, binding = 0) uniform sampler samplers[PVZ_SAMPLER_COUNT];
 
 layout(location = 0) in vec4 color;
 layout(location = 1) in vec2 uv;

@@ -29,14 +29,18 @@ def main():
     parser.add_argument('baseline', type=Path)
     parser.add_argument('current', type=Path)
     parser.add_argument('output', type=Path)
+    parser.add_argument('--baseline-label', default='v3.2.4')
+    parser.add_argument('--current-label', default='3.3 beta（原生触控，无侧键模拟）')
+    parser.add_argument('--overlay-fps-cpu', action='store_true',
+                        help='Also plot the current run FPS and CPU on one timeline')
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
     plt.rcParams['font.sans-serif'] = ['Microsoft YaHei', 'DejaVu Sans']
     plt.rcParams['axes.unicode_minus'] = False
     fig, axes = plt.subplots(3, 1, figsize=(14, 10), sharex=True)
     results = {}
-    for path, label, color in [(args.baseline, 'v3.2.4', '#1678c8'),
-                               (args.current, '3.3 beta（原生触控，无侧键模拟）', '#db6134')]:
+    for path, label, color in [(args.baseline, args.baseline_label, '#1678c8'),
+                               (args.current, args.current_label, '#db6134')]:
         rows = load(path)
         x = [(r['board_counter'] - 2291960000000) / 1e9 for r in rows]
         for ax, key in zip(axes, ['draw_fps', 'cpu_percent', 'cpu_ms_per_draw_frame']):
@@ -67,6 +71,24 @@ def main():
     fig.tight_layout(rect=(0, .065, 1, .96))
     fig.savefig(args.output / 'comparison.png', dpi=150)
     fig.savefig(args.output / 'comparison.svg')
+    if args.overlay_fps_cpu:
+        rows = load(args.current)
+        x = [(r['board_counter'] - 2291960000000) / 1e9 for r in rows]
+        overlay, fps = plt.subplots(figsize=(14, 5.5))
+        cpu = fps.twinx()
+        fps.plot(x, [r['draw_fps'] for r in rows], color='#1678c8', lw=1.25, label='绘制 FPS')
+        cpu.plot(x, [r['cpu_percent'] for r in rows], color='#e47524', lw=1.15,
+                 alpha=.85, label='进程 CPU 占用')
+        fps.set(xlabel='关卡时间距共同起点（秒）', ylabel='绘制 FPS', ylim=(0, 265))
+        cpu.set(ylabel='进程 CPU 占用（单核 = 100%）', ylim=(0, 110))
+        fps.grid(alpha=.2)
+        lines = fps.lines + cpu.lines
+        fps.legend(lines, [line.get_label() for line in lines], loc='lower left')
+        overlay.suptitle(f'{args.current_label} · Vulkan · LP14 · 用户设定 11x · 240FPS 上限')
+        overlay.text(.07, .02, '仅有效前台战斗，一秒采样，无平滑；左右坐标轴量纲不同。CPU 含整个进程线程工作。', fontsize=10)
+        overlay.tight_layout(rect=(0, .055, 1, .94))
+        overlay.savefig(args.output / 'fps-cpu.png', dpi=150)
+        overlay.savefig(args.output / 'fps-cpu.svg')
     (args.output / 'comparison.json').write_text(json.dumps(results, indent=2, ensure_ascii=False), encoding='utf-8')
     print(json.dumps(results, indent=2, ensure_ascii=False))
 

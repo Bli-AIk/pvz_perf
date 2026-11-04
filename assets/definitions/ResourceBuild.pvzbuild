@@ -13,6 +13,10 @@ atlas(zombatar zombatar:Zombatar)
 atlas(magnet_items scene:Magnet)
 atlas(almanac_ui scene:Almanac)
 atlas(achievements_ui scene:Achievements)
+# Common UI is always loaded; exactly one layout atlas is selected at startup.
+atlas(common_ui scene:CommonUI)
+atlas(desktop_ui scene:DesktopUI)
+atlas(landscape_ui scene:LandscapeUI)
 
 # Exact CP-SAT runs offline, starting from the native MaxRects layout.
 # Cached proofs depend on dimensions, model revision and solver version.

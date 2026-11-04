@@ -56,6 +56,9 @@ public final class PerfActivity extends NativeActivity implements InputManager.I
     @Override
     protected void onCreate(Bundle state) {
         super.onCreate(state);
+        if (BuildConfig.HDR_DEVICE_TEST && Build.VERSION.SDK_INT >= 26) {
+            getWindow().setColorMode(android.content.pm.ActivityInfo.COLOR_MODE_HDR);
+        }
         // Leave the Window surface to Android so its caption can be drawn.
         // NativeActivity's public holder callbacks still feed native_app_glue.
         getWindow().takeSurface(null);
@@ -247,8 +250,14 @@ public final class PerfActivity extends NativeActivity implements InputManager.I
     }
 
     @Override
+    public void onMultiWindowModeChanged(boolean multiWindow) {
+        super.onMultiWindowModeChanged(multiWindow);
+        updateWindowDecor();
+    }
+
+    @Override
     public void onMultiWindowModeChanged(boolean multiWindow, Configuration config) {
-        super.onMultiWindowModeChanged(multiWindow, config);
+        if (Build.VERSION.SDK_INT >= 26) super.onMultiWindowModeChanged(multiWindow, config);
         updateWindowDecor();
     }
 
@@ -256,5 +265,11 @@ public final class PerfActivity extends NativeActivity implements InputManager.I
     protected void onDestroy() {
         ((InputManager)getSystemService(Context.INPUT_SERVICE)).unregisterInputDeviceListener(this);
         super.onDestroy();
+        // NativeActivity.onDestroy waits for native_app_glue to finish. At
+        // this point the game has saved and released audio/GPU resources.
+        // Explicit Quit must not leave an empty cached game process behind.
+        if (isFinishing() && !isChangingConfigurations()) {
+            android.os.Process.killProcess(android.os.Process.myPid());
+        }
     }
 }

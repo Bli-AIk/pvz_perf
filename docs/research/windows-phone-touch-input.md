@@ -58,6 +58,12 @@ Android 输入同样按单指鼠标处理；当前已接入独立触点事件，
 这与本项目 PC 版按下时种植的部分路径不同。菜单按钮可以继续共享命令，战场手势需要独立
 选择提交时机，不能只增加平台 MouseUp 就宣称完成触控。
 
+## 种植横竖白条的显示条件（2026-11-04 补核）
+
+固定参考提交的 `CursorObject.DrawGroundLayer` 先检查光标。对 `CURSOR_TYPE_PLANT_FROM_BANK`，调用种植坐标换算及 `CanPlantAt`；结果不是 `PLANTING_OK` 时立即返回，整组横竖提示都不显示。通过后才遍历整行与整列绘制高亮。该条件只写在卡槽光标分支中，其他来源的植物不能直接据此认定相同。铲子则在忽略抬起或 `ToolHitTest` 无目标时返回。
+
+源码：[CursorObject.cs](https://github.com/IsraelDXPP/PvZ-Windows-Phone-decomp/blob/26cbb77df48c674dca6cb6b1fa9ad6783903a5c4/Lawn/CursorObject.cs)。本地源码哈希已与既有来源清单一致；这里仍是反编译移植代码结论，未追加原 WP 发行 DLL 的 IL 核对。本项目后续已复用现有种植预览结果过滤非法目标；按用户要求，铲子只保留目标植物发亮，不绘制白条。
+
 ## 横板布局
 
 WP 参考版使用左侧竖排卡槽，而非把 PC 顶部整条种子栏旋转：
@@ -108,4 +114,11 @@ Windows 需要继续支持 Win7，可使用 WM_TOUCH 作为共同入口，而非
 修改 DAT64 v4 的序列化字段；若实际改动触及任何已序列化对象布局，仍须单独核对转换器与版本。
 新增数据直接 public，事件及大结构按 const& 传入，函数实现放 .cpp。
 
-本次完成源码调查与接入范围核对，尚未接入上述运行时路径或构建新的测试包。
+上述内容保留原始调查结论和接入建议；已落地的原生触控、全局唯一选择、花园交互和横板布局以[当前实现](../touch-input.md)为准。
+
+
+## 原生横卡与阳光栏尺寸（2026-11-04 补核）
+
+`AtlasResources_480x800.cs` 的 SeedAtlas 区域表给出卡面总图 324×689、4 列 13 行，即每张原始图像为 81×53。`Constants.cs` 中 SMALL_SEEDPACKET_HEIGHT=52 是布局常量，不等于图像像素高度。原生阳光栏为 143×44，价格底片 33×20；因此在本项目 600 高内，可按阳光栏 44＋顶部间隔 2＋十卡 530＋九个间隔 18＝594 排下，不需要缩放。
+
+对应原始 PNG 已在本机 `wp移植版0.0.7.1.zip/Assets.zip/Content/images/480x800/SeedAtlas.png` 核对；这份 PNG 为 996×814。按原始区域裁出后逐像素保存，不使用旧精华 1.5.3 的混淆 XNB 像素，也不把 Free 960 的 108×70 卡面缩成 81×53。可复核来源与区域见[清单](../../assets/source-art/landscape-ui/native-source.json)。

@@ -1,4 +1,5 @@
 #include "LawnApp.h"
+#include "SexyAppFramework/misc/FloatingPointMode.h"
 #include "Resources.h"
 #include "Sexy.TodLib/TodStringFile.h"
 #include "Sexy.TodLib/TodDebug.h"
@@ -66,6 +67,7 @@ int main(int argc, char** argv)
 #endif
 {
 	try {
+    Sexy::EnableDenormalFlushForCurrentThread();
 #ifdef _WIN32
     if (!NativeWindowsWindowApi::EnableSystemDpiAwareness())
         throw std::runtime_error("Cannot establish system DPI awareness");

@@ -53,8 +53,12 @@ elseif(ANDROID OR CMAKE_SYSTEM_NAME STREQUAL "Android")
         message(FATAL_ERROR "libfmt.a not found next to libopenal.a")
     endif()
     # 静态 openal-soft：安卓后端（AAudio/OpenSL ES）需要系统库
-    target_link_libraries(${PROJECT_NAME} PRIVATE "${PVZ_OPENAL_LIBRARY}" "${PVZ_FMT_LIBRARY}"
-        OpenSLES aaudio)
+    target_link_libraries(${PROJECT_NAME} PRIVATE "${PVZ_OPENAL_LIBRARY}" "${PVZ_FMT_LIBRARY}" OpenSLES)
+    # AAudio entered Android in API 26. OpenAL's Android backends load it
+    # dynamically when available; API 24/25 must retain the OpenSL ES path.
+    if(CMAKE_SYSTEM_VERSION GREATER_EQUAL 26)
+        target_link_libraries(${PROJECT_NAME} PRIVATE aaudio)
+    endif()
 else()
     find_package(OpenAL REQUIRED)
     target_sources(${PROJECT_NAME} PRIVATE

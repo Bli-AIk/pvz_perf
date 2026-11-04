@@ -44,7 +44,6 @@ constexpr int ConstrainSeedChooserCameraX(int theX, int theViewportLeft, int the
 static_assert(ConstrainSeedChooserCameraX(-380, -133, 1066) == -247);
 static_assert(ConstrainSeedChooserCameraX(220, -133, 1066) == 87);
 static_assert(ConstrainSeedChooserCameraX(-380, 0, 801) == -379);
-
 // CutScene is owned by Board, not itself a Widget. Retain the Board across
 // the nested wait, but reject results after DisposeBoard changes the session.
 class DaveUpgradeSession
@@ -854,7 +853,7 @@ void CutScene::StartLevelIntro()
 	mBoard->mSeedBank->mY = -IMAGE_SEEDBANK->mHeight;
 	mBoard->mMenuButton->mBtnNoDraw = true;
 	mApp->mSeedChooserScreen->mMouseVisible = false;
-	mApp->mSeedChooserScreen->Move(mApp->mScreenBounds.mX, SEED_CHOOSER_OFFSET_Y);
+	mApp->mSeedChooserScreen->Move(mApp->mScreenBounds.mX, mBoard->mLandscapeHud ? BOARD_HEIGHT : SEED_CHOOSER_OFFSET_Y);
 	mApp->mSeedChooserScreen->mMenuButton->mBtnNoDraw = true;
 	mBoard->mShowShovel = false;
 	mBoard->mSeedBank->mCutSceneDarken = 255;
@@ -1296,7 +1295,7 @@ void CutScene::AnimateBoard()
 		// ====================================================================================================
 		if (mCutsceneTime > aTimeSeedChoserSlideOnStart && mCutsceneTime <= aTimeSeedChoserSlideOnEnd)
 		{
-			aSeedChoser->Move(mApp->mScreenBounds.mX, CalcPosition(std::int64_t(aTimeSeedChoserSlideOnStart) * 10'000'000, std::int64_t(aTimeSeedChoserSlideOnEnd) * 10'000'000, SEED_CHOOSER_OFFSET_Y, 0));
+			aSeedChoser->Move(mApp->mScreenBounds.mX, CalcPosition(std::int64_t(aTimeSeedChoserSlideOnStart) * 10'000'000, std::int64_t(aTimeSeedChoserSlideOnEnd) * 10'000'000, (mBoard->mLandscapeHud ? BOARD_HEIGHT : SEED_CHOOSER_OFFSET_Y), 0));
 			aSeedChoser->mMenuButton->mY = CalcPosition(std::int64_t(aTimeSeedChoserSlideOnStart) * 10'000'000, std::int64_t(aTimeSeedChoserSlideOnEnd) * 10'000'000, -50, -10);
 			aSeedChoser->mMenuButton->mBtnNoDraw = false;
 		}
@@ -1307,7 +1306,7 @@ void CutScene::AnimateBoard()
 		int aTimeSeedChoserSlideOffEnd = TimeSeedChoserSlideOffEnd + mCrazyDaveTime;
 		if (mCutsceneTime > aTimeSeedChoserSlideOffStart && mCutsceneTime <= aTimeSeedChoserSlideOffEnd)
 		{
-			aSeedChoser->Move(mApp->mScreenBounds.mX, CalcPosition(std::int64_t(aTimeSeedChoserSlideOffStart) * 10'000'000, std::int64_t(aTimeSeedChoserSlideOffEnd) * 10'000'000, 0, SEED_CHOOSER_OFFSET_Y));
+			aSeedChoser->Move(mApp->mScreenBounds.mX, CalcPosition(std::int64_t(aTimeSeedChoserSlideOffStart) * 10'000'000, std::int64_t(aTimeSeedChoserSlideOffEnd) * 10'000'000, 0, (mBoard->mLandscapeHud ? BOARD_HEIGHT : SEED_CHOOSER_OFFSET_Y)));
 			aSeedChoser->mMenuButton->mDisabled = true;
 		}
 	}

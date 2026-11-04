@@ -415,6 +415,51 @@ int main() {
             size.x, size.y, size.x, size.y, fit, view.width, view.height);
         Check(outside.x + view.left < view.left && outside.y < 0);
     }
+    for (const int height : {600, 900, 1200}) {
+        auto limits=WindowTrackLimits::FromScaleOutputHeight(height);
+        limits.minimumWidth=int((890LL*height+300)/600);
+        Check(limits.ConstrainWidth(1)==limits.minimumWidth);
+        Check(limits.ConstrainWidth(limits.minimumWidth)==limits.minimumWidth);
+        const auto view=SelectGameViewport(limits.minimumWidth,height,true);
+        Check(view.width==890 && view.left==-90);
+    }
+    Check(!SelectLandscapeUI(false,false,1920,1080));
+    Check(!SelectLandscapeUI(true,true,800,600));
+    Check(!SelectLandscapeUI(true,true,889,600));
+    Check(SelectLandscapeUI(true,true,890,600));
+    Check(!SelectLandscapeUI(true,true,1779,1200));
+    Check(SelectLandscapeUI(true,true,1780,1200));
+    Check(SelectLandscapeUI(true,true,3200,2136));
+    Check(SelectLandscapeUI(true,true,1500,1000));
+    Check(SelectLandscapeUI(true,true,2400,1080));
+    Check(!SelectLandscapeUI(true,true,0,0));
+    Check(SelectLandscapeUI(true,false,800,600));
+    const auto fullscreen=FitSceneToSurface(960,600,800,600);
+    Check(fullscreen.x==0&&fullscreen.y==50&&fullscreen.width==800&&fullscreen.height==500);
+    const auto phone=GameViewport::Fit(2480,1116);
+    const auto world=phone.WithinWorld(-220,1180);
+    const int restX=phone.left-world.left;
+    Check(phone.width==1333&&phone.left==-266&&restX==-46);
+    const auto full=GameViewport::Fit(2520,1080);
+    const auto fullWorld=full.WithinWorld(-220,1180);
+    Check(full.width==1400&&full.left-(full.left-fullWorld.left)==-220);
+    Check(full.left+full.width-(full.left-fullWorld.left)==1180);
+    const auto ultra=GameViewport::Fit(3000,1200);
+    const auto pillarbox=FitSceneToSurface(ultra.width,ultra.height,3000,1200);
+    Check(ultra.width==1400&&pillarbox.x==100&&pillarbox.width==2800&&pillarbox.y==0);
+    for(const bool horizontal:{false,true}) {
+        for(int width=800;width<=1400;++width) {
+            const auto view=SelectGameViewport(width,600,horizontal);
+            Check(view.width==width);
+            const int left=-view.left,right=width-800-left;
+            if(width<=900)Check(horizontal?(left==width-800&&right==0):(right==width-800&&left==0));
+            else if(width<=1000)Check(horizontal?(left==100&&right==width-900):(right==100&&left==width-900));
+            else if(width<=1240)Check(right==left||right==left+1);
+            else Check(left==220&&right==width-1020);
+        }
+    }
+    const auto nativeMinimum=FitSceneToSurface(890,600,800,600);
+    Check(nativeMinimum.width==800&&nativeMinimum.height==539&&nativeMinimum.y==30);
     bool rejected = false;
     try { (void)GameViewport::Fit(0, 600); }
     catch (const std::invalid_argument&) { rejected = true; }

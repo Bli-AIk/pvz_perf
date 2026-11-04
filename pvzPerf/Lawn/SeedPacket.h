@@ -50,6 +50,7 @@ public:
 
 public:
     SeedBank();
+    void DrawSun(Graphics* g);
 
     void			    Draw(Graphics* g);
     bool			    MouseHitTest(int x, int y, HitResult* theHitResult);

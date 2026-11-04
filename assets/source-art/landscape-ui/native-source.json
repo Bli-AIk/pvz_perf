@@ -1,0 +1,423 @@
+{
+  "package": "wp移植版0.0.7.1.zip",
+  "package_sha256": "dc722d94188c586ba8a5b97e7ee72210ad6d15388948e2cba0f2677b56e0266b",
+  "assets_zip_sha256": "f40062585cb1885cd5017df25b6cdd9f6970509fd5d9d83d3bff0e996594dc04",
+  "operation": "Exact pixel crops; no image resizing or resampling. Grayscale changes RGB only, preserving pixel count and alpha.",
+  "files": {
+    "cards.png": {
+      "atlas": "Content/images/480x800/SeedAtlas.png",
+      "rect": [
+        1,
+        1,
+        324,
+        689
+      ],
+      "size": [
+        324,
+        689
+      ],
+      "rgba_sha256": "f9e5622e81deff6a683d87f96d7998a48ddfbede956eae801495a872674cf2a5"
+    },
+    "silhouette.png": {
+      "atlas": "Content/images/480x800/CharredZombies.png",
+      "rect": [
+        1638,
+        558,
+        83,
+        51
+      ],
+      "size": [
+        83,
+        51
+      ],
+      "rgba_sha256": "4108dffec238fc4793ae6189b6df0ae2413c9939f7091256c016a37fa1dcbeb0"
+    },
+    "green_tab.png": {
+      "atlas": "Content/images/480x800/SeedAtlas.png",
+      "rect": [
+        946,
+        160,
+        33,
+        20
+      ],
+      "size": [
+        33,
+        20
+      ],
+      "rgba_sha256": "d998bea6c1cd51f883c241f0d58d7ca2cc551b468f4ddd2e98b775202bcb0abd"
+    },
+    "purple_tab.png": {
+      "atlas": "Content/images/480x800/SeedAtlas.png",
+      "rect": [
+        946,
+        182,
+        33,
+        20
+      ],
+      "size": [
+        33,
+        20
+      ],
+      "rgba_sha256": "18f8f189701b310451f19c8a260130655fa7c2fed32a62ae9309a332443ce05c"
+    },
+    "gray_tab.png": {
+      "atlas": "Content/images/480x800/SeedAtlas.png",
+      "rect": [
+        946,
+        138,
+        33,
+        20
+      ],
+      "size": [
+        33,
+        20
+      ],
+      "rgba_sha256": "9b418bf4932616db5468e61d58d57fd7bdc5c1096e8fac174b3e92c68425aae7"
+    },
+    "sunbank.png": {
+      "source": "Free 3.18.0 / ATLASES/LOADINGIMAGES_PLANTSZOMBIES_3_480_00.png",
+      "rect": [
+        336,
+        55,
+        85,
+        31
+      ],
+      "size": [
+        85,
+        31
+      ],
+      "rgba_sha256": "7a957f2bb43346755ffdffb51076ac15b28594041a35b4e92e5e8cfae29c933e",
+      "operation": "Native atlas crop, including edge pixels; no resampling"
+    },
+    "shovel.png": {
+      "atlas": "Content/images/480x800/SeedAtlas.png",
+      "rect": [
+        793,
+        769,
+        78,
+        30
+      ],
+      "size": [
+        78,
+        30
+      ],
+      "rgba_sha256": "b4655ffca3f2f52f4b65699ba02306d131916825a3e39e2ac4a89b40ab45c402"
+    },
+    "shovelbank.png": {
+      "atlas": "Content/images/480x800/SeedAtlas.png",
+      "rect": [
+        529,
+        753,
+        84,
+        41
+      ],
+      "size": [
+        84,
+        41
+      ],
+      "rgba_sha256": "6bc391e3fe9cfe3537ec96a94ad5c36bafef2cdabc4dfea61cac06e5ba1d33b7"
+    },
+    "chooser_top.png": {
+      "package": "1.5.3_Windows_x64.zip",
+      "atlas": "Content/images/480x800/en/loc.xnb",
+      "rect": [
+        1,
+        1986,
+        371,
+        44
+      ],
+      "size": [
+        371,
+        44
+      ],
+      "decode": "LZ4 XNB, ROR32(pixel XOR 0x000a1c1f, 7); exact crop, no resampling",
+      "rgba_sha256": "5b3ecd2b47db0a68fd6607459757643a1eb8cf3ef907dd718ffcd82f54f4a5ba"
+    },
+    "chooser_middle.png": {
+      "atlas": "Content/images/480x800/CharredZombies.png",
+      "rect": [
+        353,
+        641,
+        371,
+        3
+      ],
+      "size": [
+        371,
+        3
+      ],
+      "rgba_sha256": "b4c18e14d14a3a3e328ed51ecdf594604ad10a74c82fa88ec0ad9c74a8bd3a43"
+    },
+    "chooser_bottom.png": {
+      "atlas": "Content/images/480x800/CharredZombies.png",
+      "rect": [
+        1,
+        502,
+        371,
+        24
+      ],
+      "size": [
+        371,
+        24
+      ],
+      "rgba_sha256": "51b9ab4a8d582736ab4abe4697a3e251befd5c3b2b492b4d2ab022b71ec08c05"
+    },
+    "imitater_addon.png": {
+      "atlas": "Content/images/480x800/CharredZombies.png",
+      "rect": [
+        1922,
+        147,
+        107,
+        84
+      ],
+      "size": [
+        107,
+        84
+      ],
+      "rgba_sha256": "957cae44949e13baf7f537d7d2755cc6955dfec9c007b4fcdff48753ba3d51f5"
+    },
+    "play.png": {
+      "atlas": "Content/images/480x800/CharredZombies.png",
+      "rect": [
+        1,
+        528,
+        101,
+        54
+      ],
+      "size": [
+        101,
+        54
+      ],
+      "rgba_sha256": "1c62d4f37f4fe1dfaf2692c293a9125ada6326f26c3d2d286cf885be5da7a940"
+    },
+    "play_down.png": {
+      "atlas": "Content/images/480x800/CharredZombies.png",
+      "rect": [
+        207,
+        528,
+        101,
+        54
+      ],
+      "size": [
+        101,
+        54
+      ],
+      "rgba_sha256": "871ebdf1e416a73b0d496c6116ea43cf15ee02e553e3e4e858c81d2e34dc87a4"
+    },
+    "play_disabled.png": {
+      "atlas": "Content/images/480x800/CharredZombies.png",
+      "rect": [
+        104,
+        528,
+        101,
+        54
+      ],
+      "size": [
+        101,
+        54
+      ],
+      "rgba_sha256": "c1649512e99bb3075b365569d46c76bac0bac2982835acb00faab3d043fcca4b"
+    },
+    "almanac.png": {
+      "atlas": "Content/images/480x800/AlmanacUI.png",
+      "rect": [
+        1,
+        227,
+        123,
+        38
+      ],
+      "size": [
+        123,
+        38
+      ],
+      "rgba_sha256": "96ca87a5cb9bd68f45c411daf298725adfc5e0b8e5d665b968d64862b9d1fe29"
+    },
+    "almanac_down.png": {
+      "atlas": "Content/images/480x800/AlmanacUI.png",
+      "rect": [
+        126,
+        227,
+        123,
+        38
+      ],
+      "size": [
+        123,
+        38
+      ],
+      "rgba_sha256": "a899264815a7cf1d72a3f80d5c81f0b2d271372f9e5802d4efe93eaeb84625b5"
+    },
+    "shop.png": {
+      "atlas": "Content/images/480x800/AlmanacUI.png",
+      "rect": [
+        1,
+        227,
+        123,
+        38
+      ],
+      "size": [
+        123,
+        38
+      ],
+      "rgba_sha256": "96ca87a5cb9bd68f45c411daf298725adfc5e0b8e5d665b968d64862b9d1fe29"
+    },
+    "shop_down.png": {
+      "atlas": "Content/images/480x800/AlmanacUI.png",
+      "rect": [
+        126,
+        227,
+        123,
+        38
+      ],
+      "size": [
+        123,
+        38
+      ],
+      "rgba_sha256": "a899264815a7cf1d72a3f80d5c81f0b2d271372f9e5802d4efe93eaeb84625b5"
+    },
+    "flash.png": {
+      "atlas": "Content/images/480x800/Particles.png",
+      "rect": [
+        178,
+        890,
+        81,
+        53
+      ],
+      "size": [
+        81,
+        53
+      ],
+      "rgba_sha256": "c2aa7fce750fb15f337f8e263f20b1034037985be4c435f2efbb988436a06831"
+    },
+    "special_shuffle.png": {
+      "atlas": "Content/images/480x800/SeedAtlas.png",
+      "rect": [
+        844,
+        714,
+        81,
+        53
+      ],
+      "size": [
+        81,
+        53
+      ],
+      "rgba_sha256": "792e49da06be1285e934798c7a976df5d33e48267ad35372d2a136af2eddec59"
+    },
+    "special_crater.png": {
+      "atlas": "Content/images/480x800/SeedAtlas.png",
+      "rect": [
+        873,
+        659,
+        81,
+        53
+      ],
+      "size": [
+        81,
+        53
+      ],
+      "rgba_sha256": "3895eca65e85193898db09883d43754446e0f5843bbc0071bd344a0a08a688b7"
+    },
+    "special_sun.png": {
+      "atlas": "Content/images/480x800/SeedAtlas.png",
+      "rect": [
+        93,
+        720,
+        81,
+        53
+      ],
+      "size": [
+        81,
+        53
+      ],
+      "rgba_sha256": "3e7c8a875d096dae0e48c6cd80199420a219d5e3690968cd8f2a596c20ec0975"
+    },
+    "special_diamond.png": {
+      "atlas": "Content/images/480x800/SeedAtlas.png",
+      "rect": [
+        176,
+        720,
+        81,
+        53
+      ],
+      "size": [
+        81,
+        53
+      ],
+      "rgba_sha256": "babaaab942459a80daf6a0edd5568f5dbb6c71c9655cba6ef81b90efd3e69e03"
+    },
+    "special_aquarium.png": {
+      "atlas": "Content/images/480x800/SeedAtlas.png",
+      "rect": [
+        259,
+        741,
+        81,
+        53
+      ],
+      "size": [
+        81,
+        53
+      ],
+      "rgba_sha256": "8870ca9a76f0cf5e8a3b80ca30a1bb62e77137979d066b6fa16a9ef629704b27"
+    },
+    "special_trophy.png": {
+      "atlas": "Content/images/480x800/SeedAtlas.png",
+      "rect": [
+        342,
+        741,
+        81,
+        53
+      ],
+      "size": [
+        81,
+        53
+      ],
+      "rgba_sha256": "e7259dc98f3aab4773bae8817d243f2adb296f3825b8ed04a1951cbd2b7e1f48"
+    },
+    "imitater.png": {
+      "derived_from": "cards.png",
+      "operation": "RGB luma only; no resizing",
+      "size": [
+        324,
+        689
+      ]
+    },
+    "belt.png": {
+      "atlas": "Content/images/480x800/belt.png",
+      "size": [
+        83,
+        165
+      ],
+      "sha256": "cbaf25c6ee436f42a207c769ba40c0a2144272e69b3daf2734d0bee287cb68ee"
+    },
+    "belt_backdrop.png": {
+      "atlas": "Content/images/480x800/conveyorbelt_backdrop.png",
+      "size": [
+        93,
+        480
+      ],
+      "sha256": "b1ed67e51ea617b4bd0b2adccca24d2a7e03cfc73cb652b1f4de1465a487ccb8"
+    },
+    "chooser_middle_tiled.png": {
+      "derived_from": "chooser_middle.png",
+      "operation": "152 exact 371x3 copies, no resizing/resampling/blending",
+      "size": [
+        371,
+        456
+      ],
+      "rgba_sha256": "451e1502ea9e0bfea9b3f3b4fe4c88316bef4efb8725a2efceb100d87de1e929"
+    },
+    "selected_packet.png": {
+      "atlas": "Content/images/480x800/Dialog.png",
+      "rect": [
+        186,
+        389,
+        92,
+        60
+      ],
+      "size": [
+        92,
+        60
+      ],
+      "rgba_sha256": "9740fde075422afbc5c9939de36a943ac9517ebcc26d8eefad3cecb30201c89e",
+      "operation": "Exact pixel crop. Four corners are repositioned at draw time; no resampling."
+    }
+  }
+}

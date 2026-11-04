@@ -16,6 +16,16 @@ if(PVZ_VULKAN_SEPARATE_BLEND_TEST AND NOT ANDROID)
     message(FATAL_ERROR "PVZ_VULKAN_SEPARATE_BLEND_TEST requires Android")
 endif()
 add_library(sexy_vulkan STATIC VulkanContext.cpp VulkanRenderer.cpp ../PoolMesh.cpp)
+if(PVZ_VULKAN_LEGACY)
+    target_sources(sexy_vulkan PRIVATE VulkanLegacy.cpp)
+    set(PVZ_NATIVE_VULKAN_ENV vulkan1.0)
+    set(PVZ_NATIVE_VULKAN_DEFINES -DPVZ_VULKAN_LEGACY=1)
+else()
+    set(PVZ_NATIVE_VULKAN_ENV vulkan1.3)
+endif()
+if(PVZ_ANDROID_HDR_TEST)
+    list(APPEND PVZ_NATIVE_VULKAN_DEFINES -DPVZ_ANDROID_HDR_TEST=1)
+endif()
 if(ANDROID AND PVZ_VULKAN_SEPARATE_BLEND_TEST)
     target_compile_definitions(sexy_vulkan PRIVATE PVZ_VULKAN_SEPARATE_BLEND_TEST=1)
 endif()
@@ -80,6 +90,9 @@ foreach(stage IN ITEMS vs pool_vs ps sprite_ps sprite_mixed_ps hdr_linear_ps cov
         set(shaderLanguage -x hlsl)
     endif()
     set(shaderDependencies "${shaderSource}")
+    if(shaderLanguage STREQUAL "")
+        list(APPEND shaderDependencies "${CMAKE_CURRENT_SOURCE_DIR}/shaders/texture_bindings.glsl")
+    endif()
     if(stage STREQUAL "hdr_linear_ps")
         list(APPEND shaderDependencies "${CMAKE_CURRENT_SOURCE_DIR}/shaders/game_hdr_ps.hlsl")
     endif()
@@ -87,9 +100,9 @@ foreach(stage IN ITEMS vs pool_vs ps sprite_ps sprite_mixed_ps hdr_linear_ps cov
     add_custom_command(OUTPUT "${output}"
         COMMAND "${CMAKE_COMMAND}" -E make_directory "${PVZ_NATIVE_SHADER_DIR}"
         COMMAND "${PVZ_GLSLC}" -Werror ${shaderLanguage} "-fshader-stage=${shaderStage}"
-            --target-env=vulkan1.3 -O "${shaderSource}"
+            --target-env=${PVZ_NATIVE_VULKAN_ENV} ${PVZ_NATIVE_VULKAN_DEFINES} -O "${shaderSource}"
             -o "${output}"
-        COMMAND "${PVZ_SPIRV_VAL}" --target-env vulkan1.3 "${output}"
+        COMMAND "${PVZ_SPIRV_VAL}" --target-env ${PVZ_NATIVE_VULKAN_ENV} "${output}"
         DEPENDS ${shaderDependencies} VERBATIM)
     list(APPEND nativeShaders "${output}")
 endforeach()
@@ -265,7 +278,7 @@ if(BUILD_TESTING AND WIN32)
 endif()
 
 # Explicit desktop GPU experiment. Production and Android never compile these hooks.
-if(BUILD_TESTING AND WIN32 AND NOT PVZ_WINDOWS_PLATFORM STREQUAL "WIN7")
+if(BUILD_TESTING AND WIN32 AND NOT PVZ_WINDOWS_PLATFORM STREQUAL "WIN7" AND NOT PVZ_VULKAN_LEGACY)
     set(spriteExperiment "${CMAKE_CURRENT_BINARY_DIR}/sprite-experiment/$<CONFIG>/generated_sprite.spv")
     add_custom_command(OUTPUT "${spriteExperiment}"
         COMMAND "${CMAKE_COMMAND}" -E make_directory "${CMAKE_CURRENT_BINARY_DIR}/sprite-experiment/$<CONFIG>"

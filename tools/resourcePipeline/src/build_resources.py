@@ -259,7 +259,7 @@ def build(args: argparse.Namespace, work: Path) -> None:
     raw_files = runtime_asset_sources.inventory(ROOT)
     scene_documents, scene_sources = scene_atlas.prepare(
         [scene_atlas.parse(path.read_text(encoding="utf-8-sig")) for path in config.sources["scene"]]
-        + [scene_atlas.fixed_ui()], (definitions / "resources.json").read_bytes(), raw_files)
+        + [scene_atlas.common_ui()], (definitions / "resources.json").read_bytes(), raw_files)
     pak.require({row["name"] for row in scene_documents.values()} == set(scene_atlas.MODULES),
                 "Scene build requires authored Magnet, Almanac and Achievements atlases")
     resource_data, load_plan, crc, names = resources.compile_manifest(
@@ -334,13 +334,13 @@ def build(args: argparse.Namespace, work: Path) -> None:
         grouped.update(members)
         units.append({"name": group, "path": f"compiled/atlases/{group}.atlas.png",
                       "members": members, "settings": config.settings.get(group, config.defaults)})
-    fixed_ui = scene_atlas.record_path("FixedUI")
-    if fixed_ui not in grouped:
-        pak.require(not any(unit["name"] == "fixed_ui" for unit in units),
-                    "The fixed_ui atlas group name is reserved for built-in FixedUI")
-        grouped.add(fixed_ui)
-        units.append({"name": "fixed_ui", "path": "compiled/atlases/fixed_ui.atlas.png",
-                      "members": [fixed_ui], "settings": config.defaults})
+    common_ui = scene_atlas.record_path("CommonUI")
+    if common_ui not in grouped:
+        pak.require(not any(unit["name"] == "common_ui" for unit in units),
+                    "The common_ui atlas group name is reserved for built-in CommonUI")
+        grouped.add(common_ui)
+        units.append({"name": "common_ui", "path": "compiled/atlases/common_ui.atlas.png",
+                      "members": [common_ui], "settings": config.defaults})
     units.extend({"name": name, "path": "", "members": [name], "settings": config.defaults}
                  for name in definition_names if name not in grouped)
     for unit in units:

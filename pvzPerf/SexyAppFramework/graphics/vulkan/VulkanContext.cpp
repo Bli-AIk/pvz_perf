@@ -8,6 +8,9 @@
 #include "VulkanSurfaceFormat.h"
 #include "VulkanSurfaceExtent.h"
 #include "VulkanEnumeration.h"
+#if defined(PVZ_VULKAN_LEGACY)
+#include "VulkanLegacy.h"
+#endif
 #include "platform/SurfacePlatform.h"
 
 // 宏在预处理器阶段做文本替换，namespace 对它无效——习惯上放在 include 之后
@@ -36,10 +39,15 @@ namespace {
     VkInstance CreateInstanceImpl(const VulkanInitConfig& config,
                                   const std::vector<const char*>& extensions,
                                   const std::vector<const char*>& layers) {
+#if defined(PVZ_VULKAN_LEGACY)
+        if (config.appInfo.apiVersion != VK_API_VERSION_1_0)
+            throw std::runtime_error("This legacy renderer requires a Vulkan 1.0 instance");
+#else
         unsigned int loaderVersion = 0;
         VK_CHECK(vkEnumerateInstanceVersion(&loaderVersion));
         if (loaderVersion < VK_API_VERSION_1_3 || config.appInfo.apiVersion < VK_API_VERSION_1_3)
             throw std::runtime_error("This renderer requires Vulkan 1.3");
+#endif
         // Instance WSI extensions and requested validation/extra layers.
         VkInstanceCreateInfo createInfo = config.instanceInfo;
         createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;   // 强制
@@ -139,6 +147,10 @@ namespace {
     }
 
     bool RequiredFeaturesSupported(VkPhysicalDevice candidate) {
+#if defined(PVZ_VULKAN_LEGACY)
+        (void)candidate;
+        return true;
+#else
         VkPhysicalDeviceProperties properties{};
         vkGetPhysicalDeviceProperties(candidate, &properties);
         if (properties.apiVersion < VK_API_VERSION_1_3)
@@ -155,8 +167,10 @@ namespace {
                v12.descriptorBindingPartiallyBound == VK_TRUE &&
                v12.descriptorBindingSampledImageUpdateAfterBind == VK_TRUE &&
                v12.shaderSampledImageArrayNonUniformIndexing == VK_TRUE;
+#endif
     }
 
+#if !defined(PVZ_VULKAN_LEGACY)
     VkPhysicalDeviceVulkan12Features DescriptorIndexingEnable() {
         VkPhysicalDeviceVulkan12Features v12{
             VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES};
@@ -165,6 +179,7 @@ namespace {
         v12.shaderSampledImageArrayNonUniformIndexing = VK_TRUE;
         return v12;
     }
+#endif
 
     // 选卡：打分制（独显 +1000），同时带回 graphics/present 队列族下标。
     // 过滤顺序：自动生成的扩展/功能过滤器 → 调用者的 gpuFilter。
@@ -243,7 +258,11 @@ namespace {
             }
         }
         if (best == VK_NULL_HANDLE)
+#if defined(PVZ_VULKAN_LEGACY)
+            throw std::runtime_error("No GPU supports Vulkan 1.0 with the requested features and graphics/present");
+#else
             throw std::runtime_error("No GPU supports Vulkan 1.3, descriptor indexing and graphics/present");
+#endif
 
         return best;
     }
@@ -276,14 +295,18 @@ namespace {
                       VK_KHR_SWAPCHAIN_EXTENSION_NAME) == extensions.end())
             extensions.push_back(VK_KHR_SWAPCHAIN_EXTENSION_NAME);
 
+#if !defined(PVZ_VULKAN_LEGACY)
         VkPhysicalDeviceVulkan12Features v12 = DescriptorIndexingEnable();
         VkPhysicalDeviceVulkan13Features v13{
             VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES};
         v13.synchronization2 = VK_TRUE;
         v12.pNext = &v13;
+#endif
 
         VkDeviceCreateInfo createInfo{VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO};
+#if !defined(PVZ_VULKAN_LEGACY)
         createInfo.pNext = &v12;
+#endif
         createInfo.queueCreateInfoCount =
             static_cast<uint32_t>(queueInfos.size());
         createInfo.pQueueCreateInfos = queueInfos.data();
@@ -441,11 +464,18 @@ void VulkanContext::CreateSwapchain(const VkSurfaceCapabilitiesKHR& caps, VkExte
     }
     // 90°/270° 变换要求应用侧预旋转内容；本引擎按正向画面渲染，
     // 改请求 IDENTITY 交给合成器旋转（各安卓驱动普遍支持）。
+#if defined(__ANDROID__)
+    // Our vertices are never pre-rotated, including a 180-degree flip. Let
+    // Android transform the upright buffer in every orientation. Reporting
+    // ROTATE_180 here incorrectly tells the compositor we already rotated it.
+    scInfo.preTransform = VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR;
+#else
     scInfo.preTransform =
         (caps.currentTransform == VK_SURFACE_TRANSFORM_ROTATE_90_BIT_KHR ||
          caps.currentTransform == VK_SURFACE_TRANSFORM_ROTATE_270_BIT_KHR)
             ? VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR
             : caps.currentTransform;
+#endif
     // Some Linux compositors do not advertise OPAQUE. Preserve the caller's
     // supported mode; otherwise select one the presentation engine accepts.
     if (!(caps.supportedCompositeAlpha & scInfo.compositeAlpha)) {
@@ -612,10 +642,14 @@ void VulkanContext::CreateSurfaceAssets() {
                                      presentFamily, deviceFeatures,
                                      requiredExtensions,
                                      &graphicsQueue, &presentQueue);
+#if defined(PVZ_VULKAN_LEGACY)
+        InstallVulkan10Commands();
+#else
         queueSubmit2 = reinterpret_cast<PFN_vkQueueSubmit2>(
             vkGetDeviceProcAddr(device, "vkQueueSubmit2"));
         pipelineBarrier2 = reinterpret_cast<PFN_vkCmdPipelineBarrier2>(
             vkGetDeviceProcAddr(device, "vkCmdPipelineBarrier2"));
+#endif
         if (!queueSubmit2 || !pipelineBarrier2)
             throw std::runtime_error("Vulkan 1.3 synchronization entry points are unavailable");
         dualSourceBlendEnabled = deviceFeatures.dualSrcBlend == VK_TRUE;

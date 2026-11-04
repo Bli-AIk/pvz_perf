@@ -6,6 +6,9 @@
 #include "Cutscene.h"
 #include "Challenge.h"
 #include "SeedPacket.h"
+#include "LandscapeHud.h"
+#include "Sexy.TodLib/generated/SceneAtlasData.h"
+#include "graphics/AtlasDraw.h"
 #include "LawnCommon.h"
 #include "LawnApp.h"
 #include "CursorObject.h"
@@ -93,6 +96,10 @@ void SeedPacket::FlashIfReady()
 {
 	if (!CanPickUp() || mApp->mEasyPlantingCheat)
 		return;
+    if (mBoard->mLandscapeHud) {
+        if (mIndex >= 0 && mIndex < SEEDBANK_MAX) mBoard->mHudFlashStartNs[mIndex]=static_cast<std::int64_t>(mBoard->mLevelTimeNs);
+        return;
+    }
 
 	if (!mBoard->HasConveyorBeltSeedBank())
 	{
@@ -636,7 +643,10 @@ void SeedPacket::Draw(Graphics* g)
 			aGrayness = 128;
 		}
 
-		DrawSeedPacket(g, mOffsetX, 0.0f, mPacketType, mImitaterType, aPercentDark, aGrayness, aDrawCost, true);
+		if (mBoard->mLandscapeHud)
+            LandscapeHud::DrawPacket(g,0,0,mPacketType,mImitaterType,aPercentDark,aGrayness,aDrawCost,true);
+        else
+            DrawSeedPacket(g, mOffsetX, 0.0f, mPacketType, mImitaterType, aPercentDark, aGrayness, aDrawCost, true);
 	}
 }
 
@@ -959,26 +969,19 @@ void SeedBank::Draw(Graphics* g)
 		return;
 	}
 
+    if (mBoard->mLandscapeHud) { LandscapeHud::DrawBank(*this,g); return; }
+    Graphics* sunGraphics=g;
     Graphics aBankGraphics(*g);
     g = &aBankGraphics;
-	g->Translate(mApp->mScreenBounds.mX, 0);
-	if (mApp->mGameScene != GameScenes::SCENE_PLAYING)
-	{
-		g->mTransX -= mBoard->mX;
-		g->mTransY -= mBoard->mY;
-	}
+    g->Translate(mApp->mScreenBounds.mX-mBoard->mX,-mBoard->mY);
 
-	if (mApp->IsSlotMachineLevel())
-	{
-		g->DrawImage(IMAGE_SUNBANK, 0, 0);
-	}
-	else if (mBoard->HasConveyorBeltSeedBank())
+	if (mBoard->HasConveyorBeltSeedBank())
 	{
 		g->DrawImage(IMAGE_CONVEYORBELT_BACKDROP, 83, 0);
 		g->DrawImage(IMAGE_CONVEYORBELT, 90, 63, Rect(0, (mConveyorBeltCounter / 4 % 6) * 16, 502, 16));
 		g->SetClipRect(90, 0, 501, BOARD_HEIGHT);
 	}
-	else
+	else if (!mApp->IsSlotMachineLevel())
 	{
 		int aExtraWidth = mBoard->GetSeedBankExtraWidth();
 		Rect theSrcRect(IMAGE_SEEDBANK->mWidth - aExtraWidth - 12, 0, aExtraWidth + 12, IMAGE_SEEDBANK->mHeight);
@@ -1003,42 +1006,55 @@ void SeedBank::Draw(Graphics* g)
 		g->DrawImage(IMAGE_SLOTMACHINE_OVERLAY, 189, -2);
 	}
 
-	if (!mBoard->HasConveyorBeltSeedBank())
-	{
-		// C++23 第一批·条目2/9：阳光数串值变才经 to_chars 重建（原每帧 StrFormat）。
-		// 注：函数域缓存而非 SeedBank 成员——SeedBank 布局被存档层锁定
-		// （SaveGame static_assert(sizeof==1024) + ClearNativeObject memset）。
-		static int         sLastSunDisplay = -1;
-		static SexyString  sMoneyLabel;
-		const int aSunDisplay = std::max(mBoard->mSunMoney, 0);
-		if (sLastSunDisplay != aSunDisplay)
-		{
-			sLastSunDisplay = aSunDisplay;
-			char aMoneyBuf[16];
-			sMoneyLabel.assign(FormatInt(aMoneyBuf, aSunDisplay));
-		}
-		const SexyString& aMoneyLabel = sMoneyLabel;
+    DrawSun(sunGraphics);
+}
 
-		Color aMoneyColor(0, 0, 0);
-		if (mBoard->mOutOfMoneyCounter > 0 && mBoard->mOutOfMoneyCounter % 20 < 10)
-		{
-			aMoneyColor = Color(255, 0, 0);
-		}
-
-		TodDrawString(g, aMoneyLabel, 34, 78, FONT_CONTINUUMBOLD14, aMoneyColor, DrawStringJustification::DS_ALIGN_CENTER);
-	}
-
+void SeedBank::DrawSun(Graphics* graphics)
+{
+    if(!mApp->mLandscapeUIActive&&mBoard->HasConveyorBeltSeedBank())return;
+    Graphics g(*graphics);
+    int labelX=34,labelY=78;
+    if(mApp->mLandscapeUIActive) {
+        g.Translate(-mX,-mY);
+        const auto bounds=LandscapeHud::SunBounds(*mBoard);
+        g.mColorizeImages=false;g.mLinearBlend=false;
+        DrawAtlasImage(&g,{LandscapeUIAtlas::Texture,0},
+            LandscapeUIAtlas::Images[size_t(LandscapeUIAtlas::Sprite::SUNBANK)],bounds.mX,bounds.mY);
+        labelX=bounds.mX+53;labelY=bounds.mY+23;
+    } else {
+        g.Translate(mApp->mScreenBounds.mX-mBoard->mX,-mBoard->mY);
+        if(mApp->IsSlotMachineLevel())g.DrawImage(IMAGE_SUNBANK,0,0);
+    }
+    // Both layouts share one value-change cache and one shortage flash rule.
+    static int lastSun=-1;static SexyString label;
+    const int value=std::max(mBoard->mSunMoney,0);
+    if(value!=lastSun) {char buffer[16];label.assign(FormatInt(buffer,value));lastSun=value;}
+    const auto color=mBoard->mOutOfMoneyCounter>0&&mBoard->mOutOfMoneyCounter%20<10?
+        Color(255,0,0):Color::Black;
+    TodDrawString(&g,label,labelX,labelY,FONT_CONTINUUMBOLD14,color,DS_ALIGN_CENTER);
 }
 
 //0x489970
 bool SeedBank::MouseHitTest(int x, int y, HitResult* theHitResult)
 {
-	x -= mApp->mScreenBounds.mX;
+    if (mBoard->mLandscapeHud) {
+        theHitResult->mObject=nullptr;theHitResult->mObjectType=OBJECT_TYPE_NONE;
+        if (!LandscapeHud::BankBounds(*mBoard).Contains(x,y)) return false;
+        for(int i=0;i<mNumPackets;++i) {
+            auto& packet=mSeedPackets[i];
+            if(packet.mPacketType!=SEED_NONE && packet.mSlotMachineEndTimeNs==0 &&
+               LandscapeHud::PacketBounds(*mBoard,i).Contains(x,y)) {
+                theHitResult->mObject=&packet;theHitResult->mObjectType=OBJECT_TYPE_SEEDPACKET;return true;
+            }
+        }
+        return false;
+    }
+	x -= mApp->mScreenBounds.mX-mBoard->mX;
 	if (x - mX <= mWidth - 5 && mNumPackets > 0)
 	{
 		for (SeedPacket& aSeedPacket : mSeedPackets)
 		{
-			if (aSeedPacket.MouseHitTest(x - mX, y - mY, theHitResult))
+			if (aSeedPacket.MouseHitTest(x - mX, y + mBoard->mY - mY, theHitResult))
 			{
 				return true;
 			}
@@ -1053,7 +1069,9 @@ bool SeedBank::MouseHitTest(int x, int y, HitResult* theHitResult)
 //0x489A20
 bool SeedBank::ContainsPoint(int theX, int theY)
 {
-	theX -= mApp->mScreenBounds.mX;
+    if(mBoard->mLandscapeHud)return LandscapeHud::BankBounds(*mBoard).Contains(theX,theY);
+	theX -= mApp->mScreenBounds.mX-mBoard->mX;
+    theY += mBoard->mY;
 	return theX >= mX && theX < mX + mWidth && theY >= mY && theY < mY + mHeight;
 }
 

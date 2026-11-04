@@ -5,11 +5,16 @@
 
 namespace Sexy {
 
+// Resolve once when the native window is initialized, independently of the saved preference.
+bool SelectLandscapeUI(bool requested, bool mobile, int clientWidth, int clientHeight);
+
 // Presentation coordinates only. The board and save coordinates stay 800x600.
 // Odd widths give the spare pixel to the right margin. Menus extend 300
 // pixels on each side; battle views stay inside their original backdrop.
 struct GameViewport {
-    static constexpr int MaximumWidth = 1400;
+    static constexpr int MaximumLeftExpansion = 220;
+    static constexpr int MaximumRightExpansion = 380;
+    static constexpr int MaximumWidth = 800 + MaximumLeftExpansion + MaximumRightExpansion;
     int width = 800;
     int height = 600;
     int left = 0;
@@ -30,6 +35,9 @@ struct GameViewport {
     }
 };
 
+// UI-specific expansion: first 100 px on the preferred side, next 100 on the other.
+GameViewport SelectGameViewport(int clientWidth, int clientHeight, bool landscape);
+
 // Use the prepared output height, never a size inferred from a resize proposal.
 // A missing startup scale output uses the native 600-pixel client height.
 struct WindowTrackLimits {
@@ -45,7 +53,7 @@ struct WindowTrackLimits {
 
     constexpr int ConstrainWidth(int requestedWidth) const {
         const int logicalWidth = GameViewport::Fit(std::max(1, requestedWidth), height).width;
-        return int((logicalWidth * 1LL * height + 300) / 600);
+        return std::clamp(int((logicalWidth * 1LL * height + 300) / 600),minimumWidth,maximumWidth);
     }
 };
 

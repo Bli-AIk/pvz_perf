@@ -1,4 +1,6 @@
 #include "Lawn/BoardTouch.h"
+#include "Lawn/LandscapeHud.h"
+#include "SexyAppFramework/graphics/GameViewport.h"
 #include "Lawn/System/SaveGame.h"
 #include "ReanimClock.h"
 #include "SexyAppFramework/SexyAppBase.h"
@@ -42,6 +44,8 @@
 #include "Lawn/System/ReanimationLawn.h"
 #include "Lawn/Widget/StoreScreen.h"
 #include "Lawn/Widget/SeedChooserScreen.h"
+#include "Lawn/Widget/ImitaterDialog.h"
+#include "Lawn/Widget/NewOptionsDialog.h"
 #include "Lawn/Widget/TitleScreen.h"
 #include "Lawn/Widget/CreditScreen.h"
 #include "Lawn/Widget/LawnDialog.h"
@@ -110,6 +114,7 @@ bool gLifecycleRulesOnly=false;
 bool gGraveRulesOnly=false;
 bool gHudSeamsOnly=false;
 bool gTouchOnly=false;
+bool gLandscapeOnly=false;
 bool gTouchPerf=false;
 
 LONG CALLBACK SuppressFixtureCrashDialogs(EXCEPTION_POINTERS* exception)
@@ -5787,11 +5792,10 @@ bool TouchFrameMatches(const std::vector<unsigned int>& actual,const std::vector
         for(int shift=0;shift<32;shift+=8)
             maximum=std::max(maximum,std::abs(int((actual[i]>>shift)&255)-int((expected[i]>>shift)&255)));
     std::cout<<"Frame atlas/reference maximum channel difference="<<maximum<<'\n';
-#if defined(PVZ_GPU_OPENGL)
-    return maximum<=1; // Repacked normalized UVs can round one RGBA8 unit in the GL sampler.
-#else
-    return maximum==0;
-#endif
+    // Repacking changes normalized UV rounding in hardware bilinear sampling.
+    // Fractional translations can differ from the independent 104x144 texture
+    // by one RGBA8 unit on Vulkan as well as GL; source pixels remain lossless.
+    return maximum<=1;
 }
 
 void TouchPresentationRuntime(TestApp& app, Board& board)
@@ -5802,6 +5806,7 @@ void TouchPresentationRuntime(TestApp& app, Board& board)
     auto& contact=*board.mTouchState->selection;
     auto& cursor=*contact.cursor;
     const auto savedType=cursor.mCursorType;
+    const auto savedSeed=cursor.mType;
     const auto savedBackground=board.mBackground;
     Require(gTouchFrameReference&&gTouchFrameReference->mWidth==104&&
         gTouchFrameReference->mHeight==144,"Standalone TV selection frame is missing from the actual PAK");
@@ -5863,18 +5868,33 @@ void TouchPresentationRuntime(TestApp& app, Board& board)
             const int x=board.GridToPixelX(col,row),y=board.GridToPixelY(col,row);
             const int height=board.GridToPixelY(col,1)-board.GridToPixelY(col,0);
             const TouchEvent event{751,x+40,y+height/2};
+            const auto savedSquare=board.mGridSquareType[col][row];
+            board.mGridSquareType[col][row]=background==BACKGROUND_3_POOL?GRIDSQUARE_POOL:GRIDSQUARE_GRASS;
+            Plant* support=background==BACKGROUND_3_POOL?board.NewPlant(col,row,SEED_LILYPAD,SEED_NONE):
+                background==BACKGROUND_5_ROOF?board.NewPlant(col,row,SEED_FLOWERPOT,SEED_NONE):nullptr;
+            cursor.mType=SEED_PEASHOOTER;
             for(const bool shovel:{false,true}) {
             cursor.mCursorType=shovel?CURSOR_TYPE_SHOVEL:savedType;
             Plant* shovelPlant=shovel?board.NewPlant(col,row,SEED_PEASHOOTER,SEED_NONE):nullptr;
             manager.TouchBegan(event);board.UpdateTouchCursors();
             Require(contact.preview->mGridX==col&&contact.preview->mGridY==row,"Guide preview cached the wrong planting cell");
-            contact.preview->mVisible=false; // Isolate the guides; invalid cells still show an intended region.
+            Require(shovel||contact.preview->mVisible,"Valid planting target did not enable its cached preview");
             std::unique_ptr<Image> target(render.CreateRenderImage(800,600));
             {
                 GpuImageDrawScope destination(render,target.get());Graphics g(target.get());
                 g.mColor=Color::Black;g.FillRect(0,0,800,600);board.DrawTouchPreviews(&g);
             }
             render.Flush();const auto pixels=render.ReadImagePixels(*target);
+            if(shovel) {
+                Require(std::all_of(pixels.pixels.begin(),pixels.pixels.end(),[](unsigned int p){return p==0xff000000u;}),
+                    "Shovel drew planting guide bands over its target");
+                Require(board.UpdateTouchHighlights()&&shovelPlant->mHighlighted,
+                    "Removing shovel bands also removed its target plant glow");
+                manager.TouchCanceled(event);
+                shovelPlant->Die(board.mLevelTimeNs,app.mEffectSystem->mReanimationHolder->mVisualTimeNs,board.mLevelTimeNs);
+                board.ProcessDeleteQueue();
+                continue;
+            }
             const auto brightness=[&](int px,int py){return pixels.pixels.at(py*800+px)&255;};
             const bool roof=background==BACKGROUND_5_ROOF;
             const int inset=roof?30:5;
@@ -5883,7 +5903,7 @@ void TouchPresentationRuntime(TestApp& app, Board& board)
             const unsigned int overlap=brightness(x+5,y+inset);
             Require(std::abs(int(vertical)-64)<=1&&std::abs(int(horizontal)-64)<=1&&
                 std::abs(int(overlap)-128)<=1&&brightness(10,590)==0,
-                "Plant/shovel guides did not match additive white alpha 64 with a twice-bright target");
+                "Plant guides did not match additive white alpha 64 with a twice-bright target");
             if(roof) {
                 const int slopeY=board.GridToPixelY(col,0)+10;
                 Require(brightness(x+5,slopeY)==0&&brightness(x+75,slopeY)>60,
@@ -5904,17 +5924,19 @@ void TouchPresentationRuntime(TestApp& app, Board& board)
             const unsigned int rgb=colored.pixels.at((y+inset)*800+x+5);
             Require(std::abs(int((rgb>>16)&255)-152)<=1&&std::abs(int((rgb>>8)&255)-176)<=1&&
                 std::abs(int(rgb&255)-200)<=1,"Guide color did not add to the destination background");
-            if(shovel) {
-                manager.TouchMoved({event.id,board.GridToPixelX(8,4)+40,board.GridToPixelY(8,4)+40});
-                board.UpdateTouchCursors();
-                {
-                    GpuImageDrawScope destination(render,target.get());Graphics g(target.get());
-                    g.mColor=Color::Black;g.FillRect(0,0,800,600);board.DrawTouchPreviews(&g);
-                }
-                render.Flush();const auto noTarget=render.ReadImagePixels(*target);
-                Require(std::all_of(noTarget.pixels.begin(),noTarget.pixels.end(),[](unsigned int p){return p==0xff000000u;}),
-                    "Shovel guides remained over an empty planting cell");
+            auto* blocker=board.NewPlant(col,row,SEED_PEASHOOTER,SEED_NONE);
+            board.UpdateTouchCursors();
+            Require(!contact.preview->mVisible,"Occupied cell still has a legal planting preview");
+            {
+                GpuImageDrawScope destination(render,target.get());Graphics g(target.get());
+                g.mColor=Color::Black;g.FillRect(0,0,800,600);board.DrawTouchPreviews(&g);
             }
+            render.Flush();const auto invalid=render.ReadImagePixels(*target);
+            Require(std::all_of(invalid.pixels.begin(),invalid.pixels.end(),[](unsigned int p){return p==0xff000000u;}),
+                "Invalid planting target did not suppress both guide bands");
+            blocker->Die(board.mLevelTimeNs,app.mEffectSystem->mReanimationHolder->mVisualTimeNs,board.mLevelTimeNs);
+            board.ProcessDeleteQueue();board.UpdateTouchCursors();
+            Require(contact.preview->mVisible,"Planting guides did not recover when the target became legal");
             manager.TouchCanceled(event);
             std::unique_ptr<Image> idle(render.CreateRenderImage(800,600));
             {
@@ -5924,15 +5946,17 @@ void TouchPresentationRuntime(TestApp& app, Board& board)
             render.Flush();const auto inactive=render.ReadImagePixels(*idle);
             Require(std::all_of(inactive.pixels.begin(),inactive.pixels.end(),[](unsigned int p){return p==0xff000000u;}),
                 "Planting guides remained after the gesture ended");
-            if(shovelPlant) {
-                shovelPlant->Die(board.mLevelTimeNs,app.mEffectSystem->mReanimationHolder->mVisualTimeNs,board.mLevelTimeNs);
+        }
+            if(support) {
+                support->Die(board.mLevelTimeNs,app.mEffectSystem->mReanimationHolder->mVisualTimeNs,board.mLevelTimeNs);
                 board.ProcessDeleteQueue();
             }
-        }
+            board.mGridSquareType[col][row]=savedSquare;
+            cursor.mType=savedSeed;
         cursor.mCursorType=savedType;
     }
     board.mBackground=savedBackground;
-    std::cout<<"PASS touch presentation: standalone blue corners, card/shovel 800/1400 widths, independent UV oracle, plant/shovel additive 64 bands, colored-background 128 target, sloping roof, empty-target/inactive suppression\n";
+    std::cout<<"PASS touch presentation: card/shovel 800/1400 widths, independent UV oracle, legal plant additive 64 bands, colored-background 128 target, sloping roof, invalid target suppression/recovery, shovel glow without bands, inactive suppression\n";
 }
 
 void TouchFieldCardsRuntime(TestApp& app, Board& board)
@@ -6302,6 +6326,77 @@ void TouchCannonPickupRuntime(TestApp& app, Board& board)
     }
     board.mBoardFadeOutCounter=-1;board.mLevelComplete=false;
     std::cout<<"PASS award touch pickup: new plant on down, moneybag on move, trophy on up, real FadeOutLevel, canceled gesture and late release\n";
+}
+
+void TouchAquariumRuntime(TestApp& app)
+{
+    auto& manager=*app.mWidgetManager;
+    struct Restore {
+        TestApp& app;
+        Board* board=app.mBoard;
+        GameMode mode=app.mGameMode;
+        GameScenes scene=app.mGameScene;
+        Rect bounds=app.mScreenBounds;
+        ~Restore(){app.mBoard=board;app.mGameMode=mode;app.mGameScene=scene;
+            app.mScreenBounds=bounds;app.mWidgetManager->Resize(bounds,bounds);}
+    } restore{app};
+    app.mGameMode=GAMEMODE_MINIGAME_ZOMBIQUARIUM;app.mGameScene=SCENE_PLAYING;
+    app.mScreenBounds=Rect(0,0,800,600);manager.Resize(app.mScreenBounds,app.mScreenBounds);
+    Board board(&app);board.InitLevel();board.StartLevel();board.Resize(0,0,800,600);
+    board.mSeedBank->mX=board.mSeedBank->mY=0;
+    struct Remove {WidgetManager& manager;Board& board;~Remove(){
+        manager.CancelTouches(&board);manager.RemoveWidget(&board);manager.CancelMouseDownState();
+    }} remove{manager,board};
+    manager.AddWidget(&board);
+    auto& challenge=*board.mChallenge;
+    const auto brains=[&]{int count=0;GridItem* item=nullptr;
+        while(board.IterateGridItems(item)) count+=item->mGridItemType==GRIDITEM_BRAIN;
+        return count;};
+    const auto tap=[&](int x,int y){const TouchEvent e{910,x,y};manager.TouchBegan(e);manager.TouchEnded(e);};
+    const TouchEvent empty{910,600,220};
+    const int initialSun=board.mSunMoney;
+    manager.TouchBegan(empty);
+    Require(brains()==0&&board.mSunMoney==initialSun,"Aquarium fed on touch-down before tap completion");
+    manager.TouchEnded(empty);
+    Require(brains()==1&&board.mSunMoney==initialSun-5,"Empty aquarium tap failed to feed exactly once");
+    const auto addSun=[&]{auto* sun=board.AddCoin(400,220,COIN_SUN,COIN_MOTION_FROM_SKY);
+        sun->mPosX=400;sun->mPosY=220;sun->mScale=1;return sun;};
+    auto* sun=addSun();
+    const int beforePickup=board.mSunMoney;
+    tap(410,230);
+    Require(sun->mIsBeingCollected&&brains()==1&&board.mSunMoney==beforePickup,
+        "Picking up aquarium sun also placed a brain or charged feeding sun");
+    sun->Die();board.mCoins.DataArrayFree(sun);
+    sun=addSun();
+    manager.TouchBegan({911,200,230});manager.TouchMoved({911,650,230});manager.TouchEnded({911,650,230});
+    Require(sun->mIsBeingCollected&&brains()==1&&board.mSunMoney==beforePickup,
+        "Swept aquarium sun pickup also placed a brain");
+    sun->Die();board.mCoins.DataArrayFree(sun);
+    manager.TouchBegan(empty);manager.TouchMoved({empty.id,300,220});manager.TouchMoved(empty);manager.TouchEnded(empty);
+    Require(brains()==1,"Aquarium drag returned to its origin and became a feeding tap");
+    manager.TouchBegan(empty);manager.TouchCanceled(empty);
+    Require(brains()==1,"Canceled aquarium contact fed a brain");
+    manager.CancelTouches(&board);board.ClearTouchSelection();
+    board.mSunMoney=150;
+    const auto& card=board.mSeedBank->mSeedPackets[0];
+    tap(board.mSeedBank->mX+int(card.mX)+20,30);
+    Require(board.mZombies.mSize==3&&board.mSunMoney==50&&brains()==1,
+        "Aquarium card purchase was blocked by deferred feeding or fed an extra brain");
+    board.Pause(true);tap(empty.x,empty.y);board.Pause(false);
+    Require(brains()==1&&board.mSunMoney==50,"Paused aquarium touch fed a brain");
+    HitResult hit{};hit.mObjectType=OBJECT_TYPE_NONE;
+    app.mGameScene=SCENE_LEVEL_INTRO;
+    Require(!challenge.MouseDown(empty.x,empty.y,1,&hit)&&brains()==1,
+        "Challenge input bypassed its gameplay scene guard");
+    app.mGameScene=SCENE_PLAYING;hit.mObjectType=OBJECT_TYPE_COIN;
+    Require(!challenge.MouseDown(empty.x,empty.y,1,&hit)&&brains()==1,
+        "Challenge consumed a coin hit instead of passing it to Board");
+    Require(challenge.MouseDown(empty.x,empty.y,-1,&hit)&&brains()==1&&board.mSunMoney==50,
+        "Aquarium right click did not tap glass independently of coin hit");
+    hit.mObjectType=OBJECT_TYPE_NONE;
+    Require(challenge.MouseDown(empty.x,empty.y,1,&hit)&&brains()==2&&board.mSunMoney==45,
+        "Aquarium mouse feeding stopped being immediate");
+    std::cout<<"PASS aquarium input: release tap, swept pickup without feeding, drag/cancel, card purchase, pause, scene/coin priority, mouse glass/feed\n";
 }
 
 void TouchGardenRuntime(TestApp& app)
@@ -6946,6 +7041,381 @@ void TouchInputRuntime(TestApp& app)
     }
 }
 
+
+void LandscapeHudRuntime(TestApp& app)
+{
+    {
+        InertialScroll scroll;
+        scroll.Begin(1,0,0,0);scroll.Move(1,0,-100,50'000'000,-1000,0);
+        Require(scroll.position==-100 && scroll.dragging,"Direct touch scroll did not follow the finger");
+        Require(scroll.End(1,50'000'000),"Flick was mistaken for a tap");
+        const auto release=scroll;
+        scroll.Advance(150'000'000,-1000,0);
+        Require(scroll.position < -100 && scroll.position > -300,"Flick had no decelerating inertia");
+        auto subdivided=release;
+        for(int i=1;i<=20;++i)subdivided.Advance(50'000'000+i*5'000'000,-1000,0);
+        Require(std::abs(scroll.position-subdivided.position)<0.001f,"Inertia depends on update frequency");
+        scroll.Advance(2'000'000'000,-1000,0);Require(scroll.velocity==0,"Inertia failed to stop");
+        scroll.Begin(2,0,0,3'000'000'000);scroll.Move(2,0,5000,3'050'000'000,-1000,0);
+        Require(scroll.position==0,"Dragging escaped the content boundary");scroll.Cancel();
+        AchievementsWidget achievements(&app);achievements.Move(0,0);
+        achievements.TouchBegan({44,350,300});achievements.TouchMoved({44,350,200});
+        Require(achievements.mY==-100,"Achievements did not follow a touch drag");
+        // After the widget moves, the same physical point has a different local Y.
+        achievements.TouchMoved({44,350,300});
+        Require(achievements.mY==-100,"Moving achievements widget fed its own offset back into dragging");
+        achievements.mTouchScroll.sampleTimeNs=ScrollTimeNs()-50'000'000;
+        achievements.mTouchScroll.sampleY=300;
+        achievements.TouchEnded({44,350,300});
+        achievements.mTouchScroll.releaseTimeNs-=50'000'000;
+        achievements.Update();
+        Require(achievements.mY < -100,"Achievements release did not continue with inertia");
+        achievements.TouchBegan({45,350,300});achievements.TouchCanceled({45,350,300});
+        Require(!achievements.mTouchScroll.pressed && achievements.mTouchScroll.velocity==0,"Canceled achievements drag retained inertia");
+        std::cout<<"PASS touch scrolling: birth-time inertia, frequency independence, bounds, cancellation, moving-widget coordinates\n";
+    }
+    const auto oldBounds=app.mScreenBounds;const auto oldMode=app.mGameMode;
+    const bool oldLandscape=app.mLandscapeUI;
+    const bool oldLandscapeActive=app.mLandscapeUIActive;
+    struct Restore {TestApp& app;Rect bounds;GameMode mode;bool landscape;bool active;
+        ~Restore(){app.mWidgetManager->CancelTouches();app.mWidgetManager->CancelMouseDownState();
+            app.mBoard=nullptr;app.mScreenBounds=bounds;app.mGameMode=mode;app.mLandscapeUI=landscape;app.mLandscapeUIActive=active;}
+    } restore{app,oldBounds,oldMode,oldLandscape,oldLandscapeActive};
+    app.mLandscapeUI=true;app.mLandscapeUIActive=true;app.mGameMode=GAMEMODE_ADVENTURE;app.mGameScene=SCENE_PLAYING;
+    app.mPlayerInfo->mLevel=12;app.mPlayerInfo->mFinishedAdventure=2;
+    app.mPlayerInfo->mPurchases[STORE_ITEM_PACKET_UPGRADE]=4;
+    app.mPlayerInfo->mPurchases[STORE_ITEM_PLANT_IMITATER]=1;
+    app.mReanimatorCache->PrebuildCacheFrames();
+    for(const int width:{800,900,950,1000,1067,1333,1400}) {
+        app.mScreenBounds=Rect(SelectGameViewport(width,600,true).left,0,width,600);
+        auto& manager=*app.mWidgetManager;manager.Resize(app.mScreenBounds,app.mScreenBounds);
+        Board board(&app);board.Resize(app.mScreenBounds.mX,0,width,600);
+        board.mX=0;board.mY=0;board.mLevel=12;board.mBackground=BACKGROUND_1_DAY;
+        board.mSunMoney=9990;board.mCutScene->mSeedChoosing=false;
+        auto& bank=*board.mSeedBank;bank.mX=0;bank.mY=0;bank.mNumPackets=10;
+        Require(board.mLandscapeHud,"Setting did not select the horizontal card layout");
+        const auto sun=LandscapeHud::SunBounds(board);
+        Require(sun.mX==app.mScreenBounds.mX&&sun.mY==0&&sun.mWidth==85&&sun.mHeight==31,
+            "Native sunlight frame is not at the top left");
+        for(int i=0;i<10;++i) {
+            auto& packet=bank.mSeedPackets[i];packet.mX=board.GetSeedPacketPositionX(i);packet.mY=0;
+            packet.mIndex=i;packet.SetPacketType(static_cast<SeedType>(i),SEED_NONE);
+            packet.mActive=true;packet.mRefreshing=false;
+            const auto card=LandscapeHud::PacketBounds(board,i);
+            Require(card.mY>=0&&card.mY+card.mHeight<=600&&card.mX>=app.mScreenBounds.mX,
+                "Horizontal bank does not fit ten visible cards");
+            HitResult hit;Require(bank.MouseHitTest(card.mX+40,card.mY+20,&hit)&&hit.mObject==&packet,
+                "Drawn horizontal card and actual hit target disagree");
+            Require(packet.mY==0&&packet.mX==board.GetSeedPacketPositionX(i),"HUD mutated canonical save coordinates");
+        }
+        manager.AddWidget(&board);
+        struct RemoveBoard {WidgetManager& manager;Board& board;~RemoveBoard(){manager.CancelTouches(&board);manager.RemoveWidget(&board);}} removeBoard{manager,board};
+        const auto card=LandscapeHud::PacketBounds(board,0);
+        // Widget dispatch is window-relative; Board's own position remains canonical.
+        manager.TouchBegan({901,card.mX+40,card.mY+20});manager.TouchEnded({901,card.mX+40,card.mY+20});
+        Require(board.mTouchState&&board.mTouchState->selection&&
+            board.mTouchState->selection->cursor->mType==SEED_PEASHOOTER,"Horizontal card touch did not retain selection");
+        manager.TouchBegan({902,card.mX+40,card.mY+20});manager.TouchEnded({902,card.mX+40,card.mY+20});
+        Require(board.mTouchState->selection->cursor->mCursorType==CURSOR_TYPE_NORMAL&&bank.mSeedPackets[0].mActive,"Second tap did not cancel the horizontal selected card");
+        board.mShowShovel=true;
+        const auto shovel=board.GetShovelButtonRect();
+        manager.TouchBegan({903,shovel.mX+20,shovel.mY+20});manager.TouchEnded({903,shovel.mX+20,shovel.mY+20});
+        Require(board.mTouchState->selection->cursor->mCursorType==CURSOR_TYPE_SHOVEL,"Horizontal shovel target did not select the tool");
+        manager.TouchBegan({904,shovel.mX+20,shovel.mY+20});manager.TouchEnded({904,shovel.mX+20,shovel.mY+20});
+        Require(board.mTouchState->selection->cursor->mCursorType==CURSOR_TYPE_NORMAL,"Horizontal shovel did not cancel on a second tap");
+        manager.MouseDown(card.mX+40,card.mY+20,1);manager.MouseUp(card.mX+40,card.mY+20,1);
+        Require(board.mCursorObject->mCursorType==CURSOR_TYPE_PLANT_FROM_BANK,"Horizontal mouse hit selected a different card");
+        board.ClearCursor();board.RefreshSeedPacketFromCursor();
+        auto& render=*app.mDDInterface->mRenderInterface;
+        Image* target=render.CreateRenderImage(width,600);
+        const Sexy::GameViewport canvas{width,600,app.mScreenBounds.mX};
+        board.mX=canvas.left-canvas.WithinWorld(-220,1180).left;
+        {
+            GpuImageDrawScope destination(render,target);Graphics g(target);
+            g.mColor=Color(50,110,45);g.FillRect(0,0,width,600);g.Translate(board.mX-app.mScreenBounds.mX,0);
+            board.DrawBackdrop(&g);
+            LandscapeHud::DrawBank(bank,&g);LandscapeHud::DrawShovel(board,&g);
+            LandscapeHud::DrawPacket(&g,120,130,SEED_PEASHOOTER,SEED_NONE,0.25f,255,true,true);
+            LandscapeHud::DrawPacket(&g,220,130,SEED_SUNFLOWER,SEED_NONE,0.5f,255,true,true);
+            LandscapeHud::DrawPacket(&g,320,130,SEED_WALLNUT,SEED_NONE,0.75f,255,true,true);
+            LandscapeHud::DrawPacket(&g,420,130,SEED_IMITATER,SEED_PEASHOOTER,0,255,true,true);
+        }
+        render.Flush();auto pixels=render.ReadImagePixels(*target);
+        Require((pixels.pixels[590*width+1]&0x00ffffff)!=0,"Native backdrop left an unexpected black strip inside the 21:9 canvas");
+        board.mX=0;
+        Require(ImageLib::WritePNGImage("landscape-hud-"+std::to_string(width)+".png",width,600,pixels.pixels),"Cannot write horizontal HUD proof");
+        delete target;
+        if(width==800) {
+            for(int seed=SEED_ZOMBIE_NORMAL;seed<=SEED_ZOMBIE_IMP;++seed) {
+                auto* cached=app.mReanimatorCache->mZombieImages[Challenge::IZombieSeedTypeToZombieType(static_cast<SeedType>(seed))];
+                const auto sourcePixels=render.ReadImagePixels(*cached);
+                Require(ImageLib::WritePNGImage("iz-native-source-"+std::to_string(seed)+".png",cached->mWidth,cached->mHeight,sourcePixels.pixels),"Cannot write native IZ portrait source");
+            }
+            const auto nativePath=std::filesystem::path(__FILE__).parent_path().parent_path().parent_path()/"assets/runtime/images/landscape_ui/cards.png";
+            auto* decoded=ImageLib::GetImage(nativePath.string(),false);
+            Require(decoded&&decoded->mWidth==324&&decoded->mHeight==689,"Native 81x53 source sheet was replaced by a resized image");
+            ImageLib::FixTransparentEdges(*decoded);
+            Image reference;reference.SetBits(decoded->mBits,decoded->mWidth,decoded->mHeight);delete decoded;
+            target=render.CreateRenderImage(81,106);
+            {
+                GpuImageDrawScope destination(render,target);Graphics g(target);
+                g.mColor=Color::Black;g.FillRect(0,0,81,106);
+                LandscapeHud::DrawPacket(&g,0,0,SEED_PEASHOOTER,SEED_NONE,0,255,false,false);
+                g.mColorizeImages=false;g.mLinearBlend=false;
+                g.DrawImage(&reference,0,53,Rect(0,0,81,53));
+            }
+            render.Flush();pixels=render.ReadImagePixels(*target);
+            for(int y=0;y<53;++y)for(int x=0;x<81;++x)
+                Require(pixels.pixels[y*81+x]==pixels.pixels[(y+53)*81+x],"Native card was resampled instead of drawing one source pixel to one target pixel");
+            delete target;
+            target=render.CreateRenderImage(600,220);
+            {
+                GpuImageDrawScope destination(render,target);Graphics g(target);
+                g.mColor=Color(50,110,45);g.FillRect(0,0,600,220);
+                for(int i=SEED_ZOMBIE_NORMAL;i<=SEED_ZOMBIE_IMP;++i) {
+                    const int slot=i-SEED_ZOMBIE_NORMAL;
+                    LandscapeHud::DrawPacket(&g,(slot%6)*100,(slot/6)*70,static_cast<SeedType>(i),SEED_NONE,0,255,true,true);
+                }
+            }
+            render.Flush();pixels=render.ReadImagePixels(*target);
+            Require(ImageLib::WritePNGImage("landscape-iz-cards.png",600,220,pixels.pixels),"Cannot write IZ card proof");delete target;
+            target=render.CreateRenderImage(81,159);
+            {
+                GpuImageDrawScope destination(render,target);Graphics g(target);
+                g.mColor=Color::Black;g.FillRect(0,0,81,159);
+                LandscapeHud::DrawPacket(&g,0,0,SEED_PEASHOOTER,SEED_NONE,0,255,true,true);
+                LandscapeHud::DrawPacket(&g,0,53,SEED_PEASHOOTER,SEED_NONE,1,255,true,true);
+                LandscapeHud::DrawPacket(&g,0,106,SEED_PEASHOOTER,SEED_NONE,0.5f,255,true,true);
+            }
+            render.Flush();pixels=render.ReadImagePixels(*target);
+            for(int y=0;y<53;++y)for(int x=0;x<81;++x) {
+                const auto expected=pixels.pixels[(y+(x<40?0:53))*81+x];
+                Require(pixels.pixels[(y+106)*81+x]==expected,"Cooldown did not uncover the left side before the right side");
+            }
+            delete target;
+        }
+        if(width==1333||width==1400) {
+            std::vector<unsigned int> referenceHud;
+            for(const int camera:{0,-46,-80}) {
+                board.Move(camera,0);board.RefreshHudLayout();
+                const auto packet=LandscapeHud::PacketBounds(board,0);
+                Require(packet.mX+board.mX==app.mScreenBounds.mX,"Native bank anchor inherited the world camera");
+                const auto shovelRect=board.GetShovelButtonRect();
+                Require(shovelRect.mX+board.mX==app.mScreenBounds.mX&&shovelRect.mY==520,"Shovel did not occupy the same left column");
+                Require(board.mMenuButton->mX+board.mX+board.mMenuButton->mWidth==app.mScreenBounds.mX+width-2,"Menu moved away from the window edge");
+                HitResult cameraHit;
+                Require(bank.MouseHitTest(packet.mX+40,packet.mY+20,&cameraHit)&&cameraHit.mObject==&bank.mSeedPackets[0],"Camera-independent card hit failed");
+                target=render.CreateRenderImage(width,600);
+                {GpuImageDrawScope destination(render,target);Graphics g(target);g.mColor=Color::Black;g.FillRect(0,0,width,600);g.Translate(board.mX-app.mScreenBounds.mX,0);
+                    LandscapeHud::DrawBank(bank,&g);LandscapeHud::DrawShovel(board,&g);board.DrawTopRightUI(&g);}
+                render.Flush();pixels=render.ReadImagePixels(*target);delete target;
+                if(referenceHud.empty())referenceHud=pixels.pixels;
+                else Require(referenceHud==pixels.pixels,"World camera shifted actual bank/shovel/menu pixels");
+            }
+            board.Move(0,0);
+        }
+        if(width==1333) {
+            board.mCursorObject->mCursorType=CURSOR_TYPE_PLANT_FROM_BANK;board.mCursorObject->mSeedBankIndex=0;
+            target=render.CreateRenderImage(81,53);
+            {GpuImageDrawScope destination(render,target);Graphics g(target);g.mColor=Color::Black;g.FillRect(0,0,81,53);
+                const auto rect=LandscapeHud::PacketBounds(board,0);g.Translate(-rect.mX,-rect.mY);board.DrawTouchSelection(&g);}
+            render.Flush();pixels=render.ReadImagePixels(*target);
+            Require((pixels.pixels[3*81+7]&0x00ffffff)==0x00f97202&&
+                (pixels.pixels[6*81+7]&0x00ffffff)==0x00ffff5c&&
+                (pixels.pixels[24*81+40]&0x00ffffff)==0&&
+                (pixels.pixels[49*81+7]&0x00ffffff)==0x00f97202,
+                "Native WP selection lost its original colors, clear center or full card-height bottom edge");
+            Require(ImageLib::WritePNGImage("landscape-selection-frame.png",81,53,pixels.pixels),"Cannot write selection frame proof");delete target;board.ClearCursor();
+        }
+        if(width==900||width==1333||width==1400) {
+            const auto savedInterval=Sexy::gUpdateIntervalNs,savedPhase=Sexy::gLegacyTickPhaseNs;
+            const auto savedTicks=Sexy::gUpdateTicks;
+            Sexy::ApplySimulationStep(10'000'000);
+            const auto savedLeft=app.mScreenBounds.mX;
+            // Cover both current bounded canvases and a restored older centered camera.
+            for(const int left:{savedLeft,-300}) {
+                app.mScreenBounds.mX=left;
+                const GameViewport view{width,600,left};
+                const int origin=left-view.WithinWorld(-220,1180).left;
+                board.mShakeCounter=12;board.mShakeAmountX=3;board.mShakeAmountY=0;
+                while(board.mShakeCounter>0) {
+                    board.UpdateScreenShake();
+                    Require(std::abs(board.mX-origin)<=3,"Shake replaced the viewport baseline with x=0");
+                }
+                Require(board.mX==origin&&board.mY==0,"Shake did not return to its original viewport baseline");
+            }
+            app.mScreenBounds.mX=savedLeft;board.Move(-46,0);
+            auto* sun=board.AddCoin(350,250,COIN_SUN,COIN_MOTION_FROM_SKY);
+            sun->mPosX=sun->mCollectX=350;sun->mPosY=sun->mCollectY=250;
+            sun->mIsBeingCollected=true;sun->mDisappearStartTimeNs=INT64_MAX;
+            const auto destination=LandscapeHud::SunBounds(board);
+            sun->UpdateCollected();
+            Require(std::abs(sun->mPosX-(350.0f+(destination.mX+8-350.0f)/21.0f))<0.001f&&
+                std::abs(sun->mPosY-(250.0f+(destination.mY-250.0f)/21.0f))<0.001f,"Collected sun moved toward a different coordinate space than its HUD");
+            auto* collecting=render.CreateRenderImage(width,600);auto* ordinary=render.CreateRenderImage(width,600);
+            const auto drawSun=[&](Image* image,bool collected){
+                GpuImageDrawScope draw(render,image);Graphics g(image);g.mColor=Color::Black;g.FillRect(0,0,width,600);
+                g.Translate(board.mX-app.mScreenBounds.mX,0);sun->mIsBeingCollected=collected;sun->Draw(&g);
+            };
+            drawSun(collecting,true);drawSun(ordinary,false);render.Flush();
+            const auto collectingPixels=render.ReadImagePixels(*collecting),ordinaryPixels=render.ReadImagePixels(*ordinary);
+            Require(collectingPixels.pixels==ordinaryPixels.pixels,"Sun rendering applied a second HUD offset to already projected coordinates");
+            Require(std::any_of(collectingPixels.pixels.begin(),collectingPixels.pixels.end(),[](unsigned int p){return (p&0x00ffffff)!=0;}),"Sun rendering regression compared two empty images");
+            delete collecting;delete ordinary;sun->Die();board.ProcessDeleteQueue();app.mEffectSystem->ProcessDeleteQueue();board.Move(0,0);
+            Sexy::gUpdateIntervalNs=savedInterval;Sexy::gLegacyTickPhaseNs=savedPhase;Sexy::gUpdateTicks=savedTicks;
+        }
+        app.mGameScene=SCENE_LEVEL_INTRO;board.mCutScene->mPreloaded=true;board.mCutScene->mSeedChoosing=true;
+        if(width==1333) {
+            target=render.CreateRenderImage(width,600);
+            {GpuImageDrawScope destination(render,target);Graphics g(target);g.mColor=Color(255,0,255);g.FillRect(0,0,width,600);
+                g.Translate(-app.mScreenBounds.mX,0);board.DrawUIBottom(&g);}
+            render.Flush();pixels=render.ReadImagePixels(*target);
+            Require((pixels.pixels[53*width+40]&0x00ffffff)==0x00ff00ff,"Native cards were still emitted below world objects");
+            {GpuImageDrawScope destination(render,target);Graphics g(target);g.Translate(-app.mScreenBounds.mX,0);board.DrawUITop(&g);}
+            render.Flush();pixels=render.ReadImagePixels(*target);
+            Require((pixels.pixels[53*width+40]&0x00ffffff)!=0x00ff00ff,"Native cards were missing from the top HUD layer");delete target;
+        }
+        {
+            SeedChooserScreen chooser;
+            int x,y;chooser.GetSeedPositionInChooser(6,x,y);
+            Require(x==292&&y==110,"Four-column Free chooser grid is misaligned");
+            chooser.GetSeedPositionInChooser(4,x,y);Require(x==122&&y==110,"Free chooser did not wrap its fourth column");
+            chooser.GetSeedPositionInBank(9,x,y);
+            Require(x==0&&y==465,"Chooser flight endpoint disagrees with the tenth bank card");
+            Require(chooser.mStartButton->mWidth==101&&chooser.mImitaterButton->mWidth==81,
+                "Free button art/hit size was not configured");
+            app.mSeedChooserScreen=&chooser;
+            struct ClearChooser {TestApp& app;~ClearChooser(){app.mSeedChooserScreen=nullptr;}} clearChooser{app};
+            board.mCutScene->StartLevelIntro();
+            Require(chooser.mY==600,"Horizontal chooser leaked into the opening before sliding on");
+            chooser.Move(app.mScreenBounds.mX,0);chooser.mMouseVisible=true;
+            board.mCutScene->mPreloaded=true;board.mCutScene->mSeedChoosing=true;
+            {
+                const auto beforeImitater=chooser.mSeedsInBank;
+                ImitaterDialog picker;
+                Require(picker.mLandscapePicker,"Imitater retained the desktop card layout");
+                int px,py;picker.GetSeedPosition(4,px,py);
+                Require(picker.SeedHitTest(px+40,py+20)==static_cast<SeedType>(4),"Imitater horizontal card hit target disagrees with its layout");
+                picker.MouseWheel(-1);
+                int sx,sy;picker.GetSeedPosition(4,sx,sy);
+                Require(sx==px&&sy==py-55,"Imitater wheel did not scroll one native card row");
+                picker.TouchBegan({1300,px+40,py+20});
+                picker.TouchMoved({1300,px+40,py-80});picker.TouchEnded({1300,px+40,py-80});
+                Require(picker.mCardScroll.position < -55,"Imitater touch drag did not move the card list");
+                Require(chooser.mSeedsInBank==beforeImitater,"Imitater drag accidentally selected a card");
+                target=render.CreateRenderImage(picker.mWidth,picker.mHeight);
+                {GpuImageDrawScope destination(render,target);Graphics g(target);g.mColor=Color::Black;g.FillRect(0,0,picker.mWidth,picker.mHeight);picker.Draw(&g);}
+                render.Flush();pixels=render.ReadImagePixels(*target);
+                auto* frame=render.CreateRenderImage(picker.mWidth,picker.mHeight);
+                {GpuImageDrawScope destination(render,frame);Graphics g(frame);g.mColor=Color::Black;g.FillRect(0,0,picker.mWidth,picker.mHeight);picker.LawnDialog::Draw(&g);}
+                render.Flush();const auto framePixels=render.ReadImagePixels(*frame);
+                const auto bottomHeight=CommonUIAtlas::Images[size_t(CommonUIAtlas::Sprite::DIALOG_BOTTOMLEFT)].mHeight;
+                for(int yy=0;yy<picker.mHeight;++yy) {
+                    if(yy>=130&&yy<picker.mHeight-bottomHeight)continue;
+                    for(int xx=0;xx<picker.mWidth;++xx)
+                        Require(pixels.pixels[yy*picker.mWidth+xx]==framePixels.pixels[yy*picker.mWidth+xx],("Imitater card/frame pixel mismatch at "+std::to_string(xx)+","+std::to_string(yy)).c_str());
+                }
+                delete frame;
+                Require(ImageLib::WritePNGImage("landscape-imitater-"+std::to_string(width)+".png",picker.mWidth,picker.mHeight,pixels.pixels),"Cannot write imitater proof");delete target;
+            }
+            manager.AddWidget(&chooser);
+            {
+                struct RemoveChooser {WidgetManager& manager;SeedChooserScreen& chooser;~RemoveChooser(){manager.RemoveWidget(&chooser);}} removeChooser{manager,chooser};
+                manager.SetFocus(&chooser);
+                auto* modal=new ImitaterDialog();app.AddDialog(modal);manager.SetFocus(modal);
+                const auto before=chooser.mCardScroll.position;
+                manager.MouseWheel(-1);
+                Require(modal->mCardScroll.position==-55&&chooser.mCardScroll.position==before,"Modal wheel scrolled the wrong card list");
+                Require(app.KillDialog(modal->mId),"Cannot close the actual imitater modal");
+                app.ProcessSafeDeleteList();
+                Require(manager.mFocusWidget==&chooser,"Closing imitater stole wheel focus from the chooser");
+                manager.MouseWheel(-1);
+                Require(chooser.mCardScroll.position==before-55,"Chooser wheel did not recover after closing imitater");
+                chooser.ScrollCardsTo(0);
+                if(width==800)for(const bool horizontal:{true,false})for(const auto id:{DIALOG_NEWOPTIONS,DIALOG_ALMANAC,DIALOG_STORE}) {
+                    board.mLandscapeHud=horizontal;chooser.RefreshCardLayout();chooser.ScrollCardsTo(0);
+                    Dialog* dialog=id==DIALOG_NEWOPTIONS?static_cast<Dialog*>(new NewOptionsDialog(&app,false)):
+                        id==DIALOG_ALMANAC?static_cast<Dialog*>(new AlmanacDialog(&app)):static_cast<Dialog*>(new StoreScreen(&app));
+                    app.AddDialog(dialog);manager.SetFocus(dialog);
+                    if(id==DIALOG_ALMANAC)app.KillAlmanacDialog();
+                    else if(id==DIALOG_STORE)app.KillStoreScreen();
+                    else app.KillDialog(id);
+                    app.ProcessSafeDeleteList();
+                    Require(manager.mFocusWidget==&chooser,"Menu/Almanac/Store returned wheel focus to Board instead of chooser");
+                    manager.MouseWheel(-1);
+                    Require(chooser.mCardScroll.position==(horizontal?-55:0),"Chooser wheel failed after Menu/Almanac/Store close");
+                    chooser.ScrollCardsTo(0);
+                }
+                board.mLandscapeHud=true;chooser.RefreshCardLayout();chooser.ScrollCardsTo(0);
+            }
+            const auto count=chooser.mSeedsInBank;
+            chooser.MouseWheel(-1);
+            Require(chooser.mCardScroll.position==-55,"Mouse wheel did not scroll one chooser row");
+            chooser.GetSeedPositionInChooser(4,x,y);Require(y==55,"Scrolled row did not move into the first visible row");
+            chooser.TouchBegan({1200,200,250});
+            chooser.TouchMoved({1200,200,150});chooser.TouchEnded({1200,200,150});
+            Require(chooser.mCardScroll.position<=-150 && chooser.mSeedsInBank==count,
+                "Chooser drag selected a card or failed to scroll");
+            chooser.ScrollCardsTo(0);
+            chooser.mCardScroll.Cancel();
+            Require(chooser.mImitaterButton->mX==500 && chooser.mImitaterButton->mY==81,
+                "Imitater did not remain in its separate right-side addon");
+            target=render.CreateRenderImage(width,600);
+            {
+                GpuImageDrawScope destination(render,target);Graphics g(target);
+                g.mColor=Color(50,110,45);g.FillRect(0,0,width,600);
+                // The chooser is placed at viewport left by its owner.
+                chooser.Draw(&g);
+            }
+            render.Flush();pixels=render.ReadImagePixels(*target);
+            Require(std::count_if(pixels.pixels.begin(),pixels.pixels.end(),[](unsigned int p){return (p&0x00ffffff)!=0x00326e2d;})>100000,"Horizontal chooser was not actually rendered");
+            Require(ImageLib::WritePNGImage("landscape-chooser-"+std::to_string(width)+".png",width,600,pixels.pixels),"Cannot write horizontal chooser proof");delete target;
+        }
+        app.mGameScene=SCENE_PLAYING;board.mCutScene->mSeedChoosing=false;
+        const auto save="landscape-ui-"+std::to_string(width)+".dat64";
+        Require(LawnSaveGame(&board,save)&&LawnLoadGame(&board,save),"Horizontal HUD broke the existing DAT64 roundtrip");
+        Require(board.mLandscapeHud&&bank.mSeedPackets[9].mY==0,"Loading lost the selected HUD or changed saved card coordinates");
+        app.mGameMode=GAMEMODE_MINIGAME_WALLNUT_BOWLING;
+        bank.mSeedPackets[0].mX=141;bank.mSeedPackets[0].mOffsetX=25;
+        const auto beltCard=LandscapeHud::PacketBounds(board,0);
+        Require(beltCard.mY==33+75*48/50,"Conveyor canonical X/offset did not map to the vertical belt");
+        HitResult hit;Require(bank.MouseHitTest(beltCard.mX+40,beltCard.mY+20,&hit),"Vertical conveyor card is not clickable");
+        for(int i=0;i<10;++i) {
+            bank.mSeedPackets[i].mX=board.GetSeedPacketPositionX(i);bank.mSeedPackets[i].mOffsetX=0;
+            const auto slot=LandscapeHud::PacketBounds(board,i);
+            Require(slot.mY==33+i*48&&slot.mHeight==48&&slot.mY+slot.mHeight<=513,"Ten conveyor cards did not fit one 480-pixel frame");
+        }
+        board.Move(0,0);bank.mX=0;bank.mY=0; // Render in the settled board frame, not the intro camera.
+        target=render.CreateRenderImage(width,600);
+        {GpuImageDrawScope destination(render,target);Graphics g(target);g.mColor=Color(50,110,45);g.FillRect(0,0,width,600);g.Translate(-app.mScreenBounds.mX,0);
+            LandscapeHud::DrawBank(bank,&g);LandscapeHud::DrawShovel(board,&g);}
+        render.Flush();pixels=render.ReadImagePixels(*target);
+        Require((pixels.pixels[55*width+40]&0x00ffffff)!=0x00326e2d,"Compact conveyor rendered no visible card pixels");
+        Require((pixels.pixels[15*width+40]&0x00ffffff)!=0x00326e2d,"Conveyor did not retain the global sunlight header");
+        Require(ImageLib::WritePNGImage("landscape-conveyor-"+std::to_string(width)+".png",width,600,pixels.pixels),"Cannot write compact conveyor proof");delete target;
+        app.mGameMode=GAMEMODE_ADVENTURE;
+        app.mBoard=nullptr;
+        std::cout<<"PASS landscape HUD width="<<width<<": ten cards, touch selection/cancel, conveyor, chooser, DAT64\n";
+    }
+    {
+        app.mGameMode=GAMEMODE_MINIGAME_SLOT_MACHINE;app.mGameScene=SCENE_PLAYING;
+        Board slot(&app);slot.mSeedBank->mX=slot.mSeedBank->mY=0;slot.mSunMoney=50;
+        Require(!slot.mLandscapeHud&&app.mLandscapeUIActive,"Slot machine changed card layout instead of only using the global sunlight UI");
+        auto& render=*app.mDDInterface->mRenderInterface;
+        auto* actual=render.CreateRenderImage(85,31);auto* expected=render.CreateRenderImage(85,31);
+        {GpuImageDrawScope destination(render,actual);Graphics g(actual);g.mColor=Color::Black;g.FillRect(0,0,85,31);g.Translate(-app.mScreenBounds.mX,0);slot.mSeedBank->DrawSun(&g);}
+        {GpuImageDrawScope destination(render,expected);Graphics g(expected);g.mColor=Color::Black;g.FillRect(0,0,85,31);g.mLinearBlend=false;
+            DrawAtlasImage(&g,{LandscapeUIAtlas::Texture,0},LandscapeUIAtlas::Images[size_t(LandscapeUIAtlas::Sprite::SUNBANK)],0,0);}
+        render.Flush();const auto a=render.ReadImagePixels(*actual),b=render.ReadImagePixels(*expected);
+        for(int yy=0;yy<31;++yy)for(int xx=0;xx<25;++xx)Require(a.pixels[yy*85+xx]==b.pixels[yy*85+xx],"Slot machine sunlight did not use the global native frame");
+        Require(ImageLib::WritePNGImage("landscape-slot-sun.png",85,31,a.pixels),"Cannot write slot sun proof");
+        delete actual;delete expected;app.mBoard=nullptr;
+    }
+    for(auto mode:{GAMEMODE_MINIGAME_SLOT_MACHINE,GAMEMODE_LIMBO_ZEN_GARDEN,GAMEMODE_TREE_OF_WISDOM}) {
+        app.mGameMode=mode;Board board(&app);Require(!board.mLandscapeHud,"Special mode unexpectedly changed tool/reel layout");app.mBoard=nullptr;
+    }
+}
+
 void StorePauseClockRuntime(TestApp& app, DecodeOnlySoundManager& sounds)
 {
     std::cerr<<"Store clock fixture: initialize\n";
@@ -7001,15 +7471,34 @@ void StorePauseClockRuntime(TestApp& app, DecodeOnlySoundManager& sounds)
     app.mReanimatorCache=&cache;
     sounds.allowSilentPlayback=true;
     if(gTouchOnly) {
-        FixedUIAtlas::Load();
-        struct FreeTouchAtlas { ~FreeTouchAtlas(){FixedUIAtlas::Free();} } freeTouchAtlas;
+        CommonUIAtlas::Load();
+        if(gLandscapeOnly) {
+            // Exercise both startup choices with the real production loader.
+            CommonUIAtlas::Free();
+            LoadSceneAtlases(false);
+            Require(CommonUIAtlas::Texture && DesktopUIAtlas::Texture && !LandscapeUIAtlas::Texture,
+                "Desktop startup loaded the wrong UI atlases");
+            FreeSceneAtlases();
+            LoadSceneAtlases(true);
+            Require(CommonUIAtlas::Texture && LandscapeUIAtlas::Texture && !DesktopUIAtlas::Texture,
+                "Landscape startup loaded the wrong UI atlases");
+            // The layout corpus also exercises classic fallback scenes.
+            DesktopUIAtlas::Load();
+            LandscapeHudRuntime(app);
+            FreeSceneAtlases();
+            Require(!CommonUIAtlas::Texture && !DesktopUIAtlas::Texture && !LandscapeUIAtlas::Texture,
+                "UI release retained a texture binding");
+            return;
+        }
+        DesktopUIAtlas::Load();
+        struct FreeTouchAtlas { ~FreeTouchAtlas(){DesktopUIAtlas::Free();CommonUIAtlas::Free();} } freeTouchAtlas;
         const auto source=std::filesystem::path(__FILE__).parent_path().parent_path().parent_path()/"assets/runtime/images/touch_selection_frame_blue.png";
         auto* decoded=ImageLib::GetImage(source.string(),false);
         Require(decoded&&decoded->mBits,"Cannot decode independent original TV frame");
         ImageLib::FixTransparentEdges(*decoded); // Match the original ResourceManager upload preparation.
         Image frame;frame.SetBits(decoded->mBits,decoded->mWidth,decoded->mHeight);delete decoded;
         gTouchFrameReference=&frame;
-        TouchInputRuntime(app);TouchGardenRuntime(app);gTouchFrameReference=nullptr;return;
+        TouchInputRuntime(app);TouchAquariumRuntime(app);TouchGardenRuntime(app);gTouchFrameReference=nullptr;return;
     }
     if(gPlantCatalogOnly) {PlantAttackCatalogRuntime(app);return;}
     if(gZombieCatalogOnly) {ZombieBehaviorCatalogRuntime(app);return;}
@@ -7720,7 +8209,7 @@ void AllResourceGroups(SexyAppBase& app)
     SeedPacketCooldownPixels(app);
     ProjectileAtlasPixels(static_cast<LawnApp&>(app));
     PoolScenePixels(app);
-    FixedUIAtlas::Load();
+    CommonUIAtlas::Load();
     StorePauseClockRuntime(static_cast<TestApp&>(app),sounds);
     {
         auto& render=*app.mDDInterface->mRenderInterface;
@@ -7732,10 +8221,10 @@ void AllResourceGroups(SexyAppBase& app)
             CheckQuitDialogRuntime(static_cast<LawnApp&>(app),graphics);
             static_cast<TestApp&>(app).ProcessSafeDeleteList();
         }
-        catch (...) { delete target; FixedUIAtlas::Free(); throw; }
+        catch (...) { delete target; CommonUIAtlas::Free(); throw; }
         delete target;
     }
-    FixedUIAtlas::Free();
+    CommonUIAtlas::Free();
     DefinitionFreeAtlasImages();
     std::cout<<"PASS actual Quit confirmation: target-free layout, body, yes/no buttons and clean dialog release\n";
     TodWarmDispose();
@@ -8329,7 +8818,8 @@ int main(int argc, char** argv)
     gGraveRulesOnly=argc==3 && std::string_view(argv[2])=="grave-rules";
     gHudSeamsOnly=argc==3 && std::string_view(argv[2])=="hud-seams";
     gTouchPerf=argc==3 && std::string_view(argv[2])=="touch-perf";
-    gTouchOnly=gTouchPerf||(argc==3 && std::string_view(argv[2])=="touch-input");
+    gLandscapeOnly=argc==3 && std::string_view(argv[2])=="landscape-ui";
+    gTouchOnly=gLandscapeOnly||gTouchPerf||(argc==3 && std::string_view(argv[2])=="touch-input");
     std::cout<<std::unitbuf;
     SetErrorMode(SEM_FAILCRITICALERRORS | SEM_NOGPFAULTERRORBOX | SEM_NOOPENFILEERRORBOX);
     AddVectoredExceptionHandler(1,SuppressFixtureCrashDialogs);

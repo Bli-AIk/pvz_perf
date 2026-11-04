@@ -1,9 +1,12 @@
-﻿#include <time.h>
+#include <time.h>
 #include <type_traits>
 #include "ZenGarden.h"
+#include "LandscapeHud.h"
+#include "Sexy.TodLib/generated/SceneAtlasData.h"
 #include "GardenHudLayout.h"
 #include "BoardInclude.h"
 #include "graphics/DDInterface.h"
+#include "graphics/GameViewport.h"
 #include "graphics/Image.h"
 #include "ZombieFlags.h"
 #include "LawnCommon.h"
@@ -60,6 +63,9 @@ Board::Board(LawnApp* theApp)
 {
     mPoolIntroVisual = true;
 	mApp = theApp;
+    mLandscapeHud = theApp->mLandscapeUIActive && theApp->mGameMode != GAMEMODE_MINIGAME_SLOT_MACHINE &&
+        theApp->mGameMode != GAMEMODE_LIMBO_ZEN_GARDEN && theApp->mGameMode != GAMEMODE_TREE_OF_WISDOM;
+    mHudFlashStartNs.fill(-1);
 	mApp->mBoard = this;
 
 	mZombies.DataArrayInitialize(ZOMBIE_POOL_CAPACITY, DataArrayKind::Zombies);
@@ -1520,13 +1526,15 @@ void Board::InitSurvivalStage()
 //0x40AE70
 Rect Board::GetShovelButtonRect()
 {
+    if (mLandscapeHud) return LandscapeHud::ShovelBounds(*this);
 	// GOTY 1073 (0040D720): the shovel/tool bank is 70 x 72, not the 87-high seed bank.
 	Rect aRect(GetSeedBankExtraWidth() + 456, 0, Sexy::IMAGE_SHOVELBANK->mWidth, Sexy::IMAGE_SHOVELBANK->mHeight);
 	if (mApp->IsSlotMachineLevel() || mApp->IsSquirrelLevel())
 	{
 		aRect.mX = 600;
 	}
-	aRect.mX += mApp->mScreenBounds.mX;
+	aRect.mX += mApp->mScreenBounds.mX-mX;
+    aRect.mY-=mY;
 	return aRect;
 }
 
@@ -4292,8 +4300,8 @@ void Board::UpdateToolTip()
 			return;
 		}
 
-		if (mSeedBank->ContainsPoint(mWidgetManager->mLastMouseX - mApp->mScreenBounds.mX,
-			mWidgetManager->mLastMouseY) ||
+		if (mSeedBank->ContainsPoint(mWidgetManager->mLastMouseX-mX,
+			mWidgetManager->mLastMouseY-mY) ||
 			mApp->mSeedChooserScreen->mAlmanacButton->IsMouseOver() ||
 			mApp->mSeedChooserScreen->mStoreButton->IsMouseOver() ||
 			mApp->mSeedChooserScreen->mImitaterButton->IsMouseOver())
@@ -4334,7 +4342,7 @@ void Board::UpdateToolTip()
 		mToolTip->mCenter = true;
 
 		// The chooser draws this overlay in Board's frame, including camera pan.
-		mToolTip->mMinLeft = SeedChooserLayout::RebaseX(IMAGE_SEEDCHOOSER_BACKGROUND->mWidth,
+		mToolTip->mMinLeft = SeedChooserLayout::RebaseX(DesktopUIAtlas::Images[size_t(DesktopUIAtlas::Sprite::SEEDCHOOSER_BACKGROUND)].mWidth,
 			mApp->mSeedChooserScreen->mX, mX);
 		if (mApp->mSeedChooserScreen->mAlmanacButton->mBtnNoDraw && mApp->mSeedChooserScreen->mStoreButton->mBtnNoDraw)
 		{
@@ -4537,6 +4545,10 @@ void Board::UpdateToolTip()
 
 	mToolTip->mX = (SEED_PACKET_WIDTH - mToolTip->mWidth) / 2 + mSeedBank->mX + aSeedPacket->mOffsetX + aSeedPacket->mX + mApp->mScreenBounds.mX;
 	mToolTip->mY = mSeedBank->mY + aSeedPacket->mY + 70;
+    if(mLandscapeHud) {
+        const auto rect=LandscapeHud::PacketBounds(*this,aSeedPacket->mIndex);
+        mToolTip->mX=rect.mX+rect.mWidth;mToolTip->mY=rect.mY;
+    }
 	mToolTip->mVisible = true;
 }
 
@@ -6891,7 +6903,9 @@ void Board::UpdateTutorial()
 	{
 		DisplayAdvice(gStr.ADVICE_CLICK_PEASHOOTER, MessageStyle::MESSAGE_STYLE_TUTORIAL_LEVEL1_STAY, AdviceType::ADVICE_NONE);
 		// 1073 00416FB7/00416FBD read the first packet's position.
-		TutorialArrowShow(mSeedBank->mX + mSeedBank->mSeedPackets[0].mX, mSeedBank->mY + mSeedBank->mSeedPackets[0].mY);
+		const auto card = LandscapeHud::PacketBounds(*this,0);
+        TutorialArrowShow(mLandscapeHud ? card.mX-mApp->mScreenBounds.mX : mSeedBank->mX+mSeedBank->mSeedPackets[0].mX,
+                          mLandscapeHud ? card.mY : mSeedBank->mY+mSeedBank->mSeedPackets[0].mY);
 		mTutorialTimer = -1;
 	}
 	else if (mTutorialState == TutorialState::TUTORIAL_LEVEL_2_PICK_UP_SUNFLOWER ||
@@ -6941,7 +6955,9 @@ using TutorialStateCaseFn = void (*)(Board&);
 // 原 case TUTORIAL_LEVEL_2_PICK_UP_SUNFLOWER, TUTORIAL_MORESUN_PICK_UP_SUNFLOWER
 void TutorialCaseTutorialLevel2PickUpSunflower(Board& b)
 {
-    		b.TutorialArrowShow(b.mSeedBank->mX + b.mSeedBank->mSeedPackets[1].mX, b.mSeedBank->mY + b.mSeedBank->mSeedPackets[1].mY);
+		const auto card = LandscapeHud::PacketBounds(b,1);
+            b.TutorialArrowShow(b.mLandscapeHud ? card.mX-b.mApp->mScreenBounds.mX : b.mSeedBank->mX+b.mSeedBank->mSeedPackets[1].mX,
+                                b.mLandscapeHud ? card.mY : b.mSeedBank->mY+b.mSeedBank->mSeedPackets[1].mY);
 }
 
 // 标签共体（匿名 lambda 无法跨槽复用，复用即具名）
@@ -6967,7 +6983,8 @@ constexpr TutorialStateCaseFn kTutorialStateCases[(int)TutorialState::TUTORIAL_W
     		{
     			float aPosX = b.mSeedBank->mX + b.mSeedBank->mSeedPackets[0].mX;
     			float aPosY = b.mSeedBank->mY + b.mSeedBank->mSeedPackets[0].mY;
-    			b.TutorialArrowShow(aPosX, aPosY);
+			if (b.mLandscapeHud) {const auto card=LandscapeHud::PacketBounds(b,0);aPosX=card.mX-b.mApp->mScreenBounds.mX;aPosY=card.mY;}
+            b.TutorialArrowShow(aPosX, aPosY);
     			b.DisplayAdvice(gStr.ADVICE_CLICK_SEED_PACKET, MessageStyle::MESSAGE_STYLE_TUTORIAL_LEVEL1_STAY, AdviceType::ADVICE_NONE);
     		}
     		else
@@ -7153,6 +7170,23 @@ void Board::UpdateGame(std::uint64_t theDeltaNs)
 	UpdateProgressMeter(theDeltaNs);
 }
 
+void Board::UpdateScreenShake()
+{
+    // Shake around the current viewport's settled background position, never
+    // assume that a widened or externally restored canvas is centered on x=0.
+    int originX=0;
+    if(mApp->mGameScene==SCENE_PLAYING&&mBackground>=BACKGROUND_1_DAY&&mBackground<=BACKGROUND_6_BOSS) {
+        const auto& bounds=mApp->mScreenBounds;
+        const Sexy::GameViewport canvas{bounds.mWidth,BOARD_HEIGHT,bounds.mX};
+        originX=canvas.left-canvas.WithinWorld(-BOARD_OFFSET,BOARD_IMAGE_WIDTH_OFFSET).left;
+    }
+    --mShakeCounter;
+    if(mShakeCounter==0) {mX=originX;mY=0;return;}
+    if(Sexy::UpdateChance(3))mShakeAmountX=-mShakeAmountX;
+    mX=originX+TodAnimateCurveNs(120'000'000,0,mShakeCounter.mNanoseconds,0,mShakeAmountX,Curves::Bounce);
+    mY=TodAnimateCurveNs(120'000'000,0,mShakeCounter.mNanoseconds,0,mShakeAmountY,Curves::Bounce);
+}
+
 //0x415D40
 void Board::Update()
 {
@@ -7243,24 +7277,7 @@ void Board::Update()
 	{
 		mOutOfMoneyCounter--;
 	}
-	if (mShakeCounter > 0)
-	{
-		mShakeCounter--;
-		if (mShakeCounter == 0)
-		{
-			mX = 0;
-			mY = 0;
-		}
-		else
-		{
-			if (Sexy::UpdateChance(3))
-			{
-				mShakeAmountX = -mShakeAmountX;
-			}
-			mX = TodAnimateCurveNs(120'000'000, 0, mShakeCounter.mNanoseconds, 0, mShakeAmountX, Curves::Bounce);
-			mY = TodAnimateCurveNs(120'000'000, 0, mShakeCounter.mNanoseconds, 0, mShakeAmountY, Curves::Bounce);
-		}
-	}
+    if(mShakeCounter>0)UpdateScreenShake();
 	if (mCoinBankFadeCount > 0 && mApp->GetDialog(Dialogs::DIALOG_PURCHASE_PACKET_SLOT) == nullptr)
 	{
 		mCoinBankFadeCount--;
@@ -7810,7 +7827,11 @@ void Board::DrawGameObjects(Graphics* g)
 		AddUIRenderItem(aRenderList, aRenderItemCount, RenderObjectType::RENDER_ITEM_BACKDROP, MakeRenderOrder(RenderLayer::RENDER_LAYER_UI_BOTTOM, 0, 0));
 		AddUIRenderItem(aRenderList, aRenderItemCount, RenderObjectType::RENDER_ITEM_BOTTOM_UI, aZPos);
 		AddUIRenderItem(aRenderList, aRenderItemCount, RenderObjectType::RENDER_ITEM_COIN_BANK, MakeRenderOrder(RenderLayer::RENDER_LAYER_COIN_BANK, 0, 0));
-		AddUIRenderItem(aRenderList, aRenderItemCount, RenderObjectType::RENDER_ITEM_TOP_UI, MakeRenderOrder(RenderLayer::RENDER_LAYER_UI_TOP, 0, 0));
+        // Ordinary sun/coins start at COIN_BANK+1 (not ABOVE_UI). Keep the
+        // native HUD above world/fog but below that actual collectible layer.
+        AddUIRenderItem(aRenderList, aRenderItemCount, RenderObjectType::RENDER_ITEM_TOP_UI,
+            mLandscapeHud ? MakeRenderOrder(RENDER_LAYER_COIN_BANK,0,-1) :
+                MakeRenderOrder(RENDER_LAYER_UI_TOP,0,0));
 		AddUIRenderItem(aRenderList, aRenderItemCount, RenderObjectType::RENDER_ITEM_SCREEN_FADE, MakeRenderOrder(RenderLayer::RENDER_LAYER_SCREEN_FADE, 0, 0));
 	}
 	if (mApp->mGameScene == GameScenes::SCENE_ZOMBIES_WON)
@@ -8052,7 +8073,7 @@ void Board::DrawProgressMeter(Graphics* g)
 
     Graphics aHudGraphics(*g);
     g = &aHudGraphics;
-	g->Translate(mApp->mScreenBounds.mX + mApp->mScreenBounds.mWidth - BOARD_WIDTH, 0);
+	g->Translate(mApp->mScreenBounds.mX + mApp->mScreenBounds.mWidth - BOARD_WIDTH-mX, -mY);
 	// ====================================================================================================
 	// ▲ 绘制进度条进度部分的贴图
 	// ====================================================================================================
@@ -8207,7 +8228,7 @@ void Board::DrawLevel(Graphics* g)
 {
     Graphics aHudGraphics(*g);
     g = &aHudGraphics;
-	g->Translate(mApp->mScreenBounds.mX + mApp->mScreenBounds.mWidth - BOARD_WIDTH, 0);
+	g->Translate(mApp->mScreenBounds.mX + mApp->mScreenBounds.mWidth - BOARD_WIDTH-mX, -mY);
 	// ====================================================================================================
 	// ▲ 获取完整的关卡名称的字符串
 	// C++23 第一批·条目3：值变才重建（键=mLevel+mGameMode+生存旗数/连击段），输出逐字节等价
@@ -8503,6 +8524,7 @@ void Board::DrawZenButtons(Graphics* g)
 //0x418B70
 void Board::DrawShovel(Graphics* g)
 {
+    if (mLandscapeHud) { if (mShowShovel) LandscapeHud::DrawShovel(*this,g); return; }
 	if (mApp->mGameMode != GameMode::GAMEMODE_LIMBO_ZEN_GARDEN && mApp->mGameMode != GameMode::GAMEMODE_TREE_OF_WISDOM)
 	{
 		if (mShowShovel)
@@ -8865,6 +8887,9 @@ void Board::RefreshHudLayout()
 	const bool aZenMenu = mApp->mGameMode == GameMode::GAMEMODE_LIMBO_ZEN_GARDEN ||
 		mApp->mGameMode == GameMode::GAMEMODE_TREE_OF_WISDOM;
 	mMenuButton->mX = (aZenMenu ? 628 : 681) + aRightDelta;
+    if(!aZenMenu) {
+        mMenuButton->mX-=mX;mMenuButton->mY=-10-mY;
+    }
 	if (aZenMenu)
 	{
 		const auto frame = GardenHudLayout::ViewportInBoard(
@@ -8979,6 +9004,15 @@ void Board::DrawUIBottom(Graphics* g)
 		g->mDrawMode = Graphics::DRAWMODE_NORMAL;
 	}
 
+    if(!mLandscapeHud)DrawCardHud(g);
+	if (!StageHasFog()&&!mLandscapeHud)
+	{
+		DrawTopRightUI(g);
+	}
+}
+
+void Board::DrawCardHud(Graphics* g)
+{
 	if (mApp->mGameScene != GameScenes::SCENE_ZOMBIES_WON)
 	{
 		const float aBeforeSeedBankX = g->mTransX, aBeforeSeedBankY = g->mTransY;
@@ -8995,13 +9029,8 @@ void Board::DrawUIBottom(Graphics* g)
 	}
 
 	DrawShovel(g);
-    // Card/tool frames share bottom UI occlusion with their owners. Drawing
-    // them in DrawUITop would leave a floating frame over an occluding zombie.
+    // Cards, tools and selection corners always share the selected HUD layer.
     DrawTouchSelection(g);
-	if (!StageHasFog())
-	{
-		DrawTopRightUI(g);
-	}
 }
 
 //0x41A2A0
@@ -9187,7 +9216,7 @@ void Board::DrawUITop(Graphics* g)
 	Rect aScreenRect = mApp->mScreenBounds;
 	aScreenRect.Offset(-mX, -mY);
 
-	if (StageHasFog())
+	if (StageHasFog()||mLandscapeHud)
 	{
 		DrawTopRightUI(g);
 	}
@@ -9197,6 +9226,8 @@ void Board::DrawUITop(Graphics* g)
 		g->mColor = Color(200, 200, 200, 210);
 		g->FillRect(aScreenRect);
 	}
+
+    if(mLandscapeHud)DrawCardHud(g);
 
 	if (mApp->mGameScene == GameScenes::SCENE_PLAYING || mApp->mGameMode == GameMode::GAMEMODE_TREE_OF_WISDOM)
 	{
@@ -10359,7 +10390,7 @@ void Board::ProcessDeleteQueue()
 
 //0x41BE50
 // GOTY @Patoke: 0x41EC10
-bool Board::HasConveyorBeltSeedBank()
+bool Board::HasConveyorBeltSeedBank() const
 {
 	return
 		mApp->IsFinalBossLevel() ||

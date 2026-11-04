@@ -1,8 +1,26 @@
 plugins { id 'com.android.application' }
 android { namespace 'com.openpvz.perf'; compileSdk 35
     lint { checkReleaseBuilds false }
-    defaultConfig { applicationId 'com.openpvz.perf'; minSdk 34; targetSdk 35; versionCode 12; versionName '3.3' }
-    sourceSets { main { jniLibs.srcDirs = ['src/main/jniLibs'] } }
+    buildFeatures { buildConfig true }
+    defaultConfig {
+        applicationId 'com.openpvz.perf'
+        minSdk providers.gradleProperty('pvzMinSdk').getOrElse('34').toInteger()
+        targetSdk 35
+        versionCode 13
+        versionName '3.3.1'
+        buildConfigField 'boolean', 'HDR_DEVICE_TEST', providers.gradleProperty('pvzHdrTest').getOrElse('false')
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    sourceSets { main {
+        if (providers.gradleProperty('pvzStagingDir').isPresent()) {
+            def staging = providers.gradleProperty('pvzStagingDir').get()
+            assets.srcDirs = [staging + '/assets']
+            jniLibs.srcDirs = [staging + '/jniLibs']
+        } else { jniLibs.srcDirs = ['src/main/jniLibs'] }
+    } }
     packaging { jniLibs { useLegacyPackaging true }; resources { excludes += ['META-INF/*'] } }
     aaptOptions { noCompress 'pak64' }
 }

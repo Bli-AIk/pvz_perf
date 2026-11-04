@@ -8,7 +8,7 @@
 #include <stdexcept>
 
 // Run only in an isolated native fixture after loading the real LoadingFonts,
-// LoadingImages and FixedUI atlas. No save, profile or native close is requested.
+// LoadingImages and CommonUI atlas. No save, profile or native close is requested.
 // The Quit dialog measures wrapped text without a draw destination. Measurement
 // must share line breaking without entering the glyph draw path.
 inline void CheckQuitDialogRuntime(LawnApp& app, Sexy::Graphics& target)

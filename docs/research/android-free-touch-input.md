@@ -97,6 +97,12 @@ WP 参考代码同样专门保护落卡：`Coin.Collect` 设置 `mIgnoreNextMous
 
 当前项目需要补的是场上卡牌的手势，而非收集规则：`Board::TouchEnded` 对任意植物光标直接尝试种植，轻点落在草坪内的掉落卡会尝试原地种植；`IsSelectedControl` 仅支持卡槽和铲子，持有植物时 `TouchBegan` 也不会再分发普通拿卡调用，因此缺少场上同卡取消和直接换卡。后续已用既有 CoinID 接入单一共享选择，补上轻点／拖放区分、同卡取消、直接换卡和罐子手势隔离，保留普通鼠标路径。实现与本机验证见 [触控说明](../touch-input.md#场上掉落卡牌)。
 
+## 种植横竖白条的显示条件（2026-11-04 补核）
+
+同一 3.18.0 原生库的 `CursorObject::DrawGroundLayer`（0x1a743c4）对植物光标值 1／2，先计算种植格，再调用 `Board::CanPlantAt`。0x1a744c4 调用之后，非零结果经 0x1a744d0 直接跳到函数收尾 0x1a74718，因此整组行列提示都不绘制。通过检查后才进入行列绘制循环（调用点 0x1a7462c、0x1a746ac），并非只把不能种植的单格从条带里扣掉。铲子另有目标命中及忽略抬起状态检查。
+
+见[原始指令](../../Tests/evidence/android-free-touch-20261103/CursorObject_DrawGroundLayer.asm.txt)和[核对清单](../../Tests/evidence/android-free-touch-20261103/placement-guides-manifest.json)。本项目后续已接入种植合法性过滤，直接复用 CursorPreview 更新结果；按用户要求，铲子只保留目标植物发亮，不绘制白条。
+
 ## 禅境花园工具
 
 仍以同一个 Free 3.18.0 arm64 ELF 为依据，以下是静态控制流结论。
@@ -109,3 +115,10 @@ WP 参考代码同样专门保护落卡：`Coin.Collect` 设置 `mIgnoreNextMous
 Free 的花园取消分支会扫描多个触点光标，不能据此认定其工具选择严格全局唯一。目前没有完成所有多工具冲突的逆向，也没有确认它使用哪张选中边框图片。本项目按用户指定采用触控全局唯一选择和 TV 蓝色四角框，不将这两项宣称为 Free 原样行为。
 
 地址、原始指令与样本哈希见 [garden-manifest.json](../../Tests/evidence/android-free-touch-20261103/garden-manifest.json)。本机实现与回归见 [花园触控](../touch-input.md#花园工具)。
+
+
+## 选卡滚动控件与模仿者（2026-11-04 补核）
+
+3.18.0 的 `SeedChooserScreen::GetSeedPositionInChooser`（0x1c377a4）对种子 48 单独从模仿者 GameButton 读取 X/Y；其他种子委派给 `SeedPacketsWidget::GetSeedPosition`（0x1c366f4），后者由列数、牌宽高和间隔计算行列位置。因此模仿者不是普通滚动牌表的最后一项。本地 Free HD 资源另外提供 142×112 的模仿者扩展底板、108×70 的模仿者卡面和 494 宽的选卡面板。当前项目采用独立右侧扩展区；本项目坐标属于适配值，没有将其冒充为 Free 各屏幕档位的原始坐标。
+
+原图像素与逻辑尺寸需要区别：本资源包的卡面为 108×70。本项目为满足 800×600 下一点对一点，改用 WP 移植包内原生 81×53 图像，而不缩放这份 Free 960 资源。不能仅从原图尺寸推断 Free 的逻辑高度。

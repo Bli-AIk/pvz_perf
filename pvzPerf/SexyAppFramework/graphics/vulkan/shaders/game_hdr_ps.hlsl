@@ -6,8 +6,13 @@
 // 槽位对全部片元恒同=动态一致；且 glslc 的 HLSL 前端没有
 // NonUniformResourceIndex 内建（场景/覆盖掩码的 GLSL 版走 nonuniformEXT）。
 // 采样器数组同 game_ps；呈现恒线性=索引 1（编译期常量，无需非一致装饰）。
+#if defined(PVZ_VULKAN_LEGACY)
+[[vk::binding(0, 0)]] Texture2D<float4> Tex[1];
+[[vk::binding(0, 1)]] SamplerState Sam[1];
+#else
 [[vk::binding(0, 0)]] Texture2D<float4> Tex[4096];
 [[vk::binding(0, 1)]] SamplerState Sam[4];
+#endif
 struct PSIn { [[vk::location(0)]] float4 Color : COLOR0; [[vk::location(1)]] float2 UV : TEXCOORD0; [[vk::location(2)]] uint Slot : TEXCOORD1; };
 #endif
 float3 SRGBToLinear(float3 c) {
@@ -100,11 +105,22 @@ float4 ConvertHdr(float3 signal) {
         1.6604910172, -0.5876472172, -0.0728450165,
         -0.1245500243, 1.1329005300, -0.0083484533,
         -0.0181511207, -0.1005786015, 1.1187294311 };
+#ifdef PVZ_ANDROID_HDR_TEST
+    // Android's compositor supplies the display white scaling. Keep the SDR
+    // reference at scRGB 1.0 rather than adding the desktop 150/80 gain again.
+    s *= 80.0 / REINHARD_PAPER;
+#endif
     return float4(mul(M2020to709, s) * (PAPER_WHITE / 80.0), 1.0);
 #else
 	return float4(PQ(s * PAPER_WHITE), 1.0);
 #endif
 }
 #ifndef PVZ_HDR_COMPUTE_PROBE
-float4 main(PSIn input) : SV_Target { return ConvertHdr(Tex[input.Slot].Sample(Sam[1],input.UV).rgb*input.Color.rgb); }
+float4 main(PSIn input) : SV_Target {
+#if defined(PVZ_VULKAN_LEGACY)
+    return ConvertHdr(Tex[0].Sample(Sam[0],input.UV).rgb*input.Color.rgb);
+#else
+    return ConvertHdr(Tex[input.Slot].Sample(Sam[1],input.UV).rgb*input.Color.rgb);
+#endif
+}
 #endif

@@ -105,7 +105,7 @@ class SceneAtlasTests(unittest.TestCase):
                 scene.parse(SOURCE.replace("[1, 1, 2, 3]", rect))
         for text in (SOURCE + "trailing", SOURCE.replace("0.6", "0"),
                      SOURCE.replace("0.6", "-1"), SOURCE.replace("0.6", "1e999"),
-                     SOURCE.replace("atlas Magnet", "atlas FixedUI"),
+                     SOURCE.replace("atlas Magnet", "atlas CommonUI"),
                      SOURCE.replace("image:", "rows:", 1)):
             with self.subTest(text=text), self.assertRaises(ValueError):
                 scene.parse(text)
@@ -224,6 +224,9 @@ class SceneAtlasTests(unittest.TestCase):
             self.assertIn(f'DefinitionBindAtlasPath(Texture, {report["atlas_width"]}, '
                           f'{report["atlas_height"]},', native)
         self.assertIn("DefinitionUnbindAtlas(Texture)", native)
+        self.assertIn("void LoadSceneAtlases(bool landscapeUI)", native)
+        self.assertIn("if (landscapeUI) LandscapeUIAtlas::Load();", native)
+        self.assertIn("else DesktopUIAtlas::Load();", native)
         free_body = native.split("void FreeSceneAtlases() {", 1)[1].split("}", 1)[0]
         self.assertEqual(re.findall(r"(\w+)Atlas::Free\(\)", free_body), list(reversed(scene.MODULES)))
         self.assertNotRegex(header + native, r"ImageSymbolId|ResourceId|mNumRows|mNumCols|rows|cols|cel")
@@ -231,11 +234,11 @@ class SceneAtlasTests(unittest.TestCase):
         self.assertNotIn("SceneAtlasBindings.h", header + native)
         self.assertEqual(scene.generate(dict(reversed(list(reports.items())))), generated)
 
-    def test_fixed_ui_includes_four_original_touch_frame_corners(self):
-        names = [row["name"] for row in scene.fixed_ui()["sprites"]]
+    def test_common_ui_includes_four_original_touch_frame_corners(self):
+        names = [row["name"] for row in scene.common_ui()["sprites"]]
         self.assertEqual(len(names), 28)
         self.assertEqual(len(set(names)), 28)
-        corners = scene.fixed_ui()["sprites"][-4:]
+        corners = scene.common_ui()["sprites"][-4:]
         self.assertEqual([row["rect"] for row in corners],
                          [[0, 0, 42, 36], [62, 0, 42, 36], [0, 108, 42, 36], [62, 108, 42, 36]])
         self.assertTrue(all(row["image"] == "IMAGE_TOUCH_SELECTION_FRAME_BLUE" for row in corners))

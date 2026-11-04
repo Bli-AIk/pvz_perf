@@ -136,7 +136,7 @@ ChallengeScreen::ChallengeScreen(LawnApp* theApp, ChallengePage thePage)
 	mUnlockStateCounter = 0;
 	TodLoadResources(ResourceGroupId::DelayLoad_ChallengeScreen);
 
-	mBackButton = MakeFixedUIBackButton(ChallengeScreen::ChallengeScreen_Back, this, gStr.BACK_TO_MENU);
+	mBackButton = MakeCommonUIBackButton(ChallengeScreen::ChallengeScreen_Back, this, gStr.BACK_TO_MENU);
 	mBackButton->mTextDownOffsetX = 1;
 	mBackButton->mTextDownOffsetY = 1;
 	mBackButton->mColors[ButtonWidget::COLOR_LABEL] = Color(42, 42, 90);
