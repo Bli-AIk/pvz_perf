@@ -1,6 +1,6 @@
 # 资产与发行边界
 
-本文维护资产来源、加载和发行边界。当前源码关卡格式为DAT64 v4（schema0x10744），运行时仅直接读取v4；转换器仅接受原DAT、v1、v2、v4，不支持v3系列。时间与运动见[运行时](runtime.md)，资源采样结构见[资源格式](RESOURCE-V5-FORMAT.md)。
+本文维护资产来源、加载和发行边界。当前源码关卡格式为DAT64 v4（schema0x10744），运行时仅直接读取v4；转换器仅接受原DAT、v1、v2、v4，不支持v3系列。时间与运动见[运行时](runtime.md)，资源采样结构见[资源格式](resource-format.md)。
 
 ## 需要保存的输入
 
@@ -45,7 +45,7 @@ v6 中定义直接持有离线生成的图集，图集不占全局命名图片�
 仅供定义使用的图片即使原文件位于 `images/`，也不再保留独立纹理描述符或包内单图；
 其作者源文件继续作为离线图集输入。代码与定义共用的图片仍保留独立绑定，
 QuickPlay 源图的保存不构成发行引用根。
-协议和加载边界见 [RESOURCE-V5-FORMAT.md](RESOURCE-V5-FORMAT.md)。
+协议和加载边界见 [resource-format.md](resource-format.md)。
 定义编译器不接受 `--image-registry`，不会生成程序图片符号代码。
 其临时 `.source-record` 和 `image_sources.txt` 仅用于离线素材解析，
 particle 的离线记录图片字段直接记录矩形；reanim 的共享行为保存

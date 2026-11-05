@@ -39,13 +39,13 @@
 
 静态定义入口为`tools/test-static-definition-runtime.ps1`。它链接当前生产对象，覆盖图集缺失、损坏、尺寸错误的回滚和同进程恢复，并检查真实对象运动及实际Process调度。默认行为和变体共享行为数据，外观仍有独立GPU绑定及UV行。GPU动画常驻、稀疏GPU轨道和公式粒子等旧试验已撤回，不保留其验收开关作为当前必测项。
 
-源资源和发行范围见[资产边界](ASSETS.md)，线性布局、PTC1和NRSC4见[资源格式](RESOURCE-V5-FORMAT.md)。历史ResourceId和原版行为记录只用于离线转换及独立对照。
+源资源和发行范围见[资产边界](ASSETS.md)，线性布局、PTC1和NRSC4见[资源格式](resource-format.md)。历史ResourceId和原版行为记录只用于离线转换及独立对照。
 
 ## 时间、运动和存档
 
 普通物件和粒子按当前有效纳秒步长离散模拟；reanim相位及根运动按共享整数时钟求值。不同步长的碰撞、随机事件、追踪及复杂力场允许差异，不要求全游戏任意分区逐位一致。
 
-主循环检查包含30Hz实际33.345ms的完整单步及下一拍33.321666ms补偿、100Hz实际10.123456ms不截断、目标4ms超时后的短间隔、长卡顿不拆分，以及三种节拍各十万次随机抖动的纳秒总量守恒。最低目标帧率30，默认仍100；不使用10ms补拍。
+主循环检查包含30Hz实际33.345ms的完整单步及下一拍33.321666ms补偿、100Hz实际10.123456ms不截断、目标4ms超时后的短间隔、长卡顿不拆分，以及三种节拍各十万次随机抖动的纳秒总量守恒。最低目标帧率30，首次配置默认跟随刷新率，查询失败使用100；不使用10ms补拍。
 
 逐株行为入口为`tools/test-image-runtime.ps1 -BuildDirectory out/x64-win32-vulkan -Case plant-attacks -OutputDirectory $env:TEMP/pvz-plant-catalog-runtime`。两份场景名单要求恰好覆盖每个真实SeedType一次；使用真实Plant、Zombie、Projectile、Coin和特效池，不直接调用Fire替代射击过程。[范围、原始输出与哈希](../Tests/evidence/plant-behavior-audit-20261101/README.md)明确列出静止高生命目标、手动触发保护伞／金磁铁以及花园幼苗的验证边界。完整图像套件仍使用默认`-Case all`，不因定向检查通过省略其他回归。
 
@@ -75,7 +75,7 @@
 
 CPU粒子绘制按293项原始发射器／变体／裁剪情况与独立CPU参考对拍，其中291项具有可见像素；包括无图粒子、火冰不同尺寸、原始帧动画及重复加载／释放。参考渲染只在测试代码中，生产不增加对拍成本。
 
-Vulkan独立GPU实验将像素正确性、同步校验与timestamp计时分开。历史独立实验结果只支持对应产物和输入，不当作当前完整WSI套件、所有驱动或手机功耗证明。[GPU专项](android-gpu-submission.md)维护合批、16位索引、透明边缘和帧资源复用边界。[GPU泳池](gpu-pool-production.md)维护水波及焦散契约；Windows主机不能代替Linux、Android、macOS及旧API设备验收。
+Vulkan独立GPU实验将像素正确性、同步校验与timestamp计时分开。历史独立实验结果只支持对应产物和输入，不当作当前完整WSI套件、所有驱动或手机功耗证明。[GPU专项](gpu-submission.md)维护合批、16位索引、透明边缘和帧资源复用边界。[GPU泳池](gpu-pool-production.md)维护水波及焦散契约；Windows主机不能代替Linux、Android、macOS及旧API设备验收。
 
 音乐入口`tools/test-music-runtime.ps1`检查实际BASS设备、夜晚高潮声部、音量和暂停恢复；静音或只验证返回值不能替代扬声器听音。Linux OpenAL和其他后端在各自环境单独运行，不能由本机Windows构建成功推断。
 

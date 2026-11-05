@@ -33,14 +33,7 @@ nearest 采样存在纹素边界不连续：极小 UV 舍入差异可能选择�
 
 Direct3D 12 的原生测试额外覆盖三层、昼夜、主目标与离屏目标的组合，以及几何、透明度、平移和普通绘制状态恢复。Metal 在当前 Windows 环境中尚未编译或执行，需要在 macOS 上补验。
 
-本次 Windows 验证结果：
-
-- Vulkan 与 Win7 OpenGL 的主程序 Release 构建成功；两者游戏链接的 ImageRuntimeTests 全部通过，泳池七个场景的 RGBA 最大通道差均不超过 1。
-- Vulkan 原生 renderer 套件通过，包含资源销毁与重新初始化，validation errors 为零。
-- OpenGL 与 Direct3D 9 的完整 renderer 套件通过。Direct3D 9 的 nearest 场景有一个像素通过上述相邻纹素候选校验，其余六个泳池场景 RGBA 最大通道差不超过 1。
-- Direct3D 12 原生套件通过，debug errors 为零。
-- 两份 Release 的 `main.pak64` SHA-256 均保持为 `58444F294A2A03B94708CCFF613F33BAA3B52C8FBC22B3EB130C6EAEF7DF20F7`。
-
-Win7 OpenGL 使用项目指定的 MSVC 14.44 工具链构建；运行验证在当前 Windows 主机及 NVIDIA GPU 上完成，不代表已在 Windows 7 或旧显卡上实测。
-
-独立试验源码与复现边界见[验证说明](validation.md)。未锁频环境中的耗时仅作临时诊断，不写入本报告；图像一致性和后端测试通过不能推导为所有硬件上的整帧性能收益。
+当前发行的实际构建、资源哈希及测试状态由发行附件的build-verification.json和manifest.json记录，
+不在机制文档中复制某次旧PAK哈希或安装状态。复现入口见[验证说明](validation.md)。
+当前Windows主机的验证不能视为Win7旧显卡、Android或Metal实机认证；图像一致性
+通过也不能推导为所有硬件上的整帧性能收益。

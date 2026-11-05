@@ -1,238 +1,82 @@
-# Android Vulkan port
+# Android 平台
 
-The Android target uses the NDK native app glue and the Vulkan Android WSI. The
-activity hosts the game in a SurfaceView and forwards its holder callbacks to
-NativeActivity, leaving the main Window surface available for Android's caption.
-`APP_CMD_INIT_WINDOW` attaches the SurfaceView's `ANativeWindow` to the game
-window adapter and `APP_CMD_TERM_WINDOW` detaches it. Vulkan creates the surface
-with `vkCreateAndroidSurfaceKHR`, and the drawable size is read from
-`ANativeWindow_getWidth/Height`. Android currently requests a 600-pixel-high
-swapchain at the drawable aspect ratio (subject to surface limits), leaving
-physical touch coordinates unchanged. SurfaceFlinger scales the presented layer.
+Android 使用 NativeActivity、SurfaceView 和 Vulkan WSI。Activity 负责窗口、键盘及触点，
+原生窗口适配层负责将窗口内坐标映射到游戏逻辑坐标；游戏逻辑不读取 Android 时间域或系统 UI 状态。
 
-## HDR output and scaling
+## 发行目标
 
-Android HDR is not exposed in v3.3. The Options row is disabled and labeled
-HDR (disabled); a retained hdr=true setting is silently normalized to false.
-The release uses its validated SDR swapchain. Device support for FP16 scRGB was
-confirmed, but screen grayness/brightness calibration did not pass visual
-validation; no experimental paper-white or normalization path is shipped.
-Windows Vulkan/DX12 HDR uses linear RGBA16F, with output math and desktop WSI
-validated. The retired PQ equations remain only in test reference probes.
+| 包名 | 最低系统／CPU | 图形路径 |
+| --- | --- | --- |
+| `arm64-android14-vulkan1.3` | Android 14／Armv9-A，不要求 SVE／SVE2 | Vulkan 1.3，要求项目使用的 descriptor indexing 功能和 synchronization2 |
+| `arm64-android7-vulkan1.0` | Android 7／Armv8-A，64位 | Vulkan 1.0 兼容提交与传统纹理绑定 |
 
-The opt-in `PVZ_ANDROID_HDR_TEST` build remains in the repository for investigation;
-it is OFF by default and the Android HDR settings row stays disabled. Testing on
-the nubia phone produced gray/dark output; the Xiaomi/Xring O1 tablet accepted
-RGBA16F + linear scRGB but the user reported overexposure, including after the
-experimental reference-white normalization. Neither device passed visual calibration.
-Do not enable this experiment in a release based only on advertised HDR capabilities.
+旧包通过 `PVZ_VULKAN_LEGACY=ON` 构建，shader 目标为 Vulkan 1.0／SPIR-V 1.0。
+兼容层把共用提交转换成 `vkQueueSubmit` 和 `vkCmdPipelineBarrier`；双槽帧资源、fence
+检查及动态几何流与现代路径共用。旧包当前固定使用传统绑定，不是启动时自动切换 bindless。
+现代包不在每个 draw 中执行旧路径的纹理拆批分支。管线缓存按 v10／v13 分开。
 
-Android currently supports built-in presentation resizing only. HLSL/compute
-scale-effect chains are deliberately unsupported; nonempty effects arrays are
-rejected by the Android configuration reader. Do not equate ordinary bilinear
-presentation/system scaling with an additional super-resolution effect chain.
-The APK includes an empty scale.json template (multiplier 1, no effects). On
-first launch it is created beside settings.json in the selected user-data
-directory, normally Android/media/com.openpvz.perf; existing files are retained.
-The native reader uses this external file. No load-time super-resolution, disk
-scale cache or native high-resolution assets are implemented here; the template
-preserves the configuration boundary for that future work.
+最低系统版本不代表所有该版本手机都可运行：需要厂商 Vulkan 驱动、相应 CPU 指令集，
+以及所需纹理／渲染目标格式。当前不发布32位 APK。
 
-Android Studio is not required. Install the Android command-line tools, an NDK,
-the SDK platform and CMake, then configure with the NDK toolchain:
+## 构建与打包
 
-```text
-cmake -S . -B out/android-arm64 -G Ninja ^
-  -DCMAKE_TOOLCHAIN_FILE=%ANDROID_NDK%/build/cmake/android.toolchain.cmake ^
-  -DANDROID_ABI=arm64-v8a -DANDROID_PLATFORM=android-26 ^
-  -DPVZ_WINDOW_BACKEND=ANDROID -DPVZ_RENDER_BACKEND=VULKAN ^
-  -DPVZ_BUILD_LEGACY_GAME=ON -DCMAKE_BUILD_TYPE=Release
-cmake --build out/android-arm64
-```
+需要 JDK、Android 命令行 SDK、NDK、CMake／Ninja；无需安装 Android Studio。
+版本、工具路径及配置入口以项目根目录构建说明和 `tools/build-android-apk.ps1` 为准。
+旧包 Java 胶水生成 Java 8 字节码，不要求手机安装桌面 JDK；宿主构建仍可使用 JDK 17。
 
-The local SDK/NDK and `adb` are installed under `C:/UserProgram/DevTools`.
-Arm64 APK builds have been installed and tested on a nubia Z60 Ultra (Android
-14). The APK includes `main.pak64`; no manual data-package copy is required.
-Always package the native library, resource archive and SPIR-V from the same
-build tree. Shader changes also require clearing the application's pipeline
-cache before testing.
+原生库、shader 和 `main.pak64` 必须取自同一构建树：
 
-## Rendering and submission
+- 现代原生中间产物：`out/android-arm64`。
+- 兼容原生中间产物：`out/arm64-android7-vulkan1.0`。
+- 可安装包：`out/arm64-android14-vulkan1.3` 或 `out/arm64-android7-vulkan1.0`，
+  发行归档集中到 `out/distribution/<version>`，不在 `out` 根目录堆 APK。
 
-Reanimation interpolation/transforms and particle simulation/render parameters
-are evaluated on the CPU. The GPU receives ordinary textured triangles. The
-resident reanimation and particle paths, generated GPU behavior records and
-associated shader stages have been removed, including their experimental build
-options.
+已有原生构建完成后，用 `tools/build-android-apk.ps1 -BuildDirectory <tree> -Sign` 打包。
+脚本执行16KiB对齐、签名和校验；`-Install` 会安装签名包。
+`-release-unsigned.apk` 不能直接安装。APK 包含运行资源及附带存档，不需要另外拷贝数据包。
+两个目标分别使用 Full LTO；不能混用 `.so` 和另一个目标的 PAK／shader。
 
-Vulkan textures and samplers remain bindless, but a pipeline/blend/scissor change
-can still end a batch. On devices supporting `dualSrcBlend`, straight-alpha
-sprites use one dual-source pipeline for normal and additive blending. It
-preserves paint order and destination alpha; it does not reorder translucent
-draws. Devices without that feature retain their separate ordinary blend
-pipelines.
+## 设置、存档与退出
 
-Plain program images repair fully transparent RGB edges once before upload.
-Visible RGB and all alpha bytes stay unchanged. Only alpha-bearing neighbors
-in the immediately adjacent rows contribute, matching legacy sanding. The
-in-place operation needs no additional pixel buffer; loading pixels are still
-released after upload. Deferred alpha compositions keep their existing shader
-sampling because their final pixels do not exist at that preparation point.
-
-## GPU concurrency measurement
-
-The current runtime uses vertex and fragment shaders, without resident animation
-jobs or animation compute dispatches. Fragment invocation count depends on
-covered samples and overdraw, while vertex work depends on submitted triangle
-vertices and caching. Hardware concurrency is not a fixed API constant: it
-varies with shader resources, occupancy and GPU scheduling.
-
-GPU elapsed timestamps include pipeline stalls and do not directly measure
-energy use. Phone power comparisons require a controlled scene and refresh rate,
-with device power counters or external power measurement where available.
-
-For presentation measurements, poll SurfaceFlinger latency history more often
-than the buffer can wrap. Its finite history must not be sampled every four
-seconds at 100 FPS: missing entries create artificial large frame intervals.
-Current diagnostic collection polls every half second and retains unique
-presentation timestamps. A fixed paused fixture must also match triangle count
-and screenshot before runs can be compared. Automatic fixture loading alone
-does not guarantee that the user has not subsequently resumed the scene.
-
-## Android 目标帧率与外部设置（2026-10-27）
-
-设置与存档优先使用可写的 `getExternalMediaDirs()` 目录，游戏不请求额外存储权限。
-本测试机的目标位置是 `/storage/emulated/0/Android/media/com.openpvz.perf/`。
-Media 不可用时回退 `getExternalFilesDir(null)`，再回退 Activity 的内部 files 目录。单实例锁
-固定使用内部运行目录，避免 Media 的共享存储文件系统不支持 flock 导致启动失败。资源包、shader 和运行期缓存
-始终使用内部目录。Android/data 的存在不保证第三方文件管理器能看到它；
-本机用有效文件描述符实测 Media 的 flock 返回 ENOSYS（Function not implemented），
-应用内部目录的相同操作成功；用户数据可写不代表该文件系统支持进程锁。
-本机通过 ADB 确认当前用户为 0，上述目录实际包含 settings.json 和 DAT64 存档。
-公共路径解析器不再猜测 `/storage/emulated/0` 或回退旧 `com.openpvz.modern` 包名。
-首次使用新目录时优先复制旧 external-files 中的设置、用户档与关卡档，再补内部目录
-缺少的文件；已有目标文件不覆盖，源文件不删除。完成后写入隐藏迁移标记，避免后续
-启动时把已读取并消费的关卡档从旧目录重新拷回。用户索引在对应记录复制后发布。
-GPU 固定场景仅隔离关卡／用户档，设置不再跟随 fixture 复制到内部 session，
-通过现有 `PVZ_SETTINGS_FILE` 路径覆盖统一读写正常外部设置。
-
-Android 提供持久化启动参数，便于受 scoped storage 限制的设备配置：
+首选 `getExternalMediaDirs()` 提供的应用目录，通常为：
 
 ```text
-adb shell am start -n com.openpvz.perf/.PerfActivity --ei targetFps 240
+/storage/emulated/0/Android/media/com.openpvz.perf/
 ```
 
-该参数在新进程初始化前更新正常 settings.json 的 targetFps，保留其余设置，
-然后由统一设置加载器读取；不是初始化后强改字段而遗漏全局时间步进。
-应用已运行时，应先正常保存退出再重新启动以应用参数；不要在战斗中强制结束进程。
-无参数启动继续读取已保存设置。此参数不改变屏幕支持的物理刷新率。
-240FPS 对应目标等待间隔 4166666ns，并非固定逻辑步长。逻辑按实际墙钟纳秒推进，超出目标间隔时处理完整实际步长，节拍余量留给下一次；不再按10ms拆分补拍，逾期不额外等待。最终绘制率受硬件、GPU同步和呈现模式影响。
+游戏不请求额外存储权限；存在旧私有或 external-files 数据时按迁移代码处理。
+目录的实际可见性由系统文件管理器决定，不能把 `Android/data` 当作当前首选目录。
+首次创建配置时 `landscapeUI=true`、`autoDetectFrameRate=true`；已有配置按读取与钳制规则保留。
+目标帧率最低30，自动检测和时钟规则见[运行时](runtime.md)。
 
-性能采样需区分：GPU timestamp 记录 GPU 命令区间；gpu-workload 的 renderFps
-记录每 120 次呈现提交完成的墙钟区间（首批无前界故记 0，需丢弃首批）；
-SurfaceFlinger --latency 的实际呈现时间去重后反映上屏节奏，受物理刷新率约束。
-不能将这些指标互相替代，手机叠加层显示的 FPS 口径也不能未经核实视为渲染提交率。
+Activity 不是独立的游戏逻辑更新线程。正常 Quit 完成存档、原生清理后结束 Activity 和进程，
+不保留缓存游戏进程；安装时强退不会替尚未保存的关卡回写进度。
 
-实机注意：固定无尽后续 30 秒采样约 100FPS，柱子／后续界面则记录到连续约
-239～241FPS 的内部提交；没有统一写死的 100FPS 上限。屏幕实际呈现最高约 120，
-而钱袋炫白仍可造成明显下降。配置读取成功与各场景持续性能是独立验收条件。
+## 窗口和输入
 
-Android 包名自本次打包起为 `com.openpvz.perf`，显示名为 `pvz_perf`。旧包 `com.openpvz.modern` 的数据不会由系统自动迁移；换包前须备份和显式迁移，不能将新包空数据视为迁移完成。`Android/data` 可能被系统文件管理器隐藏，外部应用专属目录不等于任意文件管理器都可访问。
+- 使用 `sensorLandscape` 支持两个横向方向。Surface 的尺寸和旋转交由窗口与 Vulkan
+  surface 变换配合处理，不额外对同一坐标重复旋转。
+- SurfaceView 的窗口内位置在布局变化时更新。触点先减去此偏移，再映射到逻辑视口，
+  小窗／分屏不沿用启动时的全屏尺寸。
+- 多窗口保留系统标题栏；标题栏拖动从 DOWN 起归 Java 管理，不在进入游戏区域后改变归属。
+  最大化、关闭和贴边按钮由设备窗口管理器提供。
+- 全屏使用透明导航栏和 edge-to-edge 内容。系统支持的小窗能力不由 `screenMode` 保证，
+  不支持多窗口的设备不能靠游戏配置强行获得该功能。
+- 返回键按 Esc 处理。文本编辑使用可见输入条；检测到物理键盘时不主动弹出软键盘。
+  游戏用户名称限制 ASCII，不自动把首字母改为大写。
+- 多指、鼠标并用、共享选择、拾取和加农炮规则见[触控输入](touch-input.md)。
 
+## 图形、HDR与验证
 
-## APK output directory
+交换链采用600高的逻辑输出，SurfaceFlinger 负责缩放到物理显示；触点仍取实际窗口坐标。
+`SUBOPTIMAL_KHR` 可继续呈现，只有失效表面／尺寸变化等条件触发重建，防止逐帧重建。
+帧资源、纹理生命周期和各后端差异见[GPU提交](gpu-submission.md)，不在此重复维护性能数值。
 
-Ready-to-install APKs and their `.apk.idsig` sidecars live in `out/arm64-android14-vulkan1.3/`,
-not directly in `out/`. The current signed package is
-`out/arm64-android14-vulkan1.3/pvz_perf-arm64-android14-vulkan1.3.apk`. Native build intermediates remain in
-`out/android-arm64/`.
+Android HDR 当前禁用，设置项 disabled，旧配置的 `hdr=true` 静默归一为 false。
+保留的 `PVZ_ANDROID_HDR_TEST` 仅供后续调查，不凭“支持HDR”的系统标志开启发行路径。
+Windows 的 HDR 结论不外推到 Android。HLSL 缩放链不属于 Android 发行功能；
+`scale.json` 仅保留当前支持的设置壳和后续扩展入口。
 
-`tools/build-android-apk.ps1` copies Gradle output into this directory by default;
-`-OutputDirectory` can select another package directory. Unsigned Gradle Release
-output keeps the `-release-unsigned.apk` suffix and does not replace the current
-signed package. Use `-Sign` (or `-Install`, which also signs) to zipalign with
-16 KiB page alignment, sign with the local Android development keystore and
-verify the APK. A file ending in `-unsigned.apk` cannot be installed directly.
-
-The distribution identifier is `arm64-android14-vulkan1.3`; it names the Android
-14 minimum (API 34). Its CPU baseline remains Armv9-A without SVE/SVE2.
-Native intermediates remain in `out/android-arm64`.
-
-The separate legacy build uses `PVZ_VULKAN_LEGACY=ON`, NDK API 24 and
-`PVZ_ANDROID_CPU_BASELINE=armv8-a`. Its build and APK output are isolated in
-`out/arm64-android7-vulkan1.0`. Gradle reads the native build cache to set the
-APK minimum to API 24 and stages that tree's library, PAK and SPIR-V together.
-Java glue is compiled for Java 8 bytecode; the host build can still use JDK 17.
-The legacy shaders target Vulkan 1.0 / SPIR-V 1.0, with one sampled image and
-one sampler bound per adjacent texture/sampler run, preserving painter order.
-Core `vkQueueSubmit` and `vkCmdPipelineBarrier` replace synchronization2.
-No descriptor indexing or Vulkan 1.1+ import is required. Pipeline caches use
-separate v10/v13 filenames. OpenAL dynamically loads AAudio where available;
-API 24/25 links OpenSL ES without a hard dependency on libaaudio.
-
-Validation includes the desktop forced-1.0 initialization and renderer pixel/lifetime
-suite. It does not establish compatibility with every Android 7 vendor driver;
-an Android 7 physical device has not been tested. A device must provide a working
-Vulkan driver and the renderer's required formats, including RGBA16F render images.
-The Vulkan 1.3 binary retains its bindless implementation and no legacy run-splitting
-code is compiled into its draw loop.
-
-The activity uses `sensorLandscape` to support both landscape orientations.
-Native resize events carry the current window extent and update the cached
-NativeWindow width/height before viewport and pointer mapping. Touch coordinates
-remain window-local in split/freeform mode, rather than using startup fullscreen
-dimensions after the window has changed size.
-The SurfaceView's location within the Window is published on layout changes and
-subtracted from native motion coordinates. Gesture ownership is fixed on DOWN:
-caption drags stay with Java until release even when they cross the game area.
-The activity explicitly supports resizing and clears fullscreen/immersive flags
-in multi-window mode. Actual caption buttons and side docking are supplied by
-the device's window manager; they are not game-drawn controls.
-Fullscreen uses edge-to-edge game content beneath transparent navigation buttons,
-with navigation-bar contrast enforcement disabled. Multi-window restores the
-system's caption/content layout rather than retaining fullscreen layout flags.
-Configuration and native-window resize commands invalidate the swapchain even
-when a 180-degree flip leaves the width and height unchanged. Soft input starts
-hidden and does not resize the render surface; only `EditWidget` focus requests
-the keyboard, using an explicit request rather than forcing it for every widget.
-Tapping an already focused editor requests it again after manual dismissal.
-`PerfActivity` makes NativeActivity's content view focusable in touch mode and
-reapplies the soft-input mode after `super.onCreate`, which otherwise replaces
-the manifest setting. Android Back uses the existing Escape mapping; non-text
-keys now reach that mapping instead of being returned to the Android framework.
-Enter, Backspace and arrow keys use the same repaired input route. Volume keys
-remain with the system. Legacy Back dispatch is explicitly retained instead of
-registering a predictive-back callback that would exit the activity.
-
-The initial focus repair was installed and confirmed interactively on the
-Android 14 Z60 Ultra: keyboard opening, Back/Escape and 180-degree rotation work.
-
-Text entry now uses a bottom Android Dialog with an EditText and OK action.
-It owns a separate surface, leaving Vulkan's game SurfaceView at its original size.
-The input window uses resize adjustment to stay above the keyboard. Text changes
-cross JNI through a mutex-protected latest-value mailbox; only the game thread
-accesses EditWidget. Session numbers reject callbacks from closed or destroyed
-widgets. Java explicitly loads `pvz_perf` through its class loader: NativeActivity's
-native dlopen alone does not make exported JNI methods resolvable by ART.
-Both Java's input filter and the native mailbox consumer allow only printable
-ASCII (32..126), including pasted/IME text. The consumer applies an edit through
-the existing KeyDown/KeyChar handlers rather than inserting UTF-8 bytes directly;
-this preserves character checks and length/pixel-width limits. LawnEditWidget's
-one-time first-letter capitalization field and KeyChar override have been removed;
-both desktop and Android preserve the case entered by the user.
-Without that boundary, non-ASCII bytes reached missing bitmap-font glyphs and
-crashed in ImageFont::CharWidthKern during EnforceMaxPixels.
-The actual Java filter was extracted and executed with ASCII, mixed Chinese,
-emoji, control-character, source-range and deletion cases; all passed.
-OK submits the existing Return action; dismissing the input window keeps edits.
-Game-side text changes are mirrored back while editing. Full Unicode rendering
-in the game's bitmap fonts is outside this input bridge.
-
-A real alphabetic InputDevice or an available QWERTY hardware configuration
-suppresses automatic soft input. Virtual keyboards and game controllers do not
-count. Detection happens at input requests and device/configuration events, not
-per frame; InputDeviceListener handles hotplug. The owned input window's focus
-transfer is not treated as leaving the app, while onPause still forwards loss
-of focus and closes the editor when another app takes over.
-
-Android 两种 APK 在完成旧目录迁移后，仅在 `settings.json` 不存在时创建它，写入 `landscapeUI: true` 和 `autoDetectFrameRate: true`。已有配置不会覆盖；横板比例不足时仍按视口规则回退，设置中的偏好保留。
+签名、ZIP／ELF16KiB对齐、库／PAK／shader 配对检查不等于实机验收。
+准确范围记录于对应发行附件的 `build-verification.json`。
+完整测试入口见[验证说明](validation.md)，性能原始数据与口径见[性能总账](perf-fix-ledger.md)。

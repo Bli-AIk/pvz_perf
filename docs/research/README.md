@@ -13,7 +13,9 @@
 | [TV 版选中框素材](tv-selection-frame.md) | 蓝色四角框已入图集；TV卡框与战场落点框的二进制引用、绘制层级核对 |
 | [Windows Phone 触控与横板布局](windows-phone-touch-input.md) | 多触点 API 与单捕获业务的区别、拖放语义、侧栏布局及本项目接入范围 |
 | [Android Free 触控二进制](android-free-touch-input.md) | Free 3.18.0 的触点标识、11槽操作上下文与独立光标，以及 HD 包的证据边界 |
-| [根运动帧号方案](root-motion-frame-cursor.md) | 独立候选性能、所有Zombie的字段代价与跨步长精度；尚未接入生产 |
+| [1073动画速率上界](1073-animation-rate-bound.md) | 原版正常业务的动画速率与跨帧条件；不把旧帧率限制当作当前调度规则 |
+| [Windows Phone运行结构](windows-phone-runtime-optimizations.md) | 原始线程／逻辑刷新与运行库边界，区别于第三方精华版改动 |
 | [原版／v1到v2时间字段](dat64-v2-time-audit.md) | 冻结的时间字段偏移与单位，供离线转换追溯；不是当前运行时结构 |
 
 磁铁指数曲线推导属于已撤销的解析运动方案，已删除。原版起点证据保留；当前吸附模拟及捕获规则以[运行时](../runtime.md)为准。
+根运动候选布局和时间域线程试验已移出文档；现行帧缓存见运行时说明，历史实验原始数据仍由Git历史与已引用证据保留。

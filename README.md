@@ -12,7 +12,7 @@ v3.3.2 提供Win10 Vulkan 1.3、Win7 OpenGL 3.3、Android 14 Vulkan 1.3及Androi
 游戏只读取 **DAT64 v4 / schema 0x10745**；原版 DAT、DAT64 v1/v2 需使用附带转换器升级。
 未发布的 v3 系列中间存档不受支持。用户摘要 `users.dat` 和玩家详情 `PVZUSR64` v13 独立管理。
 资源采用当前静态定义和离线图集，EXE、shaders 与 PAK64 必须成套更新。
-本次修复见 [v3.3.2 发布说明](docs/releases/v3.3.2.md)，存档迁移背景见 [v3.0 发布说明](docs/releases/v3.0.md)。
+本次修复见 [v3.3.2 发布说明](docs/releases/v3.3.2.md)，存档迁移背景见 [v3.0 发布说明](https://github.com/YuHao2006/pvz_perf/releases/tag/v3.0)。
 生成的 PerfTest 完美用户档包含全解锁进度，DAT64 v4 无尽档来自仓库原版基准；不包含个人进度或设置。
 普通生存完成记录为 5 旗，困难生存为 10 旗。
 **Android v3.3.2 暂不开放 HDR；Win7 统一 SDR，不支持 HDR；DX9/OpenGL 的默认配置不启用自定义缩放效果。**
