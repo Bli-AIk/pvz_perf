@@ -14,6 +14,7 @@
 #include "widget/Checkbox.h"
 #include "widget/WidgetLifetimeHold.h"
 #include "Sexy.TodLib/TodStringFile.h"
+#include "pvz/BuildConfig.h"
 
 using namespace Sexy;
 
@@ -67,6 +68,10 @@ NewOptionsDialog::NewOptionsDialog(LawnApp* theApp, bool theFromGameSelector) :
     // 3D (D3D9) acceleration is always on. This checkbox now controls custom
     // scaling (scale.json): OFF = native 800x600, ON = config-driven.
     mScaleCheckbox = MakeNewCheckbox(NewOptionsDialog::NewOptionsDialog_Scale, this, theApp->mUseCustomScale);
+    if constexpr (BuildConfig::Window == BuildConfig::WindowSystem::Browser) {
+        mScaleCheckbox->SetChecked(false, false);
+        mScaleCheckbox->mDisabled = true;
+    }
 
     if (mFromGameSelector)
     {

@@ -25,6 +25,7 @@ using OpenGLScaleStep = D3d9ScaleStep;
 #include <algorithm>
 #include <array>
 #include <cmath>
+#include <chrono>
 #include <cstdint>
 #include <cstdlib>
 #include <filesystem>
@@ -512,6 +513,70 @@ void RepeatedTargetSelection(OpenGLRenderer& r)
     r.DestroyTexture(image);
 }
 #if !defined(PVZ_TEST_D3D9)
+GLenum APIENTRY BusyFrame(GLsync, GLbitfield flags, GLuint64 timeout)
+{
+    Require(flags == 0 && timeout == 0, "Frame reuse performed a blocking fence wait");
+    return GL_TIMEOUT_EXPIRED;
+}
+void FrameRingChecks(OpenGLContext& context, const std::filesystem::path& shaders)
+{
+    if (!GL3::glFenceSync) return; // GL 3.0 without ARB_sync keeps driver-managed stores.
+    OpenGLRenderer r(context, SceneW, SceneH, shaders, nullptr);
+    const auto initial = r.GetResourceCounts();
+    Require(initial.vertexBuffers == 3, "Expected two GL frame streams plus immutable pool vertices");
+    for (int frame = 0; frame < 2; ++frame) {
+        Require(r.BeginScene(), "Unused frame slot stalled");
+        Draw(r, r.whiteTexture, Quad(r.whiteTexture, 0, 0, SceneW, SceneH));
+        r.EndSceneAndPresent();
+    }
+    const auto wait = GL3::glClientWaitSync;
+    GL3::glClientWaitSync = BusyFrame;
+    bool began = false;
+    try { began = r.BeginScene(); }
+    catch (...) { GL3::glClientWaitSync = wait; throw; }
+    GL3::glClientWaitSync = wait;
+    Require(!began && !r.sceneOpen, "Busy slot did not defer before opening the scene");
+    Require(r.GetResourceCounts().vertexBuffers == initial.vertexBuffers,
+        "Deferred frame allocated another vertex stream");
+    context.WaitIdle();
+    Require(r.BeginScene(), "Completed slot could not be retried");
+    Draw(r, r.whiteTexture, Quad(r.whiteTexture, 0, 0, SceneW, SceneH));
+    r.EndSceneAndPresent();
+    Pixel(r.ReadScenePixels(), SceneW, 0, 0, 0xffffffff);
+}
+void FrameBenchmark(OpenGLContext& context, const std::filesystem::path& shaders, bool serial)
+{
+    Require(SetProcessAffinityMask(GetCurrentProcess(), 0x4000) != FALSE, "Cannot pin benchmark to LP14");
+    context.tearingEnabled = true;
+    OpenGLRenderer r(context, 800, 600, shaders, nullptr);
+    std::vector<GpuVertex> vertices;
+    for (int i = 0; i < 4000; ++i) {
+        auto q = Quad(r.whiteTexture, float(i % 100) * 8, float(i / 100) * 12, 32, 32);
+        for (auto& v : q) { v.a = .2f; v.r = .3f; }
+        vertices.insert(vertices.end(), q.begin(), q.end());
+    }
+    FILETIME created{}, exited{}, kernel{}, user{};
+    const auto cpu = [&] {
+        GetProcessTimes(GetCurrentProcess(), &created, &exited, &kernel, &user);
+        return ((static_cast<unsigned long long>(kernel.dwHighDateTime) << 32) | kernel.dwLowDateTime)
+            + ((static_cast<unsigned long long>(user.dwHighDateTime) << 32) | user.dwLowDateTime);
+    };
+    context.WaitIdle();
+    const auto cpuStart = cpu();
+    const auto start = std::chrono::steady_clock::now();
+    unsigned int draws = 0, deferred = 0;
+    while (draws < 600) {
+        if (serial) glFinish(); // Old ownership boundary, test-only A/B control.
+        if (!r.BeginScene()) { ++deferred; Sleep(0); continue; }
+        r.SubmitTriangles(vertices, r.whiteTexture, false, false, GpuBlend::Normal);
+        r.EndSceneAndPresent(); ++draws;
+    }
+    context.WaitIdle();
+    const auto seconds = std::chrono::duration<double>(std::chrono::steady_clock::now() - start).count();
+    std::cout << "frame-benchmark serial=" << serial << " draws=" << draws << " deferred=" << deferred
+        << " seconds=" << seconds << " cpu_ms_per_draw=" << double(cpu() - cpuStart) / 10000 / draws
+        << " fps=" << draws / seconds << '\n';
+}
 std::array<GpuVertex,4> NativeQuad(OpenGLTexture* texture,float x,float y,float size)
 {
     const auto triangles=Quad(texture,x,y,size,size);
@@ -1313,6 +1378,12 @@ int main(int argc, char** argv)
             << "\nrequested=3.0; actual version above is driver-reported, not a 3.0-only certification\n";
 #endif
         const std::filesystem::path shaderDirectory=argc>1 ? argv[1] : ".";
+#if !defined(PVZ_TEST_D3D9)
+        if (argc > 2 && std::string_view(argv[2]) == "--frame-benchmark") {
+            FrameBenchmark(context, shaderDirectory, argc > 3 && std::string_view(argv[3]) == "--serial");
+            return 0;
+        }
+#endif
         unsigned int failed=0;
         const auto run=[&](const char* name, auto test) {
             try {
@@ -1349,6 +1420,7 @@ int main(int argc, char** argv)
         };
 
 #if !defined(PVZ_TEST_D3D9)
+        run("two-frame-fence-busy-defer-retry-no-allocation", [&] { FrameRingChecks(context, shaderDirectory); });
         run("indexed-quads-65536-mixed-alpha-order-flat-metadata",[&] {
             IndexedQuadChecks(context,shaderDirectory);
         });

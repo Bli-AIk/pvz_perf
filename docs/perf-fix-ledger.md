@@ -170,7 +170,9 @@ reanim插值、三角函数与particle模拟及绘制参数均在CPU；GPU只消
 
 DX12已接入普通精灵专用shader、normal／additive双源合批、四顶点矩形、静态16位索引与混合索引前缀，并复用提交暂存数组及未变的根常量。共享加载路径中的透明边缘修补同样生效。当前DX12场景目标仍为BGRA8：源RGB乘alpha前移到shader后会改变UNORM取整位置，四层叠加对拍容许累计4个字节级色阶差异；覆盖率字形仍保持精确比较。独立RTX 4070渲染检查包括80000顶点跨界拆批和混合图元，不能把检查通过写成已测提速倍率。[DX12验证证据](../Tests/evidence/dx12-gpu-submission-20261029/)。
 
-OpenGL已接入下文的普通贴图硬件采样及状态缓存专项，功能验证见[OpenGL证据](../Tests/evidence/opengl-sprite-v3-20261029/)。DX9和Metal的对应专项同步仍待后续；不将Vulkan或DX12的验证状态套用到这些后端。历史DX12与当前Vulkan也不用于量化单项GPU优化收益。
+OpenGL已接入下文的普通贴图硬件采样及状态缓存专项，功能验证见[OpenGL证据](../Tests/evidence/opengl-sprite-v3-20261029/)。帧资源轮换现已扩展到GL／WebGL、DX12及DX9：每个槽位的动态数据由其完成信号保护，主画面只轮询状态，忙时延期绘制而不阻塞逻辑；纹理仍共用。GL不再每帧glFinish，DX12的可写描述符也按槽位隔离，只同步变化的纹理描述符。资源上传、读回、销毁和尺寸变化所必需的同步仍保留。
+
+Metal源码同样按双槽位组织，复用顶点和argument buffer，并使用四顶点矩形与静态16位索引；当前没有Apple编译环境或实机，不能视为已通过验证或已测提速。Web通过requestAnimationFrame让出执行权，避免绘制提交计数高于浏览器重绘节奏；绘制FPS仍不等同于屏幕实际呈现FPS。各后端验证边界见[本版说明](releases/v3.3.2.md)。历史DX12与当前Vulkan不用于量化单项GPU优化收益。
 
 
 ### 同口径固定DrawScreen：保留1.0对照

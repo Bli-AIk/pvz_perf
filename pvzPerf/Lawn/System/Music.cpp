@@ -1,4 +1,5 @@
-﻿#include "Music.h"
+#include "pvz/BuildConfig.h"
+#include "Music.h"
 #include "Sexy.TodLib/ReanimClock.h"
 #include "MusicLoadingPlan.h"
 #include "Lawn/Board.h"
@@ -37,7 +38,7 @@ Music::Music()
 	mPauseOffset = 0;
 	mPauseOffsetDrums = 0;
 	mPaused = false;
-	SetMusicDisabled(mApp->mNoSoundNeeded);
+    SetMusicDisabled(mApp->mNoSoundNeeded || !BuildConfig::SupportsModuleMusic);
 	mFadeOutEndTimeNs = 0;
 	mFadeOutDurationNs = 0;
 	mLastUpdateTimeNs = mApp->mApplicationTimeNs;

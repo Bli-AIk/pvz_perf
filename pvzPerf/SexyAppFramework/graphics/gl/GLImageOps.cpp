@@ -1,5 +1,5 @@
 #include "SexyAppFramework/graphics/PoolMesh.h"
-#include "OpenGLRendererInternal.h"
+#include "GLRendererInternal.h"
 #include "graphics/FontWeights.h"
 #include <algorithm>
 #include <cmath>
@@ -9,12 +9,12 @@
 namespace Sexy {
 using namespace GL3;
 
-void OpenGLRenderer::Impl::ImagePass(OpenGLTexture* target, OpenGLTexture* source,
-    OpenGLTexture* alpha, int operation, const GpuImageProcessing* processing,
+void GLRenderer::Impl::ImagePass(GLTexture* target, GLTexture* source,
+    GLTexture* alpha, int operation, const GpuImageProcessing* processing,
     unsigned int color, bool colorOnly)
 {
     Flush();
-    OpenGLTexture sourceCopy, alphaCopy;
+    GLTexture sourceCopy, alphaCopy;
     if (source == target) {
         Snapshot(*source, sourceCopy);
         source = &sourceCopy;
@@ -63,7 +63,7 @@ void OpenGLRenderer::Impl::ImagePass(OpenGLTexture* target, OpenGLTexture* sourc
     glActiveTexture(GL_TEXTURE0);
 }
 
-OpenGLTexture* OpenGLRenderer::ProcessImage(OpenGLTexture* source, const GpuImageProcessing& processing)
+GLTexture* GLRenderer::ProcessImage(GLTexture* source, const GpuImageProcessing& processing)
 {
     auto& s = *impl_;
     if (!source || !s.textures.contains(source))
@@ -79,7 +79,7 @@ OpenGLTexture* OpenGLRenderer::ProcessImage(OpenGLTexture* source, const GpuImag
     catch (...) { DestroyTexture(target); throw; }
     return target;
 }
-OpenGLTexture* OpenGLRenderer::CopyTextureRegion(OpenGLTexture* source, int x, int y, int w, int h)
+GLTexture* GLRenderer::CopyTextureRegion(GLTexture* source, int x, int y, int w, int h)
 {
     auto& s = *impl_;
     if (!source || !s.textures.contains(source))
@@ -112,7 +112,7 @@ OpenGLTexture* OpenGLRenderer::CopyTextureRegion(OpenGLTexture* source, int x, i
     s.selected = previous;
     return target;
 }
-OpenGLTexture* OpenGLRenderer::ComposeAlphaRaw(OpenGLTexture* base, OpenGLTexture* alpha,
+GLTexture* GLRenderer::ComposeAlphaRaw(GLTexture* base, GLTexture* alpha,
     unsigned int color, bool colorOnly)
 {
     auto& s = *impl_;
@@ -124,7 +124,7 @@ OpenGLTexture* OpenGLRenderer::ComposeAlphaRaw(OpenGLTexture* base, OpenGLTextur
     catch (...) { DestroyTexture(target); throw; }
     return target;
 }
-OpenGLTexture* OpenGLRenderer::AdoptComposedTexture(OpenGLTexture* texture)
+GLTexture* GLRenderer::AdoptComposedTexture(GLTexture* texture)
 {
     auto& s = *impl_;
     if (!texture || !s.textures.contains(texture) || texture->slot != ~0U)
@@ -142,7 +142,7 @@ OpenGLTexture* OpenGLRenderer::AdoptComposedTexture(OpenGLTexture* texture)
     }
     return texture;
 }
-OpenGLTexture* OpenGLRenderer::ComposeAlpha(OpenGLTexture* base, OpenGLTexture* alpha,
+GLTexture* GLRenderer::ComposeAlpha(GLTexture* base, GLTexture* alpha,
     unsigned int color, bool colorOnly)
 {
     return AdoptComposedTexture(ComposeAlphaRaw(base, alpha, color, colorOnly));
@@ -181,7 +181,7 @@ std::vector<FontAxisTap> Ranges(const FontAxisWeights& axis)
     return ranges;
 }
 }
-void OpenGLRenderer::RenderFontAtlas(OpenGLTexture* target, OpenGLTexture* source,
+void GLRenderer::RenderFontAtlas(GLTexture* target, GLTexture* source,
     std::span<const GpuFontGlyph> glyphs, unsigned int samplingFlags, bool forceWhite)
 {
     auto& s = *impl_;
@@ -189,7 +189,7 @@ void OpenGLRenderer::RenderFontAtlas(OpenGLTexture* target, OpenGLTexture* sourc
         !s.textures.contains(target))
         throw std::invalid_argument("OpenGL font generation requires a live float render image");
     s.Flush();
-    OpenGLTexture sourceCopy;
+    GLTexture sourceCopy;
     if (target == source) {
         s.Snapshot(*source, sourceCopy);
         source = &sourceCopy;
@@ -240,7 +240,7 @@ void OpenGLRenderer::RenderFontAtlas(OpenGLTexture* target, OpenGLTexture* sourc
     }
     s.selected = previous; glActiveTexture(GL_TEXTURE0);
 }
-OpenGLTexture* OpenGLRenderer::CreateCausticsTexture(int w, int h, OpenGLTexture* source)
+GLTexture* GLRenderer::CreateCausticsTexture(int w, int h, GLTexture* source)
 {
     if (w != 128 || h != 64)
         throw std::invalid_argument("OpenGL caustics output must be 128 by 64");
@@ -256,7 +256,7 @@ OpenGLTexture* OpenGLRenderer::CreateCausticsTexture(int w, int h, OpenGLTexture
     catch (...) { impl_->selected=previous;DestroyTexture(target); throw; }
     return target;
 }
-void OpenGLRenderer::UseCausticsTexture(OpenGLTexture* output, OpenGLTexture* source)
+void GLRenderer::UseCausticsTexture(GLTexture* output, GLTexture* source)
 {
     auto& s = *impl_;
     if (s.open || !output || !source || !s.textures.contains(output) || !s.textures.contains(source) ||
@@ -267,14 +267,14 @@ void OpenGLRenderer::UseCausticsTexture(OpenGLTexture* output, OpenGLTexture* so
     s.causticTarget = output; s.causticSource = source;
     s.causticsQueued=true;
 }
-void OpenGLRenderer::SetCausticsTimeNs(unsigned long long timeNs)
+void GLRenderer::SetCausticsTimeNs(unsigned long long timeNs)
 {
     impl_->causticTimeNs=timeNs;
     impl_->causticsQueued=impl_->causticTarget!=nullptr;
 }
-bool OpenGLRenderer::HasCausticsCompute() const { return impl_->imageProgram != 0; }
+bool GLRenderer::HasCausticsCompute() const { return impl_->imageProgram != 0; }
 
-std::vector<float> OpenGLRenderer::ReadTextureFloats(OpenGLTexture* texture)
+std::vector<float> GLRenderer::ReadTextureFloats(GLTexture* texture)
 {
     auto& s = *impl_;
     if (s.open) throw std::logic_error("OpenGL diagnostic readback requires a closed scene");
@@ -290,12 +290,12 @@ std::vector<float> OpenGLRenderer::ReadTextureFloats(OpenGLTexture* texture)
         throw std::runtime_error("OpenGL diagnostic framebuffer is incomplete");
     }
     glPixelStorei(GL_PACK_ALIGNMENT, 1);
-    glReadPixels(0, 0, texture->width, texture->height, GL_RGBA, GL_FLOAT, output.data());
+    GLPlatform::ReadTextureFloats(texture->width, texture->height, texture->format, output.data());
     glDeleteFramebuffers(1, &framebuffer);
     s.Check("Read OpenGL float image");
     return output;
 }
-ImagePixels OpenGLRenderer::ReadTexturePixels(OpenGLTexture* texture)
+ImagePixels GLRenderer::ReadTexturePixels(GLTexture* texture)
 {
     const auto values = ReadTextureFloats(texture);
     ImagePixels output(texture->width, texture->height);
@@ -310,13 +310,13 @@ ImagePixels OpenGLRenderer::ReadTexturePixels(OpenGLTexture* texture)
     }
     return output;
 }
-std::vector<unsigned int> OpenGLRenderer::ReadScenePixels()
+std::vector<unsigned int> GLRenderer::ReadScenePixels()
 {
     if (!impl_->sceneInitialized)
         throw std::logic_error("OpenGL scene readback requires a completed main scene");
     return ReadTexturePixels(impl_->scene).pixels;
 }
-std::vector<unsigned int> OpenGLRenderer::ReadScalePixels(bool)
+std::vector<unsigned int> GLRenderer::ReadScalePixels(bool)
 {
     throw std::logic_error("OpenGL 3.0 has no configured custom scaling output");
 }

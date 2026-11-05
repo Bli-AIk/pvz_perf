@@ -38,13 +38,23 @@ struct MetalRenderer::Impl {
     id<MTLArgumentEncoder> argumentEncoder;
     id<MTLRenderPipelineState> pipelines[2][3];
     id<MTLRenderPipelineState> poolPipelines[2][3];
-    id<MTLBuffer> poolVertices, poolIndices;
+    id<MTLBuffer> poolVertices, poolIndices, quadIndices;
     id<MTLSamplerState> samplers[4];
     id<MTLComputePipelineState> colorKernel, alphaKernel, fontKernel, causticKernel;
-    id<MTLCommandBuffer> commands, inFlight;
+    id<MTLCommandBuffer> commands;
+    struct FrameResources {
+        id<MTLCommandBuffer> submitted;
+        NSMutableArray* resources;
+        id<MTLBuffer> vertices;
+        id<MTLBuffer> presentationVertices;
+        size_t vertexCount = 0;
+        std::vector<id<MTLBuffer>> arguments;
+        size_t argumentCount = 0;
+    };
+    std::array<FrameResources, 2> frames{};
+    unsigned int frameIndex = 0;
     // Explicit retention also covers resources referenced indirectly via argument buffers.
     NSMutableArray* recordingResources = [NSMutableArray new];
-    NSMutableArray* submittedResources;
     std::unordered_map<MetalTexture*, std::unique_ptr<MetalTexture>> textures, raw;
     std::vector<std::unique_ptr<MetalTexture>> retired;
     std::array<MetalTexture*, SlotCount> owners{};
@@ -82,6 +92,16 @@ struct MetalRenderer::Impl {
         fragmentFunction = Function(@"pvz_game_fragment");
         argumentEncoder = [fragmentFunction newArgumentEncoderWithBufferIndex:2];
         if (!argumentEncoder) MetalError(nil, "Create Metal image argument encoder");
+        std::vector<unsigned short> quadPattern(65536 / 4 * 6);
+        for (unsigned int quad = 0; quad < 65536 / 4; ++quad) {
+            const unsigned int vertex = quad * 4;
+            const std::array<unsigned int, 6> pattern{vertex, vertex+1, vertex+2, vertex+2, vertex+1, vertex+3};
+            for (unsigned int i = 0; i < pattern.size(); ++i)
+                quadPattern[quad * 6 + i] = static_cast<unsigned short>(pattern[i]);
+        }
+        quadIndices = [device newBufferWithBytes:quadPattern.data()
+            length:quadPattern.size() * sizeof(unsigned short) options:MTLResourceStorageModeShared];
+        if (!quadIndices) MetalError(nil, "Allocate immutable Metal quad indices");
         for (unsigned generated = 0; generated < 2; ++generated) {
             for (unsigned blend = 0; blend < 3; ++blend) {
                 MTLRenderPipelineDescriptor* desc = [MTLRenderPipelineDescriptor new];
@@ -129,7 +149,8 @@ struct MetalRenderer::Impl {
             [commands commit];
             [commands waitUntilCompleted];
         }
-        if (inFlight) [inFlight waitUntilCompleted];
+        for (auto& frame : frames)
+            if (frame.submitted) [frame.submitted waitUntilCompleted];
     }
     id<MTLFunction> Function(NSString* name) {
         id<MTLFunction> result = [library newFunctionWithName:name];
@@ -197,20 +218,31 @@ struct MetalRenderer::Impl {
         for (auto& entry : textures) entry.first->sampled = false;
         for (auto& entry : raw) entry.first->sampled = false;
         scene->sampled = false;
-        submittedResources = nil;
     }
     void Wait() {
-        if (!inFlight) return;
-        [inFlight waitUntilCompleted];
-        id<MTLCommandBuffer> completed = inFlight;
-        inFlight = nil;
+        for (auto& frame : frames) {
+            if (!frame.submitted) continue;
+            [frame.submitted waitUntilCompleted];
+            if (frame.submitted.status == MTLCommandBufferStatusError)
+                MetalError(frame.submitted.error, "Metal command submission");
+            frame.submitted = nil;
+            frame.resources = nil;
+        }
         Completed();
-        if (completed.status == MTLCommandBufferStatusError)
-            MetalError(completed.error, "Metal command submission");
     }
     void Begin() {
         if (commands) return;
-        Wait();
+        auto& frame = frames[frameIndex];
+        if (frame.submitted) {
+            // Main-frame callers already polled this slot in BeginScene.
+            // Synchronous image/readback operations may deliberately drain it.
+            [frame.submitted waitUntilCompleted];
+            if (frame.submitted.status == MTLCommandBufferStatusError)
+                MetalError(frame.submitted.error, "Metal command submission");
+            frame.submitted = nil; frame.resources = nil;
+        }
+        Completed();
+        frame.vertexCount = 0; frame.argumentCount = 0;
         MTLCommandBufferDescriptor* desc = [MTLCommandBufferDescriptor new];
         desc.retainedReferences = YES;
         if (context.validation) desc.errorOptions = MTLCommandBufferErrorOptionEncoderExecutionStatus;
@@ -223,12 +255,24 @@ struct MetalRenderer::Impl {
     }
     void Finish(bool wait) {
         if (!commands) { if (wait) Wait(); return; }
-        inFlight = commands;
+        auto& frame = frames[frameIndex];
+        frame.submitted = commands;
         commands = nil;
-        submittedResources = recordingResources;
+        frame.resources = recordingResources;
         recordingResources = nil;
-        [inFlight commit];
+        [frame.submitted commit];
+        frameIndex = (frameIndex + 1) % frames.size();
         if (wait) Wait();
+    }
+    id<MTLBuffer> DrawArguments() {
+        auto& frame = frames[frameIndex];
+        if (frame.argumentCount == frame.arguments.size()) {
+            id<MTLBuffer> buffer = [device newBufferWithLength:argumentEncoder.encodedLength
+                options:MTLResourceStorageModeShared];
+            if (!buffer) MetalError(nil, "Allocate reusable Metal argument buffer");
+            frame.arguments.push_back(buffer);
+        }
+        return frame.arguments[frame.argumentCount++];
     }
     id<MTLBlitCommandEncoder> Blit() {
         Begin();
@@ -333,10 +377,10 @@ struct MetalRenderer::Impl {
         return {(w - rw) / 2, (h - rh) / 2, rw, rh};
     }
     void Draw(std::span<const GpuVertex> vertices, MetalTexture* texture,
-        GpuBlend blend, const GpuClip* clip, bool coverage) {
+        GpuBlend blend, const GpuClip* clip, bool coverage, bool quads = false) {
         if (!sceneOpen) throw std::logic_error("Metal draw requires an open scene");
         Require(texture);
-        if (vertices.size() % 3 || size_t(blend) >= 3)
+        if (vertices.size() % (quads ? 4 : 3) || size_t(blend) >= 3)
             throw std::invalid_argument("Invalid Metal triangle list or blend");
         if (vertices.empty()) return;
         auto* target = Output();
@@ -365,12 +409,20 @@ struct MetalRenderer::Impl {
             auto* old = retired.back().get();
             for (auto& input : used) if (input == target) input = old;
         }
-        id<MTLBuffer> arguments = [device newBufferWithLength:argumentEncoder.encodedLength
-            options:MTLResourceStorageModeShared];
-        id<MTLBuffer> stream = [device newBufferWithBytes:vertices.data()
-            length:vertices.size_bytes() options:MTLResourceStorageModeShared];
-        if (!arguments || !stream) MetalError(nil, "Allocate Metal draw buffers");
-        auto* copied = static_cast<GpuVertex*>(stream.contents);
+        auto& frame = frames[frameIndex];
+        if (vertices.size() > 65536 - frame.vertexCount)
+            throw std::runtime_error("Metal frame exceeds the fixed 65536-vertex stream");
+        if (!frame.vertices) {
+            frame.vertices = [device newBufferWithLength:65536 * sizeof(GpuVertex)
+                options:MTLResourceStorageModeShared];
+            if (!frame.vertices) MetalError(nil, "Allocate reusable Metal vertex stream");
+        }
+        id<MTLBuffer> arguments = DrawArguments();
+        id<MTLBuffer> stream = frame.vertices;
+        const size_t vertexOffset = frame.vertexCount * sizeof(GpuVertex);
+        auto* copied = static_cast<GpuVertex*>(stream.contents) + frame.vertexCount;
+        std::memcpy(copied, vertices.data(), vertices.size_bytes());
+        frame.vertexCount += vertices.size();
         constexpr uint32_t filters = GpuVertex::kIndependentColorFilter |
             GpuVertex::kColorFilterMask | GpuVertex::kAlphaEdgeFilter;
         for (size_t i = 0; i < vertices.size(); ++i) {
@@ -393,7 +445,7 @@ struct MetalRenderer::Impl {
         const MetalSceneConstants constants{float(target->width), float(target->height),
             target->generated ? 1u : 0u, coverage ? 1u : 0u};
         [encoder setRenderPipelineState:pipelines[target->generated ? 1 : 0][size_t(blend)]];
-        [encoder setVertexBuffer:stream offset:0 atIndex:0];
+        [encoder setVertexBuffer:stream offset:vertexOffset atIndex:0];
         [encoder setVertexBytes:&constants length:sizeof(constants) atIndex:1];
         [encoder setFragmentBytes:&constants length:sizeof(constants) atIndex:1];
         [encoder setFragmentBuffer:arguments offset:0 atIndex:2];
@@ -408,7 +460,10 @@ struct MetalRenderer::Impl {
             NSUInteger(right - left), NSUInteger(bottom - top)};
         [encoder setViewport:viewport];
         [encoder setScissorRect:scissor];
-        [encoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:vertices.size()];
+        if (quads) {
+            [encoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle indexCount:vertices.size() / 4 * 6
+                indexType:MTLIndexTypeUInt16 indexBuffer:quadIndices indexBufferOffset:0];
+        } else [encoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:vertices.size()];
         [encoder endEncoding];
         Keep(arguments);
         Keep(stream);
@@ -437,11 +492,15 @@ struct MetalRenderer::Impl {
             {x,y,1,1,1,1,0,0,0,1}, {r,y,1,1,1,1,1,0,0,1}, {x,b,1,1,1,1,0,1,0,1},
             {x,b,1,1,1,1,0,1,0,1}, {r,y,1,1,1,1,1,0,0,1}, {r,b,1,1,1,1,1,1,0,1}
         }};
-        id<MTLBuffer> args = [device newBufferWithLength:argumentEncoder.encodedLength
-            options:MTLResourceStorageModeShared];
-        id<MTLBuffer> stream = [device newBufferWithBytes:vertices.data() length:sizeof(vertices)
-            options:MTLResourceStorageModeShared];
-        if (!args || !stream) MetalError(nil, "Allocate Metal presentation buffers");
+        auto& frame = frames[frameIndex];
+        id<MTLBuffer> args = DrawArguments();
+        if (!frame.presentationVertices) {
+            frame.presentationVertices = [device newBufferWithLength:sizeof(vertices)
+                options:MTLResourceStorageModeShared];
+            if (!frame.presentationVertices) MetalError(nil, "Allocate Metal presentation vertices");
+        }
+        id<MTLBuffer> stream = frame.presentationVertices;
+        std::memcpy(stream.contents, vertices.data(), sizeof(vertices));
         std::memset(args.contents, 0, args.length);
         [argumentEncoder setArgumentBuffer:args offset:0];
         [argumentEncoder setTexture:source atIndex:0];
@@ -760,7 +819,8 @@ void MetalRenderer::DestroyTexture(MetalTexture* texture) {
     }
     auto& container = s.textures.contains(texture) ? s.textures : s.raw;
     auto found = container.find(texture);
-    if (s.commands || s.inFlight) s.retired.push_back(std::move(found->second));
+    if (s.commands || s.frames[0].submitted || s.frames[1].submitted)
+        s.retired.push_back(std::move(found->second));
     else s.ReleaseSlots(texture);
     container.erase(found);
 }
@@ -800,6 +860,15 @@ bool MetalRenderer::BeginScene() {
     if (s.sceneOpen) throw std::logic_error("Metal scene already open");
     s.context.RecreateSwapchain();
     if (!s.renderImage && s.context.surfaceSuspended) return false;
+    if (!s.renderImage && !s.commands) {
+        const auto& frame = s.frames[s.frameIndex];
+        if (frame.submitted) {
+            const auto status = frame.submitted.status;
+            if (status == MTLCommandBufferStatusError)
+                MetalError(frame.submitted.error, "Metal command submission");
+            if (status != MTLCommandBufferStatusCompleted) return false;
+        }
+    }
     s.Begin();
     if (s.causticQueued && s.causticTarget) {
         s.Snapshot(s.causticTarget);
@@ -821,6 +890,10 @@ void MetalRenderer::SubmitTriangles(std::span<const GpuVertex> vertices, MetalTe
     bool, bool, GpuBlend blend, const GpuClip* clip) {
     impl_->Draw(vertices, texture, blend, clip, false);
 }
+void MetalRenderer::SubmitQuads(std::span<const GpuVertex> vertices, MetalTexture* texture,
+    bool, bool, GpuBlend blend, const GpuClip* clip) {
+    impl_->Draw(vertices, texture, blend, clip, false, true);
+}
 void MetalRenderer::SubmitCoverageTriangles(std::span<const GpuVertex> vertices,
     MetalTexture* mask, GpuBlend blend, const GpuClip* clip) {
     impl_->Require(mask);
@@ -841,9 +914,7 @@ void MetalRenderer::SubmitPool(MetalTexture* texture, const GpuPoolParams& p) {
         s.Snapshot(target, true);
         source = s.retired.back().get();
     } else if (target->sampled) s.Snapshot(target);
-    id<MTLBuffer> arguments = [s.device newBufferWithLength:s.argumentEncoder.encodedLength
-        options:MTLResourceStorageModeShared];
-    if (!arguments) MetalError(nil, "Allocate Metal pool arguments");
+    id<MTLBuffer> arguments = s.DrawArguments();
     std::memset(arguments.contents, 0, arguments.length);
     [s.argumentEncoder setArgumentBuffer:arguments offset:0];
     [s.argumentEncoder setTexture:source->resource atIndex:source->slot];

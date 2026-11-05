@@ -24,9 +24,11 @@ public:
     D3d12Context(D3d12Context&&) = delete;
     D3d12Context& operator=(D3d12Context&&) = delete;
 
-    // Commits any drawable resize, waits for the last submitted fence without
-    // signaling another fence, and resets recording. One list may be in flight.
-    ID3D12GraphicsCommandList* BeginCommands();
+    // Reuses one of two allocator/list slots. Nonblocking main-frame attempts
+    // return nullptr if that slot is still in flight; image operations may wait.
+    ID3D12GraphicsCommandList* BeginCommands(bool wait = true);
+    static constexpr unsigned int FrameCount = 2;
+    unsigned int frameIndex = 0;
     // Upload/compute submission. Use Present() after a successful BeginPresent().
     void SubmitAndWait();
     // Requires BeginCommands(). Transitions PRESENT -> RENDER_TARGET; nullptr
@@ -36,7 +38,7 @@ public:
     std::uint64_t BackBufferRtv() const noexcept;
     // Transitions back, closes, executes, signals its fence, then presents
     // without a host fence wait. Keep referenced resources/descriptors alive
-    // until BeginCommands() or WaitIdle() completes. When
+    // until the corresponding frame slot is reused or WaitIdle() completes. When
     // BeginPresent() returned nullptr, only the recorded commands are submitted.
     void Present();
 

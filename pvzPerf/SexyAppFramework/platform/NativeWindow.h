@@ -5,7 +5,7 @@
 namespace Sexy {
 static_assert(sizeof(unsigned int) == 4);
 static_assert(sizeof(unsigned long long) == 8);
-enum class NativeWindowBackend { X11, Wayland, Android };
+enum class NativeWindowBackend { X11, Wayland, Android, Browser };
 enum class NativeCursor {
     Arrow, Hand, Text, Move, Forbidden, ResizeHorizontal, ResizeVertical,
     ResizeNorthEast, ResizeNorthWest, Wait, Hidden, Count
@@ -33,6 +33,7 @@ struct NativeWindowEvent {
     bool pressed = false, focused = false, minimized = false, repeat = false;
 };
 using NativeWindowEventCallback = void (*)(void*, const NativeWindowEvent&);
+void QueueNativeWindowEvent(void* context, const NativeWindowEvent& event);
 struct NativeWindowConfig {
     std::string title = "pvz_perf";
     int width = 800, height = 600;

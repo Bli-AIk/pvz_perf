@@ -6,6 +6,7 @@
 #include "WidgetLifetimeHold.h"
 #include "graphics/Font.h"
 #include "graphics/ImageFont.h"
+#include "platform/ApplicationHost.h"
 
 using namespace Sexy;
 
@@ -393,7 +394,9 @@ int Dialog::WaitForResult(bool autoKill)
 	WidgetLifetimeHold aWaitLifetime(*this);
 	//gSexyAppBase->DoMainLoop(mId);	
 
-	while ((gSexyAppBase->UpdateAppStep(NULL)) && (mWidgetManager != NULL) && (mResult == 0x7FFFFFFF));
+	while ((gSexyAppBase->UpdateAppStep(NULL)) && (mWidgetManager != NULL) && (mResult == 0x7FFFFFFF)) {
+        HostYield();
+    }
 
 	if (autoKill)
 		gSexyAppBase->KillDialog(this);

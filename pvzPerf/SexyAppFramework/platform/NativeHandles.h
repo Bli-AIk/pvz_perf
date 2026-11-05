@@ -13,7 +13,7 @@ using NativeMonitorHandle = Sexy::MacMonitor*;
 #include <android/native_window.h>
 using NativeWindowHandle = ANativeWindow*;
 using NativeMonitorHandle = void*;
-#elif defined(__linux__)
+#elif defined(__linux__) || defined(SEXY_WINDOW_BROWSER)
 namespace Sexy {
 class NativeWindow;
 struct NativeMonitor;

@@ -150,6 +150,13 @@ struct D3d12Context::Impl {
     ComPtr<ID3D12CommandQueue> queue;
     ComPtr<ID3D12CommandAllocator> allocator;
     ComPtr<ID3D12GraphicsCommandList> commandList;
+    struct FrameResources {
+        ComPtr<ID3D12CommandAllocator> allocator;
+        ComPtr<ID3D12GraphicsCommandList> commands;
+        UINT64 serial = 0;
+    };
+    std::array<FrameResources, D3d12Context::FrameCount> frames{};
+    unsigned int& frameIndex;
     ComPtr<ID3D12Fence> fence;
     FenceEvent fenceEvent;
     ComPtr<IDXGISwapChain3> swapchain;
@@ -161,7 +168,7 @@ struct D3d12Context::Impl {
           tearingEnabled(owner.tearingEnabled), surfaceSuspended(owner.surfaceSuspended),
           width(owner.width), height(owner.height),
           swapchainGeneration(owner.swapchainGeneration), shaderModel(owner.shaderModel),
-          adapterDescription(owner.adapterDescription) {
+          adapterDescription(owner.adapterDescription), frameIndex(owner.frameIndex) {
         if (!hwnd || !IsWindow(hwnd))
             throw std::invalid_argument("D3d12Context requires a live borrowed HWND");
         if (validation) {
@@ -262,12 +269,15 @@ struct D3d12Context::Impl {
         queueDescription.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
         Check(device->CreateCommandQueue(&queueDescription,
             IID_PPV_ARGS(queue.GetAddressOf())), "CreateCommandQueue", device.Get());
-        Check(device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT,
-            IID_PPV_ARGS(allocator.GetAddressOf())), "CreateCommandAllocator", device.Get());
-        Check(device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT,
-            allocator.Get(), nullptr, IID_PPV_ARGS(commandList.GetAddressOf())),
-            "CreateCommandList", device.Get());
-        Check(commandList->Close(), "Close(initial command list)", device.Get());
+        for (auto& frame : frames) {
+            Check(device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT,
+                IID_PPV_ARGS(frame.allocator.GetAddressOf())), "CreateCommandAllocator", device.Get());
+            Check(device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT,
+                frame.allocator.Get(), nullptr, IID_PPV_ARGS(frame.commands.GetAddressOf())),
+                "CreateCommandList", device.Get());
+            Check(frame.commands->Close(), "Close(initial command list)", device.Get());
+        }
+        allocator = frames[0].allocator; commandList = frames[0].commands;
         Check(device->CreateFence(0, D3D12_FENCE_FLAG_NONE,
             IID_PPV_ARGS(fence.GetAddressOf())), "CreateFence", device.Get());
         fenceEvent.handle = CreateEventW(nullptr, FALSE, FALSE, nullptr);
@@ -367,10 +377,12 @@ struct D3d12Context::Impl {
         const UINT flags = tearingSupported ? DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING : 0;
         if (swapchain) {
             // Reset releases indirect references retained by the previous list.
-            Check(allocator->Reset(), "Reset(command allocator for resize)", device.Get());
-            Check(commandList->Reset(allocator.Get(), nullptr),
-                "Reset(command list for resize)", device.Get());
-            Check(commandList->Close(), "Close(command list for resize)", device.Get());
+            for (auto& frame : frames) {
+                Check(frame.allocator->Reset(), "Reset(command allocator for resize)", device.Get());
+                Check(frame.commands->Reset(frame.allocator.Get(), nullptr),
+                    "Reset(command list for resize)", device.Get());
+                Check(frame.commands->Close(), "Close(command list for resize)", device.Get());
+            }
             for (auto& buffer : backBuffers)
                 buffer.Reset();
             width = 0;
@@ -417,11 +429,18 @@ struct D3d12Context::Impl {
         return true;
     }
 
-    ID3D12GraphicsCommandList* BeginCommands() {
+    ID3D12GraphicsCommandList* BeginCommands(bool wait) {
         if (recording)
             throw std::logic_error("BeginCommands requires the previous list to be submitted");
         RecreateSwapchain();
-        WaitForFence(fenceValue);
+        auto& frame = frames[frameIndex];
+        const auto completed = fence->GetCompletedValue();
+        if (completed == (std::numeric_limits<UINT64>::max)()) CheckDevice();
+        if (completed < frame.serial) {
+            if (!wait) return nullptr;
+            WaitForFence(frame.serial);
+        }
+        allocator = frame.allocator; commandList = frame.commands;
         Check(allocator->Reset(), "ID3D12CommandAllocator::Reset", device.Get());
         Check(commandList->Reset(allocator.Get(), nullptr),
             "ID3D12GraphicsCommandList::Reset", device.Get());
@@ -482,7 +501,10 @@ struct D3d12Context::Impl {
         recording = false;
         ID3D12CommandList* lists[] = {commandList.Get()};
         queue->ExecuteCommandLists(1, lists);
-        return Signal();
+        const auto serial = Signal();
+        frames[frameIndex].serial = serial;
+        frameIndex = (frameIndex + 1) % D3d12Context::FrameCount;
+        return serial;
     }
 
     void SubmitAndWait() {
@@ -520,7 +542,7 @@ D3d12Context::D3d12Context(NativeWindowHandle hwnd, bool validation, bool hdr)
 
 D3d12Context::~D3d12Context() = default;
 
-ID3D12GraphicsCommandList* D3d12Context::BeginCommands() { return impl_->BeginCommands(); }
+ID3D12GraphicsCommandList* D3d12Context::BeginCommands(bool wait) { return impl_->BeginCommands(wait); }
 void D3d12Context::SubmitAndWait() { impl_->SubmitAndWait(); }
 ID3D12Resource* D3d12Context::BeginPresent() { return impl_->BeginPresent(); }
 ID3D12Resource* D3d12Context::BackBuffer() const noexcept { return impl_->BackBuffer(); }

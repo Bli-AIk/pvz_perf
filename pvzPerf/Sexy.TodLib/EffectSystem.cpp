@@ -182,7 +182,7 @@ void TodTriangleGroup::DrawGroup(Graphics* g)
     // The legacy full-board rectangle means no local clip, including when the
     // drawable canvas is wider than the original board.
     const Rect* clip = mClipRect == Rect(0, 0, BOARD_WIDTH, BOARD_HEIGHT) ? nullptr : &mClipRect;
-#if defined(PVZ_GPU_VULKAN) || defined(PVZ_GPU_D3D12) || defined(PVZ_GPU_OPENGL)
+#if defined(PVZ_GPU_VULKAN) || defined(PVZ_GPU_D3D12) || (defined(PVZ_GPU_OPENGL) || defined(PVZ_GPU_WEBGL))
     if (mTexture.mTexture && !mQuadArray.empty()) {
         if (!g->mDestImage || !g->mDestImage->IsGpuDrawTarget())
             throw NonScreenDrawError(DrawOperation::BltTrianglesTex);
@@ -233,7 +233,7 @@ void TodTriangleGroup::AddTriangle(Graphics* g, const TextureSource& texture, co
 	TOD_ASSERT(texture.mTexture != nullptr);
 
 	if ((!mVertArray.empty()
-#if defined(PVZ_GPU_VULKAN) || defined(PVZ_GPU_D3D12) || defined(PVZ_GPU_OPENGL)
+#if defined(PVZ_GPU_VULKAN) || defined(PVZ_GPU_D3D12) || (defined(PVZ_GPU_OPENGL) || defined(PVZ_GPU_WEBGL))
         || !mQuadArray.empty()
 #endif
     ) && (mDrawMode != theDrawMode || !(mClipRect == theClipRect) ||
@@ -273,7 +273,7 @@ void TodTriangleGroup::AddTriangle(Graphics* g, const TextureSource& texture, co
 
 	// Keep uncut topology and pixel/UV coordinates. The batch's local clip is
 	// applied by GPU scissor; changing it flushes the preceding batch in order.
-#if defined(PVZ_GPU_VULKAN) || defined(PVZ_GPU_D3D12) || defined(PVZ_GPU_OPENGL)
+#if defined(PVZ_GPU_VULKAN) || defined(PVZ_GPU_D3D12) || (defined(PVZ_GPU_OPENGL) || defined(PVZ_GPU_WEBGL))
 	if (!mVertArray.empty()) DrawGroup(g);
 	mQuadArray.push_back({TriVertex{tp[0].x,tp[0].y,aTexX1,aTexY1,aTexColor},
 		TriVertex{tp[1].x,tp[1].y,aTexX1,aTexY2,aTexColor},

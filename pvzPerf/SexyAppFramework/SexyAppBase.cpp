@@ -1,5 +1,6 @@
 #include "graphics/GpuBackend.h"
 #include <stdexcept>
+#include "platform/ApplicationHost.h"
 #include "SexyAppBase.h"
 #include "misc/FloatingPointMode.h"
 #include <optional>
@@ -188,14 +189,6 @@ unsigned int RuntimeTick()
 	return GetTickCount();
 #else
 	return SexyGetTickCount();
-#endif
-}
-void RuntimeSleep(unsigned int milliseconds)
-{
-#ifdef _WIN32
-	Sleep(milliseconds);
-#else
-	std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
 #endif
 }
 std::string SettingsPath()
@@ -3117,7 +3110,7 @@ void SexyAppBase::StartLoadingThread()
 		// Raising only the main thread can starve the normal-priority loader.
 		try
 		{
-			mLoadingThread = std::thread(LoadingThreadProcStub, this);
+            HostStartLoading(*this, LoadingThreadProcStub);
 		}
 		catch (...)
 		{
@@ -3552,7 +3545,7 @@ bool SexyAppBase::Process(bool allowSleep)
 						if (gScreenSaverActive)
 						{
 							UpdateScreenSaverInfo(SexyGetTickCount());
-							if (allowSleep) RuntimeSleep(10);
+							if (allowSleep) HostSleepFor(10);
 						}
 						ProcessSafeDeleteList();
 						return true;
@@ -3606,7 +3599,7 @@ bool SexyAppBase::Process(bool allowSleep)
 					const auto aDeadline = mLastTimeCheck +
 						std::chrono::nanoseconds(aTimeToNextFrameNs);
 					const auto aSleepStart = FrameDeadline::Clock::now();
-					std::this_thread::sleep_until(aDeadline);
+                    HostSleepUntil(aDeadline);
 					aCumSleepTime += static_cast<int>(
 						std::chrono::duration_cast<std::chrono::milliseconds>(
 							FrameDeadline::Clock::now() - aSleepStart).count());
@@ -3628,7 +3621,7 @@ bool SexyAppBase::Process(bool allowSleep)
 				if (!allowSleep)
 					return false;
 
-				RuntimeSleep(aLoadingYieldSleepTime);
+				HostSleepFor(aLoadingYieldSleepTime);
 			}
 		}
 	}
@@ -3680,6 +3673,7 @@ void SexyAppBase::DoMainLoop()
 		if (mExitToTop)
 			mExitToTop = false;
 		UpdateApp();
+        HostYield();
 	}
 }
 
@@ -3746,7 +3740,7 @@ bool SexyAppBase::UpdateAppStep(bool* updated)
 		{
 			if (mStepMode==2)
 			{
-				RuntimeSleep(mFrameTime);
+				HostSleepFor(mFrameTime);
 				mUpdateAppState = UPDATESTATE_PROCESS_DONE; // skip actual update until next step
 			}
 			else
@@ -4185,9 +4179,7 @@ bool SexyAppBase::ChangeDirHook(const char *theIntendedPath)
 
 MusicInterface* SexyAppBase::CreateMusicInterface()
 {
-	if (mNoSoundNeeded)
-		return new DummyMusicInterface();
-	return new BassMusicInterface(mInvisHWnd);
+    return HostCreateMusic(mNoSoundNeeded, mInvisHWnd);
 }
 
 void SexyAppBase::InitPropertiesHook()
@@ -4812,7 +4804,7 @@ void SexyAppBase::LoadScaleConfig()
 	}
 
 	// Decode protocol fields once; only numeric IDs/values survive in app state.
-#if defined(PVZ_GPU_OPENGL) || defined(PVZ_GPU_D3D9) || (defined(__ANDROID__) && !defined(SEXY_SCALE_EFFECT_AUTHORING))
+#if (defined(PVZ_GPU_OPENGL) || defined(PVZ_GPU_WEBGL)) || defined(PVZ_GPU_D3D9) || (defined(__ANDROID__) && !defined(SEXY_SCALE_EFFECT_AUTHORING))
     auto LoadPipelineEffects = [&aDoc](const char* section, ScalePipelineConfig&)
     {
         if(aDoc.GetArraySize(std::string(section)+"/effects") != 0)
@@ -4942,7 +4934,7 @@ void SexyAppBase::LoadScaleConfig()
 // 唯一暴露项（AutoHDRStrength 同义，默认 1）。
 void SexyAppBase::ResolveHDRAutoParams()
 {
-#if defined(PVZ_GPU_OPENGL) || defined(PVZ_GPU_D3D9)
+#if (defined(PVZ_GPU_OPENGL) || defined(PVZ_GPU_WEBGL)) || defined(PVZ_GPU_D3D9)
     mScaleHDREnabled = false;
 #elif defined(_WIN32)
     ResolveWindowsHdr(mNativeHdrState, *this, mScaleHDREnabled ? TargetMonitor() : nullptr);
@@ -4958,7 +4950,7 @@ void SexyAppBase::CompileScaleEffects()
 {
     // Source was compiled while resolving startup configuration, before GPU preparation.
     if(mModernScalePrepared) throw std::logic_error("Scale shaders may only load before device preparation");
-#if defined(PVZ_GPU_OPENGL) || defined(PVZ_GPU_D3D9) || (defined(__ANDROID__) && !defined(SEXY_SCALE_EFFECT_AUTHORING))
+#if (defined(PVZ_GPU_OPENGL) || defined(PVZ_GPU_WEBGL)) || defined(PVZ_GPU_D3D9) || (defined(__ANDROID__) && !defined(SEXY_SCALE_EFFECT_AUTHORING))
     if(!mScaleEffects.empty())
         throw std::runtime_error("This graphics backend does not support HLSL/compute scale effects");
 #else

@@ -28,6 +28,8 @@ glTexParameteri glTexParameterf glGetTexImage glPixelStorei glReadPixels
 glViewport glScissor glEnable glDisable glClear glClearColor glColorMask
 glDrawArrays glDrawElements glBlendFunc glDepthMask glDrawBuffer glReadBuffer glClampColor
 glCopyTexSubImage2D glGetTexLevelParameteriv glIsEnabled glBindRenderbuffer
+glFenceSync glClientWaitSync glDeleteSync
+glBindFragDataLocationIndexed
 glGenRenderbuffers glDeleteRenderbuffers glRenderbufferStorage glFramebufferRenderbuffer
 """.split())
 ALLOWED_WGL = set("""
@@ -57,6 +59,9 @@ def audit(root):
         raise ValueError(f"GL backend directory not found: {backend}")
     files = sorted(p for p in backend.rglob("*")
                    if p.suffix.lower() in {".h", ".hpp", ".cpp", ".cc", ".glsl", ".vert", ".frag", ".comp"})
+    shared = backend.parent / "gl"
+    files += sorted(p for p in shared.rglob("*")
+                    if p.suffix.lower() in {".h", ".hpp", ".cpp"})
     if not files:
         raise ValueError("No GL backend sources found")
     issues = []
@@ -69,10 +74,15 @@ def audit(root):
 
         # Also catches declarations/function-table macro entries and quoted loader names.
         for match in CALL.finditer(text):
-            name = match[0]
+            name = match[0].removesuffix("Proc")
             allowed = ALLOWED_WGL if name.startswith("wgl") else ALLOWED_GL
             if name not in allowed:
-                report(match.start(), f"unreviewed or post-3.0 entry point: {name}")
+                report(match.start(), f"unreviewed GL entry point: {name}")
+        if path.name == "OpenGLApi.h":
+            required = text.split("#define SEXY_GL3_FUNCTIONS(X)", 1)[1].split("#define SEXY_GL3_DECLARE", 1)[0]
+            for optional in ("glFenceSync", "glClientWaitSync", "glDeleteSync", "glBindFragDataLocationIndexed"):
+                if optional in required:
+                    report(0, f"optional extension entered the required GL 3.0 table: {optional}")
         for match in re.finditer(r"^\s*#\s*version\s+(\d+)[^\n]*", text, re.M):
             if match[1] != "130":
                 report(match.start(), f"shader version must be 130, found {match[1]}")
@@ -102,7 +112,7 @@ def main():
     try:
         count, issues = audit(args.root.resolve())
         if args.glslang and not issues:
-            source = (args.root / "pvzPerf/SexyAppFramework/graphics/opengl/OpenGLShaders.cpp").read_text()
+            source = (args.root / "pvzPerf/SexyAppFramework/graphics/gl/GLShaders.cpp").read_text()
             compiled = 0
             with tempfile.TemporaryDirectory(prefix="pvz-glsl130-") as directory:
                 for shader in SHADER.finditer(source):

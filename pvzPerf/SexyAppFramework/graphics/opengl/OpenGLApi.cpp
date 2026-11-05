@@ -8,6 +8,9 @@ namespace Sexy::GL3 {
 SEXY_GL3_FUNCTIONS(SEXY_GL3_DEFINE)
 #undef SEXY_GL3_DEFINE
 glBindFragDataLocationIndexedProc glBindFragDataLocationIndexed = nullptr;
+glFenceSyncProc glFenceSync = nullptr;
+glClientWaitSyncProc glClientWaitSync = nullptr;
+glDeleteSyncProc glDeleteSync = nullptr;
 
 PROC GetProcAddress(const char* name)
 {
@@ -30,6 +33,15 @@ void Load()
     if (!name) throw std::runtime_error("OpenGL 3.0 entry point missing: " #name);
     SEXY_GL3_FUNCTIONS(SEXY_GL3_LOAD)
     glBindFragDataLocationIndexed = reinterpret_cast<glBindFragDataLocationIndexedProc>(GetProcAddress("glBindFragDataLocationIndexed"));
+    GLint major = 0, minor = 0;
+    glGetIntegerv(GL_MAJOR_VERSION, &major);
+    glGetIntegerv(GL_MINOR_VERSION, &minor);
+    const bool sync = major > 3 || (major == 3 && minor >= 2) || HasExtension("GL_ARB_sync");
+    glFenceSync = sync ? reinterpret_cast<glFenceSyncProc>(GetProcAddress("glFenceSync")) : nullptr;
+    glClientWaitSync = sync ? reinterpret_cast<glClientWaitSyncProc>(GetProcAddress("glClientWaitSync")) : nullptr;
+    glDeleteSync = sync ? reinterpret_cast<glDeleteSyncProc>(GetProcAddress("glDeleteSync")) : nullptr;
+    if (sync && (!glFenceSync || !glClientWaitSync || !glDeleteSync))
+        throw std::runtime_error("Advertised OpenGL sync entry point missing");
 #undef SEXY_GL3_LOAD
 }
 

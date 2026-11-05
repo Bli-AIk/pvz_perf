@@ -552,6 +552,24 @@ bool D3d9Renderer::BeginScene()
     if (s.open) throw std::logic_error("D3D9 scene already open");
     if (!s.selected && !s.context.BeginPresent()) return false;
     s.context.MakeCurrent();
+    if (!s.selected) {
+        auto& frame = s.frames[s.nextFrame];
+        if (frame.pending) {
+            const auto status = frame.fence->GetData(nullptr, 0, 0);
+            if (status == S_FALSE) return false;
+            Check(status, "Poll D3D9 frame completion");
+            frame.pending = false;
+        }
+        if (s.activeFrame != s.nextFrame) {
+            std::swap(s.stream, s.frames[s.activeFrame].stream);
+            std::swap(s.streamCapacity, s.frames[s.activeFrame].streamCapacity);
+            s.activeFrame = s.nextFrame;
+            std::swap(s.stream, frame.stream);
+            std::swap(s.streamCapacity, frame.streamCapacity);
+        }
+        if (!frame.fence)
+            Check(s.device->CreateQuery(D3DQUERYTYPE_EVENT, frame.fence.put()), "Create D3D9 frame fence");
+    }
     s.open = true; s.mainFrame = !s.selected;
     try {
         if (s.causticsQueued && s.causticTarget && s.causticSource) {
@@ -649,7 +667,15 @@ bool D3d9Renderer::Impl::Present()
     Check(device->SetPixelShader(presentPS.value), "Bind D3D9 presentation pixel shader");
     Constants c{}; Source(c, scene, 1); c[S::Presentation] = {0, 0, 0, 0}; SetConstants(c);
     Check(device->SetTexture(S::SourceImage, scene->image.value), "Bind retained D3D9 scene");
-    Quad(rect.width, rect.height); context.Present();
+    Quad(rect.width, rect.height);
+    // Present flushes this query with the commands it protects. A zero-flag
+    // poll on the next reuse never forces a driver flush or waits on the CPU.
+    auto& frame = frames[activeFrame];
+    if (frame.fence) {
+        Check(frame.fence->Issue(D3DISSUE_END), "Signal D3D9 frame completion");
+        frame.pending = true;
+    }
+    context.Present();
     return true;
 }
 void D3d9Renderer::EndSceneAndPresent()
@@ -657,7 +683,10 @@ void D3d9Renderer::EndSceneAndPresent()
     auto& s = *impl_;
     if (!s.open) throw std::logic_error("No D3D9 scene to end");
     s.Flush();
-    if (s.mainFrame) { s.Present(); s.sceneInitialized = true; }
+    if (s.mainFrame) {
+        s.Present(); s.sceneInitialized = true;
+        s.nextFrame = (s.nextFrame + 1) % s.frames.size();
+    }
     else s.context.WaitIdle();
     s.open = false;
 }
@@ -706,7 +735,9 @@ GpuClip D3d9Renderer::PresentRect(int w, int h) const { return FitSceneToSurface
 unsigned int D3d9Renderer::MaxImageDimension2D() const { return impl_->maximum; }
 D3d9Renderer::ResourceCounts D3d9Renderer::GetResourceCounts() const
 {
+    size_t buffers = size_t(bool(impl_->stream)) + size_t(bool(impl_->poolVertices));
+    for (const auto& frame : impl_->frames) buffers += size_t(bool(frame.stream));
     return {impl_->textures.size(), impl_->retiredTextures.size(), 0,
-        size_t(bool(impl_->stream))+size_t(bool(impl_->poolVertices)), impl_->batches.size()};
+        buffers, impl_->batches.size()};
 }
 }

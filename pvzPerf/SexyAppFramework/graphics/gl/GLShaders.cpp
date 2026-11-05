@@ -1,4 +1,4 @@
-#include "OpenGLShaders.h"
+#include "GLShaders.h"
 
 namespace Sexy::GL3 {
 

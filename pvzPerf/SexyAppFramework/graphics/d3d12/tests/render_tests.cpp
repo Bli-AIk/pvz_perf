@@ -432,6 +432,26 @@ void ResizeCanvas(D3d12Renderer& renderer, ScaleEffectRuntimeDesc& effect) {
     std::cout << "canvas-resize-800-through-1400-resident-textures-and-scale=PASS\n";
 }
 }
+void FrameSlots(Sexy::D3d12Context& context) {
+    context.WaitIdle();
+    Microsoft::WRL::ComPtr<ID3D12Fence> gate;
+    Require(SUCCEEDED(context.device->CreateFence(0, D3D12_FENCE_FLAG_NONE,
+        IID_PPV_ARGS(gate.GetAddressOf()))), "Cannot create test queue gate");
+    Require(SUCCEEDED(context.queue->Wait(gate.Get(), 1)), "Cannot gate the test queue");
+    try {
+        for (unsigned int frame = 0; frame < Sexy::D3d12Context::FrameCount; ++frame) {
+            Require(context.BeginCommands(false) != nullptr, "Unused allocator slot stalled");
+            // No WSI image: tests allocator ownership without a blocked DXGI Present.
+            context.Present();
+        }
+        Require(context.BeginCommands(false) == nullptr, "Busy allocator was reset before completion");
+    } catch (...) { gate->Signal(1); throw; }
+    Require(SUCCEEDED(gate->Signal(1)), "Cannot release the test queue gate");
+    context.WaitIdle();
+    Require(context.BeginCommands(false) != nullptr, "Completed allocator could not be retried");
+    context.SubmitAndWait();
+    std::cout << "two-frame-allocator-fence-nonblocking-retry=PASS\n";
+}
 int main(int argc, char** argv) {
     try {
         bool arenaStress = false;
@@ -443,6 +463,7 @@ int main(int argc, char** argv) {
         TestWindow window;
         Sexy::D3d12Context context(window.hwnd, true);
         std::cout << "adapter=" << context.adapterDescription << '\n';
+        FrameSlots(context);
         Sexy::ScaleEffectRuntimeDesc scaleEffect;
         try {
             Sexy::D3d12Renderer renderer(context, 800, 600, PVZ_D3D12_SHADER_DIRECTORY);

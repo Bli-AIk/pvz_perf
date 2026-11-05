@@ -30,6 +30,7 @@ import zombatar_atlas
 import scene_atlas
 import definition_catalog
 import static_definitions
+import compact_runtime_package
 from stage_runtime_package import PARTICLE_COMPILER_FIXTURES
 
 
@@ -650,11 +651,20 @@ def main() -> None:
     parser.add_argument("--compiler", type=Path, required=True)
     parser.add_argument("--cache", type=Path, required=True)
     parser.add_argument("--config", type=Path, default=ROOT / "assets/definitions/ResourceBuild.pvzbuild")
+    parser.add_argument("--compact", choices=("lossless", "light-lossy"),
+                        help="Also emit a separate main-compact.pak64; normal package stays unchanged")
+    parser.add_argument("--compact-output", type=Path)
+    parser.add_argument("--compact-workers", type=int, default=2)
     args = parser.parse_args()
     args.cache = args.cache.resolve()
     args.cache.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix="compile-", dir=args.cache) as temporary:
         build(args, Path(temporary))
+    if args.compact:
+        report = compact_runtime_package.compact_package(
+            args.cache / "main.pak64", args.compact_output or args.cache / "main-compact.pak64",
+            args.compact, args.compact_workers)
+        print(f"Compact package: {report['output']}; {report['source_bytes']} -> {report['output_bytes']} bytes")
 
 
 if __name__ == "__main__":

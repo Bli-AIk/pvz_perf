@@ -1,9 +1,9 @@
 #pragma once
 
 namespace Sexy::BuildConfig {
-enum class TargetSystem { Windows, Linux, MacOS, Android };
-enum class WindowSystem { Win32, X11, Wayland, Cocoa, Android };
-enum class GraphicsApi { Vulkan, D3d12, Metal, OpenGL, D3d9 };
+enum class TargetSystem { Windows, Linux, MacOS, Android, Web };
+enum class WindowSystem { Win32, X11, Wayland, Cocoa, Android, Browser };
+enum class GraphicsApi { Vulkan, D3d12, Metal, OpenGL, D3d9, WebGL };
 enum class WindowsApi { NotApplicable, Win7, Win10 };
 
 // Compile-time choices, never runtime backend selectors.
@@ -11,4 +11,5 @@ inline constexpr TargetSystem System = TargetSystem::@PVZ_CONFIG_TARGET_SYSTEM@;
 inline constexpr WindowSystem Window = WindowSystem::@PVZ_CONFIG_WINDOW_SYSTEM@;
 inline constexpr GraphicsApi Graphics = GraphicsApi::@PVZ_CONFIG_GRAPHICS_API@;
 inline constexpr WindowsApi Windows = WindowsApi::@PVZ_CONFIG_WINDOWS_API@;
+inline constexpr bool SupportsModuleMusic = true;
 }

@@ -9,6 +9,10 @@
 #include "d3d9/D3d9Context.h"
 #include "d3d9/D3d9Renderer.h"
 #include "d3d9/D3d9ScaleTypes.h"
+#elif defined(PVZ_GPU_WEBGL)
+#include "webgl/WebGLContext.h"
+#include "webgl/WebGLRenderer.h"
+#include "webgl/WebGLScaleTypes.h"
 #elif defined(PVZ_GPU_OPENGL)
 #include "opengl/OpenGLContext.h"
 #include "opengl/OpenGLRenderer.h"
@@ -35,6 +39,12 @@ using GpuRenderer = D3d9Renderer;
 using GpuTexture = D3d9Texture;
 using GpuScaleStep = D3d9ScaleStep;
 using GpuScaleImage = D3d9ScaleImage;
+#elif defined(PVZ_GPU_WEBGL)
+using GpuContext = WebGLContext;
+using GpuRenderer = WebGLRenderer;
+using GpuTexture = WebGLTexture;
+using GpuScaleStep = WebGLScaleStep;
+using GpuScaleImage = WebGLScaleImage;
 #elif defined(PVZ_GPU_OPENGL)
 using GpuContext = OpenGLContext;
 using GpuRenderer = OpenGLRenderer;

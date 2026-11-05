@@ -110,7 +110,7 @@ struct D3d12Renderer::Impl {
     std::filesystem::path directory;
     int width;
     int height;
-    ComPtr<ID3D12DescriptorHeap> heap, samplerHeap, rtvHeap;
+    ComPtr<ID3D12DescriptorHeap> heap, masterHeap, samplerHeap, rtvHeap;
     UINT descriptorStride = 0, rtvStride = 0;
     UINT temporary = TextureSlots, staticBase = TextureSlots;
     std::array<D3d12Texture*, TextureSlots> owners{};
@@ -126,6 +126,17 @@ struct D3d12Renderer::Impl {
     bool sceneOpen = false;
     bool imageOnly = false, sceneInitialized = false, inFlight = false;
     std::vector<std::unique_ptr<Page>> staging, vertices, indices;
+    struct FrameResources {
+        ComPtr<ID3D12DescriptorHeap> heap;
+        std::vector<std::unique_ptr<Page>> staging, vertices, indices;
+        std::vector<std::unique_ptr<D3d12Texture>> retired;
+        std::array<bool, TextureSlots> dirty{};
+        std::vector<UINT> changed;
+        UINT temporary = TextureSlots;
+        bool inFlight = false;
+    };
+    std::array<FrameResources, D3d12Context::FrameCount> frames{};
+    unsigned int activeFrame = 0;
     ComPtr<ID3D12Resource> staticIndices;
     // Reused by Draw; avoids a heap allocation for every submitted primitive.
     std::vector<D3d12Texture*> drawSources;
@@ -165,11 +176,18 @@ struct D3d12Renderer::Impl {
         desc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
         desc.NumDescriptors = HeapSlots;
         desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-        Check(device->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&heap)),
-            "CreateDescriptorHeap(renderer SRV/UAV)", device);
+        for (auto& frame : frames)
+            Check(device->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&frame.heap)),
+                "CreateDescriptorHeap(renderer frame SRV/UAV)", device);
+        heap = frames[0].heap;
         descriptorStride = device->GetDescriptorHandleIncrementSize(desc.Type);
+        desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+        desc.NumDescriptors = TextureSlots;
+        Check(device->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&masterHeap)),
+            "CreateDescriptorHeap(renderer master SRV)", device);
         desc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER;
         desc.NumDescriptors = 4;
+        desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
         Check(device->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&samplerHeap)),
             "CreateDescriptorHeap(renderer samplers)", device);
         auto samplerHandle = samplerHeap->GetCPUDescriptorHandleForHeapStart();
@@ -200,8 +218,14 @@ struct D3d12Renderer::Impl {
         nullView.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
         nullView.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
         nullView.Texture2D.MipLevels = 1;
-        for (UINT i = 0; i < TextureSlots; ++i)
-            device->CreateShaderResourceView(nullptr, &nullView, Cpu(i));
+        for (UINT i = 0; i < TextureSlots; ++i) {
+            auto handle = masterHeap->GetCPUDescriptorHandleForHeapStart();
+            handle.ptr += SIZE_T(i) * descriptorStride;
+            device->CreateShaderResourceView(nullptr, &nullView, handle);
+        }
+        for (auto& frame : frames)
+            device->CopyDescriptorsSimple(TextureSlots, frame.heap->GetCPUDescriptorHandleForHeapStart(),
+                masterHeap->GetCPUDescriptorHandleForHeapStart(), D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
         InitGraphics();
         InitKernel(causticKernel, "game_caustic_cs", 3, 1, LoadingPipelines{});
         scene = Image(w, h, DXGI_FORMAT_B8G8R8A8_UNORM, true, false, false,
@@ -419,6 +443,12 @@ struct D3d12Renderer::Impl {
         desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
         desc.Texture2D.MipLevels = 1;
         device->CreateShaderResourceView(texture->resource.Get(), &desc, Cpu(index));
+        if (index < TextureSlots) {
+            auto master = masterHeap->GetCPUDescriptorHandleForHeapStart();
+            master.ptr += SIZE_T(index) * descriptorStride;
+            device->CreateShaderResourceView(texture->resource.Get(), &desc, master);
+            MarkDescriptor(index);
+        }
     }
 
     void Register(D3d12Texture* texture, UINT staticSlot = InvalidSlot) {
@@ -500,15 +530,53 @@ struct D3d12Renderer::Impl {
         boundIndex = nullptr;
         gameBound = hasScissor = hasConstants = false;
     }
-    void Begin() {
-        if (commands) return;
-        commands = context.BeginCommands();
+    void SwapFrame(FrameResources& frame) {
+        staging.swap(frame.staging); vertices.swap(frame.vertices); indices.swap(frame.indices);
+        retired.swap(frame.retired);
+        std::swap(temporary, frame.temporary); std::swap(inFlight, frame.inFlight);
+    }
+    void MarkDescriptor(UINT slot) {
+        for (unsigned int i = 0; i < frames.size(); ++i) {
+            if (i == activeFrame) continue;
+            auto& frame = frames[i];
+            if (!frame.dirty[slot]) { frame.dirty[slot] = true; frame.changed.push_back(slot); }
+        }
+    }
+    bool Begin(bool wait = true) {
+        if (commands) return true;
+        commands = context.BeginCommands(wait);
+        if (!commands) return false;
+        const auto nextFrame = context.frameIndex;
+        if (activeFrame != nextFrame) {
+            SwapFrame(frames[activeFrame]);
+            activeFrame = nextFrame;
+            SwapFrame(frames[activeFrame]);
+        }
+        heap = frames[activeFrame].heap;
+        auto& frame = frames[activeFrame];
+        for (auto slot : frame.changed) {
+            auto source = masterHeap->GetCPUDescriptorHandleForHeapStart();
+            source.ptr += SIZE_T(slot) * descriptorStride;
+            device->CopyDescriptorsSimple(1, Cpu(slot), source, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+            frame.dirty[slot] = false;
+        }
+        frame.changed.clear();
         if (inFlight) {
             Completed(false);
             inFlight = false;
+        } else {
+            // "sampled" describes this recording, not older command lists.
+            // Their immutable SRV heaps and retired resources remain in their
+            // own frame slots until their completion fences are signaled.
+            for (auto& [handle, texture] : textures) texture->sampled = false;
+            for (auto& [handle, texture] : raw) texture->sampled = false;
+            scene->sampled = false;
+            for (auto& mode : scaleModes)
+                if (mode) mode->sampledOutput->sampled = false;
         }
         BindHeaps();
         InvalidateDrawState();
+        return true;
     }
     void BindHeaps() {
         ID3D12DescriptorHeap* heaps[] = {heap.Get(), samplerHeap.Get()};
@@ -606,6 +674,10 @@ struct D3d12Renderer::Impl {
         view.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
         view.Texture2D.MipLevels = 1;
         device->CreateShaderResourceView(nullptr, &view, Cpu(slot));
+        auto master = masterHeap->GetCPUDescriptorHandleForHeapStart();
+        master.ptr += SIZE_T(slot) * descriptorStride;
+        device->CreateShaderResourceView(nullptr, &view, master);
+        MarkDescriptor(slot);
     }
     void ReleaseSlots(D3d12Texture* texture) {
         ReleaseSlot(texture, texture->slot);
@@ -1454,7 +1526,7 @@ bool D3d12Renderer::HasCausticsCompute() const { return impl_->causticKernel.pip
 bool D3d12Renderer::BeginScene() {
     auto& s = *impl_;
     if (s.sceneOpen) throw std::logic_error("D3D12 scene already open");
-    s.Begin();
+    if (!s.Begin(s.renderImage != nullptr)) return false;
     if (!s.renderImage && !s.context.BackBuffer()) return false;
     s.sceneOpen = true;
     s.imageOnly = s.renderImage != nullptr;
@@ -1685,7 +1757,11 @@ uint32_t D3d12Renderer::MaxImageDimension2D() const {
     return D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION;
 }
 D3d12Renderer::ResourceCounts D3d12Renderer::GetResourceCounts() const {
-    return {impl_->textures.size(), impl_->retired.size() + impl_->raw.size(),
-        3, impl_->vertices.size()};
+    size_t retired = impl_->retired.size() + impl_->raw.size();
+    size_t vertices = impl_->vertices.size();
+    for (const auto& frame : impl_->frames) {
+        retired += frame.retired.size(); vertices += frame.vertices.size();
+    }
+    return {impl_->textures.size(), retired, 5, vertices};
 }
 }

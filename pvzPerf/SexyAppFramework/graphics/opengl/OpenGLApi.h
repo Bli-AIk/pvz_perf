@@ -82,6 +82,17 @@ using GLsizeiptr = std::ptrdiff_t;
 #define GL_MAX_DUAL_SOURCE_DRAW_BUFFERS 0x88FC
 #endif
 
+#ifndef GL_ARB_sync
+struct __GLsync;
+using GLsync = __GLsync*;
+using GLuint64 = unsigned long long;
+#define GL_SYNC_GPU_COMMANDS_COMPLETE 0x9117
+#define GL_ALREADY_SIGNALED 0x911A
+#define GL_TIMEOUT_EXPIRED 0x911B
+#define GL_CONDITION_SATISFIED 0x911C
+#define GL_WAIT_FAILED 0x911D
+#endif
+
 namespace Sexy::GL3 {
 // Only desktop GL <= 3.0 entry points belong in this required function table.
 #define SEXY_GL3_FUNCTIONS(X) \
@@ -150,6 +161,13 @@ SEXY_GL3_FUNCTIONS(SEXY_GL3_DECLARE)
 
 using glBindFragDataLocationIndexedProc = void (APIENTRY*)(GLuint, GLuint, GLuint, const GLchar*);
 extern glBindFragDataLocationIndexedProc glBindFragDataLocationIndexed;
+// Core since 3.2 / ARB_sync. Optional for the retained GL 3.0 compatibility path.
+using glFenceSyncProc = GLsync (APIENTRY*)(GLenum, GLbitfield);
+using glClientWaitSyncProc = GLenum (APIENTRY*)(GLsync, GLbitfield, GLuint64);
+using glDeleteSyncProc = void (APIENTRY*)(GLsync);
+extern glFenceSyncProc glFenceSync;
+extern glClientWaitSyncProc glClientWaitSync;
+extern glDeleteSyncProc glDeleteSync;
 
 // Requires a current context. Reload for each context: WGL addresses are ICD-specific.
 void Load();

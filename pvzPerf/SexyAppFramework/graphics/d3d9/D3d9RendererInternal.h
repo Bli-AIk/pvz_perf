@@ -35,6 +35,14 @@ struct D3d9Renderer::Impl {
     std::filesystem::path shaderDirectory;
     DX9::Com<IDirect3DVertexDeclaration9> declaration;
     DX9::Com<IDirect3DVertexBuffer9> stream;
+    struct FrameResources {
+        DX9::Com<IDirect3DVertexBuffer9> stream;
+        DX9::Com<IDirect3DQuery9> fence;
+        size_t streamCapacity = 0;
+        bool pending = false;
+    };
+    std::array<FrameResources, 2> frames{};
+    unsigned int activeFrame = 0, nextFrame = 0;
     DX9::Com<IDirect3DVertexShader9> sceneVS, imageVS;
     DX9::Com<IDirect3DVertexShader9> poolVS;
     DX9::Com<IDirect3DVertexDeclaration9> poolDeclaration;

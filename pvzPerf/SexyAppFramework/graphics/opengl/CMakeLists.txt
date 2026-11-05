@@ -2,7 +2,7 @@ if(NOT WIN32)
     message(FATAL_ERROR "OpenGL currently requires the Win32 WGL window backend")
 endif()
 set(SEXY_OPENGL_SOURCES
-    OpenGLApi.cpp OpenGLContext.cpp OpenGLRenderer.cpp OpenGLShaders.cpp OpenGLImageOps.cpp
+    OpenGLApi.cpp OpenGLContext.cpp OpenGLPlatform.cpp ../gl/GLRenderer.cpp ../gl/GLShaders.cpp ../gl/GLImageOps.cpp
     ../../effect/ScaleEffectSizing.cpp)
 function(add_sexy_opengl_library target)
 add_library(${target} STATIC ${SEXY_OPENGL_SOURCES})

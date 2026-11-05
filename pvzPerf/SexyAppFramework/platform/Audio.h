@@ -6,6 +6,12 @@ namespace Sexy {
 using NativeSoundManager = DSoundManager;
 using NativeSoundInstance = DSoundInstance;
 }
+#elif defined(SEXY_WINDOW_BROWSER)
+#include "web/WebAudio.h"
+namespace Sexy {
+using NativeSoundManager = WebSoundManager;
+using NativeSoundInstance = WebSoundInstance;
+}
 #elif defined(__APPLE__)
 #include "macos/audio/AudioUnitSoundManager.h"
 namespace Sexy {

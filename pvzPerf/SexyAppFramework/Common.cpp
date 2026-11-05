@@ -608,63 +608,6 @@ std::string Sexy::GetFullPath(const std::string& theRelPath)
 	return GetPathFrom(theRelPath, GetCurDir());
 }
 
-#if defined(__ANDROID__)
-namespace
-{
-std::string gAndroidRuntimeDirectory;
-}
-void Sexy::SetAndroidRuntimeDirectory(const std::string& thePath)
-{
-	gAndroidRuntimeDirectory = thePath;
-}
-
-
-#endif
-
-std::string Sexy::GetExecutableDirectory()
-{
-#if defined(__APPLE__)
-    return AddTrailingSlash(MacExecutableDirectory(), true);
-#elif defined(_WIN32)
-	std::vector<char> aPath(MAX_PATH, '\0');
-	for (;;)
-	{
-		DWORD aLength = GetModuleFileNameA(nullptr, aPath.data(),
-			static_cast<DWORD>(aPath.size()));
-		if (aLength == 0)
-			return GetCurDir();
-		if (aLength < aPath.size() - 1)
-		{
-			std::string aDirectory(aPath.data(), aLength);
-			size_t aSlash = aDirectory.find_last_of("\\/");
-			if (aSlash == std::string::npos)
-				return ".\\";
-			aDirectory.erase(aSlash + 1);
-			return aDirectory;
-		}
-		aPath.resize(aPath.size() * 2, '\0');
-		if (aPath.size() > 32768)
-			return GetCurDir();
-	}
-	#else
-	#if defined(__ANDROID__)
-	// /proc/self/exe 是 /system/bin/app_process64；注入目录优先。
-	if (!gAndroidRuntimeDirectory.empty())
-		return AddTrailingSlash(gAndroidRuntimeDirectory, true);
-	#endif
-	std::vector<char> path(1024);
-	for (;;)
-	{
-		const auto length = readlink("/proc/self/exe", path.data(), path.size());
-		if (length < 0)
-			throw std::runtime_error("Cannot resolve executable via /proc/self/exe");
-		if (static_cast<size_t>(length) < path.size())
-			return GetFileDir(std::string(path.data(), length), true);
-		path.resize(path.size() * 2);
-	}
-#endif
-}
-
 std::string Sexy::GetDataFilePath(const std::string& theFileName)
 {
 #ifdef _WIN32

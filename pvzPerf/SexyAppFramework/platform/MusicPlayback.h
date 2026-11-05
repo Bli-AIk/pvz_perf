@@ -1,6 +1,8 @@
 #pragma once
 #ifdef _WIN32
 #include "windows/audio/MusicPlayback.h"
+#elif defined(SEXY_WINDOW_BROWSER)
+#include "web/WebMusicPlayback.h"
 #elif defined(__APPLE__)
 #include "macos/audio/AudioUnitMusicPlayback.h"
 #elif defined(__ANDROID__)

@@ -294,7 +294,7 @@ namespace {
 GpuTexture* TrackCompositionScratch(GpuRenderer& renderer,
 	std::vector<GpuTexture*>& scratch,GpuTexture* texture)
 {
-#if defined(PVZ_GPU_OPENGL) || defined(PVZ_GPU_D3D9)
+#if (defined(PVZ_GPU_OPENGL) || defined(PVZ_GPU_WEBGL)) || defined(PVZ_GPU_D3D9)
 	// These adapters retain raw inputs until successful adoption. If recording
 	// the handle fails, it has not entered the caller's cleanup list yet.
 	try { scratch.push_back(texture); }
@@ -354,7 +354,7 @@ GpuTexture* UploadDecodedImage(GpuRenderer& renderer,const ImageLib::Image& imag
 	}
 	catch (...)
 	{
-#if defined(PVZ_GPU_OPENGL) || defined(PVZ_GPU_D3D9)
+#if (defined(PVZ_GPU_OPENGL) || defined(PVZ_GPU_WEBGL)) || defined(PVZ_GPU_D3D9)
 		for (auto it=scratch.rbegin();it!=scratch.rend();++it)
 			renderer.DestroyTexture(*it);
 #endif
@@ -404,7 +404,7 @@ static void SubmitTextureTriangleBatch(size_t triangleCount,VertexAt vertexAt,
 			(tint&0xff)/255.0f,((tint>>24)&0xff)/255.0f,
 			source.u,source.v,slot,sampler};
 	}
-#if defined(PVZ_GPU_VULKAN) || defined(PVZ_GPU_D3D12) || defined(PVZ_GPU_OPENGL)
+#if defined(PVZ_GPU_VULKAN) || defined(PVZ_GPU_D3D12) || (defined(PVZ_GPU_OPENGL) || defined(PVZ_GPU_WEBGL))
     if constexpr (Quads) {
         const auto blend=gGpuCurrentDrawMode==1 ? GpuBlend::Additive :
             gGpuCurrentDrawMode==2 ? GpuBlend::Opaque : GpuBlend::Normal;
@@ -458,7 +458,7 @@ static void SubmitGpuTriangles(
 		aOut.sampler = aSampler;
 	};
 
-#if defined(PVZ_GPU_VULKAN) || defined(PVZ_GPU_D3D12) || defined(PVZ_GPU_OPENGL)
+#if defined(PVZ_GPU_VULKAN) || defined(PVZ_GPU_D3D12) || (defined(PVZ_GPU_OPENGL) || defined(PVZ_GPU_WEBGL))
     if (theNumVertices==4 && theType!=PRIMITIVE_TRIANGLELIST) {
         if (theType==PRIMITIVE_TRIANGLESTRIP)
             for (int i=0;i<4;++i) ConvertVertex(theVertices[i]);
@@ -495,7 +495,7 @@ static void SubmitGpuTriangles(
     if(theClipRect) nativeClip={theClipRect->mX,theClipRect->mY,theClipRect->mWidth,theClipRect->mHeight};
     const auto aBlend = aDrawMode == 1 ? GpuBlend::Additive :
         aDrawMode == 2 ? GpuBlend::Opaque : GpuBlend::Normal;
-#if defined(PVZ_GPU_VULKAN) || defined(PVZ_GPU_D3D12) || defined(PVZ_GPU_OPENGL)
+#if defined(PVZ_GPU_VULKAN) || defined(PVZ_GPU_D3D12) || (defined(PVZ_GPU_OPENGL) || defined(PVZ_GPU_WEBGL))
     if (aCount==4) {
         gGpuRenderer->SubmitQuads(std::span<const GpuVertex>(aConverted,aCount),theSRV,
             theLinearFilter,RenderInterface::sSamplerAddressWrap,aBlend,theClipRect ? &nativeClip : nullptr);
@@ -521,7 +521,7 @@ static void SubmitTextureQuad(const SexyVector2 (&points)[4], const TextureRegio
 	const float alpha = ((packed >> 24) & 0xff) / 255.0f;
 	const uint32_t slot = GpuRenderer::SlotOf(texture) | CombinedImageSamplingFlags();
 	const uint32_t sampler = (gLinearFilter ? 1u : 0u) | (RenderInterface::sSamplerAddressWrap ? 2u : 0u);
-#if defined(PVZ_GPU_VULKAN) || defined(PVZ_GPU_D3D12) || defined(PVZ_GPU_OPENGL)
+#if defined(PVZ_GPU_VULKAN) || defined(PVZ_GPU_D3D12) || (defined(PVZ_GPU_OPENGL) || defined(PVZ_GPU_WEBGL))
 	// Preserve the previous strip/fan diagonal, including non-parallelogram UVs.
 	static constexpr unsigned int order[2][4]{{0,1,2,3},{1,3,0,2}};
 	GpuVertex vertices[4];
@@ -537,7 +537,7 @@ static void SubmitTextureQuad(const SexyVector2 (&points)[4], const TextureRegio
 			(index & 2) ? source.mU1 : source.mU0, (index & 1) ? source.mV1 : source.mV0,
 			slot, sampler};
 	}
-#if defined(PVZ_GPU_VULKAN) || defined(PVZ_GPU_D3D12) || defined(PVZ_GPU_OPENGL)
+#if defined(PVZ_GPU_VULKAN) || defined(PVZ_GPU_D3D12) || (defined(PVZ_GPU_OPENGL) || defined(PVZ_GPU_WEBGL))
 	GpuClip nativeClip{};
 	if (clip) nativeClip = {clip->mX,clip->mY,clip->mWidth,clip->mHeight};
 	const auto blend = gGpuCurrentDrawMode == 1 ? GpuBlend::Additive :
@@ -1268,7 +1268,7 @@ void RenderInterface::DrawTrianglesTex(std::span<const std::array<TriVertex,3>> 
 		RGBA_MAKE(color.mRed,color.mGreen,color.mBlue,color.mAlpha),tx,ty,clip);
 }
 
-#if defined(PVZ_GPU_VULKAN) || defined(PVZ_GPU_D3D12) || defined(PVZ_GPU_OPENGL)
+#if defined(PVZ_GPU_VULKAN) || defined(PVZ_GPU_D3D12) || (defined(PVZ_GPU_OPENGL) || defined(PVZ_GPU_WEBGL))
 void RenderInterface::DrawQuadsTex(std::span<const std::array<TriVertex,4>> quads,
     const Color& color,int drawMode,const TextureSource& source,float tx,float ty,bool blend,const Rect* clip)
 {

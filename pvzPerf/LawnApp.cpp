@@ -1,3 +1,4 @@
+#include "platform/ApplicationHost.h"
 #include <thread>
 #include <chrono>
 #include <time.h>
@@ -1897,8 +1898,7 @@ void LawnApp::LoadingThreadProc()
 	// 线程在此等"队列空 && 主线程清扫净"——装载屏仍在 tick（驱动主线程
 	// 泵+清扫），无死锁；快进玩家也不会再撞首盘懒建尖峰。清扫在主线程
 	// UpdateApp 执行（Vulkan 上传严禁跨线程，焦散案同型竞态教训）。
-	while (!TodWarmDrained() && !gSexyAppBase->mShutdown && !mCloseRequest)
-		std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    HostFinishResourcePrewarm(*this, mCloseRequest);
 
 
 }
@@ -3294,7 +3294,8 @@ void LawnApp::PreloadForUser()
 
 	if (mCompletedLoadingThreadTasks != aNumTasks)
 	{
-		throw std::exception{};
+		throw std::runtime_error(StrFormat("Preload task count mismatch: expected %d, completed %d",
+			aNumTasks, mCompletedLoadingThreadTasks.load()));
 	}
 }
 

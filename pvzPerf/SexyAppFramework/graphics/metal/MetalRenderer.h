@@ -59,6 +59,8 @@ public:
     const bool& sceneOpen;
     void SubmitTriangles(std::span<const GpuVertex> vertices, MetalTexture* texture,
         bool linear, bool wrap, GpuBlend blend, const GpuClip* clip = nullptr);
+    void SubmitQuads(std::span<const GpuVertex> vertices, MetalTexture* texture,
+        bool linear, bool wrap, GpuBlend blend, const GpuClip* clip = nullptr);
     void SubmitCoverageTriangles(std::span<const GpuVertex> vertices,
         MetalTexture* mask, GpuBlend blend, const GpuClip* clip = nullptr);
     void SubmitPool(MetalTexture* texture, const GpuPoolParams& params);

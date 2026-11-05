@@ -38,7 +38,7 @@ static_assert(sizeof(VulkanSpriteInstance)==88);
 // ResizePresent changes WSI only; ResizeScene explicitly replaces the canvas.
 // Neither operation replaces resident game images.
 // Read-only metadata references borrow stable storage from this renderer's Impl.
-// Main WSI uses one command/fence set and one shared collection of draw streams.
+// Main WSI alternates two command/fence sets and their dynamic draw streams.
 // Texture descriptors remain immutable while referenced by recorded GPU work.
 class VulkanRenderer final {
     struct Impl;

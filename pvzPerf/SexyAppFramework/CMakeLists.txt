@@ -262,6 +262,7 @@ add_subdirectory(imagelib)
 target_sources(${PROJECT_NAME} PRIVATE
     "Common.h"
     "Common.cpp"
+    "platform/NativeApplicationHost.cpp"
     "graphics/GameViewport.cpp"
     "widget/InertialScroll.cpp"
     "widget/InertialScroll.h"
@@ -347,6 +348,7 @@ if(ANDROID OR CMAKE_SYSTEM_NAME STREQUAL "Android")
     set_property(TARGET ${PROJECT_NAME} PROPERTY SOURCES "${_PVZ_GAME_SOURCES}")
     target_sources(${PROJECT_NAME} PRIVATE
         "platform/linux/LinuxApp.cpp"
+        "platform/linux/VulkanWindowInit.cpp"
         "platform/linux/WindowGeometry.cpp"
         "platform/linux/CalendarTime.cpp"
         "platform/linux/UserDirectories.cpp"
@@ -361,6 +363,7 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     set_property(TARGET ${PROJECT_NAME} PROPERTY SOURCES "${_PVZ_GAME_SOURCES}")
     target_sources(${PROJECT_NAME} PRIVATE
         "platform/linux/LinuxApp.cpp"
+        "platform/linux/VulkanWindowInit.cpp"
         "platform/linux/WindowGeometry.cpp"
         "platform/linux/CalendarTime.cpp"
         "platform/linux/UserDirectories.cpp"
