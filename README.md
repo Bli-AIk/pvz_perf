@@ -5,7 +5,7 @@
 
 发行下载：[GitHub Releases](https://github.com/YuHao2006/pvz_perf/releases)。
 **当前版本 v3.3.1，沿用 v3.0 引入的 DAT64 v4：v1.x/v2.x 的旧存档与旧 PAK64 不能直接混用。**
-v3.3.1 提供Win10 Vulkan 1.3、Win7 OpenGL 3.3和Android Vulkan 1.3整包，以及完美用户档与统一无尽基准。
+v3.3.1 提供Win10 Vulkan 1.3、Win7 OpenGL 3.3、Android 14 Vulkan 1.3及Android 7 Vulkan 1.0整包，以及完美用户档与统一无尽基准。
 完整解压到新的可写目录后运行 `pvz_perf.exe`。
 游戏只读取 **DAT64 v4 / schema 0x10745**；原版 DAT、DAT64 v1/v2 需使用附带转换器升级。
 未发布的 v3 系列中间存档不受支持。用户摘要 `users.dat` 和玩家详情 `PVZUSR64` v13 独立管理。
