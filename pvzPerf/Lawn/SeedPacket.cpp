@@ -98,15 +98,16 @@ void SeedPacket::FlashIfReady()
 		return;
     if (mBoard->mLandscapeHud) {
         if (mIndex >= 0 && mIndex < SEEDBANK_MAX) mBoard->mHudFlashStartNs[mIndex]=static_cast<std::int64_t>(mBoard->mLevelTimeNs);
-        return;
     }
-
-	if (!mBoard->HasConveyorBeltSeedBank())
+	else if (!mBoard->HasConveyorBeltSeedBank())
 	{
 		int aRenderPosition = Board::MakeRenderOrder(RenderLayer::RENDER_LAYER_UI_BOTTOM, 0, 2);
 		mApp->AddTodParticle(mX + mBoard->mSeedBank->mX, mY + mBoard->mSeedBank->mY, aRenderPosition, ParticleEffect::PARTICLE_SEED_PACKET_FLASH, static_cast<std::int64_t>(mBoard->mLevelTimeNs));
 	}
 	
+	// Flash rendering differs by HUD; cooldown completion must advance the same
+	// tutorial state for both. Returning from the landscape flash branch leaves
+	// level 1-2 in REFRESH_SUNFLOWER, so later planting never checks the sun count.
 	if (mBoard->mTutorialState == TutorialState::TUTORIAL_LEVEL_1_REFRESH_PEASHOOTER)
 	{
 		mBoard->SetTutorialState(TutorialState::TUTORIAL_LEVEL_1_PICK_UP_PEASHOOTER);
@@ -605,8 +606,6 @@ void SeedPacket::Draw(Graphics* g)
 		{
 			aDrawCost = false;
 		}
-		int aCost = mBoard->GetCurrentPlantCost(mPacketType, mImitaterType);
-
 		int aGrayness = 255;
 		if ((mApp->mGameMode == GameMode::GAMEMODE_MINIGAME_BEGHOULED && !mActive) ||
 			(mApp->mGameMode == GameMode::GAMEMODE_MINIGAME_BEGHOULED_TWIST && !mActive))
@@ -638,7 +637,12 @@ void SeedPacket::Draw(Graphics* g)
 		{
 			aPercentDark = 0.0f;
 		}
-		else if ((!mBoard->CanTakeSunMoney(aCost) && aDrawCost) || aPercentDark > 1.0f || !mBoard->Met(aUseSeedType))
+		else if (aPercentDark > 0.0f)
+		{
+			// Cooldown has one appearance, independent of the current sun balance.
+			aGrayness = 128;
+		}
+		else if ((aDrawCost && !mBoard->CanTakeSunMoney(mBoard->GetCurrentPlantCost(mPacketType, mImitaterType))) || !mBoard->Met(aUseSeedType))
 		{
 			aGrayness = 128;
 		}

@@ -4219,6 +4219,8 @@ void AdventureRulesRuntime(TestApp& app)
         Board board(&app);
         try
         {
+            // Exercise both HUDs through real seed pickup, cooldown and planting.
+            board.mLandscapeHud=level<=2&&hz!=100;
             board.InitLevel();
             const int background=level==35?int(BACKGROUND_2_NIGHT):level==50?int(BACKGROUND_6_BOSS):(level-1)/10;
             const bool conveyor=level==5||level==10||level==20||level==25||level==30||level==40||level==45||level==50;
@@ -4269,11 +4271,19 @@ void AdventureRulesRuntime(TestApp& app)
             const auto plantFromBank=[&](int packet,int col,int row) {
                 auto& card=board.mSeedBank->mSeedPackets[packet];
                 const auto seed=card.mPacketType;
-                card.MouseDown(0,0,1);
-                Require(board.mCursorObject->mCursorType==CURSOR_TYPE_PLANT_FROM_BANK&&board.mCursorObject->mType==seed,
-                    "Adventure tutorial could not pick up its real seed packet");
                 const int sun=board.mSunMoney,cost=board.GetCurrentPlantCost(seed,SEED_NONE);
-                board.MouseDownWithPlant(board.GridToPixelX(col,row)+20,board.GridToPixelY(col,row)+20,1);
+                if(board.mLandscapeHud) {
+                    const auto bounds=LandscapeHud::PacketBounds(board,packet);
+                    const Sexy::TouchEvent cardTap{123, bounds.mX+20, bounds.mY+20};
+                    board.TouchBegan(cardTap);board.TouchEnded(cardTap);
+                    const Sexy::TouchEvent lawnTap{123,board.GridToPixelX(col,row)+20,board.GridToPixelY(col,row)+20};
+                    board.TouchBegan(lawnTap);board.TouchEnded(lawnTap);
+                } else {
+                    card.MouseDown(0,0,1);
+                    Require(board.mCursorObject->mCursorType==CURSOR_TYPE_PLANT_FROM_BANK&&board.mCursorObject->mType==seed,
+                        "Adventure tutorial could not pick up its real seed packet");
+                    board.MouseDownWithPlant(board.GridToPixelX(col,row)+20,board.GridToPixelY(col,row)+20,1);
+                }
                 auto* planted=board.GetTopPlantAt(col,row,TOPPLANT_ONLY_NORMAL_POSITION);
                 Require(planted&&planted->mSeedType==seed&&board.mSunMoney==sun-cost,
                     "Adventure tutorial planting or sun deduction failed");
@@ -4285,6 +4295,11 @@ void AdventureRulesRuntime(TestApp& app)
                 const int packet=level==1?0:1;
                 const int count=level==1?2:3;
                 for(int planted=0;planted<count;++planted) {
+                    // Resume a ready card whose teaching state was stranded in
+                    // REFRESH by the old landscape flash path. Successful touch
+                    // planting must still consume the tutorial's plant count.
+                    if(board.mLandscapeHud&&planted==count-1)
+                        board.SetTutorialState(level==1?TUTORIAL_LEVEL_1_REFRESH_PEASHOOTER:TUTORIAL_LEVEL_2_REFRESH_SUNFLOWER);
                     plantFromBank(packet,planted,2);
                     if(planted+1<count) advance(7'600'000'000);
                 }
@@ -7094,6 +7109,43 @@ void LandscapeHudRuntime(TestApp& app)
         board.mSunMoney=9990;board.mCutScene->mSeedChoosing=false;
         auto& bank=*board.mSeedBank;bank.mX=0;bank.mY=0;bank.mNumPackets=10;
         Require(board.mLandscapeHud,"Setting did not select the horizontal card layout");
+        // Cooldown completion must not stop at the landscape-only flash branch.
+        for(const bool horizontal:{false,true}) {
+            board.mLandscapeHud=horizontal;
+            auto& packet=bank.mSeedPackets[1];
+            const auto savedPacket=packet;
+            packet.mIndex=1;packet.SetPacketType(SEED_SUNFLOWER,SEED_NONE);
+            packet.mActive=true;packet.mRefreshing=false;
+            for(const auto refresh:{TUTORIAL_LEVEL_2_REFRESH_SUNFLOWER,TUTORIAL_MORESUN_REFRESH_SUNFLOWER}) {
+                board.SetTutorialState(refresh);
+                packet.FlashIfReady();
+                Require(board.mTutorialState==(refresh==TUTORIAL_LEVEL_2_REFRESH_SUNFLOWER?
+                    TUTORIAL_LEVEL_2_PICK_UP_SUNFLOWER:TUTORIAL_MORESUN_PICK_UP_SUNFLOWER),
+                    "Sunflower cooldown did not return to card-pickup teaching state");
+            }
+            auto& pea=bank.mSeedPackets[0];pea.SetPacketType(SEED_PEASHOOTER,SEED_NONE);pea.mActive=true;
+            board.SetTutorialState(TUTORIAL_LEVEL_1_REFRESH_PEASHOOTER);pea.FlashIfReady();
+            Require(board.mTutorialState==TUTORIAL_LEVEL_1_PICK_UP_PEASHOOTER,
+                "Peashooter cooldown did not return to card-pickup teaching state");
+            board.SetTutorialState(TUTORIAL_OFF);
+            packet.mActive=false;packet.mRefreshing=true;packet.mRefreshTime=750;
+            packet.mRefreshStartTimeNs=static_cast<std::int64_t>(board.mLevelTimeNs)-3'750'000'000LL;
+            auto& renderer=*app.mDDInterface->mRenderInterface;
+            Image* image=renderer.CreateRenderImage(81,70);
+            const auto drawCard=[&](int sun) {
+                board.mSunMoney=sun;
+                {GpuImageDrawScope target(renderer,image);Graphics g(image);g.mColor=Color::Black;g.FillRect(0,0,81,70);packet.Draw(&g);}
+                renderer.Flush();return renderer.ReadImagePixels(*image).pixels;
+            };
+            const auto poorCooling=drawCard(0),richCooling=drawCard(9990);
+            Require(poorCooling==richCooling,"Cooling card changed appearance with sun balance");
+            packet.mActive=true;packet.mRefreshing=false;
+            const auto poorReady=drawCard(0),richReady=drawCard(9990);
+            Require(poorReady!=richReady,"Ready card lost its insufficient-sun appearance");
+            delete image;packet=savedPacket;board.mSunMoney=9990;
+        }
+        board.mLandscapeHud=true;board.SetTutorialState(TUTORIAL_OFF);board.TutorialArrowRemove();
+
         const auto sun=LandscapeHud::SunBounds(board);
         Require(sun.mX==app.mScreenBounds.mX&&sun.mY==0&&sun.mWidth==85&&sun.mHeight==31,
             "Native sunlight frame is not at the top left");
@@ -7395,7 +7447,7 @@ void LandscapeHudRuntime(TestApp& app)
         Require(ImageLib::WritePNGImage("landscape-conveyor-"+std::to_string(width)+".png",width,600,pixels.pixels),"Cannot write compact conveyor proof");delete target;
         app.mGameMode=GAMEMODE_ADVENTURE;
         app.mBoard=nullptr;
-        std::cout<<"PASS landscape HUD width="<<width<<": ten cards, touch selection/cancel, conveyor, chooser, DAT64\n";
+        std::cout<<"PASS landscape HUD width="<<width<<": ten cards, teaching cooldown, sun-independent cooldown pixels, touch selection/cancel, conveyor, chooser, DAT64\n";
     }
     {
         app.mGameMode=GAMEMODE_MINIGAME_SLOT_MACHINE;app.mGameScene=SCENE_PLAYING;

@@ -23,8 +23,9 @@ def completed_profile():
         records[mode] = 5
     records[71] = 1000
     purchases = [0] * 80
-    for item in list(range(9)) + [13, 16, 17, 18, 19, 20, 22, 23, 25, 27]:
+    for item in list(range(9)) + [13, 16, 17, 18, 19, 20, 22, 23, 25, 27, 29]:
         purchases[item] = 1
+    # STORE_ITEM_FIRSTAID (29): all completed profiles include Wall-nut First Aid.
     purchases[9] = 2
     purchases[21] = 4
     for item in (14, 15):

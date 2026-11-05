@@ -4947,11 +4947,16 @@ void Board::MouseDownWithPlant(int x, int y, int theClickCount)
 	}
 
 	// 设置教程状态相关
-	if (mTutorialState == TutorialState::TUTORIAL_LEVEL_1_PLANT_PEASHOOTER)
+	// A successful commit is authoritative even when a retained touch selection
+	// or a restored save still carries PICK_UP/REFRESH. Do not require the card's
+	// visual cooldown callback to have advanced teaching before counting plants.
+	if (mTutorialState >= TutorialState::TUTORIAL_LEVEL_1_PICK_UP_PEASHOOTER &&
+        mTutorialState <= TutorialState::TUTORIAL_LEVEL_1_REFRESH_PEASHOOTER)
 	{
 		SetTutorialState(mPlants.mSize >= 2 ? TutorialState::TUTORIAL_LEVEL_1_COMPLETED : TutorialState::TUTORIAL_LEVEL_1_REFRESH_PEASHOOTER);
 	}
-	else if (mTutorialState == TutorialState::TUTORIAL_LEVEL_2_PLANT_SUNFLOWER)
+	else if (mTutorialState >= TutorialState::TUTORIAL_LEVEL_2_PICK_UP_SUNFLOWER &&
+             mTutorialState <= TutorialState::TUTORIAL_LEVEL_2_REFRESH_SUNFLOWER)
 	{
 		int aSunFlowersCount = CountSunFlowers();
 		if (aPlantingSeedType == SeedType::SEED_SUNFLOWER && aSunFlowersCount == 2)
