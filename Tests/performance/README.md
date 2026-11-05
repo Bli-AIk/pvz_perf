@@ -150,7 +150,7 @@ $bench = 'out/x64-win32-vulkan/SexyAppFramework/graphics/vulkan/sexy_vulkan_spri
 输入为固定合成精灵，不能替代完整无尽关卡或手机实测。
 原始输出写系统 Temp，未锁频结果不写入正式性能总账。
 实现、当前实验边界和正确性记录见
-[GPU 专项](../../docs/android-gpu-submission.md)。
+[GPU 专项](../../docs/gpu-submission.md)。
 
 额外互斥实验选项：`--compare-index-widths` 比较 16／32 位索引；
 `--baked-filters` 配合 `--bake-format=rgba16f|rgba8|rgba8-manual` 比较派生滤镜；
