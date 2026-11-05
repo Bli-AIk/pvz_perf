@@ -49,9 +49,13 @@ def main():
     parser.add_argument("--commit")
     parser.add_argument("--notes", type=Path)
     parser.add_argument("--asset", type=Path, action="append", default=[])
+    parser.add_argument("--replace-asset", action="append", default=[],
+                        help="Explicitly replace a changed attachment with this exact name")
     parser.add_argument("--source-only", action="store_true",
                         help="Publish tag source archives without uploading attachments")
     args = parser.parse_args()
+    if not set(args.replace_asset) <= {path.name for path in args.asset}:
+        parser.error("Every --replace-asset must also be supplied through --asset")
     if args.source_only and args.asset:
         parser.error("--source-only cannot be combined with --asset")
     environment = dict(os.environ, GIT_TERMINAL_PROMPT="0", GCM_INTERACTIVE="never")
@@ -87,10 +91,10 @@ def main():
                 status = int(result.stdout)
                 if status >= 400:
                     raise urllib.error.HTTPError(url, status, "GitHub API request failed", {}, None)
-                return json.loads(result_file.read_text(encoding="utf-8"))
+                return None if status == 204 else json.loads(result_file.read_text(encoding="utf-8"))
         req = urllib.request.Request(url, data=body, headers=request_headers, method=method)
         with urllib.request.urlopen(req, timeout=300) as response:
-            return json.load(response)
+            return None if response.status == 204 else json.load(response)
 
     repository = request("GET", root)
     if not repository.get("permissions", {}).get("push"):
@@ -119,10 +123,12 @@ def main():
         contents = path.read_bytes()
         digest = "sha256:" + hashlib.sha256(contents).hexdigest()
         asset = existing.get(path.name)
-        if asset is not None:
-            if asset.get("digest") != digest:
+        if asset is not None and asset.get("digest") != digest:
+            if path.name not in args.replace_asset:
                 raise RuntimeError("A different release asset already exists: " + path.name)
-        else:
+            request("DELETE", root + "/releases/assets/" + str(asset["id"]))
+            asset = None
+        if asset is None:
             content_type = ("application/vnd.android.package-archive"
                             if path.suffix.lower() == ".apk" else "application/zip")
             asset = request("POST", upload_root + "?name=" + urllib.parse.quote(path.name),
@@ -132,7 +138,8 @@ def main():
         uploaded.append({"name": asset["name"], "bytes": asset["size"]})
         print("Verified upload: " + path.name, flush=True)
     published = request("PATCH", root + "/releases/" + str(release["id"]),
-                        {"body": notes, "name": args.tag, "draft": False, "prerelease": False})
+                        {"body": notes, "name": args.tag, "target_commitish": commit,
+                         "draft": False, "prerelease": False})
     print(json.dumps({"release": published["html_url"], "commit": commit,
                       "assets": uploaded}, indent=2))
 

@@ -234,3 +234,5 @@ count. Detection happens at input requests and device/configuration events, not
 per frame; InputDeviceListener handles hotplug. The owned input window's focus
 transfer is not treated as leaving the app, while onPause still forwards loss
 of focus and closes the editor when another app takes over.
+
+Android 两种 APK 在完成旧目录迁移后，仅在 `settings.json` 不存在时创建它，写入 `landscapeUI: true` 和 `autoDetectFrameRate: true`。已有配置不会覆盖；横板比例不足时仍按视口规则回退，设置中的偏好保留。

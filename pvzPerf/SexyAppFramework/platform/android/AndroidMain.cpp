@@ -248,6 +248,15 @@ void android_main(android_app* state) {
         // replacing an established profile or a consumed level save.
         const char* dataPath = std::getenv("PVZ_APPDATA_DIR");
         const std::filesystem::path userDirectory(dataPath ? dataPath : state->activity->internalDataPath);
+        // Run after legacy-directory migration so an existing preference is
+        // never replaced. Only the first launch creates these Android defaults.
+        if (!std::filesystem::exists(settingsPath)) {
+            JsonDoc settings;
+            settings.SetBool("landscapeUI", true);
+            settings.SetBool("autoDetectFrameRate", true);
+            if (!settings.SaveFile(settingsPath))
+                throw std::runtime_error("Cannot create settings: " + settingsPath);
+        }
         const auto scalePath = userDirectory / "scale.json";
         if (!std::filesystem::exists(scalePath)) {
             const auto temporary = userDirectory / "scale.json.tmp";
