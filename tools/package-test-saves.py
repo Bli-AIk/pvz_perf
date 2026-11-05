@@ -113,12 +113,9 @@ def main():
                 args.perfect_output, "x", zipfile.ZIP_DEFLATED) as archive:
             for name in ("data/users.dat", "data/user1.dat64"):
                 archive.writestr(name, source.read(name))
-            archive.writestr("README.txt", f"pvz_perf {args.version} completed test profile\n\n"
-                "Exit the game, back up your own data, then extract data/ beside pvz_perf.exe.\n"
-                "Generated PerfTest / ID1 profile; replaces destination profile summary.\n"
-                "All permanent unlocks, two adventure completions, trophies, achievements, ten seed slots.\n"
-                "Zen garden and custom Zombatars are empty. No level checkpoint is included.\n"
-                "Use the separate endless benchmark ZIP for a canonical level checkpoint.\n")
+            archive.writestr("readme.txt", (
+                "桌面版存档目录在程序目录的data子文件夹下,"
+                "安卓存档目录在Android/media/com.openpvz.perf\n").encode("utf-8-sig"))
     if args.benchmark_output:
         import shutil
         args.benchmark_output.parent.mkdir(parents=True, exist_ok=True)
