@@ -36,8 +36,9 @@ Screen destinations, clipping and collision rectangles remain pixel geometry.
 Floating drawing-offset changes are deferred. This representation change does
 not alter PNG pixels, pak/offline interchange or save layouts.
 
-The program has 210 named `Image*` bindings declared in `Resources.h`; scene atlas
-migration removed 76 declaration/definition pairs with no remaining C++ consumer.
+Named `Image*` bindings are declared in `Resources.h`. Scene atlas migration
+removes standalone bindings when no direct C++ consumer remains; current counts
+come from the generated binding manifest rather than a frozen total here.
 Runtime `ResourceId`, `ImageSymbolId` and font SymbolId registries are retired;
 `ProgramImageSymbols.h/.cpp` have been removed. Generated loading functions
 assign named pointers and retain a named `SharedImageRef` owner for each image.
@@ -502,8 +503,8 @@ size/style/tags finish the other record kinds. A font reference is either
 `0xFFFFFFFF` or a prior font's
 record position in the same group; it is never a global ResourceId.
 
-The current authoring inputs compile to 398 explicit targets in 29 groups: 210 images, 168
-sounds and 20 fonts. `ResourceLoadBindings.inc` generates one typed load call
+The generated contract records current group and image/sound/font target counts.
+`ResourceLoadBindings.inc` generates one typed load call
 and a matching release call for every target; group release reverses load order.
 Image calls pass both the named `Image*&` target and its named
 `SharedImageRef&` owner. The generated contract header records the image count,
@@ -643,7 +644,7 @@ Particle simulation, drawing-track sampling, image-frame selection, crossfade, c
 ## Global image resources
 
 Definition image fields use precompiled UV regions and direct GPU texture pointers.
-Named image globals retain the 210 images needed directly by game code and UI;
+Named image globals retain images needed directly by game code and UI;
 font glyph paths retain their own image closure. `Resources.h/.cpp` declare and
 define those ordinary `Image*` variables. Reanimation and particle compilers
 resolve author labels independently and do not generate a global image registry.
@@ -663,11 +664,10 @@ texture bindings do not by themselves establish a Vulkan performance gain.
 
 ## Whole-sheet scene atlases
 
-`scene_atlas.py` compiles the authored Magnet, Almanac and Achievements DSLs
-and one built-in FixedUI source list. The modules contain respectively 21/19,
-19/19, 35/16 and 24/24 logical views/full source sheets: 99 views over 78 sheets
-in total. FixedUI's list is explicit Python data: six stone-button images,
-thirteen dialog pieces and five seed-chooser button states.
+`tools/scene_atlas.py` compiles the Magnet, Almanac, Achievements, DesktopUI
+and LandscapeUI DSLs plus a built-in CommonUI source list. CommonUI contains
+shared controls; DesktopUI and LandscapeUI contain layout-specific images.
+The generated manifest is authoritative for view and full-sheet counts.
 
 The packing unit is always the entire decoded source sheet at its original
 pixel dimensions. It is not trimmed, split into frames, rotated or rearranged
@@ -678,13 +678,15 @@ Two-pixel edge extrusion applies outside the sheet, without changing its interio
 The existing author's alpha composition policy is preserved before packing.
 
 Generated `SceneAtlasData.h/.cpp` defines the global namespaces `MagnetAtlas`,
-`AlmanacAtlas`, `AchievementsAtlas` and `FixedUIAtlas`. Each has one
+`AlmanacAtlas`, `AchievementsAtlas`, `CommonUIAtlas`, `DesktopUIAtlas` and
+`LandscapeUIAtlas`. Each has one
 `Sexy::GpuTexture* Texture`, a module-local `Sprite` enum, static `TextureRegion`
-`Images` arrays and `Load()` / `Free()` functions. Public atlas Width/Height
+`Images` arrays and `Load()` / `Free()` functions.
+`LoadSceneAtlases(bool landscapeUI)` loads common modules plus one layout;
+`FreeSceneAtlases()` safely clears all modules. Public atlas Width/Height
 constants are removed. The load
 functions bind the final GPU field through `DefinitionBindAtlasPath`; freeing
-unbinds it. `LoadSceneAtlases()` and reverse-order `FreeSceneAtlases()` aggregate
-the four modules. There is no per-view `Image` object, texture wrapper or
+unbinds it. There is no per-view `Image` object, texture wrapper or
 global resource identity.
 
 Magnet emits its authored non-unit `Scales` array. Achievements additionally
@@ -694,8 +696,8 @@ DSL declaration order may vary. Consumers index this explicit array rather than
 assuming that icon entries occupy consecutive enum values.
 
 Scene source selection uses `sources(scene "ui/*.atlas.dsl")`; atlas members use
-`scene:Magnet`, `scene:Almanac` and `scene:Achievements`. FixedUI is a built-in
-packing unit. These use the existing exact solver, native incumbent, geometry
+`scene:Magnet`, `scene:Almanac`, `scene:Achievements`, `scene:CommonUI`,
+`scene:DesktopUI` and `scene:LandscapeUI`. CommonUI uses the built-in source list. These use the existing exact solver, native incumbent, geometry
 cache, no-rotation rule, two-pixel padding and 60-second budget per unit. Reports
 retain proof status and gap; a bounded feasible result is not a proof of optimality.
 `SceneAtlasBindings.h` stores offline extent and full-sheet RGBA verification

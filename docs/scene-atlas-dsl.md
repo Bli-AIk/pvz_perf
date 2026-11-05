@@ -4,18 +4,19 @@
 游戏只持有最终 GPU 指针和 `TextureRegion`，不解析 DSL，不读取场景行为 compiled，
 不通过资源 SymbolId 查图。
 
-当前作者文件是 `assets/definitions/ui/Magnet.atlas.dsl`、
-`Almanac.atlas.dsl` 和 `Achievements.atlas.dsl`。FixedUI 无专用 DSL：
-Python 直接列出六张石质按钮状态、十三张对话框部件、五张选卡按钮状态，
-共 24 张完整源图。
+当前作者文件位于 `assets/definitions/ui/`：Magnet、Almanac、Achievements、
+DesktopUI 和 LandscapeUI 各有 `.atlas.dsl`。CommonUI 的共用按钮、对话框和蓝色选择框
+由 `tools/scene_atlas.py` 的显式源表描述。旧 FixedUI 已拆分，不是当前生成接口。
 
-| 模块 | view 数 | 完整 sheet 数 |
-| --- | ---: | ---: |
-| Magnet | 21 | 19 |
-| Almanac | 19 | 19 |
-| Achievements | 35 | 16 |
-| FixedUI | 24 | 24 |
-| 合计 | 99 | 78 |
+| 模块 | 用途 |
+| --- | --- |
+| Magnet、Almanac、Achievements | 磁铁物件、图鉴、成就 |
+| CommonUI | 两种布局共用 |
+| DesktopUI | 电脑布局专用 |
+| LandscapeUI | 横板布局专用 |
+
+view 数量与完整源 sheet 数量不同；数量以当前生成清单为准。两种专用图集均打包，
+但运行时只加载启动时选定的一种，CommonUI 共同加载。
 
 ## 整张源图与局部矩形
 
@@ -43,8 +44,8 @@ Python 直接列出六张石质按钮状态、十三张对话框部件、五张�
 
 ## 基本语法
 
-每个文件只声明一个 `export atlas`，模块名为 `Magnet`、`Almanac` 或
-`Achievements`。模块之间不能重复声明，同一模块内的 sprite 名称必须唯一。
+每个文件只声明一个 `export atlas`，模块名与编译器支持的模块对应，例如 `Magnet`、`Almanac`、
+`Achievements`、`DesktopUI` 或 `LandscapeUI`。模块之间不能重复声明，同一模块内的 sprite 名称必须唯一。
 字段以分号结束；支持 `//`、`#` 和 `/* ... */` 注释。
 
 ```text
@@ -118,23 +119,28 @@ sources(scene "ui/*.atlas.dsl")
 atlas(magnet_items scene:Magnet)
 atlas(almanac_ui scene:Almanac)
 atlas(achievements_ui scene:Achievements)
+atlas(common_ui scene:CommonUI)
+atlas(desktop_ui scene:DesktopUI)
+atlas(landscape_ui scene:LandscapeUI)
 ```
 
-FixedUI 自动建立 `fixed_ui` 装箱单元，不新增作者文件。
-四单元使用公共原生初始布局、精确求解器、几何缓存、禁止旋转和两像素扩边；
+CommonUI 使用生成器中的显式源表，不新增作者文件。
+这些单元使用公共原生初始布局、精确求解器、几何缓存、禁止旋转和两像素扩边；
 当前每单元预算 60 秒。只有证明完成才能称为最优；限时可行结果必须保留
 真实状态、下界和 gap。缓存复用不会把可行解改标成最优解。
 已经完成的旧图集搜索缓存继续保留，新增场景单元不要求清空它们。
 
 `SceneAtlasData.h/.cpp` 在 `Sexy.TodLib/generated/` 下生成，提供
-`MagnetAtlas`、`AlmanacAtlas`、`AchievementsAtlas`、`FixedUIAtlas` 四个全局 namespace：
+`MagnetAtlas`、`AlmanacAtlas`、`AchievementsAtlas`、`CommonUIAtlas`、
+`DesktopUIAtlas`、`LandscapeUIAtlas` 六个全局 namespace：
 
 - 每模块一个 `Sexy::GpuTexture* Texture`，不再公开图集 `Width`、`Height`。
 - 模块内 `Sprite`、`Count` 和 `extern const Sexy::TextureRegion Images[Count]`。
 - 只有包含非 1 缩放的模块生成 `Scales`，当前为 Magnet。
 - Achievements 另外生成按数字顺序排列的 `IconCount` 和 `Icons`。
 - `Load()` 通过 `DefinitionBindAtlasPath` 绑定最终指针；`Free()` 解绑。
-  `LoadSceneAtlases()` 与逆序 `FreeSceneAtlases()` 聚合四模块。
+  `LoadSceneAtlases(bool landscapeUI)` 加载公共模块和选定布局；
+  `FreeSceneAtlases()` 逆序清理，未加载模块的空指针也可安全清理。
 
 `TextureSource` 仅借用 GPU 指针和采样 flags，不保存图集尺寸。
 生成的 loader 仍传入预期 PNG 宽高字面量以验证资源，没有新增常驻采样尺寸。
