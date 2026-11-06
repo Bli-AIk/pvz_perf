@@ -18,7 +18,7 @@ import zipfile
 import zlib
 
 
-TOOL = Path(__file__).resolve().parents[1] / "build_numeric_runtime_pak64.py"
+TOOL = Path(importlib.util.find_spec("build_numeric_runtime_pak64").origin)
 SPEC = importlib.util.spec_from_file_location("numeric_pak64", TOOL)
 pak = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(pak)

@@ -1,16 +1,6 @@
-find_package(Python3 COMPONENTS Interpreter REQUIRED)
-if(ANDROID OR CMAKE_SYSTEM_NAME STREQUAL "Android")
-    set(PVZ_RESOURCE_COMPILER_HOST "${CMAKE_SOURCE_DIR}/out/x64-win32-vulkan/tools/resourceCompiler/build/reanimc.exe"
-        CACHE FILEPATH "Host reanimc executable used while cross-compiling Android resources")
-    if(NOT EXISTS "${PVZ_RESOURCE_COMPILER_HOST}")
-        message(FATAL_ERROR "Android resource builds need a host reanimc.exe: ${PVZ_RESOURCE_COMPILER_HOST}")
-    endif()
-    add_executable(reanimc IMPORTED GLOBAL)
-    set_target_properties(reanimc PROPERTIES IMPORTED_LOCATION "${PVZ_RESOURCE_COMPILER_HOST}")
-else()
-    add_subdirectory("${CMAKE_SOURCE_DIR}/tools/resourceCompiler/src"
-        "${CMAKE_BINARY_DIR}/tools/resourceCompiler/build")
-endif()
+include("${CMAKE_SOURCE_DIR}/CMake/DevTools.cmake")
+pvz_import_dev_tool(reanimc reanimc PVZ_RESOURCE_COMPILER_HOST)
+pvz_import_dev_tool(pvz_resource_builder pvz-resource-build PVZ_RESOURCE_BUILDER_HOST)
 
 set(PVZ_RESOURCE_CACHE "${CMAKE_BINARY_DIR}/cache/resources" CACHE PATH
     "Resource compiler cache, optionally shared with a verified host build")
@@ -74,34 +64,10 @@ add_custom_command(
         "${PVZ_GAME_SOURCE_DIR}/Sexy.TodLib/generated/ReanimAttacherMasks.h"
         "${PVZ_GAME_SOURCE_DIR}/Sexy.TodLib/ReanimTrackId.h"
         "${PVZ_GAME_SOURCE_DIR}/Sexy.TodLib/ReanimTrackMphfGlobal.h"
-    COMMAND "${Python3_EXECUTABLE}" -B
-        "${CMAKE_SOURCE_DIR}/tools/resourcePipeline/src/build_resources.py"
+    COMMAND "$<TARGET_FILE:pvz_resource_builder>" build --root "${CMAKE_SOURCE_DIR}"
         --compiler "$<TARGET_FILE:reanimc>" --cache "${PVZ_RESOURCE_CACHE}"
         --config "${CMAKE_SOURCE_DIR}/assets/definitions/ResourceBuild.pvzbuild"
-    DEPENDS reanimc ${PVZ_RESOURCE_INPUTS}
-        "${CMAKE_SOURCE_DIR}/tools/resourcePipeline/src/build_resources.py"
-        "${CMAKE_SOURCE_DIR}/tools/runtime_asset_sources.py"
-        "${CMAKE_SOURCE_DIR}/tools/definition_atlas.py"
-        "${CMAKE_SOURCE_DIR}/tools/projectile_atlas.py"
-        "${CMAKE_SOURCE_DIR}/tools/zombatar_atlas.py"
-        "${CMAKE_SOURCE_DIR}/tools/scene_atlas.py"
-        "${CMAKE_SOURCE_DIR}/tools/definition_catalog.py"
-        "${CMAKE_SOURCE_DIR}/tools/static_definitions.py"
-        "${CMAKE_SOURCE_DIR}/tools/static_definition_codegen.py"
-        "${CMAKE_SOURCE_DIR}/tools/static_reanim_codegen.py"
-        "${CMAKE_SOURCE_DIR}/tools/static_particle_codegen.py"
-        "${CMAKE_SOURCE_DIR}/tools/resource_build_config.py"
-        "${CMAKE_SOURCE_DIR}/tools/exact_atlas.py"
-        "${CMAKE_SOURCE_DIR}/tools/compile_numeric_resources.py"
-        "${CMAKE_SOURCE_DIR}/tools/resource_authoring.py"
-        "${CMAKE_SOURCE_DIR}/tools/compile_numeric_fonts.py"
-        "${CMAKE_SOURCE_DIR}/tools/build_numeric_runtime_pak64.py"
-        "${CMAKE_SOURCE_DIR}/tools/gen_reanim_attacher_masks.py"
-        "${CMAKE_SOURCE_DIR}/tools/reanim_type_map.txt"
-        "${CMAKE_SOURCE_DIR}/tools/reanim_track_families.txt"
-        "${CMAKE_SOURCE_DIR}/tools/font_symbol_ids.bin"
-        "${PVZ_GAME_SOURCE_DIR}/Resources.h"
-        "${PVZ_GAME_SOURCE_DIR}/Sexy.TodLib/ParticleImageVariants.inc"
+    DEPENDS reanimc pvz_resource_builder ${PVZ_RESOURCE_INPUTS} ${PVZ_DEVTOOLS_BINARY_INPUTS}
     COMMENT "Compiling definitions, generated C++ and runtime PAK64"
     VERBATIM)
 add_custom_target(pvz_resources

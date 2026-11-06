@@ -1,4 +1,8 @@
 """Compare recorded retail resource order with frozen converter history."""
+import os as _devtools_os
+from pathlib import Path as _DevToolsPath
+DEVTOOLS_ROOT = _DevToolsPath(_devtools_os.environ.get("PVZ_DEVTOOLS_SOURCE_DIR", str(_DevToolsPath(__file__).resolve().parents[2] / "PvzDevTools")))
+DEVTOOLS_REFERENCE = DEVTOOLS_ROOT / "tests/reference/python"
 import argparse
 import json
 from pathlib import Path
@@ -25,7 +29,7 @@ else:
 print('原版资源总数:', len(orig))
 
 # ---- 现代: converter-only 冻结历史枚举序 ----
-txt = (root / 'tools/saveConverter/src/FrozenResourceIds.h').read_text(encoding='utf-8')
+txt = (DEVTOOLS_ROOT / "saveConverter/src/FrozenResourceIds.h").read_text(encoding='utf-8')
 i = txt.index('enum class ResourceId')
 seg = txt[i:]
 seg = seg[:seg.index('RESOURCE_ID_MAX')]

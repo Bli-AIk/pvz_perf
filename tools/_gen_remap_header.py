@@ -1,4 +1,8 @@
 """Reproduce the converter-only historical remap; requires an explicit output."""
+import os as _devtools_os
+from pathlib import Path as _DevToolsPath
+DEVTOOLS_ROOT = _DevToolsPath(_devtools_os.environ.get("PVZ_DEVTOOLS_SOURCE_DIR", str(_DevToolsPath(__file__).resolve().parents[2] / "PvzDevTools")))
+DEVTOOLS_REFERENCE = DEVTOOLS_ROOT / "tests/reference/python"
 import argparse
 import json
 from pathlib import Path
@@ -13,7 +17,7 @@ final = json.loads((root / "tools/_exe_resid_final.json").read_text(encoding="ut
 assert len(final) == 879, len(final)
 
 # 现代枚举序（= modern id）
-enum_text = (root / "tools/saveConverter/src/FrozenResourceIds.h").read_text(encoding="utf-8")
+enum_text = (DEVTOOLS_ROOT / "saveConverter/src/FrozenResourceIds.h").read_text(encoding="utf-8")
 i = enum_text.index('enum class ResourceId')
 seg = enum_text[i:enum_text.index('RESOURCE_ID_MAX')]
 names = re.findall(r'\b([A-Z0-9_]+)_ID\s*=\s*\d+\s*,', seg)

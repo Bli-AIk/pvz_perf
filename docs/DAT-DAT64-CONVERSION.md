@@ -107,6 +107,6 @@ v4粒子系统在固定记录0/4分别保存原版106个基础ID与内部variant
 
 ## 验证与实现入口
 
-头及字段布局：`pvzPerf/Lawn/System/LevelSaveFormat.h`、`V7SaveSchema.h`、`SaveRecordMapping.h`；游戏读写：`SaveGame.cpp`；转换器：`tools/saveConverter/src/LevelSaveConverter.cpp`。状态重建和动作切换的当前机制见[运行时](runtime.md)。
+头及字段布局：`pvzPerf/Lawn/System/LevelSaveFormat.h`、`V7SaveSchema.h`、`SaveRecordMapping.h`；游戏读写：`SaveGame.cpp`；转换器：[PvzDevTools 的转换器](https://github.com/YuHao2006/PvzDevTools/tree/main/saveConverter/src)。状态重建和动作切换的当前机制见[运行时](runtime.md)。
 
 转换测试覆盖原DAT、v1、v2、v4规范往返，全部旧粒子／reanim外观、无CRC读取、非法schema/minor和整个v3系列拒绝且不改动输出。真实游戏回归需加载转换副本、保存、重载并比较对象与外观快照；具体本轮通过状态见[验证说明](validation.md)，独立转换通过不代替完整游戏验收。

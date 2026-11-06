@@ -62,7 +62,7 @@ Android HDR 当前禁用，设置项保留但不可启用；Win7 使用 SDR。�
 
 Android 不需要安装 Android Studio；可使用命令行 SDK、NDK、JDK、CMake 和 Ninja。兼容包使用 `PVZ_VULKAN_LEGACY=ON`，必须配套 Android API 24 原生构建；现代包与兼容包不得交叉混用 `.so`、PAK 和 shader。
 
-资源入口为 `assets/definitions/ResourceBuild.pvzbuild`。图集已完成布局缓存位于 `assets/definitions/atlas-cache/`；未证明最优的限时排布如实记录。资源编译器、存档转换器和离线工具位于 `tools/`，性能采集位于 `Tests/performance/`。源码构建不要求相邻的原版安装目录。
+资源入口为 `assets/definitions/ResourceBuild.pvzbuild`。图集已完成布局缓存位于 `assets/definitions/atlas-cache/`；未证明最优的限时排布如实记录。资源构建链和存档转换器的源码迁至独立开源仓库 [PvzDevTools](https://github.com/YuHao2006/PvzDevTools)，本仓库只附带 `tools/bin/windows-x64/` 中的预编译工具。主 CMake 直接运行 C++ 工具，不通过 Python 构建资源；其他主机可自行构建工具并设置 `PVZ_DEVTOOLS_BIN_DIR`。测试与性能采集脚本继续保留，性能采集位于 `Tests/performance/`。源码构建不要求相邻的原版安装目录。
 
 ## 文档与贡献
 

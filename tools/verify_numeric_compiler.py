@@ -104,7 +104,7 @@ def main() -> int:
         output.mkdir()
         owns_output = True
         image = root / "pvzPerf/Sexy.TodLib/generated/image_symbol_ids.bin"
-        font = root / "tools/font_symbol_ids.bin"
+        font = root / "assets/definitions/toolchain/font_symbol_ids.bin"
         source_stamp = pak.fingerprint(source)
         report["compiler"] = {"path": str(compiler), **pak.fingerprint(compiler)}
         report["source"] = {"path": str(source), **source_stamp}
@@ -115,7 +115,7 @@ def main() -> int:
             "compile-v2", "--input", str(compiler_root / "assets/definitions/reanim/root.dsl"),
             "--output", str(output / "reanim"),
             "--type-map", str(root / "tools/reanim_type_map.txt"),
-            "--family-file", str(root / "tools/reanim_track_families.txt"),
+            "--family-file", str(root / "assets/definitions/toolchain/reanim_track_families.txt"),
             "--font-registry", str(font), *common,
         ], output / "reanim.compile.log")
         run_compiler(compiler, [

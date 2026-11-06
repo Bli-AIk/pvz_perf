@@ -39,7 +39,7 @@ reanim、projectile 行为使用生成的静态 C++；particle 的完整 CPU 定
 
 ## 构建与部署
 
-主 CMake 构建资源工具，再运行 `tools/resourcePipeline/src/build_resources.py`。Python 图像步骤依赖 Pillow，装箱求解依赖 OR-Tools，依赖清单位于 `tools/resourcePipeline/requirements.txt`；游戏运行时不依赖 Python。
+主 CMake 直接调用 `tools/bin/windows-x64/` 中预编译的 C++ 资源构建器和 DSL 编译器，不再执行 Python 资源流水线。工具源码、构建说明与 Windows 二进制发布位于独立的 [PvzDevTools](https://github.com/YuHao2006/PvzDevTools)。其他主机需单独构建工具并设置 `PVZ_DEVTOOLS_BIN_DIR`。测试对拍所用 Python 参照仅保存在工具仓库，不是生产构建回退路径。
 
 流水线解析作者定义、生成 C++、验证引用和纹理区域，再写入 `out/<组合>/cache/resources/main.pak64` 并部署到该树的 Release。输入和输出内容不变时不重复改写生成源码。shader 按后端单独编译。
 

@@ -6,6 +6,10 @@ Only the supplied candidate directory is written. No compiler or game is run.
 """
 
 from __future__ import annotations
+import os as _devtools_os
+from pathlib import Path as _DevToolsPath
+DEVTOOLS_ROOT = _DevToolsPath(_devtools_os.environ.get("PVZ_DEVTOOLS_SOURCE_DIR", str(_DevToolsPath(__file__).resolve().parents[2] / "PvzDevTools")))
+DEVTOOLS_REFERENCE = DEVTOOLS_ROOT / "tests/reference/python"
 
 import argparse
 from collections import Counter
@@ -288,12 +292,12 @@ def input_paths(root: Path, compiler_root: Path) -> list[Path]:
     files = [
         root / "pvzPerf/Sexy.TodLib/generated/image_symbol_ids.bin",
         root / "pvzPerf/Sexy.TodLib/generated/ImageSymbolId.h",
-        root / "tools/saveConverter/src/FrozenResourceIds.h",
-        root / "tools/saveConverter/src/ResourceIdRemap.h",
+        DEVTOOLS_ROOT / "saveConverter/src/FrozenResourceIds.h",
+        DEVTOOLS_ROOT / "saveConverter/src/ResourceIdRemap.h",
         root / "tools/gen_image_symbol_registry.py",
         root / "tools/reanim_type_map.txt",
-        root / "tools/reanim_track_families.txt",
-        root / "tools/font_symbol_ids.bin",
+        root / "assets/definitions/toolchain/reanim_track_families.txt",
+        root / "assets/definitions/toolchain/font_symbol_ids.bin",
         deployed / "main.pak64",
         compiler_root / "out/x64-win32-dx12/tools/resourceCompiler/build/reanimc.exe",
     ]
@@ -343,8 +347,8 @@ def input_category(path: Path, root: Path, compiler_root: Path) -> str:
     if path.is_relative_to(root / "out/modern-game/Release"):
         return "production_compiled_assets_and_pak"
     if path.is_relative_to(root / "pvzPerf/Sexy.TodLib/generated") or path in {
-            root / "tools/saveConverter/src/FrozenResourceIds.h",
-            root / "tools/saveConverter/src/ResourceIdRemap.h"}:
+            DEVTOOLS_ROOT / "saveConverter/src/FrozenResourceIds.h",
+            DEVTOOLS_ROOT / "saveConverter/src/ResourceIdRemap.h"}:
         return "production_sidecar_headers_and_save_mapping"
     if path.is_relative_to(compiler_root / "assets/definitions/particle-reference"):
         return "native_particle_gold"

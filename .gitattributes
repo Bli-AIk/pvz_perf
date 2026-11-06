@@ -5,3 +5,5 @@
 /Tests/evidence/linux-wayland-20261018/* -text -whitespace
 /Tests/evidence/v324-microbenchmarks-20261101/** -text -whitespace
 /Tests/evidence/windows-vulkan-lp14-240-20261101/** -text -whitespace
+# Preserve vendor bytes covered by the development-tool SHA-256 manifest.
+tools/bin/windows-x64/** -text

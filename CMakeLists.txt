@@ -358,18 +358,9 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 ################################################################################
 # Sub-projects
 ################################################################################
+include(CMake/DevTools.cmake)
 if(PVZ_BUILD_DAT64_CONVERTER)
-    if(ANDROID OR CMAKE_SYSTEM_NAME STREQUAL "Android")
-        set(PVZ_DAT64_CONVERTER_HOST "${CMAKE_SOURCE_DIR}/out/x64-win32-vulkan/tools/saveConverter/build/pvz_dat64_converter.exe"
-            CACHE FILEPATH "Host dat64 converter used while cross-compiling Android")
-        if(NOT EXISTS "${PVZ_DAT64_CONVERTER_HOST}")
-            message(FATAL_ERROR "Android builds need a host pvz_dat64_converter.exe: ${PVZ_DAT64_CONVERTER_HOST}")
-        endif()
-        add_executable(pvz_dat64_converter IMPORTED GLOBAL)
-        set_target_properties(pvz_dat64_converter PROPERTIES IMPORTED_LOCATION "${PVZ_DAT64_CONVERTER_HOST}")
-    else()
-        add_subdirectory(tools/saveConverter/src tools/saveConverter/build)
-    endif()
+    pvz_import_dev_tool(pvz_dat64_converter pvz_dat64_converter PVZ_DAT64_CONVERTER_HOST)
 endif()
 
 if(PVZ_BUILD_LEGACY_GAME)
@@ -406,6 +397,7 @@ if(PVZ_BUILD_LEGACY_GAME)
     add_subdirectory(pvzPerf/SexyAppFramework SexyAppFramework)
 endif()
 if(BUILD_TESTING AND PVZ_BUILD_LEGACY_GAME)
+    find_package(Python3 COMPONENTS Interpreter REQUIRED)
     add_test(NAME release_draft_resume
         COMMAND "${Python3_EXECUTABLE}" -B "${CMAKE_SOURCE_DIR}/Tests/native/test_release_draft_resume.py")
     add_test(NAME completed_test_profile
@@ -680,3 +672,14 @@ foreach(pvzTarget IN LISTS pvzRootTargets)
         target_link_libraries(${pvzTarget} PRIVATE pvz_source_headers)
     endif()
 endforeach()
+
+# Resource tool regressions import the independent test-only Python reference.
+if(BUILD_TESTING AND EXISTS "${PVZ_DEVTOOLS_SOURCE_DIR}/tests/reference/python")
+    get_property(pvz_configured_tests DIRECTORY PROPERTY TESTS)
+    if(pvz_configured_tests)
+        set_property(TEST ${pvz_configured_tests} APPEND PROPERTY ENVIRONMENT
+            "PYTHONPATH=${PVZ_DEVTOOLS_SOURCE_DIR}/tests/reference/python"
+            "PVZ_GAME_ROOT=${CMAKE_SOURCE_DIR}"
+            "PVZ_DEVTOOLS_SOURCE_DIR=${PVZ_DEVTOOLS_SOURCE_DIR}")
+    endif()
+endif()

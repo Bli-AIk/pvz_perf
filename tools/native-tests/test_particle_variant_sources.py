@@ -1,5 +1,9 @@
 """Variant source roots, corpus completeness, packaging and independent counts."""
 from __future__ import annotations
+import os as _devtools_os
+from pathlib import Path as _DevToolsPath
+DEVTOOLS_ROOT = _DevToolsPath(_devtools_os.environ.get("PVZ_DEVTOOLS_SOURCE_DIR", str(_DevToolsPath(__file__).resolve().parents[3] / "PvzDevTools")))
+DEVTOOLS_REFERENCE = DEVTOOLS_ROOT / "tests/reference/python"
 
 import importlib.util
 from pathlib import Path
@@ -178,7 +182,7 @@ class ParticleVariantSourceTests(unittest.TestCase):
 
     def test_definition_bindings_use_normalized_paths_and_do_not_reorder_emitters(self):
         self.table()
-        pipeline_path = Path(__file__).resolve().parents[1] / "resourcePipeline/src/build_resources.py"
+        pipeline_path = DEVTOOLS_REFERENCE / "resourcePipeline/src/build_resources.py"
         spec = importlib.util.spec_from_file_location("variant_pipeline", pipeline_path)
         pipeline = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(pipeline)

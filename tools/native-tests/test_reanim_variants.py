@@ -103,8 +103,8 @@ class ReanimVariantCompilerTests(unittest.TestCase):
         result = subprocess.run([
             COMPILER, "compile-v2", "--input-list", str(inputs), "--output", str(output),
             "--type-map", str(root / "tools/reanim_type_map.txt"),
-            "--family-file", str(root / "tools/reanim_track_families.txt"),
-            "--font-registry", str(root / "tools/font_symbol_ids.bin")],
+            "--family-file", str(root / "assets/definitions/toolchain/reanim_track_families.txt"),
+            "--font-registry", str(root / "assets/definitions/toolchain/font_symbol_ids.bin")],
             capture_output=True, text=True, errors="replace")
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         metadata = json.loads((output / "reanim_variants.json").read_text())["roots"]

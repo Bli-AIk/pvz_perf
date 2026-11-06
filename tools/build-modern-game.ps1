@@ -30,7 +30,7 @@ $compile='call "{0}" >nul && {1}"{2}" --build "{3}" --target LawnProject --paral
 if($LASTEXITCODE -ne 0){throw "Modern game build failed: $LASTEXITCODE"}
 # The game POST_BUILD copy is not rerun when only the converter relinks.
 # Keep the playable directory current for converter-only source fixes too.
-& $cmake -E copy_if_different (Join-Path $build 'tools\saveConverter\build\pvz_dat64_converter.exe') (Join-Path $build 'Release\data\pvz_dat64_converter.exe')
+& $cmake -E copy_if_different (Join-Path $root 'tools/bin/windows-x64/pvz_dat64_converter.exe') (Join-Path $build 'Release\data\pvz_dat64_converter.exe')
 if($LASTEXITCODE -ne 0){throw "Modern converter staging failed: $LASTEXITCODE"}
 if($StageRuntime){
     $source=Join-Path $root 'out\x64-win32-dx12\Release'

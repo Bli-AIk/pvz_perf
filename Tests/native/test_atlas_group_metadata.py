@@ -1,5 +1,9 @@
 """Validate offline atlas metadata and the native static loading contract."""
 from __future__ import annotations
+import os as _devtools_os
+from pathlib import Path as _DevToolsPath
+DEVTOOLS_ROOT = _DevToolsPath(_devtools_os.environ.get("PVZ_DEVTOOLS_SOURCE_DIR", str(_DevToolsPath(__file__).resolve().parents[3] / "PvzDevTools")))
+DEVTOOLS_REFERENCE = DEVTOOLS_ROOT / "tests/reference/python"
 
 import hashlib
 import importlib.util
@@ -23,7 +27,7 @@ import resource_build_config
 import scene_atlas
 
 SPEC = importlib.util.spec_from_file_location(
-    "atlas_resource_pipeline", ROOT / "tools/resourcePipeline/src/build_resources.py")
+    "atlas_resource_pipeline", DEVTOOLS_REFERENCE / "resourcePipeline/src/build_resources.py")
 pipeline = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(pipeline)
 PACKAGE = Path(os.environ.get(

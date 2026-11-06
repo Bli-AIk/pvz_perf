@@ -392,6 +392,10 @@ FodyWeavers.xsd
 
 # Executables
 *.exe
+!/tools/bin/windows-x64/*.exe
+!/tools/bin/windows-x64/*.dll
+!/tools/bin/
+!/tools/bin/windows-x64/
 *.out
 *.app
 

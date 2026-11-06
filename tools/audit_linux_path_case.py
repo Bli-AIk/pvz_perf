@@ -11,8 +11,7 @@ from collections import defaultdict
 from pathlib import Path
 
 
-SOURCE_ROOTS = ("pvzPerf",
-                "tools/saveConverter/src", "tools/resourceCompiler/src")
+SOURCE_ROOTS = ("pvzPerf",)
 SCAN_SKIP_DIRS = {"tests", "unused", "third_party"}
 WALK_SKIP_DIRS = {".dxc-check", "__pycache__", "out", "build"}
 CPP_SUFFIXES = {".cpp", ".h", ".hpp", ".c", ".inl", ".inc"}
@@ -20,8 +19,7 @@ PATH_SUFFIXES = CPP_SUFFIXES | {".cmake", ".rc", ".cur", ".hlsl", ".hlsli",
                               ".frag", ".comp", ".vert"}
 INCLUDE_ROOTS = ("", "pvzPerf", "pvzPerf/SexyAppFramework", "pvzPerf/Sexy.TodLib",
                  "pvzPerf/SexyAppFramework/platform", "pvzPerf/SexyAppFramework/graphics/vulkan",
-                 "pvzPerf/SexyAppFramework/graphics/d3d12", "pvzPerf/SexyAppFramework/effect",
-                 "tools/resourceCompiler/src/include")
+                 "pvzPerf/SexyAppFramework/graphics/d3d12", "pvzPerf/SexyAppFramework/effect")
 CPP_LEXEMES = re.compile(
     r'R"(?P<delimiter>[^ ()\\\t\r\n]{0,16})\(.*?\)(?P=delimiter)"'
     r'|"(?:\\.|[^"\\])*"|\'(?:\\.|[^\'\\])*\'|//[^\n]*|/\*.*?\*/',

@@ -1,4 +1,8 @@
 """Ordinary named image pointers remain independent of the saved ResourceId ABI."""
+import os as _devtools_os
+from pathlib import Path as _DevToolsPath
+DEVTOOLS_ROOT = _DevToolsPath(_devtools_os.environ.get("PVZ_DEVTOOLS_SOURCE_DIR", str(_DevToolsPath(__file__).resolve().parents[3] / "PvzDevTools")))
+DEVTOOLS_REFERENCE = DEVTOOLS_ROOT / "tests/reference/python"
 import hashlib
 from pathlib import Path
 import re
@@ -32,7 +36,7 @@ class ProgramImagesTests(unittest.TestCase):
             self.assertNotIn("IMAGE_" + name, names)
 
     def test_saved_resource_ids_preserve_the_released_order(self):
-        frozen = ROOT / "tools/saveConverter/src/FrozenResourceIds.h"
+        frozen = DEVTOOLS_ROOT / "saveConverter/src/FrozenResourceIds.h"
         pairs = re.findall(r"\b(\w+)_ID\s*=\s*(\d+)\s*,",
                            frozen.read_text(encoding="utf-8"))
         names = [name for name, _ in pairs]
@@ -43,7 +47,7 @@ class ProgramImagesTests(unittest.TestCase):
             "92e7703a146ea92879c2ca0dc9ed8cab771acf20a7f48f557f6db1346bf7fad1")
 
     def test_converter_history_does_not_depend_on_runtime_resource_ids(self):
-        directory = ROOT / "tools/saveConverter/src"
+        directory = DEVTOOLS_ROOT / "saveConverter/src"
         for path in list(directory.glob("*.h")) + list(directory.glob("*.cpp")):
             with self.subTest(path=path.name):
                 source = path.read_text(encoding="utf-8")
@@ -51,7 +55,7 @@ class ProgramImagesTests(unittest.TestCase):
                 self.assertNotIn("Sexy::ResourceId", source)
                 self.assertNotIn("Sexy::IsImageResourceId", source)
         generator = (ROOT / "tools/generate_reanim_appearances.py").read_text(encoding="utf-8")
-        self.assertIn("tools/saveConverter/src/FrozenResourceIds.h", generator)
+        self.assertIn('DEVTOOLS_ROOT / "saveConverter/src/FrozenResourceIds.h"', generator)
         self.assertNotIn("Sexy.TodLib/generated/ResourceId.h", generator)
 
     def test_historical_registry_remains_available_for_migration_audits(self):

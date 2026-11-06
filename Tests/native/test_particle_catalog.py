@@ -1,4 +1,8 @@
 """Retail particle identities and the frozen old appearance conversion."""
+import os as _devtools_os
+from pathlib import Path as _DevToolsPath
+DEVTOOLS_ROOT = _DevToolsPath(_devtools_os.environ.get("PVZ_DEVTOOLS_SOURCE_DIR", str(_DevToolsPath(__file__).resolve().parents[3] / "PvzDevTools")))
+DEVTOOLS_REFERENCE = DEVTOOLS_ROOT / "tests/reference/python"
 from pathlib import Path
 import hashlib
 import json
@@ -16,7 +20,7 @@ class ParticleCatalogTests(unittest.TestCase):
         names = re.findall(r"^\s*(PARTICLE_\w+),\s*$", body, re.M)
         self.assertEqual(len(names), 106)
         self.assertEqual(len(set(names)), 106)
-        legacy = (ROOT / "tools/saveConverter/src/LegacyParticleIds.inc").read_text(encoding="utf-8")
+        legacy = (DEVTOOLS_ROOT / "saveConverter/src/LegacyParticleIds.inc").read_text(encoding="utf-8")
         original = re.findall(r'LEGACY_PARTICLE_ID\("?(\w+)"?\)', legacy)[:106]
         self.assertEqual(names, original)
         self.assertNotIn("PARTICLE_NONE", names)

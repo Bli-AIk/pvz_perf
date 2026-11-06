@@ -1,4 +1,8 @@
 """Strict proofs and explicitly bounded, honestly unproven publication policies."""
+import os as _devtools_os
+from pathlib import Path as _DevToolsPath
+DEVTOOLS_ROOT = _DevToolsPath(_devtools_os.environ.get("PVZ_DEVTOOLS_SOURCE_DIR", str(_DevToolsPath(__file__).resolve().parents[3] / "PvzDevTools")))
+DEVTOOLS_REFERENCE = DEVTOOLS_ROOT / "tests/reference/python"
 import importlib.util
 import json
 from pathlib import Path
@@ -13,7 +17,7 @@ import exact_atlas
 from resource_build_config import AtlasSettings
 
 spec = importlib.util.spec_from_file_location(
-    "proof_pipeline", ROOT / "tools/resourcePipeline/src/build_resources.py")
+    "proof_pipeline", DEVTOOLS_REFERENCE / "resourcePipeline/src/build_resources.py")
 pipeline = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(pipeline)
 

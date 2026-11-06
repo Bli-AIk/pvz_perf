@@ -5,6 +5,10 @@ the game needs to inspect C++ image symbols. ResourceId appears only in the
 separate offline save-conversion catalog.
 """
 from __future__ import annotations
+import os as _devtools_os
+from pathlib import Path as _DevToolsPath
+DEVTOOLS_ROOT = _DevToolsPath(_devtools_os.environ.get("PVZ_DEVTOOLS_SOURCE_DIR", str(_DevToolsPath(__file__).resolve().parents[2] / "PvzDevTools")))
+DEVTOOLS_REFERENCE = DEVTOOLS_ROOT / "tests/reference/python"
 import argparse
 import itertools
 import json
@@ -159,7 +163,7 @@ def main():
         if parts and parts[-1].isdigit():
             type_map[parts[0]] = int(parts[-1])
     resource_ids = {name: int(index) for name, index in re.findall(
-        r"\b(IMAGE_\w+)_ID\s*=\s*(\d+)", (ROOT / "tools/saveConverter/src/FrozenResourceIds.h").read_text())}
+        r"\b(IMAGE_\w+)_ID\s*=\s*(\d+)", (DEVTOOLS_ROOT / "saveConverter/src/FrozenResourceIds.h").read_text())}
     catalog, definitions, axes, choices = {}, [], [], []
     header = ["// Generated authoring choice constants; no Image* or SymbolId.", "#pragma once",
               "#include <cstdint>", "namespace ReanimOptions {"]
