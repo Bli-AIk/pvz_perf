@@ -1,6 +1,7 @@
 const statusText=document.getElementById('status'),start=document.getElementById('start'),stage=document.getElementById('stage');
 const form=document.getElementById('launch-form'),fps=document.getElementById('target-fps');
 const autoFps=document.getElementById('auto-fps'),aspect=document.getElementById('aspect');
+const showFps=document.getElementById('show-fps');
 const landscape=document.getElementById('landscape-ui'),volume=document.getElementById('sfx-volume');
 const canvas=document.getElementById('canvas');
 const musicVolume=document.getElementById('music-volume'),launchFullscreen=document.getElementById('launch-fullscreen');
@@ -23,20 +24,20 @@ if(!fixedMobileRate)import('./frame-rate.js').then(({createFrameRateObserver})=>
   updateControls();
  });
 });
-function startFps(){const label=document.getElementById("game-fps");label.hidden=false;let time=performance.now(),draws=Module._pvz_web_draws();clearInterval(fpsTimer);fpsTimer=setInterval(()=>{const now=performance.now(),next=Module._pvz_web_draws();label.textContent="FPS "+((next-draws)*1000/(now-time)).toFixed(1);time=now;draws=next},1000)}
+function startFps(){const label=document.getElementById("game-fps");clearInterval(fpsTimer);fpsTimer=0;label.hidden=!showFps.checked;if(label.hidden)return;let time=performance.now(),draws=Module._pvz_web_draws();fpsTimer=setInterval(()=>{const now=performance.now(),next=Module._pvz_web_draws();label.textContent="FPS "+((next-draws)*1000/(now-time)).toFixed(1);time=now;draws=next},1000)}
 let runtimeReady=false,running=false,formEdited=false,refreshRate=60,resizeScheduled=false,lastWidth=0;
 function readPreferences(){try{return JSON.parse(localStorage.getItem(storageKey)||'{}')||{}}catch{return {}}}
 function normalizePreferences(value){
  const finite=(x,fallback)=>Number.isFinite(Number(x))?Number(x):fallback;
  return {targetFps:Math.max(30,Math.min(1000000000,Math.round(finite(value.targetFps,mobileUA?60:100)))),
-  autoDetectFrameRate:!fixedMobileRate&&(typeof value.autoDetectFrameRate==='boolean'?value.autoDetectFrameRate:!mobileUA),landscapeUI:value.landscapeUI===true,
+  autoDetectFrameRate:!fixedMobileRate&&(typeof value.autoDetectFrameRate==='boolean'?value.autoDetectFrameRate:!mobileUA),landscapeUI:value.landscapeUI===true,showFps:value.showFps===true,
   sfxVolume:Math.max(0,Math.min(100,Math.round(finite(value.sfxVolume,100)))),
   musicVolume:Math.max(0,Math.min(100,Math.round(finite(value.musicVolume,100)))),
   fullscreen:typeof value.screenMode==='string'?value.screenMode==='fullscreen':value.fullscreen===true,
   aspect:['auto','4:3','16:9','21:9'].includes(value.aspect)?value.aspect:'auto'};
 }
-function fillPreferences(value){const p=normalizePreferences(value);fps.value=p.targetFps;autoFps.checked=p.autoDetectFrameRate;landscape.checked=p.landscapeUI;volume.value=p.sfxVolume;musicVolume.value=p.musicVolume;launchFullscreen.checked=p.fullscreen;aspect.value=p.aspect;updateControls()}
-function preferences(){return normalizePreferences({targetFps:fps.value,autoDetectFrameRate:autoFps.checked,landscapeUI:landscape.checked,sfxVolume:volume.value,musicVolume:musicVolume.value,fullscreen:launchFullscreen.checked,aspect:aspect.value})}
+function fillPreferences(value){const p=normalizePreferences(value);fps.value=p.targetFps;autoFps.checked=p.autoDetectFrameRate;showFps.checked=p.showFps;landscape.checked=p.landscapeUI;volume.value=p.sfxVolume;musicVolume.value=p.musicVolume;launchFullscreen.checked=p.fullscreen;aspect.value=p.aspect;updateControls()}
+function preferences(){return normalizePreferences({targetFps:fps.value,autoDetectFrameRate:autoFps.checked,showFps:showFps.checked,landscapeUI:landscape.checked,sfxVolume:volume.value,musicVolume:musicVolume.value,fullscreen:launchFullscreen.checked,aspect:aspect.value})}
 function showError(message){const box=document.getElementById('error');box.hidden=false;box.textContent=String(message);console.error(message)}
 function updateControls(){
  autoFps.disabled=fixedMobileRate;fps.disabled=autoFps.checked;

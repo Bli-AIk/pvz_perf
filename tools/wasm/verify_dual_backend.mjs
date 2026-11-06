@@ -11,9 +11,14 @@ try {
   const expected=mode==='auto'?'webgpu':'webgl';
   assert.equal(await page.evaluate(()=>Module.pvzSelectedBackend),expected);
   assert.equal(await page.locator('#graphics-backend option').count(),3);
+  assert.equal(await page.locator('#show-fps').isChecked(),false);
+  if(mode==='auto')await page.locator('#show-fps').check();
   assert.equal(await page.evaluate(()=>Module.FS.analyzePath('/persist/development-v331/user1.dat64').exists),true);
   await page.locator('#start').click();
   await page.waitForFunction(()=>Module._pvz_web_scene&&Module._pvz_web_scene()===0,null,{timeout:60000});
+  assert.equal(await page.locator('#game-fps').isVisible(),mode==='auto');
+  assert.equal(await page.evaluate(()=>JSON.parse(localStorage.getItem('pvz_perf_web_launcher_v1')).showFps),mode==='auto');
+  if(mode!=='auto')assert.equal(await page.evaluate(()=>fpsTimer),0);
   assert.deepEqual(errors,[]);console.log(mode+': '+expected+' loads shared saves and starts');
   await context.close();
  }

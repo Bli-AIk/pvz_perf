@@ -14,6 +14,7 @@
 <label class="field"><span>目标帧率</span><input id="target-fps" type="number" min="30" max="1000000000" step="1" value="100" required><small id="target-fps-info">最低 30 FPS；实际绘制受浏览器与屏幕限制。</small></label>
 <label class="field"><span>画面比例</span><select id="aspect"><option value="auto">随可用窗口自动调整</option><option value="4:3">4:3</option><option value="16:9">16:9</option><option value="21:9">21:9</option></select><small>保持比例，不拉伸；超出 4:3～21:9 的部分留黑边。</small></label>
 <label class="check"><input id="auto-fps" type="checkbox" checked><span>自动跟随浏览器刷新节奏<small id="refresh-info">正在估算…</small></span></label>
+<label class="check"><input id="show-fps" type="checkbox"><span>显示帧率<small>显示游戏绘制帧率，默认关闭。</small></span></label>
 <label class="check"><input id="landscape-ui" type="checkbox"><span>使用横板 UI<small>窗口较窄时回退桌面 UI，布局在启动时确定。</small></span></label>
 <label class="field volume audio-sfx"><span>音效音量 <output id="volume-value">100</output></span><input id="sfx-volume" type="range" min="0" max="100" value="100"></label>
 <label class="field volume audio-music"><span>音乐音量 <output id="music-value">100</output></span><input id="music-volume" type="range" min="0" max="100" value="100"></label>
