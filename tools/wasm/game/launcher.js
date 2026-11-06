@@ -5,15 +5,17 @@ const landscape=document.getElementById('landscape-ui'),volume=document.getEleme
 const canvas=document.getElementById('canvas');
 const musicVolume=document.getElementById('music-volume'),launchFullscreen=document.getElementById('launch-fullscreen');
 const saveToolsReady=import('./save-tools.js'),lineupToolsReady=import('./lineups.js');
-const mobileInput=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)||
+const mobileUA=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+const mobileInput=mobileUA||
  (navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1)||matchMedia('(pointer:coarse)').matches;
 const saveRoot='/persist/development-v331';
 const storageKey='pvz_perf_web_launcher_v1';
 // Distribution policy is read once, outside the game loop and user preferences.
 const webConfig=window.PVZWebConfig;
 if(typeof webConfig?.bypassBilibiliChecks!=='boolean')throw Error('缺少有效的 web-config.js 配置');
+const fixedMobileRate=mobileUA&&!webConfig.bypassBilibiliChecks;
 let fpsTimer=0;
-import('./frame-rate.js').then(({createFrameRateObserver})=>{
+if(!fixedMobileRate)import('./frame-rate.js').then(({createFrameRateObserver})=>{
  Module.pvzObserveFrame=createFrameRateObserver(rate=>{
   if(refreshRate===rate)return;
   refreshRate=rate;Module.pvzRefreshRate=rate;
@@ -26,8 +28,8 @@ let runtimeReady=false,running=false,formEdited=false,refreshRate=60,resizeSched
 function readPreferences(){try{return JSON.parse(localStorage.getItem(storageKey)||'{}')||{}}catch{return {}}}
 function normalizePreferences(value){
  const finite=(x,fallback)=>Number.isFinite(Number(x))?Number(x):fallback;
- return {targetFps:Math.max(30,Math.min(1000000000,Math.round(finite(value.targetFps,100)))),
-  autoDetectFrameRate:value.autoDetectFrameRate!==false,landscapeUI:value.landscapeUI===true,
+ return {targetFps:Math.max(30,Math.min(1000000000,Math.round(finite(value.targetFps,mobileUA?60:100)))),
+  autoDetectFrameRate:!fixedMobileRate&&(typeof value.autoDetectFrameRate==='boolean'?value.autoDetectFrameRate:!mobileUA),landscapeUI:value.landscapeUI===true,
   sfxVolume:Math.max(0,Math.min(100,Math.round(finite(value.sfxVolume,100)))),
   musicVolume:Math.max(0,Math.min(100,Math.round(finite(value.musicVolume,100)))),
   fullscreen:typeof value.screenMode==='string'?value.screenMode==='fullscreen':value.fullscreen===true,
@@ -36,7 +38,13 @@ function normalizePreferences(value){
 function fillPreferences(value){const p=normalizePreferences(value);fps.value=p.targetFps;autoFps.checked=p.autoDetectFrameRate;landscape.checked=p.landscapeUI;volume.value=p.sfxVolume;musicVolume.value=p.musicVolume;launchFullscreen.checked=p.fullscreen;aspect.value=p.aspect;updateControls()}
 function preferences(){return normalizePreferences({targetFps:fps.value,autoDetectFrameRate:autoFps.checked,landscapeUI:landscape.checked,sfxVolume:volume.value,musicVolume:musicVolume.value,fullscreen:launchFullscreen.checked,aspect:aspect.value})}
 function showError(message){const box=document.getElementById('error');box.hidden=false;box.textContent=String(message);console.error(message)}
-function updateControls(){fps.disabled=autoFps.checked;document.getElementById('volume-value').value=volume.value;document.getElementById('music-value').value=musicVolume.value;document.getElementById('refresh-info').textContent=`浏览器绘制节奏约 ${refreshRate} Hz（估算），自动跟随开启时在运行中更新。`;scheduleResize()}
+function updateControls(){
+ autoFps.disabled=fixedMobileRate;fps.disabled=autoFps.checked;
+ document.getElementById('volume-value').value=volume.value;document.getElementById('music-value').value=musicVolume.value;
+ document.getElementById('target-fps-info').textContent=mobileUA?'手机建议值：60 FPS，可手动调整；实际绘制受浏览器与屏幕限制。':'最低 30 FPS；实际绘制受浏览器与屏幕限制。';
+ document.getElementById('refresh-info').textContent=fixedMobileRate?'手机 B 站环境不检测刷新率；默认目标为 60 FPS。':`浏览器绘制节奏约 ${refreshRate} Hz（估算），自动跟随开启时在运行中更新。`;
+ scheduleResize();
+}
 function viewportFor(width,height,mode,minimumWidth=800){
  const requested=mode==='auto'?width/height:Number(mode.split(':')[0])/Number(mode.split(':')[1]);
  const logicalWidth=Math.round(Math.max(minimumWidth,Math.min(1400,requested*600)));
@@ -84,6 +92,9 @@ for(const type of ['pointerdown','pointermove','pointerup','pointercancel'])canv
   // sidebar belongs to the parent document, so explicitly refocus our iframe.
   window.focus();
   if(Module.pvzTextInput?.active)Module.pvzTextInput.focus();else canvas.focus({preventScroll:true});
+  // A genuine canvas press can restore application focus even when a mobile
+  // Toy host ignores window.focus(). This queues focus before the touch itself.
+  Module._pvz_web_focus?.(1);
   activePointers.set(e.pointerId,{touch:e.pointerType!=='mouse',button:e.button+1});
  }
  const p=pointerPosition(e.clientX,e.clientY),touch=e.pointerType!=='mouse';
@@ -98,8 +109,9 @@ for(const type of ['pointerdown','pointermove','pointerup','pointercancel'])canv
  e.preventDefault();
 });
 canvas.addEventListener('lostpointercapture',e=>cancelPointer(e.pointerId));
-window.addEventListener('blur',cancelPointers);
-document.addEventListener('visibilitychange',()=>{if(document.hidden)cancelPointers()});
+window.addEventListener('blur',()=>{cancelPointers();Module._pvz_web_focus?.(0)});
+window.addEventListener('focus',()=>{if(!document.hidden)Module._pvz_web_focus?.(1)});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)cancelPointers();Module._pvz_web_focus?.(document.hidden?0:1)});
 for(const type of ['mousedown','mousemove','mouseup','touchstart','touchmove','touchend','touchcancel'])
  canvas.addEventListener(type,e=>{if(running){e.preventDefault();e.stopImmediatePropagation()}},{capture:true,passive:false});
 window.addEventListener('resize',scheduleResize);
@@ -267,6 +279,6 @@ async function boot(){
  const script=document.createElement('script');script.src='./'+stem+'.js';script.onerror=()=>showError('无法加载游戏 JavaScript');document.body.appendChild(script);
 }
 window.PVZLauncher={viewportFor,normalizePreferences,preferences,fitCanvas,pointerPosition};
-measureRefreshRate().catch(()=>updateControls());
+if(!fixedMobileRate)measureRefreshRate().catch(()=>updateControls());
 const textInputReady=import('./text-input.js').then(m=>{Module.pvzTextInput=m.createTextInput()});
 Promise.all([textInputReady,saveToolsReady,lineupsReady,import('./audio/music-engine.js').then(m=>m.prepareMusic()).then(audio=>{Module.pvzMusic=audio;if(runtimeReady)start.disabled=false}),boot()]).catch(showError);

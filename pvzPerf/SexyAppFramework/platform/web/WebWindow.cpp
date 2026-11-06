@@ -17,6 +17,16 @@ namespace Sexy {
 namespace {
 int pendingWidth = 0, pendingHeight = 0;
 unsigned int pendingRefreshRate = 0;
+SDL_Window* inputWindow = nullptr;
+}
+extern "C" EMSCRIPTEN_KEEPALIVE void pvz_web_focus(int focused) {
+    if (!inputWindow) return;
+    // DOM callbacks enqueue only; the normal event phase applies app focus.
+    SDL_Event event{};
+    event.type = SDL_WINDOWEVENT;
+    event.window.windowID = SDL_GetWindowID(inputWindow);
+    event.window.event = focused ? SDL_WINDOWEVENT_FOCUS_GAINED : SDL_WINDOWEVENT_FOCUS_LOST;
+    SDL_PushEvent(&event);
 }
 extern "C" EMSCRIPTEN_KEEPALIVE void pvz_web_refresh_rate(unsigned int rate) {
     pendingRefreshRate = std::clamp(rate, 30U, 1000U);
@@ -28,7 +38,9 @@ extern "C" EMSCRIPTEN_KEEPALIVE void pvz_web_resize(int width, int height) {
     pendingHeight = 600;
 }
 extern "C" EMSCRIPTEN_KEEPALIVE void pvz_web_pointer(int kind, int id, double x, double y, int button, double time) {
-    SDL_Window* window = SDL_GetKeyboardFocus();
+    // Mobile hosts may not restore SDL's keyboard focus after their overlay
+    // closes. Pointer input belongs to our canvas independently of keyboard focus.
+    SDL_Window* window = inputWindow;
     if (!window) return;
     int width, height; SDL_GetWindowSize(window, &width, &height);
     SDL_Event event{};
@@ -71,6 +83,7 @@ NativeWindow::NativeWindow(const NativeWindowConfig& config) : impl_(new Impl) {
 #endif
     );
     if (!impl_->window) throw std::runtime_error(SDL_GetError());
+    inputWindow = impl_->window;
 
 #if !defined(PVZ_GPU_WEBGPU)
     impl_->context = SDL_GL_CreateContext(impl_->window);
@@ -80,6 +93,7 @@ NativeWindow::NativeWindow(const NativeWindowConfig& config) : impl_(new Impl) {
 #endif
 }
 NativeWindow::~NativeWindow() {
+    inputWindow = nullptr;
 #if !defined(PVZ_GPU_WEBGPU)
     SDL_GL_DeleteContext(impl_->context);
 #endif

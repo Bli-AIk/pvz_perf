@@ -24,7 +24,7 @@ python -m http.server 18089 --bind 127.0.0.1 --directory out/wasm-webgpu/toy
 GitHub 附件名为 `wasm32-web-v3.3.3.zip`；入口及资源 URL 均使用相对路径。
 源码对照构建可显式使用 `-GraphicsBackend WEBGL`，输出至原 `out/wasm/` 树。
 ZIP 内 `web-build-manifest.json` 记录版本、Web 补充源码提交和每个资源的 SHA256。
-v3.3.3 标签同时包含原生和 Web 源码。
+v3.3.3 标签包含首发原生和 Web 源码；后续替换的网页附件以包内 `source_commit` 记录的补充提交为准。
 
 `package_toy.py` 只打包 HTML、JS、预加载资源数据和 gzip 后的 Wasm，
 不打包原始 Wasm、调试符号、日志和验证截图。页面用浏览器 DecompressionStream
@@ -34,6 +34,9 @@ v3.3.3 标签同时包含原生和 Web 源码。
 `-PakFile` 或 `PVZ_WEB_PAK` 指定其他包。普通包与 compact 包分别约 45.25MB、37.49MB。
 
 ## 平台边界
+
+- 手机 UA 默认建议 60 FPS，可手动修改；手机 B 站包不检测刷新率，不自动跟随。桌面行为保留。
+- Web 触控以画布所属窗口路由，不要求 SDL 键盘焦点已恢复；焦点变化只入队，在正常事件阶段处理，不重入游戏更新。
 
 - WebGPU 启动时申请可用的双源混合；WebGL 2 路径 normal/additive 分开提交。
   两者均为 SDR，不支持原生 HDR/超分管线。
