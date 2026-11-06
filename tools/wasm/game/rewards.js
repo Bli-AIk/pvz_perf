@@ -1,20 +1,22 @@
-export async function authorizeReward(kind,config,provideToy){
+export async function authorizeReward(config,provideToy){
  if(config.bypassBilibiliChecks===true)return;
- const coin=kind==='perfect'&&config.perfectSaveRequirement==='coin';
- if(coin&&(!Array.isArray(config.rewardVideoBvids)||!config.rewardVideoBvids.length))
-  throw Error('尚未配置投币视频 BV 号，请稍后再试。');
  const toy=await provideToy();
- if(coin){
-  if(typeof toy?.getVideoUserActions!=='function')throw Error('当前 B 站环境不支持投币状态查询，请使用支持此接口的 Toy 宿主。');
-  const result=await toy.getVideoUserActions({videos:config.rewardVideoBvids.map(bvid=>({bvid}))});
-  if(result.status!=='ok'&&result.status!=='partial')throw Error('无法验证投币状态：'+result.status+'。请登录 B 站或在 B 站 App 内打开。');
-  if(!result.items?.some(item=>item.status==='ok'&&Number(item.coinCount)>0))throw Error('尚未检测到对指定视频的投币。投币后可再次点击领取。');
- }else{
-  if(typeof toy?.getAuthorRelation!=='function')throw Error('当前 B 站环境不支持关注状态查询。');
-  const result=await toy.getAuthorRelation();
-  if(result.status!=='ok')throw Error('无法验证关注状态：'+result.status+'。请登录 B 站或在 B 站 App 内打开。');
-  if(!result.data?.isFollowing&&!result.data?.isAuthor)throw Error('尚未检测到关注作者。关注后可再次点击领取。');
+ if(typeof toy?.getAuthorRelation==='function'){
+  // The two alternatives are independent: a failed author lookup must not
+  // prevent a successful coin lookup. Following alone never grants a reward.
+  try{
+   const relation=await toy.getAuthorRelation();
+   if(relation.status==='ok'&&relation.data?.isAuthor===true)return;
+  }catch{}
  }
+ const bvid=config.rewardVideoBvid;
+ if(typeof bvid!=='string'||!/^BV[0-9A-Za-z]{10}$/.test(bvid))throw Error('尚未配置有效的投币视频 BV 号。');
+ if(typeof toy?.getVideoUserActions!=='function')throw Error('当前 B 站环境不支持投币状态查询，请使用支持此接口的 Toy 宿主。');
+ let result;
+ try{result=await toy.getVideoUserActions({videos:[{bvid}]})}catch(error){throw Error('投币状态查询失败：'+(error.message||error))}
+ if(result.status!=='ok'&&result.status!=='partial')throw Error('无法验证投币状态：'+result.status+'。请登录 B 站或在 B 站 App 内打开。');
+ if(!result.items?.some(item=>item.bvid===bvid&&item.status==='ok'&&Number.isInteger(item.coinCount)&&item.coinCount>=2))
+  throw Error('尚未检测到给 '+bvid+' 投满两个币。投币后可再次点击领取。');
 }
 
 let sdk;

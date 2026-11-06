@@ -1,7 +1,9 @@
-# HTML / Wasm Toy 试验目标
+# v3.3.3 网页版：WebGPU / WebGL 2 / Wasm
 
 独立 CMake 工程 `game/` 编译当前 pvz_perf 游戏逻辑，不替换为上游游戏。
-WebGL2 与 OpenGL、Vulkan 是平级构建后端，浏览器窗口使用 SDL2 的 Emscripten 端口。
+发行包包含 WebGPU 和 WebGL 2；启动时默认优先 WebGPU，不可用时使用 WebGL 2，也可手动选择。
+两个运行时共用资源和存档，浏览器只下载所选后端的 Wasm；切换接口重新加载启动页。
+两者是平级构建后端，浏览器窗口使用 SDL2 的 Emscripten 端口。
 OpenGL / WebGL 共享 `graphics/gl` 的绘制实现，各自的上下文、API 差异由编译期别名选择。
 浏览器调度、加载、文件路径和音频实现放在 `platform/web`，由 CMake 选入；
 公共游戏代码不包含 `__EMSCRIPTEN__` 分支，原生目标不引入 SDL 或浏览器运行库。
@@ -14,11 +16,15 @@ SDL2、zlib、libjpeg 由 Emscripten ports 为 wasm32 编译。
 
 ```powershell
 pwsh -File tools/build-web-toy.ps1
-python -m http.server 18088 --bind 127.0.0.1 --directory out/wasm/toy
+python -m http.server 18089 --bind 127.0.0.1 --directory out/wasm-webgpu/toy
 ```
 
-浏览器打开 `http://127.0.0.1:18088/`，等待加载后点击“开始游戏”。不能用 file://
-直接打开，需要 HTTP。上传包在 `out/wasm/pvz-perf-toy.zip`；入口及所有 URL 均使用相对路径。
+浏览器打开 `http://127.0.0.1:18089/`，等待加载后点击“开始游戏”。不能用 file://
+直接打开，需要 HTTP。包位于 `out/wasm-webgpu/pvz-perf-toy.zip`，
+GitHub 附件名为 `wasm32-web-v3.3.3.zip`；入口及资源 URL 均使用相对路径。
+源码对照构建可显式使用 `-GraphicsBackend WEBGL`，输出至原 `out/wasm/` 树。
+ZIP 内 `web-build-manifest.json` 记录版本、Web 补充源码提交和每个资源的 SHA256。
+v3.3.3 标签同时包含原生和 Web 源码。
 
 `package_toy.py` 只打包 HTML、JS、预加载资源数据和 gzip 后的 Wasm，
 不打包原始 Wasm、调试符号、日志和验证截图。页面用浏览器 DecompressionStream
@@ -29,12 +35,15 @@ python -m http.server 18088 --bind 127.0.0.1 --directory out/wasm/toy
 
 ## 平台边界
 
-- WebGL2 不使用桌面双源混合；normal/additive 分开提交。SDR 输出，不支持原生 HDR/超分管线。
-- BGRA 上传在 Web 平台转换成 RGBA；GLSL 1.30 编译前转换为 GLSL ES 3.00。
+- WebGPU 启动时申请可用的双源混合；WebGL 2 路径 normal/additive 分开提交。
+  两者均为 SDR，不支持原生 HDR/超分管线。
+- BGRA 上传在 Web 平台转换成 RGBA；WebGPU 使用 WGSL，WebGL 对照将 GLSL 转为 ES 3.00。
+- WebGPU 的普通贴图使用 Vulkan 1.3 同类路径的单次硬件采样，颜色过滤采用保持色相的闭式公式；需逐 texel 变换时才使用手工采样。目标预乘状态用管线常量区分，覆盖率文字使用独立入口。主帧复用绑定组和顶点缓冲，场景与呈现记录到同一命令编码器再提交，呈现使用全屏三角形。
 - 使用 Asyncify 让主循环及模态等待交还浏览器。加载暂时在主线程执行，直接完成纹理
   队列与图集上传，不等待被挂起的外层循环。没有引入 SharedArrayBuffer、COOP/COEP 或 pthread 要求。
-- 主循环按 requestAnimationFrame 让出执行权；两套动态顶点流使用 WebGL2 fence
-  零等待轮询，忙时保留绘制脏标记并重试。纹理与场景目标共用，不执行主画面每帧 glFinish。
+- 主循环按 requestAnimationFrame 让出执行权；两套动态顶点流各自跟踪完成状态。
+  WebGPU 由队列完成回调标记，WebGL 使用 fence 零等待轮询；忙时保留绘制脏标记并重试。
+  纹理与场景目标共用，正常主帧不等待整个队列清空。
 - 音乐定位后先解码并保留一个采样帧，使首行命令先执行，再恢复控制器的 BPM／speed；
   读取这两个属性时等待音频线程确认，避免读取异步旧值。读档及暂停恢复共用此路径，
   不丢弃这个预解码采样，不改动原生 BASS。
@@ -47,8 +56,8 @@ python -m http.server 18088 --bind 127.0.0.1 --directory out/wasm/toy
 - 浏览器输入透过独立 NativeWindow 实现进入现有鼠标/触控事件路径；不会把触控改成全局鼠标位置。
 - Wasm 没有可写 FTZ/DAZ 控制寄存器，不能沿用原生开关。
 
-该目录是试验移植，不是正式发行平台。只有通过实际关卡、保存/重载和目标浏览器测试后，
-才能视为可以公开发布的 Toy。构建脚本不登录或上传 Bilibili。
+v3.3.3 提供双后端网页 ZIP；构建脚本不登录或上传 Bilibili。
+浏览器与宿主能力仍需实际检测，不能把桌面 Edge 验证当作所有手机 WebView 均可运行。
 
 本机 Edge 已验证：加载、标题、创建用户、主菜单、进入首关战斗、选择卡牌种植、
 空格暂停/恢复、用户表同步到 IndexedDB；最终一轮控制台无错误。
@@ -74,12 +83,13 @@ ZIP 约 47MB（十进制；构建时输出实际值）。上传额度的压缩�
 Custom Scale 在 Web 禁用。游戏 Quit 完成存档同步后自动重载回启动设置，
 不用点击额外的“重新开始”按钮，下次只需一次“开始游戏”。
 网页每秒读取一次游戏实际绘制计数来显示 FPS，不提前启用 C++ 调试字体。开发档独立放在 IndexedDB 的 `/persist/development-v331`，
-不覆盖早期 `/persist` 下的试玩档。首次复制发行的完美存档与无尽基准，之后保留游玩进度，
-设置页提供显式重置按钮。
+不覆盖早期 `/persist` 下的试玩档。离线配置首次复制发行的完美存档与无尽基准，之后保留游玩进度；
+B 站配置由领取按钮部署，覆盖前需确认。
 
-局域网试玩可用 `python -m http.server 18088 --bind 0.0.0.0 --directory out/wasm/toy`，
+局域网部署可用 `python -m http.server 18089 --bind 0.0.0.0 --directory out/wasm-webgpu/toy`，
 手机访问电脑 LAN IP（需要同网和防火墙允许入站），Wasm 在手机本地执行，非桌面串流。
-不需要 HTTPS 的基本试玩可用；未来 AudioWorklet 等功能还需安全上下文。
+WebGPU 在手机普通 HTTP LAN IP 下通常不可用；跨设备试玩应部署 HTTPS。
+WebGL 源码对照可以使用普通 HTTP；AudioWorklet 同样需要安全上下文。
 浏览器不提供线程 CPU 亲和性接口；本项目不尝试对 Wasm 锁核。
 触屏设备按长边／短边计算画面比例，竖持时仅在网页内旋转游戏区域，
 不依赖浏览器的屏幕方向锁。PointerEvent 坐标逆变换后进入 SDL 事件队列，
@@ -145,30 +155,99 @@ SHA256 为 `71f930d56141cef1b45d4ecee423617a5daaf9068bb5e2bddd1ce4c3044071a9`。
 
 ## 相同包体的两种配置
 
-`build-web-toy.ps1` 编译一次、打包两次。两个 ZIP 的文件名集合与内容完全一致，
-唯一例外是 `web-config.js` 中的 `bypassBilibiliChecks`：
+`build-web-toy.ps1` 编译一次、打包两次。两个 ZIP 的运行库和资源相同；
+`web-config.js` 中的 `bypassBilibiliChecks` 以及反映该配置的校验清单不同：
 
-- GitHub／离线：`out/wasm/pvz-perf-toy.zip`，值为 `true`，不会加载 B 站 SDK。
-- B 站：`out/wasm/pvz-perf-toy-bilibili.zip`，值为 `false`。
+- GitHub／离线：`out/wasm-webgpu/pvz-perf-toy.zip`，值为 `true`，不会加载 B 站 SDK。
+- B 站：`out/wasm-webgpu/pvz-perf-toy-bilibili.zip`，值为 `false`。
 
 两者均是多文件站点，不将二进制转换成 HTML 内嵌编码。解压后用 `start-local.cmd`
 或 `sh start-local.sh` 开启 localhost；需要 Python 3，不需要联网或第三方 Python 包。
 不能直接通过 `file://` 打开 `index.html`。同一浏览器的存档按访问地址／端口隔离。
 
 源码配置为 `tools/wasm/game/web-config.json`；成品配置为 `web-config.js`。
-两个领取入口默认均检查关注状态，作者本人也可通过；只有完整成功响应中的
-`isFollowing` 或 `isAuthor` 为真才通过。修改成品配置后刷新即可，不需要重新编译。
-将 `perfectSaveRequirement` 改为 `coin` 时才启用 `rewardVideoBvids`：任意一个指定
-BV 已投币即可领取完美档；空列表不视为通过投币验证。
+两个入口统一检查：给 `rewardVideoBvid` 指定的视频投满两个币，或当前用户为作者本人。
+当前配置为 `BV1hV4P6PEDc`。仅关注、一个币、错误 BV、未登录或失败响应都不放行。
+使用 SDK 的 `getAuthorRelation().data.isAuthor` 和
+`getVideoUserActions({videos:[{bvid}]})` 中同 BV、成功项的 `coinCount >= 2`。
+只在点击领取／打开自定义时验证。弹窗打开后，生成、部署、提取与导出均不重复查询；关闭后重新打开才再次验证。
 
-领取按钮使用官方 SDK 文档中的 `getAuthorRelation()`（`isFollowing`／`isAuthor`）与
-`getVideoUserActions({videos:[{bvid:...}]})`（逐视频 `coinCount`）。仅在点击时查询，
-成功后把随包发布的档复制到 IndexedDB；不在游戏循环中判断账号状态。
-`unsupported`／未登录／授权未开启不能当作已满足条件；外部手机浏览器不支持视频互动查询。
-接口拒绝、部分成功、零投币、未关注、离线零调用已通过单元与浏览器模拟测试，
-但真实 B 站宿主查询尚未验证，也尚未指定正式 BV 号。
+预置档以 `save-bundle.json` 随包分发，不依赖宿主单独分发 `.dat64` 后缀文件。
+领取完美档先下载验证全部文件，再弹出删除警告；取消或下载失败不会删除旧档。
+确认后清除所有旧用户和关卡档，只安装 1 号用户，同时部署原始完整无尽基准。
+`settings.json` 和浏览器中用户添加的阵型列表保留。
 
-离线开发首次安装完美进度和无尽基准；B 站配置首次不导入，保留游戏正常建档流程。
-导入完美档会替换 PerfTest 用户资料；导入无尽还会替换其泳池无尽关卡档。
-两者都包含坚果包扎术。当前随包只有泳池无尽基准，其他经典阵型待提供兼容存档后加入。
-存档与程序同包分发，领取按钮属于便利入口，不是加密或防提取机制。
+网页提供音效音量、音乐音量、启动时独占全屏配置。未启用独占全屏时只铺满网页。
+浏览器／WebView 可拒绝 Fullscreen API，网页不能保证系统允许独占全屏。
+
+### 自定义无尽与 DAT64
+
+- 默认已完成 **128 旗**（每轮两旗，填写偶数），随机种子 **114514**。
+- 场景：白天、黑夜、泳池、浓雾、屋顶、月夜；在泳池无尽入口读取实际场景。
+- 默认阵型来自现有无尽基准；支持添加自己的 Toolkit 1.22 阵型码。
+- 阵型码只记录布阵、叠层、睡眠／模仿者、梯子与钉耙等，不保存血量。
+- 生成使用正常植物构造，满血重建；Continue 后通过原有无尽换轮流程进入选卡。
+- 生成档保存选卡曲的正确 MO3 起点，使用解码器实际读取的 BPM／speed；开始战斗后由正常游戏流程按场景切曲，不写死构造默认速度。
+- 自定义部署只替换 `game1_58.dat64`；需要先有 1 号用户（可领取完美档）。
+- 在自定义弹窗中选择浏览器内部的当前格式 DAT64 提取阵型码，也可直接下载所选完整 DAT64。
+- 创建、部署、提取和导出只在游戏未运行时执行；游戏内请先保存并 Quit 返回设置页。
+
+离线工具是临时、同源 `srcdoc` iframe 内的独立 Wasm 实例，复用同一份已下载的游戏二进制与资源；
+不导航到第二个 HTML 路由，iframe 沙箱禁止顶层导航，避免 Toy 的 HTML 页面壳接管工具地址。
+只初始化构造／序列化所需资源，不进入游戏更新和绘制循环，不挂载 IDBFS、不写用户存储。
+生成使用新 Board，提取使用独立读档对象；完成后销毁整个工具实例。
+代码位于 `tools/wasm/game/web/SaveTool.cpp`，正常游戏 `Board::LoadGame` 无导入钩子。
+工具资源请求交给主页面上下文执行；Wasm 同时接受 gzip 文件和宿主已自动解压的响应，避免重复解压。
+错误分别标出投币查询、资源文件／HTTP 状态、阵型解压，不把它们都显示成裸 `Failed to fetch`。
+Toolkit 阵型格式参考 [pvztoolkit 的 lineup.cpp](https://github.com/lmintlcx/pvztoolkit/blob/master/src/lineup.cpp)。
+
+当前原始基准与自定义满血重建档用途不同：前者保留原参数供性能复测，后者可修改场景／旗数／种子。
+相同种子只在同实现、同初始条件与同随机调用序列下可重现，不承诺跨游戏版本出怪一致。
+
+### 浏览器保存位置与刷新节奏
+
+游戏虚拟目录 `/persist/development-v331/` 持久化到 IndexedDB，数据库 `/persist`、对象存储 `FILE_DATA`。
+它属于当前站点／嵌入上下文的浏览器存储，不是 B 站账号云存档；换浏览器、设备或访问地址不共享。
+可在开发者工具 Application → IndexedDB 查看。手机 App 内置浏览器通常放在其私有数据中，
+不是文件管理器可直接浏览的一组 DAT64；需要使用网页导出按钮。
+
+运行时从真正等待的 requestAnimationFrame 回调观测节奏，用两段各 12 个间隔确认稳定变化。
+只在 Web 原生事件阶段应用自动目标刷新率；保留墙钟欠账和逻辑时间余量，不用帧数冒充时间。
+主循环已有实际墙钟纳秒步长，这次不修改共享主循环。宿主仍可在无操作时限帧、隐藏页时暂停回调；
+网页不能保证物理面板刷新率，也不伪造触摸事件强行保活。
+
+GitHub Release 提供离线配置的 WebGPU ZIP，不自动更新 Toy。SDK 的真实权限和手机 WebView 下载／嵌套工具
+仍需在实际 Toy 宿主验证；本地浏览器模拟覆盖两个币／作者与拒绝路径。
+
+## WebGPU 后端
+
+`pwsh -File tools/build-web-toy.ps1 -GraphicsBackend WEBGPU` 输出至 `out/wasm-webgpu/`，
+保留原 `out/wasm/` WebGL 构建。编译与链接使用 Emscripten 官方 `--use-port=emdawnwebgpu`，
+绘制、纹理、绑定组、命令录制和队列提交均由 C++ 后端负责；WGSL 源码位于 `.cpp`。
+公共路径只扩展编译期后端选择和已有能力分支，不增加每次绘制的运行期接口分发。
+
+Web UI 在运行游戏前检测 adapter、device、可选特性和限制。发行包只包含 WebGPU，
+检测失败时明确显示不能启动，不携带或下载 WebGL 回退运行库。原 WebGL 包单独保留作对照。
+WebGPU 需要安全上下文；
+本机 localhost 可用，手机通过普通 HTTP 的局域网 IP 访问通常不开放 WebGPU，需要 HTTPS。
+B 站内置浏览器是否开放由实际内核、设备和宿主策略决定，不能按 UA 推定。
+
+- 继续使用两套动态顶点缓冲，各自跟踪队列完成；第三拍复用第一套之前检查完成状态。
+  未完成仅延期绘制，不跳过逻辑。纹理、图集和静态 16 位四边形索引共用，不复制纹理。
+- 缓存纹理／采样器绑定组、目标参数及呈现绑定组；相邻批次复用管线、绑定组和裁剪状态。
+  每批上传动态顶点，保留 65536 顶点容量，满时提交并继续，不扩页。
+- 检测并显式申请 `dual-source-blending`。支持时普通精灵的 normal/additive 可合批，
+  不支持时保留各自混合批次。`?dualSource=off` 仅供检查分开提交路径。
+- 没有 Vulkan descriptor indexing 式 bindless；缓存绑定组不称为 bindless。
+  GPU 不计算 reanim 或 particle 行为，存档格式不因切换后端变化。
+- 字体使用原有整数权重生成 RGBA16F，普通纹理／主场景使用 RGBA8；透明与生成图像走
+  对应采样路径。显式读回可以等待，正常主帧不调用全队列同步等待。
+
+验证脚本：`verify_webgpu_shaders.mjs` 检查 WGSL；`test_graphics.mjs` 检查能力选择／失败回退；
+`verify_webgpu.mjs --endless` 检查真实游戏。独立 `Tests/native/WebGpuRuntimeProbe.cpp`
+链接实际 WebGPU 后端，覆盖上传读回、局部复制、alpha、字体、混合、coverage、容量边界和帧准入；
+它不编入游戏。性能是否改善须用相同场景对照，不把 API 可用或满上限当作提速证明。
+
+自定义无尽的默认阵型为97无炮、14格、24炮、[终极战术]五角星无炮流；
+用户自存阵型单独保留。生成器接受初始阳光（0～9990，默认9990），选卡阶段恢复，
+不生成小推车。领取完美档附带的原始无尽基准不受自定义生成规则影响。

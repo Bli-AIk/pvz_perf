@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <exception>
 #include <emscripten.h>
+#include "SaveTool.h"
 
 bool (*gAppCloseRequest)();
 extern "C" {
@@ -16,7 +17,8 @@ EMSCRIPTEN_KEEPALIVE int pvz_web_active() { return gLawnApp && gLawnApp->mActive
 EMSCRIPTEN_KEEPALIVE unsigned int pvz_web_updates() { return gLawnApp ? gLawnApp->mUpdateCount : 0; }
 EMSCRIPTEN_KEEPALIVE unsigned int pvz_web_draws() { return gLawnApp ? gLawnApp->mDrawCount : 0; }
 }
-int main() {
+int main(int argc, char** argv) {
+    if (argc > 1 && std::string(argv[1]) == "--save-tool") return RunWebSaveTool();
     setenv("PVZ_APPDATA_DIR", "/persist/development-v331/", 1);
     try {
         gTodStringFormats = gLawnStringFormats;

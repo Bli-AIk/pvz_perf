@@ -16,6 +16,7 @@ inline Renderer* CreateRenderer(Context& context, int width, int height,
             Selected == BuildConfig::GraphicsApi::Metal ||
             Selected == BuildConfig::GraphicsApi::OpenGL ||
             Selected == BuildConfig::GraphicsApi::WebGL ||
+            Selected == BuildConfig::GraphicsApi::WebGPU ||
             Selected == BuildConfig::GraphicsApi::D3d9);
         return new Renderer(context, width, height, shaderDirectory, hdr);
     }
@@ -31,6 +32,7 @@ inline auto* CausticsTexture(const Renderer& renderer)
             Selected == BuildConfig::GraphicsApi::Metal ||
             Selected == BuildConfig::GraphicsApi::OpenGL ||
             Selected == BuildConfig::GraphicsApi::WebGL ||
+            Selected == BuildConfig::GraphicsApi::WebGPU ||
             Selected == BuildConfig::GraphicsApi::D3d9);
         return renderer.causticsTexture;
     }
@@ -44,6 +46,7 @@ inline auto ScaleHandle(const Image& image)
     else if constexpr (Selected == BuildConfig::GraphicsApi::Metal ||
         Selected == BuildConfig::GraphicsApi::OpenGL ||
             Selected == BuildConfig::GraphicsApi::WebGL ||
+            Selected == BuildConfig::GraphicsApi::WebGPU ||
         Selected == BuildConfig::GraphicsApi::D3d9)
         return image.texture;
     else {

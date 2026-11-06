@@ -10,7 +10,19 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(PVZ_CONFIG_TARGET_SYSTEM Web)
 set(PVZ_CONFIG_WINDOW_SYSTEM Browser)
-set(PVZ_CONFIG_GRAPHICS_API WebGL)
+set(PVZ_WEB_BACKEND "WEBGL" CACHE STRING "Browser graphics backend: WEBGL or WEBGPU")
+set_property(CACHE PVZ_WEB_BACKEND PROPERTY STRINGS WEBGL WEBGPU)
+if(PVZ_WEB_BACKEND STREQUAL "WEBGPU")
+    set(PVZ_CONFIG_GRAPHICS_API WebGPU)
+    set(WEB_GPU_DIRECTORY webgpu)
+    set(WEB_GPU_DEFINITION PVZ_GPU_WEBGPU=1)
+elseif(PVZ_WEB_BACKEND STREQUAL "WEBGL")
+    set(PVZ_CONFIG_GRAPHICS_API WebGL)
+    set(WEB_GPU_DIRECTORY webgl)
+    set(WEB_GPU_DEFINITION PVZ_GPU_WEBGL=1)
+else()
+    message(FATAL_ERROR "PVZ_WEB_BACKEND must be WEBGL or WEBGPU")
+endif()
 set(PVZ_CONFIG_WINDOWS_API NotApplicable)
 configure_file("${ROOT}/CMake/BuildConfig.h.in" "${CMAKE_BINARY_DIR}/include/pvz/BuildConfig.h" @ONLY)
 set(PVZ_WEB_PAK "${ROOT}/out/x64-win32-vulkan/Release/main.pak64" CACHE FILEPATH "Prebuilt resource package")
@@ -28,23 +40,27 @@ file(GLOB SOURCES CONFIGURE_DEPENDS
     "${FRAMEWORK}/*.cpp" "${FRAMEWORK}/graphics/*.cpp" "${FRAMEWORK}/misc/*.cpp" "${FRAMEWORK}/widget/*.cpp")
 list(FILTER SOURCES EXCLUDE REGEX "/(main|TodDrawTriangle[^/]*|ModVal|Win32CrashDump|ModernVulkan[^/]*Smoke|Portable[^/]*Smoke|LoadingCloseSmoke|AttachmentLifetimeSmoke)\\.cpp$")
 list(FILTER SOURCES EXCLUDE REGEX "/FloatingPointMode\\.cpp$")
-file(GLOB WEB_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/web/*.cpp" "${FRAMEWORK}/platform/web/*.cpp" "${FRAMEWORK}/graphics/webgl/*.cpp")
+file(GLOB WEB_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/web/*.cpp" "${FRAMEWORK}/platform/web/*.cpp" "${FRAMEWORK}/graphics/${WEB_GPU_DIRECTORY}/*.cpp")
 add_executable(pvz-perf ${SOURCES} ${WEB_SOURCES}
     "${FRAMEWORK}/imagelib/ImageLib.cpp" "${FRAMEWORK}/paklib/PakInterface.cpp"
     "${FRAMEWORK}/effect/ScaleEffectSizing.cpp"
     "${FRAMEWORK}/platform/linux/LinuxApp.cpp" "${FRAMEWORK}/platform/linux/WindowGeometry.cpp"
     "${FRAMEWORK}/platform/linux/CalendarTime.cpp"
-    "${FRAMEWORK}/graphics/gl/GLRenderer.cpp"
-    "${FRAMEWORK}/graphics/gl/GLShaders.cpp"
-    "${FRAMEWORK}/graphics/gl/GLImageOps.cpp"
     "${FRAMEWORK}/sound/BassMusicInterface.cpp"
     "${PVZ_SPNG_SOURCE}/spng.c")
+if(PVZ_WEB_BACKEND STREQUAL "WEBGPU")
+    target_compile_options(pvz-perf PRIVATE --use-port=emdawnwebgpu)
+    target_link_options(pvz-perf PRIVATE --use-port=emdawnwebgpu)
+else()
+    target_sources(pvz-perf PRIVATE "${FRAMEWORK}/graphics/gl/GLRenderer.cpp" "${FRAMEWORK}/graphics/gl/GLShaders.cpp" "${FRAMEWORK}/graphics/gl/GLImageOps.cpp")
+endif()
+
 target_include_directories(pvz-perf PRIVATE "${CMAKE_CURRENT_LIST_DIR}" "${CMAKE_BINARY_DIR}/include"
     "${ROOT}" "${GAME}" "${FRAMEWORK}" "${GAME}/Sexy.TodLib" "${FRAMEWORK}/graphics"
     "${PVZ_SPNG_SOURCE}")
 # Do not expose all host-vcpkg headers (zlib/jpeg have a different target ABI).
 file(COPY "${PVZ_JSON_INCLUDE}/nlohmann" DESTINATION "${CMAKE_BINARY_DIR}/include")
-target_compile_definitions(pvz-perf PRIVATE NDEBUG PVZ_GPU_WEBGL=1 SEXY_WINDOW_BROWSER=1 SEXY_RENDER_GPU=1 SPNG_STATIC SEXY_DISABLE_MODVAL=1 AL_APIENTRY=)
+target_compile_definitions(pvz-perf PRIVATE NDEBUG ${WEB_GPU_DEFINITION} SEXY_WINDOW_BROWSER=1 SEXY_RENDER_GPU=1 SPNG_STATIC SEXY_DISABLE_MODVAL=1 AL_APIENTRY=)
 target_compile_options(pvz-perf PRIVATE -Oz -flto -fexceptions -sUSE_SDL=2 -sUSE_ZLIB=1 -sUSE_LIBJPEG=1
     -Wno-inconsistent-missing-override -Wno-invalid-source-encoding -Wno-invalid-offsetof)
 target_link_options(pvz-perf PRIVATE -Oz -flto -fexceptions -sUSE_SDL=2 -sUSE_ZLIB=1 -sUSE_LIBJPEG=1

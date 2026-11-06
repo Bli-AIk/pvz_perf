@@ -1,27 +1,17 @@
 import assert from 'node:assert/strict';
 import {authorizeReward} from './game/rewards.js';
-
+const bvid='BV1hV4P6PEDc',config={bypassBilibiliChecks:false,rewardVideoBvid:bvid};
 let calls=0;
-const forbidden=async()=>{++calls;throw Error('Offline path contacted SDK')};
-for(const kind of ['perfect','endless'])await authorizeReward(kind,{bypassBilibiliChecks:true},forbidden);
+await authorizeReward({bypassBilibiliChecks:true},async()=>{++calls;throw Error('Offline contacted SDK')});
 assert.equal(calls,0);
-await assert.rejects(authorizeReward('perfect',{bypassBilibiliChecks:false,perfectSaveRequirement:'coin',rewardVideoBvids:[]},forbidden),/BV/);
-assert.equal(calls,0);
-const config={bypassBilibiliChecks:false,perfectSaveRequirement:'coin',rewardVideoBvids:['BVtestA','BVtestB']};
-await authorizeReward('perfect',config,async()=>({getVideoUserActions:async req=>{
- assert.deepEqual(req.videos,[{bvid:'BVtestA'},{bvid:'BVtestB'}]);
- return {status:'partial',items:[{status:'denied'},{status:'ok',coinCount:1}]};
-}}));
-for(const status of ['unsupported','denied','not_login'])
- await assert.rejects(authorizeReward('perfect',config,async()=>({getVideoUserActions:async()=>({status,items:[]})})));
-await assert.rejects(authorizeReward('perfect',config,async()=>({getVideoUserActions:async()=>({status:'ok',items:[{status:'ok',coinCount:0}]})})));
-await assert.rejects(authorizeReward('endless',config,async()=>({getAuthorRelation:async()=>({status:'ok',data:{isFollowing:false}})})));
-await authorizeReward('endless',config,async()=>({getAuthorRelation:async()=>({status:'ok',data:{isFollowing:true}})}));
-for(const kind of ['perfect','endless']){
- const following={bypassBilibiliChecks:false,perfectSaveRequirement:'following',rewardVideoBvids:[]};
- await authorizeReward(kind,following,async()=>({getAuthorRelation:async()=>({status:'ok',data:{isFollowing:false,isAuthor:true}})}));
- await authorizeReward(kind,following,async()=>({getAuthorRelation:async()=>({status:'ok',data:{isFollowing:true,isAuthor:false}})}));
- await assert.rejects(authorizeReward(kind,following,async()=>({getAuthorRelation:async()=>({status:'ok',data:{isFollowing:false,isAuthor:false}})})));
- await assert.rejects(authorizeReward(kind,following,async()=>({getAuthorRelation:async()=>({status:'unsupported',data:{isAuthor:true}})})));
-}
-console.log('PASS reward authorization: offline makes zero SDK calls; empty BV, unsupported, denied and unmet actions never grant saves');
+await authorizeReward(config,async()=>({getAuthorRelation:async()=>({status:'ok',data:{isAuthor:true}}),getVideoUserActions:async()=>{throw Error('Author should bypass coin lookup')}}));
+const response=(coinCount,options={})=>({getAuthorRelation:async()=>({status:'ok',data:{isFollowing:true,isAuthor:false}}),getVideoUserActions:async req=>{assert.deepEqual(req.videos,[{bvid}]);return {status:'ok',items:[{bvid,status:'ok',coinCount,...options}]}}});
+await authorizeReward(config,async()=>response(2));
+for(const count of [0,1,undefined,null,'2',NaN])await assert.rejects(authorizeReward(config,async()=>response(count)),/两个币/);
+await assert.rejects(authorizeReward(config,async()=>response(2,{bvid:'BV0000000000'})),/两个币/);
+await assert.rejects(authorizeReward(config,async()=>response(2,{status:'denied'})),/两个币/);
+for(const status of ['unsupported','denied','not_login'])await assert.rejects(authorizeReward(config,async()=>({getAuthorRelation:async()=>({status,data:{isAuthor:true}}),getVideoUserActions:async()=>({status,items:[{bvid,status:'ok',coinCount:2}]})})),/无法验证/);
+await authorizeReward(config,async()=>({getAuthorRelation:async()=>{throw Error('Unavailable')},getVideoUserActions:async()=>({status:'ok',items:[{bvid,status:'ok',coinCount:2}]})}));
+await authorizeReward(config,async()=>({getVideoUserActions:async()=>({status:'partial',items:[{bvid,status:'ok',coinCount:2}]})}));
+await assert.rejects(authorizeReward({...config,rewardVideoBvid:''},async()=>response(2)),/BV/);
+console.log('PASS: author or two coins on the exact configured BV; following, one coin, wrong video and failed statuses do not grant saves; offline calls no SDK');

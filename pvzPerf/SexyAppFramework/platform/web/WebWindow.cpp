@@ -1,6 +1,7 @@
 #include "platform/NativeWindow.h"
 #include "platform/TabletCaret.h"
 #include "WebTextInput.h"
+#include "SexyAppBase.h"
 #include "platform/UserDirectories.h"
 #include "platform/ErrorDialog.h"
 #include <SDL.h>
@@ -15,6 +16,10 @@ EM_JS(double, WebRefreshRate, (), { return Module.pvzRefreshRate || 60; });
 namespace Sexy {
 namespace {
 int pendingWidth = 0, pendingHeight = 0;
+unsigned int pendingRefreshRate = 0;
+}
+extern "C" EMSCRIPTEN_KEEPALIVE void pvz_web_refresh_rate(unsigned int rate) {
+    pendingRefreshRate = std::clamp(rate, 30U, 1000U);
 }
 extern "C" EMSCRIPTEN_KEEPALIVE void pvz_web_resize(int width, int height) {
     // DOM events only publish dimensions. Apply them in the normal event phase,
@@ -52,18 +57,34 @@ struct NativeWindow::Impl {
 NativeWindow::NativeWindow(const NativeWindowConfig& config) : impl_(new Impl) {
     impl_->config = config;
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) != 0) throw std::runtime_error(SDL_GetError());
+#if !defined(PVZ_GPU_WEBGPU)
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+#endif
     Width = std::clamp(WebViewportWidth(), 800, 1400); Height = 600; Focused = true;
-    impl_->window = SDL_CreateWindow(config.title.c_str(), 0, 0, Width, Height, SDL_WINDOW_OPENGL);
+    impl_->window = SDL_CreateWindow(config.title.c_str(), 0, 0, Width, Height,
+#if defined(PVZ_GPU_WEBGPU)
+        0
+#else
+        SDL_WINDOW_OPENGL
+#endif
+    );
     if (!impl_->window) throw std::runtime_error(SDL_GetError());
+
+#if !defined(PVZ_GPU_WEBGPU)
     impl_->context = SDL_GL_CreateContext(impl_->window);
     if (!impl_->context) throw std::runtime_error(SDL_GetError());
     emscripten_webgl_enable_extension(emscripten_webgl_get_current_context(), "EXT_color_buffer_float");
     emscripten_webgl_enable_extension(emscripten_webgl_get_current_context(), "OES_texture_float_linear");
+#endif
 }
-NativeWindow::~NativeWindow() { SDL_GL_DeleteContext(impl_->context); SDL_DestroyWindow(impl_->window); }
+NativeWindow::~NativeWindow() {
+#if !defined(PVZ_GPU_WEBGPU)
+    SDL_GL_DeleteContext(impl_->context);
+#endif
+    SDL_DestroyWindow(impl_->window);
+}
 void NativeWindow::PumpEvents() {
     ProcessWebTextInput();
     if (pendingWidth) {
@@ -76,6 +97,14 @@ void NativeWindow::PumpEvents() {
             resized.width = w; resized.height = h;
             if (impl_->config.callback) impl_->config.callback(impl_->config.callbackContext, resized);
         }
+    }
+    if (pendingRefreshRate) {
+        // Apply JS observations only at the normal native event boundary, never
+        // re-enter C++ while Asyncify has suspended an update/draw. Retain all
+        // wall-time backlog and already simulated time across cadence changes.
+        if (gSexyAppBase && gSexyAppBase->mAutoDetectFrameRate)
+            gSexyAppBase->mFrameTiming = FrameTiming::FromDisplayRefreshRate(pendingRefreshRate);
+        pendingRefreshRate = 0;
     }
     SDL_Event input;
     while (SDL_PollEvent(&input)) {

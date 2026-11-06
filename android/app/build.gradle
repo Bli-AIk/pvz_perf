@@ -6,8 +6,8 @@ android { namespace 'com.openpvz.perf'; compileSdk 35
         applicationId 'com.openpvz.perf'
         minSdk providers.gradleProperty('pvzMinSdk').getOrElse('34').toInteger()
         targetSdk 35
-        versionCode 14
-        versionName '3.3.2'
+        versionCode 15
+        versionName '3.3.3'
         buildConfigField 'boolean', 'HDR_DEVICE_TEST', providers.gradleProperty('pvzHdrTest').getOrElse('false')
     }
     compileOptions {

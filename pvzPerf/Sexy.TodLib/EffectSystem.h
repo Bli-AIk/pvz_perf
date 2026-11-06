@@ -25,7 +25,7 @@ class TodTriangleGroup
 public:
     TextureSource               mTexture;
     std::vector<std::array<TriVertex,3>> mVertArray;
-#if defined(PVZ_GPU_VULKAN) || defined(PVZ_GPU_D3D12) || (defined(PVZ_GPU_OPENGL) || defined(PVZ_GPU_WEBGL))
+#if defined(PVZ_GPU_VULKAN) || defined(PVZ_GPU_D3D12) || (defined(PVZ_GPU_OPENGL) || defined(PVZ_GPU_WEBGL) || defined(PVZ_GPU_WEBGPU))
     std::vector<std::array<TriVertex,4>> mQuadArray;
 #endif
     int                         mDrawMode;

@@ -1,9 +1,13 @@
 """Stage a relative-path Toy site; keep the uncompressed Wasm in the build tree."""
 import argparse
 import gzip
+import base64
+import hashlib
 import json
+import re
 from pathlib import Path
 import shutil
+import subprocess
 import runpy
 import zipfile
 
@@ -16,15 +20,16 @@ def main():
     parser.add_argument('--output', type=Path, default=ROOT / 'out/wasm/toy')
     parser.add_argument('--config', type=Path, default=ROOT / 'tools/wasm/game/web-config.json')
     parser.add_argument('--bilibili', action='store_true', help='Disable API bypass; game files remain identical')
+    parser.add_argument('--webgpu', action='store_true', help='Package WebGPU; optionally add selectable WebGL through --webgl-build')
+    parser.add_argument('--webgl-build', type=Path, help='Include selectable WebGL runtime, sharing the same data package')
     args = parser.parse_args()
+    version_source = (ROOT / 'pvzPerf/LawnApp.cpp').read_text(encoding='utf-8')
+    version = re.search(r'mProductVersion\s*=\s*"([^"]+)"', version_source).group(1)
     config = json.loads(args.config.read_text(encoding='utf-8'))
     if not isinstance(config.get('bypassBilibiliChecks'), bool):
         raise ValueError('bypassBilibiliChecks must be a boolean')
-    if config.get('perfectSaveRequirement') not in ('following', 'coin'):
-        raise ValueError('perfectSaveRequirement must be following or coin')
-    videos = config.get('rewardVideoBvids')
-    if not isinstance(videos, list) or any(not isinstance(video, str) or not video.startswith('BV') for video in videos):
-        raise ValueError('rewardVideoBvids must be an array of BV strings')
+    if not isinstance(config.get('rewardVideoBvid'), str) or not re.fullmatch(r'BV[0-9A-Za-z]{10}',config['rewardVideoBvid']):
+        raise ValueError('rewardVideoBvid must be one BV string')
     if args.bilibili:
         config['bypassBilibiliChecks'] = False
     required = ['pvz-perf.js', 'pvz-perf.wasm', 'pvz-perf.data']
@@ -32,15 +37,35 @@ def main():
         if not (args.build / name).is_file():
             raise FileNotFoundError(args.build / name)
     args.output.mkdir(parents=True, exist_ok=True)
-    support_files = ['index.html', 'launcher.js', 'launcher.css', 'rewards.js', 'text-input.js', 'save-catalog.json', 'serve.py',
+    (args.output / "save-tool.html").unlink(missing_ok=True)
+    support_files = ['index.html', 'launcher.js', 'launcher.css', 'rewards.js', 'lineups.js', 'frame-rate.js', 'graphics.js', 'save-tools.js', 'save-tool-runtime.js', 'text-input.js', 'serve.py',
                      'start-local.cmd', 'start-local.sh', 'README.txt']
     for name in support_files:
         shutil.copyfile(ROOT / 'tools/wasm/game' / name, args.output / name)
+    readme = args.output / 'README.txt'
+    text = readme.read_text(encoding='utf-8')
+    readme.write_text('pvz_perf Web v' + version + '\n' + text.split('\n', 1)[1], encoding='utf-8')
     (args.output / 'web-config.js').write_text('window.PVZWebConfig = ' + json.dumps(config, ensure_ascii=False, indent=2) + ';\n', encoding='utf-8')
     for name in ['pvz-perf.js', 'pvz-perf.data']:
         shutil.copyfile(args.build / name, args.output / name)
     (args.output / 'pvz-perf.wasm.gz').write_bytes(gzip.compress((args.build / 'pvz-perf.wasm').read_bytes(), compresslevel=9, mtime=0))
     files = support_files + ['web-config.js', 'pvz-perf.js', 'pvz-perf.data', 'pvz-perf.wasm.gz']
+    if args.webgl_build:
+        if not args.webgpu:
+            raise ValueError('--webgl-build requires --webgpu')
+        if hashlib.sha256((args.webgl_build / 'pvz-perf.data').read_bytes()).digest() != hashlib.sha256((args.build / 'pvz-perf.data').read_bytes()).digest():
+            raise ValueError('WebGL and WebGPU must use the same resource package')
+        shutil.copyfile(args.webgl_build / 'pvz-perf.js', args.output / 'pvz-perf-webgl.js')
+        (args.output / 'pvz-perf-webgl.wasm.gz').write_bytes(gzip.compress((args.webgl_build / 'pvz-perf.wasm').read_bytes(), compresslevel=9, mtime=0))
+        files += ['pvz-perf-webgl.js', 'pvz-perf-webgl.wasm.gz']
+    graphics = {'version': version, 'webgpu': args.webgpu, 'fallback': bool(args.webgl_build)}
+    (args.output / 'graphics-config.js').write_text('window.PVZGraphicsConfig = ' + json.dumps(graphics) + ';\n', encoding='utf-8')
+    files.append('graphics-config.js')
+    if args.webgpu:
+        license_path = args.output / 'licenses/emdawnwebgpu.txt'
+        license_path.parent.mkdir(exist_ok=True)
+        shutil.copyfile(ROOT / 'tools/wasm/licenses/emdawnwebgpu.txt', license_path)
+        files.append('licenses/emdawnwebgpu.txt')
     decoder = ROOT / 'out/dependencies/libopenmpt-web-0.8.10'
     runtime = decoder / 'bin/wasm/libopenmpt.js'
     if not runtime.is_file():
@@ -73,6 +98,24 @@ def main():
                     if name == 'user1.dat64' else source.read('data/' + name))
             destination.write_bytes(data)
             files.append(relative)
+    bundle = {name: base64.b64encode((args.output / 'development-save' / name).read_bytes()).decode('ascii') for name in ['users.dat','user1.dat64','game1_58.dat64']}
+    (args.output / 'save-bundle.json').write_text(json.dumps(bundle,separators=(',',':')),encoding='utf-8')
+    files = [name for name in files if not name.startswith('development-save/')] + ['save-bundle.json']
+    source_commit = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()
+    manifest = {
+        'version': version,
+        'backend': 'WebGPU' if args.webgpu else 'WebGL2',
+        'webgl_fallback': bool(args.webgl_build),
+        'source_commit': source_commit,
+        'source_url': 'https://github.com/YuHao2006/pvz_perf/tree/' + source_commit,
+        'bypass_bilibili_checks': config['bypassBilibiliChecks'],
+        'files': {name: {'bytes': (args.output / name).stat().st_size,
+                         'sha256': hashlib.sha256((args.output / name).read_bytes()).hexdigest()}
+                  for name in files},
+    }
+    (args.output / 'web-build-manifest.json').write_text(
+        json.dumps(manifest, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+    files.append('web-build-manifest.json')
     sizes = {name: (args.output / name).stat().st_size for name in files}
     archive_path = args.output.parent / ('pvz-perf-toy-bilibili.zip' if args.bilibili else 'pvz-perf-toy.zip')
     with zipfile.ZipFile(archive_path, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as archive:

@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';
+import {detectGraphics,capabilityText} from './game/graphics.js';
+const limits={maxTextureDimension2D:8192,maxSampledTexturesPerShaderStage:16,maxBindGroups:4};
+let requests=0,destroyed=0,requested;
+const adapter={features:new Set(['dual-source-blending','timestamp-query']),limits,info:{vendor:'test'},requestDevice:async options=>{requests++;requested=options;return {destroy(){destroyed++}}}};
+const gpu={requestAdapter:async()=>adapter};
+let result=await detectGraphics(gpu);assert.equal(result.backend,'webgpu');assert.deepEqual(requested.requiredFeatures,['dual-source-blending']);assert.equal(destroyed,1);assert.match(capabilityText(result),/两套/);
+result=await detectGraphics(undefined);assert.equal(result.backend,'webgl');assert.match(result.reason,/安全上下文/);
+await assert.rejects(detectGraphics(undefined,'webgpu'),/初始化失败/);
+result=await detectGraphics({requestAdapter:async()=>null});assert.equal(result.backend,'webgl');
+result=await detectGraphics({requestAdapter:async()=>({...adapter,requestDevice:async()=>{throw Error('device denied')}})});assert.equal(result.backend,'webgl');assert.match(result.reason,/device denied/);
+result=await detectGraphics({requestAdapter:async()=>({...adapter,features:new Set()})});assert.equal(result.backend,'webgpu');assert.deepEqual(requested.requiredFeatures,[]);
+result=await detectGraphics(gpu,'webgl');assert.equal(result.backend,'webgl');assert.equal(result.webgpu,true);
+const before=requests;result=await detectGraphics(gpu,'auto',false);assert.equal(result.backend,'webgl');assert.equal(requests,before);
+console.log('Graphics capability selection and fallback: passed');

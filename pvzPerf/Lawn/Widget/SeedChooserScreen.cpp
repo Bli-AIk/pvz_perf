@@ -516,7 +516,16 @@ void SeedChooserScreen::Draw(Graphics* g)
 
 	if(mBoard->mLandscapeHud) {
         if(!mImitaterButton->mBtnNoDraw) LandscapeHud::DrawImitaterAddon(g);
+        // Landscape has no separate disabled artwork: tint the selected packet.
+        const auto savedColor = g->mColor;
+        const bool savedColorize = g->mColorizeImages;
+        if (mImitaterButton->mDisabled) {
+            g->mColorizeImages = true;
+            g->mColor = Color(115, 115, 115);
+        }
         mImitaterButton->DrawAtlas(g,chooserButtons);
+        g->mColor = savedColor;
+        g->mColorizeImages = savedColorize;
     }
     else mImitaterButton->Draw(g);
 	for (SeedType aSeedType = SEED_PEASHOOTER; aSeedType < NUM_SEEDS_IN_CHOOSER; aSeedType = (SeedType)(aSeedType + 1))

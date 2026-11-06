@@ -12,7 +12,7 @@
 namespace {
 bool browserFrameReady = false;
 EM_ASYNC_JS(void, WaitForBrowserFrame, (), {
-    await new Promise(resolve => requestAnimationFrame(resolve));
+    await new Promise(resolve => requestAnimationFrame(time => { Module.pvzObserveFrame?.(time); resolve(); }));
 });
 }
 namespace Sexy {

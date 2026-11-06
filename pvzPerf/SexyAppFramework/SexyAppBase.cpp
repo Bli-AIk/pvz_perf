@@ -4804,7 +4804,7 @@ void SexyAppBase::LoadScaleConfig()
 	}
 
 	// Decode protocol fields once; only numeric IDs/values survive in app state.
-#if (defined(PVZ_GPU_OPENGL) || defined(PVZ_GPU_WEBGL)) || defined(PVZ_GPU_D3D9) || (defined(__ANDROID__) && !defined(SEXY_SCALE_EFFECT_AUTHORING))
+#if (defined(PVZ_GPU_OPENGL) || defined(PVZ_GPU_WEBGL) || defined(PVZ_GPU_WEBGPU)) || defined(PVZ_GPU_D3D9) || (defined(__ANDROID__) && !defined(SEXY_SCALE_EFFECT_AUTHORING))
     auto LoadPipelineEffects = [&aDoc](const char* section, ScalePipelineConfig&)
     {
         if(aDoc.GetArraySize(std::string(section)+"/effects") != 0)
@@ -4934,7 +4934,7 @@ void SexyAppBase::LoadScaleConfig()
 // 唯一暴露项（AutoHDRStrength 同义，默认 1）。
 void SexyAppBase::ResolveHDRAutoParams()
 {
-#if (defined(PVZ_GPU_OPENGL) || defined(PVZ_GPU_WEBGL)) || defined(PVZ_GPU_D3D9)
+#if (defined(PVZ_GPU_OPENGL) || defined(PVZ_GPU_WEBGL) || defined(PVZ_GPU_WEBGPU)) || defined(PVZ_GPU_D3D9)
     mScaleHDREnabled = false;
 #elif defined(_WIN32)
     ResolveWindowsHdr(mNativeHdrState, *this, mScaleHDREnabled ? TargetMonitor() : nullptr);
@@ -4950,7 +4950,7 @@ void SexyAppBase::CompileScaleEffects()
 {
     // Source was compiled while resolving startup configuration, before GPU preparation.
     if(mModernScalePrepared) throw std::logic_error("Scale shaders may only load before device preparation");
-#if (defined(PVZ_GPU_OPENGL) || defined(PVZ_GPU_WEBGL)) || defined(PVZ_GPU_D3D9) || (defined(__ANDROID__) && !defined(SEXY_SCALE_EFFECT_AUTHORING))
+#if (defined(PVZ_GPU_OPENGL) || defined(PVZ_GPU_WEBGL) || defined(PVZ_GPU_WEBGPU)) || defined(PVZ_GPU_D3D9) || (defined(__ANDROID__) && !defined(SEXY_SCALE_EFFECT_AUTHORING))
     if(!mScaleEffects.empty())
         throw std::runtime_error("This graphics backend does not support HLSL/compute scale effects");
 #else
