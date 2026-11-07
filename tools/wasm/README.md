@@ -1,4 +1,4 @@
-# v3.3.4beta 网页版：WebGPU / WebGL 2 / Wasm
+# v3.3.4 网页版：WebGPU / WebGL 2 / Wasm
 
 独立 CMake 工程 `game/` 编译当前 pvz_perf 游戏逻辑，不替换为上游游戏。
 发行包包含 WebGPU 和 WebGL 2；启动时默认优先 WebGPU，不可用时使用 WebGL 2，也可手动选择。

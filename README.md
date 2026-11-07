@@ -2,7 +2,7 @@
 
 基于 [PvZ-Portable](https://github.com/wszqkzqk/PvZ-Portable) 修改，继续优化《植物大战僵尸》的 CPU 热路径、资源装载、图形提交和跨平台输入。游戏行为以零售 1073 为主要核对依据。
 
-**当前原生发行版：[v3.3.4](https://github.com/YuHao2006/pvz_perf/releases/tag/v3.3.4)。网页版现行发行包仍为 v3.3.3，v3.3.4 网页改动正在开发。**
+**当前发行版：[v3.3.4](https://github.com/YuHao2006/pvz_perf/releases/tag/v3.3.4)，包含四个原生包和网页版。**
 
 版本号采用三段规则：**第一个数表示破坏性更新，第二个数表示功能更新，第三个数表示 bug 修复**。兼容性以各版发行说明为准。
 
