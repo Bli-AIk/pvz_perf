@@ -33,8 +33,12 @@ void HostYield() {
         browserFrameReady = false;
     }
 }
-void HostStartLoading(SexyAppBase& app, void (*entry)(void*)) { entry(&app); }
+void HostStartLoading(SexyAppBase& app, void (*entry)(void*)) {
+    EM_ASM({ Module.pvzStartupPhase?.('加载游戏资源'); });
+    entry(&app);
+}
 void HostFinishResourcePrewarm(SexyAppBase&, const std::atomic<bool>&) {
+    EM_ASM({ Module.pvzStartupPhase?.('解码音效与上传纹理'); });
     FinishWebSoundLoading();
     TodWarmDrainAll();
     ReanimatorUploadAllTexturesToGPU();

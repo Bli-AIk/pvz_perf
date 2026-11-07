@@ -1,9 +1,13 @@
 #include "sound/BassLoader.h"
+#include "WebOggDecoder.h"
 #include <emscripten.h>
 #include <cstring>
 // ABI adapter for the existing music controller. No BASS binary is loaded.
 EM_JS(unsigned int, web_music_load, (const void* data,unsigned int size,int stream), {
     return Module.pvzMusic.load(HEAPU8.slice(data,data+size),!!stream);
+});
+EM_JS(unsigned int, web_music_pcm, (const float* data,int samples,int channels,int rate), {
+    return Module.pvzMusic.loadStream(HEAPF32.subarray(data>>2,(data>>2)+samples),channels,rate);
 });
 EM_JS(double, web_music_command, (unsigned int id,const char* op,double value,int extra), {
     return Module.pvzMusic.command(id,UTF8ToString(op),value,extra);
@@ -20,7 +24,8 @@ unsigned int LoadModule(BASSBOOL memory,const void* data,QWORD offset,DWORD size
 }
 unsigned int LoadStream(BASSBOOL memory,const void* data,QWORD offset,QWORD size,DWORD) {
     if(!memory||!data||!size||size>0xffffffffULL||offset)return 0;
-    return web_music_load(data,static_cast<unsigned int>(size),true);
+    const auto pcm=Sexy::DecodeWebOgg({static_cast<const unsigned char*>(data),static_cast<size_t>(size)});
+    return web_music_pcm(pcm.samples.data(),static_cast<int>(pcm.samples.size()),pcm.channels,pcm.sampleRate);
 }
 BASSBOOL FreeVoice(DWORD id) { return web_music_command(id,"free",0,0); }
 BASSBOOL Play(DWORD id,BASSBOOL restart) { return web_music_command(id,"play",restart,0); }

@@ -1,6 +1,7 @@
 #include "LawnApp.h"
 #include "Lawn/Board.h"
 #include "Resources.h"
+#include "paklib/PakInterface.h"
 #include "Sexy.TodLib/TodStringFile.h"
 #include <cstdio>
 #include <cstdlib>
@@ -34,9 +35,18 @@ int main(int argc, char** argv) {
         gLawnApp->Start();
         gLawnApp->Shutdown();
         delete gLawnApp; gLawnApp = nullptr;
-        EM_ASM({ Module.FS.syncfs(false, error => { if (error) console.error(error); Module.pvzOnQuit?.(); }); });
+        // The Wasm instance and mounted save filesystem survive Quit. App-owned
+        // GPU/audio resources are gone; release the package mapping so the next
+        // app cannot accumulate a second mapping of the same preloaded bytes.
+        delete gPakInterface;
+        gPakInterface = new PakInterface;
+        EM_ASM({ Module.pvzOnQuit?.(); });
     } catch (const std::exception& error) {
         emscripten_log(EM_LOG_ERROR, "pvz_perf Web: %s", error.what());
+        EM_ASM({ Module.pvzOnError?.(UTF8ToString($0)); }, error.what());
+        return 1;
+    } catch (...) {
+        EM_ASM({ Module.pvzOnError?.('游戏初始化或运行时出现未知异常'); });
         return 1;
     }
     return 0;

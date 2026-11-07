@@ -29,7 +29,7 @@ if (-not $JsonInclude) {
 }
 $webRoot = if ($GraphicsBackend -eq 'WEBGPU') { 'out/wasm-webgpu' } else { 'out/wasm' }
 $webBuild = Join-Path $projectRoot ($webRoot + '/game')
-if (-not $PakFile) { $PakFile = Join-Path $projectRoot 'out/x64-win32-vulkan/Release/main.pak64' }
+if (-not $PakFile) { $PakFile = Join-Path $projectRoot 'out/x64-win32-vulkan/cache/resources/main-compact.pak64' }
 if (-not (Test-Path -LiteralPath $PakFile)) {
     throw 'Build the requested main.pak64 resource package first.'
 }

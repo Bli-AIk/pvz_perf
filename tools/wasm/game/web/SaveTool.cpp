@@ -141,13 +141,15 @@ int RunWebSaveTool() {
         app.Init();
         app.LoadingThreadProc();
         Require(!app.mLoadingFailed && app.mPlayerInfo,"Cannot initialize offline save resources/profile");
-        app.mGameMode=GameMode::GAMEMODE_SURVIVAL_ENDLESS_STAGE_3;
+        Json request;std::ifstream("/tool/request.json")>>request;
+        const int mode=request.value("mode",static_cast<int>(GameMode::GAMEMODE_SURVIVAL_ENDLESS_STAGE_3));
+        Require(mode>=0&&mode<static_cast<int>(GameMode::NUM_GAME_MODES),"Invalid DAT64 slot mode");
+        app.mGameMode=static_cast<GameMode>(mode);
         app.mGameScene=GameScenes::SCENE_PLAYING;
         app.mBoard=new Board(&app);
-        Json request;std::ifstream("/tool/request.json")>>request;
         if(request.at("op")=="generate")Generate(app,*app.mBoard,request.at("recipe"));
         else Require(LawnLoadGame(app.mBoard,"/tool/input.dat64"),"Cannot load DAT64 in offline extractor");
-        const auto result=Extract(*app.mBoard).dump();
+        const auto result=(request.at("op")=="validate" ? Json{{"mode",mode},{"scene",static_cast<int>(app.mBoard->mBackground)}} : Extract(*app.mBoard)).dump();
         ReleaseToolApp();
         EM_ASM({Module.pvzToolComplete(UTF8ToString($0));},result.c_str());
         // The caller also destroys the iframe and remaining Wasm memory.

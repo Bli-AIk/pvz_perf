@@ -1,5 +1,5 @@
 import {MusicMixer} from './music-mixer.js';
-import {SoundEngine} from './sound-engine.js';
+import {SoundEngine,createPCMBuffer} from './sound-engine.js';
 export async function prepareMusic(){
  const response=await fetch('./audio/libopenmpt.wasm');if(!response.ok)throw Error('Cannot load MO3 decoder');
  const compiled=await WebAssembly.compile(await response.arrayBuffer());
@@ -37,10 +37,14 @@ class MusicEngine {
   });
  }
  load(data,stream){
+  if(stream)throw Error('OGG streams must be decoded by Wasm');
   const id=this.next++,v={id,stream,playing:false,paused:false,position:0,revision:0,tempo:155,speed:3,gain:0,flags:0,offset:0};this.voices.set(id,v);
-  if(!stream)this.send({op:'load',id,data});
-  else this.context.decodeAudioData(data.buffer).then(buffer=>{if(!this.voices.has(id))return;v.buffer=buffer;v.gainNode=this.context.createGain();v.gainNode.gain.value=v.gain;v.gainNode.connect(this.master);if(v.playing&&!v.paused)this.startStream(v)}).catch(error=>{this.error=String(error);console.error(error)});
+  this.send({op:'load',id,data});
   return id;
+ }
+ loadStream(samples,channels,rate){
+  const id=this.next++,buffer=createPCMBuffer(this.context,samples,channels,rate),gainNode=this.context.createGain();gainNode.gain.value=0;gainNode.connect(this.master);
+  this.voices.set(id,{id,stream:true,playing:false,paused:false,position:0,revision:0,tempo:155,speed:3,gain:0,flags:0,offset:0,buffer,gainNode});return id;
  }
  startStream(v){
   v.source?.stop();if(!v.buffer)return;
@@ -69,5 +73,5 @@ class MusicEngine {
   if(op==='resume'){v.paused=false;v.playing=true;if(v.stream)this.startStream(v)}
   if(!v.stream)this.send({id,op,value,channel:extra,restart:!!value});return 1;
  }
- close(){this.sound?.close();for(const id of this.voices.keys())this.command(id,'free')}
+ close(){this.sound?.close();for(const id of this.voices.keys())this.command(id,'free');this.sound=new SoundEngine(this.context);this.error=''}
 }

@@ -16,24 +16,22 @@ try{
  assert.ok(Math.abs(a.x-b.x)<1&&b.y>a.y&&c.x>a.x);
  assert.equal(await page.locator('#coin-video').getAttribute('href'),'https://www.bilibili.com/video/BV1hV4P6PEDc/');
  assert.equal(await page.locator('#cover #export-endless').count(),0);
- await page.locator('#claim-perfect').click();await page.locator('#replace-save-dialog button[value=replace]').click();await page.waitForFunction(()=>document.getElementById('reward-status').textContent.includes('无尽基准已部署'));
- await page.locator('#claim-endless').click();await page.locator('#endless-dialog').waitFor({state:'visible'});
- assert.equal(await page.locator('#lineup-file').count(),0);assert.equal(await page.locator('#internal-save').inputValue(),'game1_58.dat64');
- await page.locator('#extract-lineup').click();await page.waitForFunction(()=>document.getElementById('endless-status').textContent.includes('已提取'),null,{timeout:180000});
- assert.equal(page.url(),url);assert.equal(await page.locator('#endless-dialog').isVisible(),true);
- const extracted=await page.locator('#lineup-code').inputValue();assert.ok(extracted.length>20);
- assert.equal(await page.locator('iframe').count(),0);
- // Generate from that real internal DAT64, not an external upload or template-only path.
- await page.locator('#endless-flags').fill('128');await page.locator('#endless-seed').fill('114514');await page.locator('#endless-scene').selectOption('3');
+ page.once('dialog',d=>d.accept());
+ await page.locator('#custom-save').click();const editor=page.frameLocator('#save-editor-frame');await editor.locator('#board button').first().waitFor();
+ await editor.locator('[data-tab=profile]').click();await editor.locator('#perfect').click();await editor.locator('#status').filter({hasText:'完美存档与无尽基准已部署'}).waitFor({timeout:180000});
+ await editor.locator('[data-tab=files]').click();await editor.locator('#extract').click();await editor.locator('#status').filter({hasText:'已提取阵型'}).waitFor({timeout:180000});
+ assert.equal(page.url(),url);assert.equal(await page.locator('#save-editor-dialog').isVisible(),true);
+ assert.ok((await editor.locator('#code').inputValue()).length>20);
+ await editor.locator('#flags').fill('128');await editor.locator('#seed').fill('114514');await editor.locator('#scene').selectOption({index:3});
  const queriesAtOpen=await page.evaluate(()=>window.toyCalls);
  await page.evaluate(()=>{window.toy.getAuthorRelation=async()=>{throw Error('SDK must not be called inside the modal')};window.toy.getVideoUserActions=async()=>{throw Error('SDK must not be called inside the modal')}});
- await page.locator('#generate-endless').click();await page.waitForFunction(()=>document.getElementById('endless-status').textContent.includes('已生成并部署'),null,{timeout:180000});
- assert.equal(page.url(),url);assert.equal(await page.locator('iframe').count(),0);assert.equal(await page.locator('#start').isEnabled(),true);
+ await editor.locator('#generate').click();await editor.locator('#status').filter({hasText:'已生成并部署'}).waitFor({timeout:180000});
+ assert.equal(page.url(),url);assert.equal(await page.locator('iframe').count(),1);
  const state=await page.evaluate(()=>({bytes:Module.FS.stat('/persist/development-v331/game1_58.dat64').size,magic:new TextDecoder().decode(Module.FS.readFile('/persist/development-v331/game1_58.dat64').slice(0,8))}));
  assert.equal(state.magic,'PVZDAT64');assert.ok(state.bytes>100000);
- const download=page.waitForEvent('download');await page.locator('#export-endless').click();assert.equal((await download).suggestedFilename(),'game1_58.dat64');
+ await editor.locator('[data-tab=files]').click();const download=page.waitForEvent('download');await editor.locator('#export').click();assert.equal((await download).suggestedFilename(),'game1_58.dat64');
  assert.equal(await page.evaluate(()=>window.toyCalls),queriesAtOpen);
- await page.locator('#close-endless').click();assert.equal(await page.locator('#endless-dialog').isVisible(),false);
+ await editor.locator('#close').click();assert.equal(await page.locator('#save-editor-dialog').isVisible(),false);
  assert.deepEqual(htmlRequests,[url]);
  // Page routing does not intercept AudioWorklet loads. Reopen the persisted
  // generated save on the real server root for the actual gameplay check.

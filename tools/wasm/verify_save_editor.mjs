@@ -1,0 +1,33 @@
+import assert from 'node:assert/strict';
+const {chromium}=await import(process.env.PVZ_PLAYWRIGHT_MODULE);
+const browser=await chromium.launch({headless:true,executablePath:'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',args:['--enable-unsafe-webgpu','--ignore-gpu-blocklist']});
+try{
+ const page=await browser.newPage({viewport:{width:1440,height:1000}}),base=process.env.PVZ_WEBGPU_URL||'http://127.0.0.1:18089/';
+ const errors=[];page.on('pageerror',e=>errors.push(e.message));page.on('dialog',d=>d.accept());
+ const ready=async()=>{await page.waitForFunction(()=>!document.getElementById('start').disabled||!document.getElementById('error').hidden,null,{timeout:120000});assert.equal(await page.locator('#error').isVisible(),false,await page.locator('#error').textContent())};
+ await page.goto(base);await ready();
+ await page.route('**/web-config.js',route=>route.fulfill({contentType:'text/javascript',body:'window.PVZWebConfig={bypassBilibiliChecks:false,rewardVideoBvid:"BV1hV4P6PEDc"};'}));
+ await page.addInitScript(()=>{window.coinQueries=0;window.cloud={};window.toy={getAuthorRelation:async()=>({status:'ok',data:{isAuthor:false}}),getVideoUserActions:async()=>{window.coinQueries++;return {status:'ok',items:[{status:'ok',bvid:'BV1hV4P6PEDc',coinCount:2}]}},getCloudStorage:async keys=>Object.fromEntries(keys.filter(k=>Object.hasOwn(cloud,k)).map(k=>[k,cloud[k]])),setCloudStorage:async values=>{await new Promise(resolve=>window.finishUpload=resolve);Object.assign(cloud,values)}}});
+ await page.reload();await ready();console.log("launcher ready");
+ assert.equal(await page.locator('#claim-perfect,#claim-endless,#manage-level-saves').count(),0);
+ assert.ok((await page.locator('#start').boundingBox()).y<(await page.locator('#target-fps').boundingBox()).y);
+ const original=await page.evaluate(()=>Array.from(Module.FS.readFile('/persist/development-v331/game1_58.dat64')));
+ await page.locator('#upload-progress').click();await page.locator('#cloud-upload-warning').waitFor({state:'visible'});
+ assert.equal(await page.locator('#cloud-upload-warning').evaluate(el=>getComputedStyle(el).color),'rgb(255, 101, 101)');
+ await page.waitForFunction(()=>typeof window.finishUpload==='function');await page.evaluate(()=>{const f=finishUpload;finishUpload=null;f()});await page.waitForFunction(()=>typeof window.finishUpload==='function');await page.evaluate(()=>finishUpload());await page.locator('#cloud-upload-warning').waitFor({state:'hidden'});
+ console.log('cloud upload state passed');await page.locator('#custom-save').click();const editor=page.frameLocator('#save-editor-frame');await editor.locator('#board button').first().waitFor();
+ console.log('editor opened');assert.equal(await page.evaluate(()=>coinQueries),1);assert.equal(await editor.locator('#board button').count(),54);
+ await editor.locator('[data-tab=files]').click();await editor.locator('#extract').click();await editor.locator('#status').filter({hasText:'已提取阵型'}).waitFor({timeout:180000});
+ assert.equal(await page.evaluate(()=>coinQueries),1);
+ await editor.locator('#layer').selectOption('main');await editor.locator('#plant').selectOption('0');await editor.locator('#board button').first().click();assert.match(await editor.locator('#board button').first().textContent(),/豌豆射手/);
+ await editor.locator('#undo').click();await editor.locator('#redo').click();assert.match(await editor.locator('#board button').first().textContent(),/豌豆射手/);
+ await editor.locator('[data-tab=files]').click();await editor.locator('#file').setInputFiles({name:'game1_58.dat64',mimeType:'application/octet-stream',buffer:Buffer.from('invalid')});await editor.locator('#import').click();await editor.locator('#status').filter({hasText:'DAT64 文件无效'}).waitFor();
+ assert.deepEqual(await page.evaluate(()=>Array.from(Module.FS.readFile('/persist/development-v331/game1_58.dat64'))),original);
+ await editor.locator('#file').setInputFiles({name:'game1_58.dat64',mimeType:'application/octet-stream',buffer:Buffer.from(original)});await editor.locator('#import').click();await editor.locator('#status').filter({hasText:'已校验并导入'}).waitFor({timeout:180000});
+ const download=page.waitForEvent('download');await editor.locator('#export').click();assert.equal((await download).suggestedFilename(),'game1_58.dat64');
+ assert.equal(await page.evaluate(()=>coinQueries),1);
+ await editor.locator('[data-tab=lineup]').click();await editor.locator('#generate').click();await editor.locator('#status').filter({hasText:'已生成并部署'}).waitFor({timeout:180000});
+ await editor.locator('#close').click();await page.locator('#save-editor-dialog').waitFor({state:'hidden'});await page.locator('#custom-save').click();await editor.locator('#board button').first().waitFor();assert.equal(await page.evaluate(()=>coinQueries),2);
+ assert.deepEqual(errors,[]);await page.screenshot({path:process.env.TEMP+'/pvz-save-editor-preview.png'});
+ console.log('Top actions; red upload state; one authorization per open; visual layers/undo; validated DAT64 import/export; generation; unchanged local namespace passed');
+}finally{await browser.close()}

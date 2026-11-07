@@ -19,12 +19,13 @@ def main():
     parser.add_argument('--build', type=Path, default=ROOT / 'out/wasm/game/site')
     parser.add_argument('--output', type=Path, default=ROOT / 'out/wasm/toy')
     parser.add_argument('--config', type=Path, default=ROOT / 'tools/wasm/game/web-config.json')
+    parser.add_argument('--version', help='Explicit preview version; defaults to the native product version')
     parser.add_argument('--bilibili', action='store_true', help='Disable API bypass; game files remain identical')
     parser.add_argument('--webgpu', action='store_true', help='Package WebGPU; optionally add selectable WebGL through --webgl-build')
     parser.add_argument('--webgl-build', type=Path, help='Include selectable WebGL runtime, sharing the same data package')
     args = parser.parse_args()
     version_source = (ROOT / 'pvzPerf/LawnApp.cpp').read_text(encoding='utf-8')
-    version = re.search(r'mProductVersion\s*=\s*"([^"]+)"', version_source).group(1)
+    version = args.version or re.search(r'mProductVersion\s*=\s*"([^"]+)"', version_source).group(1)
     config = json.loads(args.config.read_text(encoding='utf-8'))
     if not isinstance(config.get('bypassBilibiliChecks'), bool):
         raise ValueError('bypassBilibiliChecks must be a boolean')
@@ -38,10 +39,14 @@ def main():
             raise FileNotFoundError(args.build / name)
     args.output.mkdir(parents=True, exist_ok=True)
     (args.output / "save-tool.html").unlink(missing_ok=True)
-    support_files = ['index.html', 'launcher.js', 'launcher.css', 'rewards.js', 'lineups.js', 'frame-rate.js', 'graphics.js', 'save-tools.js', 'save-tool-runtime.js', 'text-input.js', 'serve.py',
+    support_files = ['index.html', 'launcher.js', 'launcher.css', 'rewards.js', 'lineups.js', 'frame-rate.js', 'graphics.js', 'save-tools.js', 'save-tool-runtime.js', 'save-editor-host.js', 'progress-storage.js', 'text-input.js', 'serve.py',
                      'start-local.cmd', 'start-local.sh', 'README.txt']
     for name in support_files:
         shutil.copyfile(ROOT / 'tools/wasm/game' / name, args.output / name)
+    # The HTML tool is built and maintained in PvzDevTools; ship its artifact.
+    shutil.copyfile(ROOT / 'tools/bin/web/save-editor.html', args.output / 'save-editor.html')
+    shutil.copyfile(ROOT / 'tools/bin/web/manifest.json', args.output / 'save-editor-manifest.json')
+    support_files += ['save-editor.html', 'save-editor-manifest.json']
     readme = args.output / 'README.txt'
     text = readme.read_text(encoding='utf-8')
     readme.write_text('pvz_perf Web v' + version + '\n' + text.split('\n', 1)[1], encoding='utf-8')
@@ -61,6 +66,10 @@ def main():
     graphics = {'version': version, 'webgpu': args.webgpu, 'fallback': bool(args.webgl_build)}
     (args.output / 'graphics-config.js').write_text('window.PVZGraphicsConfig = ' + json.dumps(graphics) + ';\n', encoding='utf-8')
     files.append('graphics-config.js')
+    license_path = args.output / 'licenses/stb-vorbis.txt'
+    license_path.parent.mkdir(exist_ok=True)
+    shutil.copyfile(ROOT / 'tools/wasm/licenses/stb-vorbis.txt', license_path)
+    files.append('licenses/stb-vorbis.txt')
     if args.webgpu:
         license_path = args.output / 'licenses/emdawnwebgpu.txt'
         license_path.parent.mkdir(exist_ok=True)

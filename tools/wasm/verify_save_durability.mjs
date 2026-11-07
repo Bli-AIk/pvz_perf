@@ -1,0 +1,33 @@
+import assert from 'node:assert/strict';
+const {chromium}=await import(process.env.PVZ_PLAYWRIGHT_MODULE);
+const browser=await chromium.launch({headless:true,executablePath:'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',args:['--enable-unsafe-webgpu','--ignore-gpu-blocklist']});
+try{
+ const context=await browser.newContext({viewport:{width:1440,height:900}}),page=await context.newPage();
+ const base=process.env.PVZ_WEBGPU_URL||'http://127.0.0.1:18089/';
+ const ready=async()=>{await page.waitForFunction(()=>!document.getElementById('start').disabled||!document.getElementById('error').hidden,null,{timeout:120000});assert.equal(await page.locator('#error').isVisible(),false,await page.locator('#error').textContent())};
+ await page.goto(base);await ready();
+ const original=Buffer.from(await page.evaluate(()=>Array.from(Module.FS.readFile('/persist/development-v331/game1_58.dat64'))));
+ await page.evaluate(()=>Module.FS.unlink('/persist/development-v331/game1_58.dat64'));
+ await page.waitForTimeout(1500);await page.reload();await ready();
+ assert.equal(await page.evaluate(()=>Module.FS.analyzePath('/persist/development-v331/game1_58.dat64').exists),true,'Consuming a MEMFS checkpoint must not auto-delete its durable copy');
+ await page.evaluate(async()=>{Module.FS.unlink('/persist/development-v331/game1_58.dat64');await new Promise((resolve,reject)=>Module.FS.syncfs(false,e=>e?reject(e):resolve()))});
+ await page.locator('#custom-save').click();const editor=page.frameLocator('#save-editor-frame');await editor.locator('#board button').first().waitFor();
+ await editor.locator('[data-tab=files]').click();
+ await editor.locator('#file').setInputFiles({name:'game1_58.dat64',mimeType:'application/octet-stream',buffer:original});
+ await editor.locator('#import').click();await editor.locator('#status').filter({hasText:'已校验并导入'}).waitFor({timeout:180000});
+ assert.deepEqual(Buffer.from(await page.evaluate(()=>Array.from(Module.FS.readFile('/persist/development-v331/game1_58.dat64')))),original);
+ await editor.locator('#close').click();await page.reload();await ready();
+ assert.deepEqual(Buffer.from(await page.evaluate(()=>Array.from(Module.FS.readFile('/persist/development-v331/game1_58.dat64')))),original);
+ await page.locator('#aspect').selectOption('21:9');await page.locator('#start').click();await page.waitForTimeout(16000);
+ const click=async(x,y)=>{const b=await page.locator('#canvas').boundingBox();await page.mouse.click(b.x+x/1400*b.width,b.y+y/600*b.height)};
+ await click(700,550);await page.waitForFunction(()=>Module._pvz_web_scene()===1,null,{timeout:20000});await page.waitForTimeout(2500);
+ await page.evaluate(()=>{const sync=Module.FS.syncfs;Module.FS.syncfs=function(populate,callback){if(!populate){callback(Error('simulated disk failure'));return}sync.call(this,populate,callback)};window.restoreSync=()=>{Module.FS.syncfs=sync}});
+ await click(1040,530);await page.waitForTimeout(400);await click(600,395);
+ await page.waitForFunction(()=>!document.body.classList.contains('playing'),null,{timeout:60000});
+ assert.match(await page.locator('#local-save-status').textContent(),/本地保存失败/);
+ assert.ok(await page.evaluate(()=>Module.FS.readFile('/persist/development-v331/user1.dat64').length)>8);
+ await page.evaluate(()=>window.restoreSync());await page.locator('#save-local').click();
+ await page.waitForFunction(()=>document.getElementById('local-save-status').textContent.includes('已写入'));
+ assert.equal(await page.locator('#error').isVisible(),false);
+ console.log('Durable checkpoint survives consumption; DAT64 import round-trips exactly; Quit write failure preserves memory and supports retry');
+}finally{await browser.close()}

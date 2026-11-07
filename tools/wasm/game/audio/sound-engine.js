@@ -1,3 +1,9 @@
+export function createPCMBuffer(context,samples,channels,rate){
+ if(!Number.isInteger(channels)||channels<1||channels>2||!Number.isInteger(rate)||rate<=0||!samples.length||samples.length%channels)throw Error('Invalid PCM audio');
+ const frames=samples.length/channels,buffer=context.createBuffer(channels,frames,rate);
+ for(let channel=0;channel<channels;++channel){const output=buffer.getChannelData(channel);for(let i=0;i<frames;++i)output[i]=samples[i*channels+channel]}
+ return buffer;
+}
 export class SoundEngine {
  constructor(context){this.context=context;this.sources=new Map();this.channels=new Map();this.master=context.createGain();this.master.connect(context.destination)}
  async decode(bytes){
@@ -10,8 +16,13 @@ export class SoundEngine {
    for(let channel=0;channel<channels;++channel){const output=buffer.getChannelData(channel);for(let i=0;i<frames;++i){const u=(~bytes[offset+i*channels+channel])&255;const value=((((u&15)<<3)+132)<<((u&112)>>4))-132;output[i]=(u&128?-value:value)/32768}}
    return buffer;
   }
-  return this.context.decodeAudioData(bytes.buffer);
+  // Keep WAV support for authored sound packs; shipped OGG never reaches the
+  // browser codec path. Pass only this view, not unrelated ArrayBuffer bytes.
+  if(bytes.length>=12&&header.getUint32(0)===0x52494646&&header.getUint32(8)===0x57415645)
+   return this.context.decodeAudioData(bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength));
+  throw Error('Unsupported sound encoding; OGG must be decoded by Wasm');
  }
+ loadPCM(id,samples,channels,rate){this.sources.set(id,{buffer:createPCMBuffer(this.context,samples,channels,rate),promise:Promise.resolve()})}
  load(id,bytes){const entry={buffer:null};entry.promise=this.decode(bytes).then(buffer=>{entry.buffer=buffer});entry.promise.catch(()=>{});this.sources.set(id,entry)}
  async finish(){await Promise.all(Array.from(this.sources.values(),s=>s.promise))}
  release(id){this.sources.delete(id)}

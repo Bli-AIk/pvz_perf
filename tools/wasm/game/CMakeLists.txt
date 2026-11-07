@@ -25,7 +25,7 @@ else()
 endif()
 set(PVZ_CONFIG_WINDOWS_API NotApplicable)
 configure_file("${ROOT}/CMake/BuildConfig.h.in" "${CMAKE_BINARY_DIR}/include/pvz/BuildConfig.h" @ONLY)
-set(PVZ_WEB_PAK "${ROOT}/out/x64-win32-vulkan/Release/main.pak64" CACHE FILEPATH "Prebuilt resource package")
+set(PVZ_WEB_PAK "${ROOT}/out/x64-win32-vulkan/cache/resources/main-compact.pak64" CACHE FILEPATH "Prebuilt compact resource package")
 set(PVZ_SPNG_SOURCE "C:/UserProgram/vcpkg/buildtrees/libspng/src/v0.7.4-e8b3878a48.clean/spng" CACHE PATH "libspng source directory")
 set(PVZ_JSON_INCLUDE "${ROOT}/out/vcpkg_installed/x64-windows-static-md/include" CACHE PATH "nlohmann json include root")
 if(NOT EXISTS "${PVZ_JSON_INCLUDE}/nlohmann/json.hpp")
@@ -47,7 +47,10 @@ add_executable(pvz-perf ${SOURCES} ${WEB_SOURCES}
     "${FRAMEWORK}/platform/linux/LinuxApp.cpp" "${FRAMEWORK}/platform/linux/WindowGeometry.cpp"
     "${FRAMEWORK}/platform/linux/CalendarTime.cpp"
     "${FRAMEWORK}/sound/BassMusicInterface.cpp"
+    "${FRAMEWORK}/platform/web/stb_vorbis.c"
     "${PVZ_SPNG_SOURCE}/spng.c")
+set_source_files_properties("${FRAMEWORK}/platform/web/stb_vorbis.c" PROPERTIES
+    COMPILE_DEFINITIONS "STB_VORBIS_NO_STDIO;STB_VORBIS_NO_PUSHDATA_API")
 if(PVZ_WEB_BACKEND STREQUAL "WEBGPU")
     target_compile_options(pvz-perf PRIVATE --use-port=emdawnwebgpu)
     target_link_options(pvz-perf PRIVATE --use-port=emdawnwebgpu)

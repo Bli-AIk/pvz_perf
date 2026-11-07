@@ -1,0 +1,40 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+const {chromium}=await import(process.env.PVZ_PLAYWRIGHT_MODULE);
+const browser=await chromium.launch({headless:true,executablePath:'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',args:['--ignore-gpu-blocklist']});
+try{
+ const context=await browser.newContext({viewport:{width:1440,height:900}});
+ await context.addInitScript(()=>{
+  localStorage.setItem('pvz_graphics_backend','webgl');
+  Object.defineProperty(navigator,'gpu',{value:undefined});
+  const get=WebGL2RenderingContext.prototype.getParameter;
+  WebGL2RenderingContext.prototype.getParameter=function(key){return key===this.MAX_TEXTURE_SIZE||key===this.MAX_RENDERBUFFER_SIZE?4096:get.call(this,key)};
+  window.browserAudioDecodes=0;
+  AudioContext.prototype.decodeAudioData=function(){window.browserAudioDecodes++;return Promise.reject(new DOMException('Decoding failed','EncodingError'))};
+ });
+ const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(String(e)));
+ await page.goto(process.env.PVZ_WEBGPU_URL||'http://127.0.0.1:18089/');
+ await page.waitForFunction(()=>!document.getElementById('start').disabled||!document.getElementById('error').hidden,null,{timeout:120000});
+ assert.equal(await page.locator('#error').isVisible(),false,await page.locator('#error').innerText());
+ assert.match(await page.locator('#graphics-capabilities').textContent(),/WebGL 2 最大二维纹理：4096/);
+ await page.locator('#aspect').selectOption('21:9');await page.locator('#start').click();
+ await page.waitForTimeout(16000);
+ const click=async(x,y)=>{const r=await page.locator('#canvas').boundingBox();await page.mouse.click(r.x+x/1400*r.width,r.y+y/600*r.height)};
+ await click(700,550);
+ await page.waitForFunction(()=>Module._pvz_web_scene()===1||!document.getElementById('error').hidden,null,{timeout:20000});
+ await page.waitForTimeout(2000);
+ assert.equal(await page.locator('#error').isVisible(),false,await page.locator('#error').innerText());
+ assert.equal(await page.evaluate(()=>window.browserAudioDecodes),0);
+ assert.ok(await page.evaluate(()=>Module.pvzMusic.sound.sources.size)>100);
+ assert.deepEqual(errors,[]);
+ const output=path.join(os.tmpdir(),'pvz-mobile-web-compat');fs.mkdirSync(output,{recursive:true});
+ await page.screenshot({path:path.join(output,'4096-menu.png')});
+ await click(680,460);await page.waitForTimeout(2000);
+ assert.equal(await page.locator('#error').isVisible(),false,await page.locator('#error').innerText());
+ await page.screenshot({path:path.join(output,'4096-almanac.png')});
+ await page.evaluate(()=>document.getElementById('canvas').dispatchEvent(new Event('webglcontextlost',{cancelable:true})));
+ assert.match(await page.locator('#error').innerText(),/WebGL 图形上下文丢失/);
+ console.log('4096 texture limit + disabled browser OGG decoder: title/menu/almanac load; context loss reports an error');
+}finally{await browser.close()}

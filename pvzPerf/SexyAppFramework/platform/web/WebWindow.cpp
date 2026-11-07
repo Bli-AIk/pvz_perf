@@ -94,10 +94,12 @@ NativeWindow::NativeWindow(const NativeWindowConfig& config) : impl_(new Impl) {
 }
 NativeWindow::~NativeWindow() {
     inputWindow = nullptr;
+    pendingWidth = pendingHeight = 0;pendingRefreshRate = 0;
 #if !defined(PVZ_GPU_WEBGPU)
     SDL_GL_DeleteContext(impl_->context);
 #endif
     SDL_DestroyWindow(impl_->window);
+    SDL_QuitSubSystem(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
 }
 void NativeWindow::PumpEvents() {
     ProcessWebTextInput();

@@ -9,8 +9,9 @@
 <output id="game-fps" hidden title="游戏绘制计数；实际呈现还受屏幕和浏览器限制">FPS —</output>
 <section id="cover"><form id="launch-form" class="panel">
 <p class="eyebrow">PLANTS VS. ZOMBIES · WEB</p><h1>植物大战僵尸 · 网页</h1><p class="intro">设置好画面与帧率，进入游戏。</p>
+<div class="launch-row top-actions"><div class="primary-actions"><button id="start" type="submit" disabled>开始游戏</button><button id="upload-progress" class="secondary" type="button" disabled>上传云端</button><button id="restore-progress" class="secondary" type="button" disabled>从云端恢复</button></div><div class="load-state"><span id="status" role="status" aria-live="polite">正在加载程序和资源…</span><progress id="progress"></progress></div><strong id="cloud-upload-warning" role="status" aria-live="assertive" hidden>正在上传云端，请勿关闭或刷新页面。</strong><small id="cloud-status" role="status">关卡 DAT64 不上传云端，请自行导出备份。</small></div>
 <div class="settings">
-<label class="field" id="graphics-field" hidden><span>图形接口</span><select id="graphics-backend" disabled><option value="webgpu">WebGPU</option></select><small id="graphics-info">正在检测浏览器能力…</small><details><summary>设备图形能力</summary><pre id="graphics-capabilities">正在检测…</pre></details></label>
+<label class="field" id="graphics-field" hidden><span>图形接口</span><select id="graphics-backend" disabled><option value="">正在检测图形接口…</option></select><small id="graphics-info">正在检测浏览器能力…</small><details><summary>设备图形能力</summary><pre id="graphics-capabilities">正在检测…</pre></details></label>
 <label class="field"><span>目标帧率</span><input id="target-fps" type="number" min="30" max="1000000000" step="1" value="100" required><small id="target-fps-info">最低 30 FPS；实际绘制受浏览器与屏幕限制。</small></label>
 <label class="field"><span>画面比例</span><select id="aspect"><option value="auto">随可用窗口自动调整</option><option value="4:3">4:3</option><option value="16:9">16:9</option><option value="21:9">21:9</option></select><small>保持比例，不拉伸；超出 4:3～21:9 的部分留黑边。</small></label>
 <label class="check"><input id="auto-fps" type="checkbox" checked><span>自动跟随浏览器刷新节奏<small id="refresh-info">正在估算…</small></span></label>
@@ -19,23 +20,18 @@
 <label class="field volume audio-sfx"><span>音效音量 <output id="volume-value">100</output></span><input id="sfx-volume" type="range" min="0" max="100" value="100"></label>
 <label class="field volume audio-music"><span>音乐音量 <output id="music-value">100</output></span><input id="music-volume" type="range" min="0" max="100" value="100"></label>
 <label class="check launch-fullscreen"><input id="launch-fullscreen" type="checkbox"><span>启动时独占全屏<small>需要浏览器允许；未启用时只铺满网页。</small></span></label>
-<div class="field save-management"><span>存档管理</span><small>领取会删除全部用户及关卡存档，安装唯一的 1 号用户，并自动部署无尽基准。设置保留。</small><button id="claim-perfect" class="secondary" type="button">领取完美存档</button><button id="claim-endless" class="secondary" type="button">自定义无尽</button><a id="coin-video" class="secondary video-link" target="_blank" rel="noopener noreferrer">前往投币视频</a><small id="reward-status" role="status" aria-live="polite"></small></div>
+<div class="field save-management"><span>存档管理</span><button id="custom-save" class="secondary" type="button">自定义存档</button><small>可视化布阵、完美进度和 DAT64 导入／导出。</small><button id="save-local" class="secondary" type="button">重试本地保存</button><small id="local-save-status" role="status"></small><a id="coin-video" class="secondary video-link" target="_blank" rel="noopener noreferrer">前往投币视频</a><small id="reward-status" role="status" aria-live="polite"></small></div>
 </div>
-<div class="launch-row"><div class="load-state"><span id="status" role="status" aria-live="polite">正在加载程序和资源…</span><progress id="progress"></progress></div><button id="start" type="submit" disabled>开始游戏</button></div>
+
 <p class="note">设置和用户资料保存在当前浏览器。请通过游戏菜单正常退出。</p>
 </form></section><div id="error" role="alert" hidden></div>
 </div></main>
-<dialog id="replace-save-dialog" aria-labelledby="replace-save-title"><h2 id="replace-save-title">删除现有存档？</h2><p>这会删除当前浏览器中本游戏的全部用户、通关进度和关卡存档，替换为只有一个用户、用户编号为 1 的完美存档。此操作不可撤销。</p><p>游戏设置会保留。导入无尽时还会安装所选无尽存档。</p><form method="dialog"><button value="cancel" class="secondary" autofocus>取消</button><button value="replace">删除全部存档并领取</button></form></dialog>
-<dialog id="endless-dialog" aria-labelledby="endless-title"><h2 id="endless-title">自定义无尽</h2><p>在泳池无尽入口读取所选场景。阵型只保存布阵，不保存血量。生成会替换当前泳池无尽存档，继续后进入选卡阶段。</p><div class="settings">
-<label class="field"><span>已完成旗数</span><input id="endless-flags" type="number" min="0" max="10000000" step="2" value="128"><small>每轮两旗，填写偶数。</small></label>
-<label class="field"><span>随机数种子</span><input id="endless-seed" type="number" min="-2147483648" max="2147483647" value="114514"></label>
-<label class="field"><span>初始阳光</span><input id="endless-sun" type="number" min="0" max="9990" step="1" value="9990"><small>生成档不带小推车。</small></label>
-<label class="field"><span>场景</span><select id="endless-scene"><option value="0">白天</option><option value="1">黑夜</option><option value="2" selected>泳池</option><option value="3">浓雾</option><option value="4">屋顶</option><option value="5">月夜</option></select></label>
-<label class="field"><span>阵型</span><select id="endless-preset"><option value="benchmark">97无炮</option></select></label>
-<label class="field wide"><span>Toolkit 阵型码</span><textarea id="lineup-code" rows="3" spellcheck="false"></textarea></label>
-<label class="field"><span>保存阵型名称</span><input id="lineup-name" type="text" maxlength="60" placeholder="我的阵型"></label><button id="add-lineup" class="secondary" type="button">添加到阵型列表</button>
-<div class="field wide"><span>浏览器内的关卡存档</span><select id="internal-save" aria-label="浏览器内的 DAT64"></select><small>提取阵型只保留场景、植物和叠层等信息；导出保留完整关卡状态。</small><div class="internal-save-actions"><button id="extract-lineup" class="secondary" type="button">从所选 DAT64 提取阵型码</button><button id="export-endless" class="secondary" type="button">导出所选 DAT64</button></div></div>
-</div><p id="endless-status" role="status"></p><div class="dialog-actions"><button id="close-endless" class="secondary" type="button">关闭</button><button id="generate-endless" type="button">生成并部署 DAT64</button></div></dialog>
+<dialog id="save-editor-dialog" aria-label="自定义存档"><iframe id="save-editor-frame" title="PvzDevTools 可视化存档修改器" sandbox="allow-scripts allow-same-origin allow-downloads allow-modals"></iframe></dialog>
 <form id="web-text-input" hidden><label for="web-text-value">游戏文本输入（ASCII）</label><input id="web-text-value" type="text" inputmode="text" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="done"><button type="submit">完成</button></form>
 <footer><span>点击／拖动 · 空格暂停 · Esc 菜单</span><span>基于 <a href="https://github.com/wszqkzqk/PvZ-Portable" target="_blank" rel="noopener">PvZ-Portable</a> 修改 · <a href="https://github.com/YuHao2006/pvz_perf" target="_blank" rel="noopener">源码与原生版</a></span></footer>
-<script src="./web-config.js"></script><script src="./graphics-config.js"></script><script src="./launcher.js"></script></body></html>
+<script src="./web-config.js"></script><script src="./graphics-config.js"></script><script defer src="./launcher.js"></script>
+
+<dialog id="cloud-restore-dialog"><h2>恢复云端用户进度？</h2><p>将覆盖本地用户资料、通关进度和花园状态。关卡 DAT64 不在云端，不会被本操作删除。请先备份需要保留的关卡文件。</p><form method="dialog"><button value="cancel" class="secondary" autofocus>取消</button><button value="restore">覆盖用户进度并恢复</button></form></dialog>
+
+
+</body></html>
