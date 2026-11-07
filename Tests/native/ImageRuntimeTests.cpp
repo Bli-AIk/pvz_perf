@@ -108,6 +108,7 @@ bool gUiRulesOnly=false;
 bool gAwardRulesOnly=false;
 bool gAlmanacClockOnly=false;
 bool gActorBirthOnly=false;
+bool gCreditsOnly=false;
 bool gLossRulesOnly=false;
 bool gOpeningRulesOnly=false;
 bool gLifecycleRulesOnly=false;
@@ -1678,11 +1679,16 @@ void CreditsMovieOwnerClockRuntime(TestApp& app)
     std::cout<<"PASS Credits movie owner clock: distinct catch-up steps, one-shot blink, paused app updates and single-step resume\n";
     std::unique_ptr<Image> wide(render.CreateRenderImage(1400,600));
     credits.mCreditsPaused=true;
+    int extendedScenes=0;
     struct Scene { CreditsPhase phase; int frame; };
     for (const auto scene : {Scene{CreditsPhase::CREDITS_MAIN1,230},
             Scene{CreditsPhase::CREDITS_MAIN1,320}, Scene{CreditsPhase::CREDITS_MAIN2,50},
+            Scene{CreditsPhase::CREDITS_MAIN2,95}, Scene{CreditsPhase::CREDITS_MAIN3,95},
+            Scene{CreditsPhase::CREDITS_MAIN2,150},
             Scene{CreditsPhase::CREDITS_MAIN2,210}, Scene{CreditsPhase::CREDITS_MAIN3,50},
-            Scene{CreditsPhase::CREDITS_MAIN3,250}, Scene{CreditsPhase::CREDITS_END,1}})
+            Scene{CreditsPhase::CREDITS_MAIN3,250}, Scene{CreditsPhase::CREDITS_MAIN3,256},
+            Scene{CreditsPhase::CREDITS_MAIN3,280}, Scene{CreditsPhase::CREDITS_MAIN3,299},
+            Scene{CreditsPhase::CREDITS_END,1}})
     {
         app.mEffectSystem->EffectSystemFreeAll();
         movie=credits.PlayReanim(scene.phase==CreditsPhase::CREDITS_END ? 3 : int(scene.phase)+1);
@@ -1690,6 +1696,13 @@ void CreditsMovieOwnerClockRuntime(TestApp& app)
         movie->Seek(scene.frame,movie->mDefinition->mTracks.tracks->mTransforms.count-1);
         movie->UpdateAt(clocks.mVisualTimeNs);
         credits.mDrawCount=10;
+        const bool isolatedDisco=scene.phase==CreditsPhase::CREDITS_MAIN2 && scene.frame==150;
+        if(isolatedDisco) {
+            // Keep the scene timing/visibility that enables DrawDisco, while
+            // removing sprites and attachments that could hide a shape change.
+            for(int i=0;i<movie->mDefinition->mTracks.count;++i)
+                movie->mTrackInstances[i].mRenderGroup=RENDER_GROUP_HIDDEN;
+        }
         app.mScreenBounds=Rect(0,0,800,600);
         {
             GpuImageDrawScope destination(render,target.get());
@@ -1697,6 +1710,9 @@ void CreditsMovieOwnerClockRuntime(TestApp& app)
             credits.Draw(&graphics);
         }
         const auto reference=render.ReadImagePixels(*target);
+        if(isolatedDisco)
+            Require(ImageLib::WritePNGImage("credits-disco-800.png",800,600,reference.pixels),
+                "Cannot write isolated original-size disco proof");
         app.mScreenBounds=Rect(-300,0,1400,600);
         {
             GpuImageDrawScope destination(render,wide.get());
@@ -1705,19 +1721,16 @@ void CreditsMovieOwnerClockRuntime(TestApp& app)
             const auto originalClip=graphics.mClipRect;
             credits.Draw(&graphics);
             Require(graphics.mClipRect==originalClip && graphics.mTransX==300,
-                "Credits movie draw leaked its crop into sibling buttons");
+                "Credits movie draw changed the caller's clip or translation");
         }
         const auto actual=render.ReadImagePixels(*wide);
-        int differences=0;
+        int differences=0,outsidePixels=0;
         for (int y=0;y<600;++y) for (int x=0;x<1400;++x)
         {
             const auto pixel=actual.pixels[y*1400+x];
             if (x<300 || x>=1100)
             {
-                if (pixel!=0xff000000u)
-                    std::cerr<<"Credits crop leak: phase="<<int(scene.phase)<<" frame="<<scene.frame
-                        <<" x="<<x<<" y="<<y<<" color="<<std::hex<<pixel<<std::dec<<'\n';
-                Require(pixel==0xff000000u,"Credits pool/lights escaped the centered 800x600 movie");
+                outsidePixels+=pixel!=0xff000000u;
             }
             else
             {
@@ -1727,11 +1740,60 @@ void CreditsMovieOwnerClockRuntime(TestApp& app)
                     { ++differences; break; }
             }
         }
-        Require(differences<1440,"Credits wide crop differs from the original 800x600 movie");
+        Require(differences<1440,"Credits viewport width changed the centered movie's drawing offsets");
+        if(isolatedDisco) {
+            const auto visible=std::count_if(reference.pixels.begin(),reference.pixels.end(),
+                [](unsigned int pixel){return (pixel&0x00ffffff)!=0;});
+            Require(visible>100 && differences<16,
+                "Widescreen changed isolated ground-light geometry, UVs or pixel dimensions");
+            std::cout<<"PASS isolated Credits disco: 800/wide translation-only comparison, changedPixels="
+                <<differences<<" visiblePixels="<<visible<<'\n';
+        }
+        extendedScenes+=outsidePixels>100;
+        Require(ImageLib::WritePNGImage("credits-wide-"+std::to_string(int(scene.phase))+"-"+
+            std::to_string(scene.frame)+".png",1400,600,actual.pixels),"Cannot write widescreen Credits proof");
+        if(scene.phase==CreditsPhase::CREDITS_MAIN3 && scene.frame>=256 && scene.frame<300) {
+            Require(outsidePixels==0,"Credits closing iris left the widescreen background exposed");
+            if(scene.frame==280) {
+                int opening=0;
+                for(int y=60;y<350;++y)for(int x=580;x<850;++x)
+                    opening+=(actual.pixels[y*1400+x]&0x00ffffff)!=0;
+                Require(opening>100,"Extending the black iris border covered the original circular opening");
+            }
+        }
+        if(scene.frame==95) {
+            // Isolate the montage background layer. Each yard belongs inside
+            // its moving white frame; comparing 800/wide alone misses spill
+            // when both renders make the same composition mistake.
+            std::vector<Rect> panels;
+            for(int i=0;i<movie->mDefinition->mTracks.count;++i) {
+                if(movie->mTrackInstances[i].mRenderGroup!=1) {
+                    movie->mTrackInstances[i].mRenderGroup=RENDER_GROUP_HIDDEN;
+                    continue;
+                }
+                ReanimatorTransform transform;movie->GetCurrentTransform(i,&transform);
+                if(transform.mFrame<0 || !transform.mImageSlot)continue;
+                const auto& region=movie->mDefinition->mImageRects[transform.mImageSlot];
+                panels.emplace_back(int(transform.mTransX)+300-3,int(transform.mTransY)-3,
+                    region.mWidth+6,region.mHeight+6);
+            }
+            {GpuImageDrawScope destination(render,wide.get());Graphics graphics(wide.get());
+             graphics.mTransX=300;credits.Draw(&graphics);}
+            const auto montage=render.ReadImagePixels(*wide);
+            int visible=0;
+            for(int y=0;y<600;++y)for(int x=0;x<1400;++x) {
+                const auto pixel=montage.pixels[y*1400+x];
+                visible+=pixel!=0xff000000u;
+                if(std::none_of(panels.begin(),panels.end(),[&](const Rect& panel){return panel.Contains(x,y);}))
+                    Require(pixel==0xff000000u,"Credits montage background spilled outside its own moving frame");
+            }
+            Require(visible>10000,"Credits montage test hid every panel instead of composing their backgrounds");
+        }
         credits.Update(); // Paused layout still follows the physical window edge.
         Require(credits.mReplayButton->mX==-290,"Credits Replay did not follow the whole-window left edge");
     }
-    std::cout<<"PASS Credits 800x600 crop: day/night pool, disco, scene transitions, final roll and window-left Replay\n";
+    Require(extendedScenes>=3,"Credits backgrounds/effects are still confined to the original 800x600 frame");
+    std::cout<<"PASS Credits full viewport: background extensions, isolated montage frames, full-window closing iris with unchanged circular opening, centered offsets, pool/disco and window-left Replay\n";
 }
 
 void PottedGiftPickupRuntime(TestApp& app, Board& board)
@@ -4731,6 +4793,38 @@ void GardenRulesRuntime(TestApp& app)
             garden.MouseDownWithFullWheelBarrow(garden.GridToPixelX(2,2)+40,garden.GridToPixelY(2,2)+40);
             Require(!garden.GetPottedPlantInWheelbarrow()&&findPlant(0)&&profile.mPottedPlant[0].mWhichZenGarden==GARDEN_MAIN,
                 "Wheelbarrow could not restore its plant to a free main-garden cell");
+            auto* snail=garden.GetStinky();
+            auto* snailAnimation=app.ReanimationGet(snail->mGridItemReanimID);
+            std::unique_ptr<Image> snailTarget(app.mDDInterface->mRenderInterface->CreateRenderImage(800,600));
+            for(const auto state:{GRIDITEM_STINKY_TURNING_LEFT,GRIDITEM_STINKY_TURNING_RIGHT,
+                GRIDITEM_STINKY_WALKING_LEFT,GRIDITEM_STINKY_WALKING_RIGHT,GRIDITEM_STINKY_SLEEPING})
+            {
+                Plant* highlighted=nullptr;while(board.IteratePlants(highlighted)) highlighted->mHighlighted=false;
+                snail->mPosX=400;snail->mPosY=300;snail->mGoalX=450;snail->mGoalY=300;
+                snail->mMotionTrailCount=0;
+                if(state==GRIDITEM_STINKY_SLEEPING) garden.StinkyFinishFallingAsleep(snail,0);
+                else {
+                    snail->mGridItemState=state;
+                    snailAnimation->PlayReanim(state==GRIDITEM_STINKY_TURNING_LEFT||state==GRIDITEM_STINKY_TURNING_RIGHT?
+                        ReanimTrackId::turn:ReanimTrackId::anim_crawl,
+                        state==GRIDITEM_STINKY_TURNING_LEFT||state==GRIDITEM_STINKY_TURNING_RIGHT?
+                            REANIM_PLAY_ONCE_AND_HOLD:REANIM_LOOP,0,6.0f);
+                }
+                snail->mHighlighted=true;
+                const int beforeChocolate=profile.mPurchases[STORE_ITEM_CHOCOLATE];
+                garden.MouseDownWithTool(440,340,CURSOR_TYPE_CHOCOLATE);
+                Require(profile.mPurchases[STORE_ITEM_CHOCOLATE]==beforeChocolate-1&&garden.IsStinkyHighOnChocolate(),
+                    "Feeding Stinky did not charge one chocolate and activate its real-time effect");
+                update(1'000'000);
+                if(state==GRIDITEM_STINKY_TURNING_LEFT||state==GRIDITEM_STINKY_TURNING_RIGHT)
+                    Require(snail->mPosX==400&&snail->mPosY==300,"Chocolate moved Stinky during its stationary turn");
+                advance(2'000'000'000);
+                {
+                    GpuImageDrawScope destination(*app.mDDInterface->mRenderInterface,snailTarget.get());
+                    Graphics graphics(snailTarget.get());snail->DrawStinky(&graphics);
+                }
+                Require(std::isfinite(snail->mPosX)&&std::isfinite(snail->mPosY),"Chocolate produced a non-finite Stinky position");
+            }
             profile.SaveDetails();PlayerInfo loaded;loaded.mId=45;
             Require(loaded.LoadDetails()&&loaded.mNumPottedPlants==4&&loaded.mPottedPlant[0].mPlantAge==PLANTAGE_FULL&&
                 loaded.mPottedPlant[0].mX==2&&loaded.mPottedPlant[0].mY==2&&loaded.mPottedPlant[0].mWhichZenGarden==GARDEN_MAIN,
@@ -7057,6 +7151,57 @@ void TouchInputRuntime(TestApp& app)
 }
 
 
+void ConveyorSelectionRuntime(TestApp& app)
+{
+    const auto savedMode=app.mGameMode;
+    const auto savedBounds=app.mScreenBounds;
+    const bool savedLandscape=app.mLandscapeUIActive;
+    auto& render=*app.mDDInterface->mRenderInterface;
+    int checked=0,visible=0;
+    for(const bool landscape:{false,true})
+    for(const int width:{900,1400})
+    for(const int camera:{0,37})
+    {
+        app.mGameMode=GAMEMODE_MINIGAME_COLUMN;app.mGameScene=SCENE_PLAYING;
+        app.mLandscapeUIActive=landscape;
+        app.mScreenBounds=Rect(SelectGameViewport(width,600,landscape).left,0,width,600);
+        Board board(&app);board.mLandscapeHud=landscape;board.mX=camera;board.mY=-7;
+        board.mPaused=false;board.mTimeStopCounter=0;board.mBoardFadeOutCounter=-1;
+        auto& bank=*board.mSeedBank;bank.mX=0;bank.mY=camera?-43:0;bank.mVisible=true;bank.mNumPackets=1;
+        auto& packet=bank.mSeedPackets[0];packet.mX=91;packet.mY=8;packet.mPacketType=SEED_PEASHOOTER;
+        auto& cursor=*board.mCursorObject;cursor.mCursorType=CURSOR_TYPE_PLANT_FROM_BANK;cursor.mSeedBankIndex=0;
+        Image* target=render.CreateRenderImage(width,600);
+        const auto draw=[&] {
+            {GpuImageDrawScope destination(render,target);Graphics g(target);
+             g.mColor=Color::Black;g.FillRect(0,0,width,600);
+             g.Translate(board.mX-app.mScreenBounds.mX,board.mY);board.DrawTouchSelection(&g);}
+            render.Flush();return render.ReadImagePixels(*target).pixels;
+        };
+        for(const int offset:{-30,0,250,470,500,540}) {
+            packet.mOffsetX=offset;
+            app.mGameMode=GAMEMODE_MINIGAME_COLUMN;
+            const auto bankBounds=LandscapeHud::BankBounds(board);
+            const Rect clip=landscape?Rect(bankBounds.mX,bankBounds.mY+33,81,480):
+                Rect(app.mScreenBounds.mX-board.mX+90,bank.mY-board.mY,501,BOARD_HEIGHT);
+            const Rect screenClip(clip.mX+board.mX-app.mScreenBounds.mX,clip.mY+board.mY,clip.mWidth,clip.mHeight);
+            const auto pixels=draw();
+            int inside=0;
+            for(int y=0;y<600;++y)for(int x=0;x<width;++x) {
+                const bool colored=(pixels[y*width+x]&0x00ffffff)!=0;
+                if(screenClip.Contains(x,y))inside+=colored;
+                else Require(!colored,"Selected conveyor card frame escaped the conveyor viewport");
+            }
+            // A fully visible card must retain its frame, not merely draw nothing.
+            if(offset==250) Require(inside>50,"Conveyor clipping removed the visible selection frame");
+            visible+=inside; ++checked;
+        }
+        delete target;
+    }
+    app.mGameMode=savedMode;app.mScreenBounds=savedBounds;app.mLandscapeUIActive=savedLandscape;
+    Require(checked==48&&visible>0,"Conveyor frame regression did not cover both layouts");
+    std::cout<<"PASS conveyor selection: 48 desktop/landscape, narrow/wide, moving camera/intro, entry/middle/exit pixel cases\n";
+}
+
 void LandscapeHudRuntime(TestApp& app)
 {
     {
@@ -7101,6 +7246,7 @@ void LandscapeHudRuntime(TestApp& app)
     app.mPlayerInfo->mPurchases[STORE_ITEM_PACKET_UPGRADE]=4;
     app.mPlayerInfo->mPurchases[STORE_ITEM_PLANT_IMITATER]=1;
     app.mReanimatorCache->PrebuildCacheFrames();
+    ConveyorSelectionRuntime(app);
     for(const int width:{800,900,950,1000,1067,1333,1400}) {
         app.mScreenBounds=Rect(SelectGameViewport(width,600,true).left,0,width,600);
         auto& manager=*app.mWidgetManager;manager.Resize(app.mScreenBounds,app.mScreenBounds);
@@ -7565,6 +7711,7 @@ void StorePauseClockRuntime(TestApp& app, DecodeOnlySoundManager& sounds)
     if(gAwardRulesOnly) {AwardRulesRuntime(app);return;}
     if(gAlmanacClockOnly) {AlmanacRulesRuntime(app,true);return;}
     if(gActorBirthOnly) {ActorBirthClockRuntime(app);return;}
+    if(gCreditsOnly) {CreditsMovieOwnerClockRuntime(app);return;}
     if(gLossRulesOnly) {LossRulesRuntime(app);return;}
     if(gOpeningRulesOnly) {CheckOpeningFlows(app,app.fixtureNestedPump,[](LawnApp& a){static_cast<TestApp&>(a).ProcessSafeDeleteList();});return;}
     if(gLifecycleRulesOnly) {LateLifecycleRuntime(app);return;}
@@ -8252,7 +8399,7 @@ void AllResourceGroups(SexyAppBase& app)
         }
     }
     Require(loadedImages==RESOURCE_LOAD_IMAGE_COUNT,"Full loading skipped an image recipe");
-    if(gPlantCatalogOnly||gZombieCatalogOnly||gMinigameRulesOnly||gPuzzleRulesOnly||gSurvivalRulesOnly||gAdventureRulesOnly||gHiddenRulesOnly||gGardenRulesOnly||gIntroRulesOnly||gUiRulesOnly||gAwardRulesOnly||gAlmanacClockOnly||gActorBirthOnly||gLossRulesOnly||gOpeningRulesOnly||gLifecycleRulesOnly||gGraveRulesOnly||gHudSeamsOnly||gTouchOnly)
+    if(gPlantCatalogOnly||gZombieCatalogOnly||gMinigameRulesOnly||gPuzzleRulesOnly||gSurvivalRulesOnly||gAdventureRulesOnly||gHiddenRulesOnly||gGardenRulesOnly||gIntroRulesOnly||gUiRulesOnly||gAwardRulesOnly||gAlmanacClockOnly||gActorBirthOnly||gCreditsOnly||gLossRulesOnly||gOpeningRulesOnly||gLifecycleRulesOnly||gGraveRulesOnly||gHudSeamsOnly||gTouchOnly)
     {
         StorePauseClockRuntime(static_cast<TestApp&>(app),sounds);
         DefinitionFreeAtlasImages();
@@ -8367,7 +8514,7 @@ void ParticleDefinitionsAndFrames(SexyAppBase& app, const char* pakPath)
     Require(gPakInterface && gPakInterface->AddPakFile(pakPath),
         "Cannot mount the production particle package");
     AllResourceGroups(app);
-    if(gPlantCatalogOnly||gZombieCatalogOnly||gMinigameRulesOnly||gPuzzleRulesOnly||gSurvivalRulesOnly||gAdventureRulesOnly||gHiddenRulesOnly||gGardenRulesOnly||gIntroRulesOnly||gUiRulesOnly||gAwardRulesOnly||gAlmanacClockOnly||gActorBirthOnly||gLossRulesOnly||gOpeningRulesOnly||gLifecycleRulesOnly||gGraveRulesOnly||gHudSeamsOnly||gTouchOnly) return;
+    if(gPlantCatalogOnly||gZombieCatalogOnly||gMinigameRulesOnly||gPuzzleRulesOnly||gSurvivalRulesOnly||gAdventureRulesOnly||gHiddenRulesOnly||gGardenRulesOnly||gIntroRulesOnly||gUiRulesOnly||gAwardRulesOnly||gAlmanacClockOnly||gActorBirthOnly||gCreditsOnly||gLossRulesOnly||gOpeningRulesOnly||gLifecycleRulesOnly||gGraveRulesOnly||gHudSeamsOnly||gTouchOnly) return;
     ResourceLoadingOwnership(app);
     ReanimationAppearanceDefinitions(app);
     constexpr ParticleEffect fireEffect=ParticleEffect::PARTICLE_ZOMBIE_BOSS_FIREBALL;
@@ -8864,6 +9011,7 @@ int main(int argc, char** argv)
     gAwardRulesOnly=argc==3 && std::string_view(argv[2])=="award-rules";
     gAlmanacClockOnly=argc==3 && std::string_view(argv[2])=="almanac-clock";
     gActorBirthOnly=argc==3 && std::string_view(argv[2])=="actor-birth";
+    gCreditsOnly=argc==3 && std::string_view(argv[2])=="credits";
     gLossRulesOnly=argc==3 && std::string_view(argv[2])=="loss-rules";
     gOpeningRulesOnly=argc==3 && std::string_view(argv[2])=="opening-rules";
     gLifecycleRulesOnly=argc==3 && std::string_view(argv[2])=="lifecycle-rules";
@@ -8925,7 +9073,7 @@ int main(int argc, char** argv)
         SharedReferences(app);
         ReanimationAppearancePixels(app);
         ReanimationFullscreenPixels(app);
-        Require(argc==2||gPlantCatalogOnly||gZombieCatalogOnly||gMinigameRulesOnly||gPuzzleRulesOnly||gSurvivalRulesOnly||gAdventureRulesOnly||gHiddenRulesOnly||gGardenRulesOnly||gIntroRulesOnly||gUiRulesOnly||gAwardRulesOnly||gAlmanacClockOnly||gActorBirthOnly||gLossRulesOnly||gOpeningRulesOnly||gLifecycleRulesOnly||gGraveRulesOnly||gHudSeamsOnly||gTouchOnly,"Pass the production main.pak64 path and optional focused case");
+        Require(argc==2||gPlantCatalogOnly||gZombieCatalogOnly||gMinigameRulesOnly||gPuzzleRulesOnly||gSurvivalRulesOnly||gAdventureRulesOnly||gHiddenRulesOnly||gGardenRulesOnly||gIntroRulesOnly||gUiRulesOnly||gAwardRulesOnly||gAlmanacClockOnly||gActorBirthOnly||gCreditsOnly||gLossRulesOnly||gOpeningRulesOnly||gLifecycleRulesOnly||gGraveRulesOnly||gHudSeamsOnly||gTouchOnly,"Pass the production main.pak64 path and optional focused case");
         ParticleDefinitionsAndFrames(app,argv[1]);
     }
     catch (const ResourceManagerException& error)

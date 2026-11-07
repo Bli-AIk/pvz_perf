@@ -734,6 +734,7 @@ void Board::DrawTouchSelection(Sexy::Graphics* g)
         mTouchState->selection->cursor->mCursorType != CURSOR_TYPE_NORMAL ?
         *mTouchState->selection->cursor : *mCursorObject;
     Sexy::Rect bounds;
+    bool conveyor=false;
     const auto gardenTool = GardenMode(*this) ? SelectedGardenTool(cursor.mCursorType) : OBJECT_TYPE_NONE;
     if (gardenTool != OBJECT_TYPE_NONE)
     {
@@ -752,9 +753,22 @@ void Board::DrawTouchSelection(Sexy::Graphics* g)
         // Hit/slot pitch is 48, but the authored card face is 53 pixels high.
         // Frame the full artwork so the bottom corners clear the price label.
         if (mLandscapeHud) bounds.mHeight=53;
+        conveyor=HasConveyorBeltSeedBank();
     }
     else return;
     Sexy::Graphics local(*g);
+    if (conveyor)
+    {
+        // The HUD draws its selection separately from SeedBank::Draw.
+        // Keep the corners under the same conveyor viewport as the card.
+        if (mLandscapeHud)
+        {
+            const auto bank=LandscapeHud::BankBounds(*this);
+            local.ClipRect(bank.mX,bank.mY+33,81,480);
+        }
+        else local.ClipRect(mApp->mScreenBounds.mX-mX+mSeedBank->mX+90,
+            mSeedBank->mY-mY,501,BOARD_HEIGHT);
+    }
     DrawSelectionFrame(local, bounds, mLandscapeHud);
 }
 

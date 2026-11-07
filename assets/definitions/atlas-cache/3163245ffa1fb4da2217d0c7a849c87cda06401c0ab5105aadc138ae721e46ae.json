@@ -1,0 +1,105 @@
+{
+  "format": "pvz-exact-atlas-v2",
+  "key": "3163245ffa1fb4da2217d0c7a849c87cda06401c0ab5105aadc138ae721e46ae",
+  "layout": {
+    "exact": {
+      "best_bound": 55029,
+      "cache_hit": false,
+      "cache_key": "3163245ffa1fb4da2217d0c7a849c87cda06401c0ab5105aadc138ae721e46ae",
+      "elapsed_seconds": 60.50930520000111,
+      "gap": 0.03589824450751603,
+      "model_version": "integer-nonrotating-padded-global-area-v2",
+      "objective_area": 57078,
+      "optimal": false,
+      "proof_scope": "minimum integer atlas area; fixed orientation; configured padding and max_side",
+      "search_complete": true,
+      "solve_budget_seconds": 60.0,
+      "solver": "ortools-cp-sat",
+      "solver_version": "9.15.6755",
+      "status": "FEASIBLE",
+      "restricted_from_cache_key": "1dae4740fd8c1294c51491e0ae4c848b5cc06a4b7b9db9e7dd272f2763e635af",
+      "search_domain_max_side": 16384
+    },
+    "height": 189,
+    "method": "native-maxrects",
+    "regions": [
+      [
+        244,
+        124,
+        56,
+        63
+      ],
+      [
+        92,
+        134,
+        53,
+        53
+      ],
+      [
+        173,
+        70,
+        57,
+        60
+      ],
+      [
+        2,
+        2,
+        94,
+        86
+      ],
+      [
+        242,
+        63,
+        57,
+        57
+      ],
+      [
+        191,
+        134,
+        49,
+        53
+      ],
+      [
+        100,
+        2,
+        64,
+        61
+      ],
+      [
+        105,
+        69,
+        64,
+        61
+      ],
+      [
+        149,
+        145,
+        38,
+        42
+      ],
+      [
+        243,
+        2,
+        57,
+        57
+      ],
+      [
+        169,
+        2,
+        69,
+        63
+      ],
+      [
+        2,
+        92,
+        86,
+        95
+      ]
+    ],
+    "search_attempts": 1375,
+    "search_microseconds": 3818,
+    "shelf_area": 62196,
+    "width": 302
+  },
+  "layout_sha256": "9f8bf0aef534bf4d341d27f0a2299936f3df49e8352e748fadf43ad74a655f8e"
+}

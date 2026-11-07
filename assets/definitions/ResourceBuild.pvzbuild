@@ -25,7 +25,7 @@ atlas(landscape_ui scene:LandscapeUI)
 atlas_defaults(
     solver exact
     padding 2
-    max_side 16384
+    max_side 4096
     time_limit_seconds 60
     require_optimal false
     workers 1

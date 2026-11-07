@@ -2,7 +2,7 @@ param(
     [Parameter(Mandatory=$true)][string]$BuildDirectory,
     [string]$PakFile,
     [string]$OutputDirectory,
-    [ValidateSet('all','plant-attacks','zombie-behavior','ice3','minigame-rules','puzzle-rules','survival-rules','adventure-rules','hidden-rules','garden-rules','intro-rules','ui-rules','award-rules','almanac-clock','actor-birth','loss-rules','opening-rules','lifecycle-rules','grave-rules','hud-seams','touch-input','touch-perf','landscape-ui')][string]$Case='all'
+    [ValidateSet('all','plant-attacks','zombie-behavior','ice3','minigame-rules','puzzle-rules','survival-rules','adventure-rules','hidden-rules','garden-rules','intro-rules','ui-rules','award-rules','almanac-clock','actor-birth','credits','loss-rules','opening-rules','lifecycle-rules','grave-rules','hud-seams','touch-input','touch-perf','landscape-ui')][string]$Case='all'
 )
 $ErrorActionPreference='Stop'
 $taskRoot=Split-Path -Parent $PSScriptRoot

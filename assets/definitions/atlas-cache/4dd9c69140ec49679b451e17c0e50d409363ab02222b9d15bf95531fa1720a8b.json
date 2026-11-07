@@ -1,0 +1,109 @@
+{
+  "format": "pvz-exact-atlas-v2",
+  "key": "4dd9c69140ec49679b451e17c0e50d409363ab02222b9d15bf95531fa1720a8b",
+  "layout": {
+    "exact": {
+      "best_bound": 119011,
+      "cache_hit": false,
+      "cache_key": "4dd9c69140ec49679b451e17c0e50d409363ab02222b9d15bf95531fa1720a8b",
+      "elapsed_seconds": 3.611419400003797,
+      "gap": 0.0,
+      "model_version": "integer-nonrotating-padded-global-area-v2",
+      "objective_area": 119011,
+      "optimal": true,
+      "proof_scope": "minimum integer atlas area; fixed orientation; configured padding and max_side",
+      "solver": "ortools-cp-sat",
+      "solver_version": "9.15.6755",
+      "status": "OPTIMAL",
+      "restricted_from_cache_key": "1c2a3748a7ac3a0a8725ccaf849bd811851ec3bf344724b8879fdd2b40b7776c",
+      "search_domain_max_side": 16384
+    },
+    "height": 1951,
+    "method": "native-maxrects",
+    "regions": [
+      [
+        2,
+        2,
+        57,
+        156
+      ],
+      [
+        2,
+        162,
+        57,
+        156
+      ],
+      [
+        2,
+        322,
+        57,
+        156
+      ],
+      [
+        2,
+        482,
+        57,
+        156
+      ],
+      [
+        2,
+        642,
+        57,
+        156
+      ],
+      [
+        2,
+        802,
+        57,
+        156
+      ],
+      [
+        2,
+        962,
+        57,
+        156
+      ],
+      [
+        2,
+        1122,
+        57,
+        156
+      ],
+      [
+        2,
+        1282,
+        57,
+        156
+      ],
+      [
+        2,
+        1442,
+        57,
+        156
+      ],
+      [
+        2,
+        1602,
+        57,
+        156
+      ],
+      [
+        2,
+        1762,
+        57,
+        156
+      ],
+      [
+        2,
+        1922,
+        32,
+        27
+      ]
+    ],
+    "search_attempts": 1206,
+    "search_microseconds": 1158,
+    "shelf_area": 119011,
+    "width": 61
+  },
+  "layout_sha256": "cee0b3a8605885da8e589f390bf69667b72586d16cb365ef157982cf0abdf47f"
+}

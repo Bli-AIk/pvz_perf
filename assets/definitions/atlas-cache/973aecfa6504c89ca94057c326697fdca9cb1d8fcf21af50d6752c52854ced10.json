@@ -1,0 +1,112 @@
+{
+  "format": "pvz-exact-atlas-v2",
+  "key": "973aecfa6504c89ca94057c326697fdca9cb1d8fcf21af50d6752c52854ced10",
+  "layout": {
+    "exact": {
+      "best_bound": 19050,
+      "cache_hit": false,
+      "cache_key": "973aecfa6504c89ca94057c326697fdca9cb1d8fcf21af50d6752c52854ced10",
+      "completion_evidence": "matching-published-manifest",
+      "elapsed_seconds": 60.02945500000351,
+      "gap": 0.020061728395061727,
+      "model_version": "integer-nonrotating-padded-global-area-v2",
+      "objective_area": 19440,
+      "optimal": false,
+      "proof_scope": "minimum integer atlas area; fixed orientation; configured padding and max_side",
+      "search_complete": true,
+      "solve_budget_seconds": 60.0,
+      "solver": "ortools-cp-sat",
+      "solver_version": "9.15.6755",
+      "status": "FEASIBLE",
+      "restricted_from_cache_key": "aab6d474751ab003e22d376d9bdd19d1bfe3af63d0d6b3f837c1589acdeefa15",
+      "search_domain_max_side": 16384
+    },
+    "height": 120,
+    "method": "native-maxrects",
+    "regions": [
+      [
+        67,
+        96,
+        40,
+        22
+      ],
+      [
+        120,
+        2,
+        40,
+        22
+      ],
+      [
+        80,
+        38,
+        13,
+        12
+      ],
+      [
+        82,
+        54,
+        11,
+        6
+      ],
+      [
+        2,
+        2,
+        74,
+        64
+      ],
+      [
+        2,
+        70,
+        61,
+        48
+      ],
+      [
+        116,
+        73,
+        44,
+        20
+      ],
+      [
+        67,
+        70,
+        42,
+        22
+      ],
+      [
+        131,
+        97,
+        29,
+        21
+      ],
+      [
+        112,
+        97,
+        15,
+        21
+      ],
+      [
+        80,
+        2,
+        36,
+        32
+      ],
+      [
+        129,
+        28,
+        31,
+        41
+      ],
+      [
+        97,
+        38,
+        28,
+        27
+      ]
+    ],
+    "search_attempts": 1237,
+    "search_microseconds": 2897,
+    "shelf_area": 22542,
+    "width": 162
+  },
+  "layout_sha256": "7766660e582df412d4df66faeae7ade6a2cc427d76ec3bd4369be73891a3a67a"
+}

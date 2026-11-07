@@ -1,0 +1,106 @@
+{
+  "format": "pvz-exact-atlas-v2",
+  "key": "4a85e6f1e41c615b5c967718c29605b6811906ff0de38251b1643050caf0cc08",
+  "layout": {
+    "exact": {
+      "best_bound": 31815,
+      "cache_hit": false,
+      "cache_key": "4a85e6f1e41c615b5c967718c29605b6811906ff0de38251b1643050caf0cc08",
+      "completion_evidence": "matching-published-manifest",
+      "elapsed_seconds": 60.27667310000106,
+      "gap": 0.0380952380952381,
+      "model_version": "integer-nonrotating-padded-global-area-v2",
+      "objective_area": 33075,
+      "optimal": false,
+      "proof_scope": "minimum integer atlas area; fixed orientation; configured padding and max_side",
+      "search_complete": true,
+      "solve_budget_seconds": 60.0,
+      "solver": "ortools-cp-sat",
+      "solver_version": "9.15.6755",
+      "status": "FEASIBLE",
+      "restricted_from_cache_key": "24e67e556e821ebcf4309089bf6f91ff3880fd3e6be27d31fca569a07199d3db",
+      "search_domain_max_side": 16384
+    },
+    "height": 175,
+    "method": "native-maxrects",
+    "regions": [
+      [
+        2,
+        92,
+        100,
+        81
+      ],
+      [
+        3,
+        2,
+        109,
+        85
+      ],
+      [
+        165,
+        146,
+        22,
+        27
+      ],
+      [
+        147,
+        4,
+        39,
+        36
+      ],
+      [
+        127,
+        62,
+        60,
+        80
+      ],
+      [
+        107,
+        130,
+        9,
+        13
+      ],
+      [
+        147,
+        44,
+        39,
+        14
+      ],
+      [
+        106,
+        91,
+        17,
+        16
+      ],
+      [
+        136,
+        146,
+        25,
+        26
+      ],
+      [
+        106,
+        147,
+        26,
+        26
+      ],
+      [
+        116,
+        32,
+        27,
+        26
+      ],
+      [
+        117,
+        2,
+        26,
+        26
+      ]
+    ],
+    "search_attempts": 967,
+    "search_microseconds": 1473,
+    "shelf_area": 37323,
+    "width": 189
+  },
+  "layout_sha256": "0edf0fc79c320d9c8288f208121296fb5f2df0970504b9031a268c3efe2197b1"
+}

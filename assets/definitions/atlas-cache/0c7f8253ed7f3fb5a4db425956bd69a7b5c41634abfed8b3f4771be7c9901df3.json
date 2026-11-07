@@ -1,0 +1,111 @@
+{
+  "format": "pvz-exact-atlas-v2",
+  "key": "0c7f8253ed7f3fb5a4db425956bd69a7b5c41634abfed8b3f4771be7c9901df3",
+  "layout": {
+    "exact": {
+      "best_bound": 31746,
+      "cache_hit": false,
+      "cache_key": "0c7f8253ed7f3fb5a4db425956bd69a7b5c41634abfed8b3f4771be7c9901df3",
+      "elapsed_seconds": 60.745257300004596,
+      "gap": 0.02905554196231955,
+      "model_version": "integer-nonrotating-padded-global-area-v2",
+      "objective_area": 32696,
+      "optimal": false,
+      "proof_scope": "minimum integer atlas area; fixed orientation; configured padding and max_side",
+      "search_complete": true,
+      "solve_budget_seconds": 60.0,
+      "solver": "ortools-cp-sat",
+      "solver_version": "9.15.6755",
+      "status": "FEASIBLE",
+      "restricted_from_cache_key": "e0c31fa1d853de255c96e942af47af7342f820ee4f5b897e5a85a9346d995671",
+      "search_domain_max_side": 16384
+    },
+    "height": 134,
+    "method": "native-maxrects",
+    "regions": [
+      [
+        2,
+        84,
+        30,
+        16
+      ],
+      [
+        156,
+        102,
+        28,
+        28
+      ],
+      [
+        168,
+        44,
+        28,
+        28
+      ],
+      [
+        168,
+        2,
+        38,
+        38
+      ],
+      [
+        200,
+        68,
+        42,
+        9
+      ],
+      [
+        2,
+        104,
+        32,
+        27
+      ],
+      [
+        210,
+        2,
+        30,
+        27
+      ],
+      [
+        2,
+        2,
+        162,
+        78
+      ],
+      [
+        193,
+        81,
+        49,
+        50
+      ],
+      [
+        168,
+        76,
+        21,
+        22
+      ],
+      [
+        38,
+        84,
+        55,
+        48
+      ],
+      [
+        97,
+        84,
+        55,
+        48
+      ],
+      [
+        210,
+        33,
+        31,
+        31
+      ]
+    ],
+    "search_attempts": 1031,
+    "search_microseconds": 3310,
+    "shelf_area": 36993,
+    "width": 244
+  },
+  "layout_sha256": "c349dd38b4df20332f83d93b5bc926aaaf5e6f9a369703b496581ec867b2ac59"
+}

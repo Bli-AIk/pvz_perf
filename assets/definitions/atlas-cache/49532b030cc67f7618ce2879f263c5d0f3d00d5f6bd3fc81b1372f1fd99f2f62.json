@@ -1,0 +1,154 @@
+{
+  "format": "pvz-exact-atlas-v2",
+  "key": "49532b030cc67f7618ce2879f263c5d0f3d00d5f6bd3fc81b1372f1fd99f2f62",
+  "layout": {
+    "exact": {
+      "best_bound": 357149,
+      "cache_hit": false,
+      "cache_key": "49532b030cc67f7618ce2879f263c5d0f3d00d5f6bd3fc81b1372f1fd99f2f62",
+      "completion_evidence": "matching-published-manifest",
+      "elapsed_seconds": 60.046190499997465,
+      "gap": 0.013705704312477907,
+      "model_version": "integer-nonrotating-padded-global-area-v2",
+      "objective_area": 362112,
+      "optimal": false,
+      "proof_scope": "minimum integer atlas area; fixed orientation; configured padding and max_side",
+      "search_complete": true,
+      "solve_budget_seconds": 60.0,
+      "solver": "ortools-cp-sat",
+      "solver_version": "9.15.6755",
+      "status": "FEASIBLE",
+      "restricted_from_cache_key": "43a9b218572fec12f4250ed27ca77634ec34b1191a0cbf45fc1402c0e969b6d5",
+      "search_domain_max_side": 16384
+    },
+    "height": 1968,
+    "method": "native-maxrects",
+    "regions": [
+      [
+        90,
+        1914,
+        91,
+        26
+      ],
+      [
+        90,
+        1864,
+        73,
+        46
+      ],
+      [
+        2,
+        2,
+        180,
+        129
+      ],
+      [
+        2,
+        135,
+        180,
+        129
+      ],
+      [
+        2,
+        268,
+        180,
+        129
+      ],
+      [
+        2,
+        401,
+        180,
+        129
+      ],
+      [
+        2,
+        534,
+        180,
+        129
+      ],
+      [
+        2,
+        667,
+        180,
+        129
+      ],
+      [
+        2,
+        800,
+        180,
+        129
+      ],
+      [
+        2,
+        933,
+        180,
+        129
+      ],
+      [
+        2,
+        1066,
+        180,
+        129
+      ],
+      [
+        2,
+        1199,
+        180,
+        129
+      ],
+      [
+        2,
+        1332,
+        180,
+        129
+      ],
+      [
+        2,
+        1465,
+        180,
+        129
+      ],
+      [
+        2,
+        1598,
+        180,
+        129
+      ],
+      [
+        2,
+        1731,
+        180,
+        129
+      ],
+      [
+        26,
+        1944,
+        36,
+        15
+      ],
+      [
+        26,
+        1923,
+        36,
+        15
+      ],
+      [
+        26,
+        1864,
+        60,
+        55
+      ],
+      [
+        2,
+        1864,
+        20,
+        102
+      ]
+    ],
+    "search_attempts": 1616,
+    "search_microseconds": 4227,
+    "shelf_area": 367632,
+    "width": 184
+  },
+  "layout_sha256": "5df4cdbadf4c6f3fe003e218ef0e15d47be8724def7ee6918b7636ede3a1e929"
+}

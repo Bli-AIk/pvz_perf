@@ -1,0 +1,100 @@
+{
+  "format": "pvz-exact-atlas-v2",
+  "key": "db56c66c57a2c0a8e5be1a03afb57f01b676c86ff593acc91081ec38bb5d0d74",
+  "layout": {
+    "exact": {
+      "best_bound": 11786,
+      "cache_hit": false,
+      "cache_key": "db56c66c57a2c0a8e5be1a03afb57f01b676c86ff593acc91081ec38bb5d0d74",
+      "completion_evidence": "matching-published-manifest",
+      "elapsed_seconds": 60.03580430000147,
+      "gap": 0.04644012944983819,
+      "model_version": "integer-nonrotating-padded-global-area-v2",
+      "objective_area": 12360,
+      "optimal": false,
+      "proof_scope": "minimum integer atlas area; fixed orientation; configured padding and max_side",
+      "search_complete": true,
+      "solve_budget_seconds": 60.0,
+      "solver": "ortools-cp-sat",
+      "solver_version": "9.15.6755",
+      "status": "FEASIBLE",
+      "restricted_from_cache_key": "875b95d35f0728dcc60e1c4257a6f1cdeeea03c5699a24e1dc4984b9960974a6",
+      "search_domain_max_side": 16384
+    },
+    "height": 103,
+    "method": "native-maxrects",
+    "regions": [
+      [
+        44,
+        51,
+        51,
+        11
+      ],
+      [
+        44,
+        2,
+        72,
+        45
+      ],
+      [
+        104,
+        52,
+        14,
+        15
+      ],
+      [
+        5,
+        59,
+        10,
+        11
+      ],
+      [
+        104,
+        71,
+        13,
+        25
+      ],
+      [
+        2,
+        2,
+        17,
+        25
+      ],
+      [
+        2,
+        31,
+        15,
+        24
+      ],
+      [
+        23,
+        2,
+        17,
+        26
+      ],
+      [
+        23,
+        32,
+        17,
+        26
+      ],
+      [
+        2,
+        74,
+        13,
+        24
+      ],
+      [
+        19,
+        66,
+        81,
+        35
+      ]
+    ],
+    "search_attempts": 1064,
+    "search_microseconds": 1741,
+    "shelf_area": 13685,
+    "width": 120
+  },
+  "layout_sha256": "941af070883794feb0776293294239202c53efcc7dbe91ff47a0102bd06d3833"
+}

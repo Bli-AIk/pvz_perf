@@ -1751,67 +1751,68 @@ void ZenGarden::StinkyUpdate(GridItem* theStinky)
         }
     }
 
-    float aDeltaX = theStinky->mPosX - theStinky->mGoalX;
-    float aDeltaY = theStinky->mPosY - theStinky->mGoalY;
-    float aSpeedY = 0.5f;
     StinkyAnimRateUpdate(theStinky);
-    const int direction = theStinky->mGridItemState == GridItemState::GRIDITEM_STINKY_WALKING_LEFT ? -1 :
-        (theStinky->mGridItemState == GridItemState::GRIDITEM_STINKY_WALKING_RIGHT ? 1 : 0);
-    const auto currentX = theStinky->mPosX;
-    const auto rootAt = [aStinkyReanim, aStinkyHighOnChocolate](std::int64_t offset) {
-        return aStinkyHighOnChocolate ?
-            aStinkyReanim->RootMotionClamped(ReanimTrackId::_ground, 15.0f, 50.0f, offset) :
-            aStinkyReanim->RootMotion(ReanimTrackId::_ground, 15.0f, offset);
-    };
-    const auto rootNow = rootAt(0);
-    if (theStinky->mRootReanimID != theStinky->mGridItemReanimID ||
-        theStinky->mRootGeneration != aStinkyReanim->mPlaybackGeneration ||
-        theStinky->mRootDirection != direction ||
-        theStinky->mRootPeriodNs != aStinkyReanim->mPeriodNs ||
-        theStinky->mRootLastOutputX != currentX ||
-        theStinky->mRootChocolate != aStinkyHighOnChocolate)
-    {
-        theStinky->mRootWorldX = currentX;
-        theStinky->mRootSample = rootNow;
-        theStinky->mRootReanimID = theStinky->mGridItemReanimID;
-        theStinky->mRootGeneration = aStinkyReanim->mPlaybackGeneration;
-        theStinky->mRootDirection = direction;
-        theStinky->mRootPeriodNs = aStinkyReanim->mPeriodNs;
-        theStinky->mRootChocolate = aStinkyHighOnChocolate;
-    }
-    auto aMoveX = rootNow - theStinky->mRootSample;
-    if (aStinkyHighOnChocolate)
-    {
-        aSpeedY = 1.0f;
-    }
-    else if (mBoard->mCursorObject->mCursorType == CursorType::CURSOR_TYPE_CHOCOLATE)
-    {
-        aSpeedY = 0.0f;
-        aMoveX = 0;
-        theStinky->mRootWorldX = currentX;
-        theStinky->mRootSample = rootNow;
-    }
-    aSpeedY *= TodAnimateCurveFloat(20.0, 5.0, fabs(aDeltaY), 1.0f, 0.2f, Curves::Linear);
-    if (theStinky->mGridItemState == GridItemState::GRIDITEM_STINKY_WALKING_LEFT)
-    {
-        theStinky->mPosX = CheckedPosition(theStinky->mRootWorldX - aMoveX);
-        if (theStinky->mPosX < theStinky->mGoalX)
-        {
-            theStinky->mPosX = theStinky->mGoalX;
-        }
-    }
-    else if (theStinky->mGridItemState == GridItemState::GRIDITEM_STINKY_WALKING_RIGHT)
-    {
-        theStinky->mPosX = CheckedPosition(theStinky->mRootWorldX + aMoveX);
-        if (theStinky->mPosX > theStinky->mGoalX)
-        {
-            theStinky->mPosX = theStinky->mGoalX;
-        }
-    }
-    theStinky->mRootLastOutputX = theStinky->mPosX;
-
+    // Only crawling moves Stinky. A turn has a stationary _ground track, so
+    // applying chocolate's minimum crawling speed to it has no root cycle.
     if (theStinky->mGridItemState == GridItemState::GRIDITEM_STINKY_WALKING_LEFT || theStinky->mGridItemState == GridItemState::GRIDITEM_STINKY_WALKING_RIGHT)
     {
+        float aDeltaX = theStinky->mPosX - theStinky->mGoalX;
+        float aDeltaY = theStinky->mPosY - theStinky->mGoalY;
+        float aSpeedY = 0.5f;
+        const int direction = theStinky->mGridItemState == GridItemState::GRIDITEM_STINKY_WALKING_LEFT ? -1 : 1;
+        const auto currentX = theStinky->mPosX;
+        const auto rootAt = [aStinkyReanim, aStinkyHighOnChocolate](std::int64_t offset) {
+            return aStinkyHighOnChocolate ?
+                aStinkyReanim->RootMotionClamped(ReanimTrackId::_ground, 15.0f, 50.0f, offset) :
+                aStinkyReanim->RootMotion(ReanimTrackId::_ground, 15.0f, offset);
+        };
+        const auto rootNow = rootAt(0);
+        if (theStinky->mRootReanimID != theStinky->mGridItemReanimID ||
+            theStinky->mRootGeneration != aStinkyReanim->mPlaybackGeneration ||
+            theStinky->mRootDirection != direction ||
+            theStinky->mRootPeriodNs != aStinkyReanim->mPeriodNs ||
+            theStinky->mRootLastOutputX != currentX ||
+            theStinky->mRootChocolate != aStinkyHighOnChocolate)
+        {
+            theStinky->mRootWorldX = currentX;
+            theStinky->mRootSample = rootNow;
+            theStinky->mRootReanimID = theStinky->mGridItemReanimID;
+            theStinky->mRootGeneration = aStinkyReanim->mPlaybackGeneration;
+            theStinky->mRootDirection = direction;
+            theStinky->mRootPeriodNs = aStinkyReanim->mPeriodNs;
+            theStinky->mRootChocolate = aStinkyHighOnChocolate;
+        }
+        auto aMoveX = rootNow - theStinky->mRootSample;
+        if (aStinkyHighOnChocolate)
+        {
+            aSpeedY = 1.0f;
+        }
+        else if (mBoard->mCursorObject->mCursorType == CursorType::CURSOR_TYPE_CHOCOLATE)
+        {
+            aSpeedY = 0.0f;
+            aMoveX = 0;
+            theStinky->mRootWorldX = currentX;
+            theStinky->mRootSample = rootNow;
+        }
+        aSpeedY *= TodAnimateCurveFloat(20.0, 5.0, fabs(aDeltaY), 1.0f, 0.2f, Curves::Linear);
+        if (theStinky->mGridItemState == GridItemState::GRIDITEM_STINKY_WALKING_LEFT)
+        {
+            theStinky->mPosX = CheckedPosition(theStinky->mRootWorldX - aMoveX);
+            if (theStinky->mPosX < theStinky->mGoalX)
+            {
+                theStinky->mPosX = theStinky->mGoalX;
+            }
+        }
+        else if (theStinky->mGridItemState == GridItemState::GRIDITEM_STINKY_WALKING_RIGHT)
+        {
+            theStinky->mPosX = CheckedPosition(theStinky->mRootWorldX + aMoveX);
+            if (theStinky->mPosX > theStinky->mGoalX)
+            {
+                theStinky->mPosX = theStinky->mGoalX;
+            }
+        }
+        theStinky->mRootLastOutputX = theStinky->mPosX;
+
         if (fabs(aDeltaY) < aSpeedY)
         {
             theStinky->mPosY = theStinky->mGoalY;

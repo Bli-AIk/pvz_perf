@@ -1,0 +1,127 @@
+{
+  "format": "pvz-exact-atlas-v2",
+  "key": "d0b113616296a86e06e92e64e773117f8620555cf728efdcc44473507e5c0b31",
+  "layout": {
+    "width": 1404,
+    "height": 2321,
+    "regions": [
+      [
+        710,
+        126,
+        93,
+        39
+      ],
+      [
+        2,
+        262,
+        1400,
+        225
+      ],
+      [
+        2,
+        491,
+        1400,
+        225
+      ],
+      [
+        2,
+        720,
+        1400,
+        225
+      ],
+      [
+        2,
+        949,
+        1400,
+        225
+      ],
+      [
+        2,
+        1178,
+        1400,
+        225
+      ],
+      [
+        2,
+        2,
+        512,
+        256
+      ],
+      [
+        518,
+        2,
+        92,
+        120
+      ],
+      [
+        518,
+        126,
+        92,
+        120
+      ],
+      [
+        614,
+        2,
+        92,
+        120
+      ],
+      [
+        2,
+        1407,
+        1400,
+        225
+      ],
+      [
+        2,
+        1636,
+        1400,
+        225
+      ],
+      [
+        614,
+        126,
+        92,
+        120
+      ],
+      [
+        710,
+        2,
+        92,
+        120
+      ],
+      [
+        2,
+        1865,
+        1400,
+        225
+      ],
+      [
+        2,
+        2094,
+        1400,
+        225
+      ]
+    ],
+    "shelf_area": 3432780,
+    "search_attempts": 1135,
+    "search_microseconds": 1539,
+    "method": "native-maxrects",
+    "exact": {
+      "status": "FEASIBLE",
+      "best_bound": 3091497,
+      "optimal": false,
+      "gap": 0.05130506670791031,
+      "elapsed_seconds": 60.0953901,
+      "cache_hit": false,
+      "cache_key": "d0b113616296a86e06e92e64e773117f8620555cf728efdcc44473507e5c0b31",
+      "solver": "ortools-cp-sat",
+      "solver_version": "9.15.6755",
+      "model_version": "integer-nonrotating-padded-global-area-v2",
+      "search_complete": true,
+      "solve_budget_seconds": 60.0,
+      "proof_scope": "minimum integer atlas area; fixed orientation; configured padding and max_side",
+      "objective_area": 3258684
+    }
+  },
+  "layout_sha256": "23b3c9b753d7f16c8d802472f2695c286500f770be74d3a962ee887f983f57ee"
+}

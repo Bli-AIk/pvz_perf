@@ -15,9 +15,12 @@
 #include "Sexy.TodLib/TodParticle.h"
 #include "widget/Dialog.h"
 #include "graphics/Image.h"
+#include "misc/SexyMatrix.h"
 #include "widget/WidgetLifetimeHold.h"
 #include "Sexy.TodLib/EffectSystem.h"
 #include "Sexy.TodLib/TodStringFile.h"
+#include <algorithm>
+#include <cmath>
 
 static CreditsTiming gCreditsTiming[] = {  //0x6A1AD8
     {  128.5f,      CreditWordType::WORD_AW ,         0,     CreditBrainType::BRAIN_OFF       },
@@ -677,6 +680,33 @@ static void DrawDisco(Graphics* g, float aCenterX, float aCenterY, float theTime
     g->DrawTrianglesTex(IMAGE_REANIM_CREDITS_DISCOLIGHTS, aVerts, 2);
 }
 
+// The authored iris has opaque black edges, but its image is only 801x801.
+// Extend those edges instead of stretching the transparent circular opening.
+static void DrawIrisBorder(Graphics* g, Reanimation* movie)
+{
+    const int index=movie->FindTrackIndex(ReanimTrackId::attacher__Zombie1);
+    ReanimatorTransform transform;
+    movie->GetCurrentTransform(index,&transform);
+    if(transform.mFrame<0 || transform.mImageSlot==0 || transform.mAlpha<=0) return;
+    const auto& region=movie->mDefinition->mImageRects[transform.mImageSlot];
+    SexyTransform2D matrix;
+    movie->GetTrackMatrix(index,matrix);
+    const float halfWidth=(std::abs(matrix.m00)*region.mWidth+std::abs(matrix.m01)*region.mHeight)*0.5f;
+    const float halfHeight=(std::abs(matrix.m10)*region.mWidth+std::abs(matrix.m11)*region.mHeight)*0.5f;
+    const auto& clip=g->mClipRect;
+    const int left=std::clamp(int(std::ceil(matrix.m02+g->mTransX-halfWidth)),clip.mX,clip.mX+clip.mWidth);
+    const int right=std::clamp(int(std::floor(matrix.m02+g->mTransX+halfWidth)),left,clip.mX+clip.mWidth);
+    const int top=std::clamp(int(std::ceil(matrix.m12+g->mTransY-halfHeight)),clip.mY,clip.mY+clip.mHeight);
+    const int bottom=std::clamp(int(std::floor(matrix.m12+g->mTransY+halfHeight)),top,clip.mY+clip.mHeight);
+    Graphics border(*g);
+    border.mTransX=border.mTransY=0;
+    border.mColor=Color(0,0,0,ClampInt(FloatRoundToInt(transform.mAlpha*movie->mColorOverride.mAlpha),0,255));
+    border.FillRect(clip.mX,clip.mY,left-clip.mX,clip.mHeight);
+    border.FillRect(right,clip.mY,clip.mX+clip.mWidth-right,clip.mHeight);
+    border.FillRect(left,clip.mY,right-left,top-clip.mY);
+    border.FillRect(left,bottom,right-left,clip.mY+clip.mHeight-bottom);
+}
+
 //0x4351E0
 void CreditScreen::DrawFogEffect(Graphics* g, float theTime)
 {
@@ -780,23 +810,16 @@ void CreditScreen::Draw(Graphics* destination)
 {
     Graphics movie(*destination);
     Graphics* g = &movie;
-    if (mApp->mScreenBounds.mWidth > mWidth) {
-        {
-            Graphics background(*g);
-            background.mColor = Color::Black;
-            background.FillRect(mApp->mScreenBounds);
-        }
-    }
-    // Keep the authored 800x600 movie centered by the widget's translation.
-    // Local scene crops may narrow this boundary, but must never clear it.
-    g->ClipRect(0, 0, BOARD_WIDTH, BOARD_HEIGHT);
-    const Rect movieClip = g->mClipRect;
+    // Authored movie positions remain relative to the centered widget. Let
+    // backgrounds and effects extend into the rest of the actual viewport.
+    Rect screen=mApp->mScreenBounds;
+    screen.Offset(-mX,-mY);
     g->mLinearBlend = true;
 
     if (!mPreloaded)
     {
         g->mColor = Color::Black;
-        g->FillRect(0, 0, mWidth, mHeight);
+        g->FillRect(screen);
         mDrawCount = 1;
         return;
     }
@@ -816,7 +839,7 @@ void CreditScreen::Draw(Graphics* destination)
         DrawReanimToPreload(g, ReanimationType::REANIM_SUNFLOWER);
     }
     g->mColor = Color::Black;
-    g->FillRect(0, 0, mWidth, mHeight);
+    g->FillRect(screen);
 
     Reanimation* aCreditsReanim = mApp->ReanimationGet(mCreditsReanimID);
     const double aPlaybackPhase = static_cast<double>(aCreditsReanim->SamplePlayback().phaseNs) /
@@ -829,8 +852,11 @@ void CreditScreen::Draw(Graphics* destination)
     int aBackground2Index = aCreditsReanim->FindTrackIndex(ReanimTrackId::Background2);
     ReanimatorTransform aTransformBackground2;
     aCreditsReanim->GetCurrentTransform(aBackground2Index, &aTransformBackground2);
+    const Rect movieClip=g->mClipRect;
     Graphics aBackground2G(*g);
 
+    // These crops compose independent shots inside the animated white frames.
+    // They are scene masks, not the removed 800x600 viewport boundary.
     bool aDrawClippedBackgrounds1 = false;
     bool aDrawClippedBackgrounds2 = false;
     if (mCreditsPhase == CreditsPhase::CREDITS_MAIN2 && aFrameFactor * 125.0f > aPlaybackPhase)
@@ -1000,9 +1026,7 @@ void CreditScreen::Draw(Graphics* destination)
     aCreditsReanim->DrawRenderGroup(g, 0);
 
     if (aDrawDoorBottom)
-    {
         g->ClipRect(48, 0, BOARD_WIDTH, BOARD_HEIGHT);
-    }
     if (aDrawDiscoLights)
     {
         float aDiscoTime = aCreditsReanim->mDefinition->mTracks.tracks->mTransforms.count * aPlaybackPhase / (aCreditsReanim->mAnimRate);
@@ -1017,13 +1041,16 @@ void CreditScreen::Draw(Graphics* destination)
 
     if (aDrawDoorBottom)
     {
-        g->mClipRect = movieClip;
+        g->mClipRect=movieClip;
         aBackground2G.DrawImage(IMAGE_BACKGROUND3_GAMEOVER_MASK, -172, 234);
     }
     if (aDrawChimney)
     {
         aBackground2G.DrawImage(IMAGE_BACKGROUND5_GAMEOVER_MASK, -220, 81);
     }
+    if (mCreditsPhase==CreditsPhase::CREDITS_MAIN3 &&
+        aPlaybackPhase>=aFrameFactor*240.0f && aPlaybackPhase<aFrameFactor*300.0f)
+        DrawIrisBorder(g,aCreditsReanim);
     aCreditsReanim->DrawRenderGroup(g, 3);
 
     TodParticleSystem* aParticle = nullptr;

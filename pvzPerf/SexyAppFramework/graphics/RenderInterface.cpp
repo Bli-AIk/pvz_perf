@@ -11,6 +11,7 @@
 #include <array>
 #include <cmath>
 #include <stdexcept>
+#include <string>
 #include <utility>
 #include <vector>
 
@@ -65,10 +66,11 @@ struct ScreenVertex
 static void RequireImageDimensions(const GpuRenderer* renderer, int width, int height)
 {
 	if (!renderer)
-		throw std::logic_error("Image creation requires a native Vulkan renderer");
+		throw std::logic_error("Image creation requires an initialized graphics renderer");
 	const uint32_t limit = renderer->MaxImageDimension2D();
 	if (width <= 0 || height <= 0 || uint32_t(width) > limit || uint32_t(height) > limit)
-		throw std::invalid_argument("Image dimensions exceed the Vulkan device limit");
+		throw std::invalid_argument("Image dimensions " + std::to_string(width) + "x" +
+			std::to_string(height) + " exceed graphics texture limit " + std::to_string(limit));
 }
 
 ///////////////////////////////////////////////////////////////////////////////

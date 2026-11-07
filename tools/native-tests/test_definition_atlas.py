@@ -473,7 +473,7 @@ class NativeAtlasLayoutTests(unittest.TestCase):
     def test_batch_is_deterministic_preserves_order_and_never_regresses_shelf(self):
         batches = [[], [(1, 1)], [(56, 96), (36, 56), (36, 36)],
                    [(28, 28)] * 16, [(124, 1)] * 4 + [(1, 124)] * 4,
-                   [(16380, 1)], [(8188, 16380), (8188, 8188), (8188, 8188)]]
+                   [(4092, 1)], [(2044, 4092), (2044, 2044), (2044, 2044)]]
         first = atlas.native_layouts(self.compiler(), batches)
         second = atlas.native_layouts(self.compiler(), batches)
         for sizes, a, b in zip(batches, first, second):
@@ -484,8 +484,12 @@ class NativeAtlasLayoutTests(unittest.TestCase):
                 self.assertLessEqual(a["width"] * a["height"], a["shelf_area"])
             self.assertLessEqual(a["search_attempts"], 16288)
         self.assertLess(first[2]["width"] * first[2]["height"], first[2]["shelf_area"])
-        self.assertEqual((first[-1]["width"], first[-1]["height"]), (16384, 16384))
+        self.assertEqual((first[-1]["width"], first[-1]["height"]), (4096, 4096))
         self.assertEqual(first[-1]["shelf_area"], 0)
+
+    def test_padded_sources_exceeding_4096_are_rejected(self):
+        with self.assertRaises(subprocess.CalledProcessError):
+            atlas.native_layouts(self.compiler(), [[(4093, 1)]])
 
     def test_vertical_gap_filling_keeps_logical_orientation_and_padding(self):
         # Padded rectangles 60x100,40x60,40x40 exactly fill a 100x100 square:

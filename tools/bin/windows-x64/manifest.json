@@ -1,6 +1,6 @@
 {
   "format": "pvz-devtools-binaries-v1",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "platform": "windows-x64",
   "files": [
     {
@@ -50,8 +50,8 @@
     },
     {
       "path": "pvz-resource-build.exe",
-      "bytes": 1628160,
-      "sha256": "e39e13d26e6d667158e7a293c1539613b586bbca904c2177265cf2ee161385bb"
+      "bytes": 1639936,
+      "sha256": "6b8434af9960e1538c7e1d207e1fc87e43f5d36a68b866e8540d32cb51995122"
     },
     {
       "path": "re2.dll",
@@ -60,13 +60,13 @@
     },
     {
       "path": "README.md",
-      "bytes": 4484,
-      "sha256": "ff9bbaa12e6004e3bde0a5bc44f46b743c5097edef5fd06fb168ce2d30769a95"
+      "bytes": 5494,
+      "sha256": "e0cc959fa83f8bef72155119371cca7aa0eccd793e9d8a9bb274c0f547a1b7e7"
     },
     {
       "path": "reanimc.exe",
       "bytes": 847360,
-      "sha256": "e9af928d22c9dc3a3f8113452df8b4b3ab90e5de1e3dea803010cf923a5755c5"
+      "sha256": "6fa582335c336720650bdb64c247c0b711ec121c7cf3baa50c5dec52f4abbd81"
     },
     {
       "path": "third-party-notices/libjpeg-turbo.txt",
@@ -128,5 +128,6 @@
       "bytes": 90624,
       "sha256": "bb69e0be9857093ba4f3b30f49fc720fe1f295c5cc0cb4030035c57906d0f7c3"
     }
-  ]
+  ],
+  "source_commit": "480b1272b5fcaa32a378bb1dcd05c8be8b331edb"
 }

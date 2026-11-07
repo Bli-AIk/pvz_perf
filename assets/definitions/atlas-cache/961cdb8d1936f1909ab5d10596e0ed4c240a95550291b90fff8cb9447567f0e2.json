@@ -1,0 +1,100 @@
+{
+  "format": "pvz-exact-atlas-v2",
+  "key": "961cdb8d1936f1909ab5d10596e0ed4c240a95550291b90fff8cb9447567f0e2",
+  "layout": {
+    "exact": {
+      "best_bound": 33705,
+      "cache_hit": false,
+      "cache_key": "961cdb8d1936f1909ab5d10596e0ed4c240a95550291b90fff8cb9447567f0e2",
+      "completion_evidence": "matching-published-manifest",
+      "elapsed_seconds": 60.026198899999144,
+      "gap": 0.015107240956110105,
+      "model_version": "integer-nonrotating-padded-global-area-v2",
+      "objective_area": 34222,
+      "optimal": false,
+      "proof_scope": "minimum integer atlas area; fixed orientation; configured padding and max_side",
+      "search_complete": true,
+      "solve_budget_seconds": 60.0,
+      "solver": "ortools-cp-sat",
+      "solver_version": "9.15.6755",
+      "status": "FEASIBLE",
+      "restricted_from_cache_key": "38bfeb17e5bfbb120dd5a8123b9969bdaac32ff7282ba0bd9c3da3fb513f0b35",
+      "search_domain_max_side": 16384
+    },
+    "height": 241,
+    "method": "native-maxrects",
+    "regions": [
+      [
+        2,
+        2,
+        67,
+        59
+      ],
+      [
+        2,
+        185,
+        77,
+        54
+      ],
+      [
+        83,
+        182,
+        25,
+        21
+      ],
+      [
+        83,
+        207,
+        18,
+        17
+      ],
+      [
+        73,
+        2,
+        67,
+        56
+      ],
+      [
+        73,
+        62,
+        67,
+        56
+      ],
+      [
+        2,
+        65,
+        67,
+        56
+      ],
+      [
+        73,
+        122,
+        67,
+        56
+      ],
+      [
+        2,
+        125,
+        67,
+        56
+      ],
+      [
+        112,
+        182,
+        17,
+        18
+      ],
+      [
+        112,
+        204,
+        17,
+        18
+      ]
+    ],
+    "search_attempts": 1473,
+    "search_microseconds": 1252,
+    "shelf_area": 37800,
+    "width": 142
+  },
+  "layout_sha256": "b387c11b181ce93ac82d5d2ecb7c38c283f59be631343d276d0a603065864343"
+}

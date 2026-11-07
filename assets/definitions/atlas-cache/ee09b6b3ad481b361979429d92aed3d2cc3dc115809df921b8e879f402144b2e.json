@@ -1,0 +1,202 @@
+{
+  "format": "pvz-exact-atlas-v2",
+  "key": "ee09b6b3ad481b361979429d92aed3d2cc3dc115809df921b8e879f402144b2e",
+  "layout": {
+    "exact": {
+      "best_bound": 47336,
+      "cache_hit": false,
+      "cache_key": "ee09b6b3ad481b361979429d92aed3d2cc3dc115809df921b8e879f402144b2e",
+      "completion_evidence": "matching-published-manifest",
+      "elapsed_seconds": 60.04036210000049,
+      "gap": 0.034589655735030186,
+      "model_version": "integer-nonrotating-padded-global-area-v2",
+      "objective_area": 49032,
+      "optimal": false,
+      "proof_scope": "minimum integer atlas area; fixed orientation; configured padding and max_side",
+      "search_complete": true,
+      "solve_budget_seconds": 60.0,
+      "solver": "ortools-cp-sat",
+      "solver_version": "9.15.6755",
+      "status": "FEASIBLE",
+      "restricted_from_cache_key": "f78dd4e05d0e4e5c15b40e0771b50b23966daf4c69bd17b7bb4d0656fe8e83e8",
+      "search_domain_max_side": 16384
+    },
+    "height": 216,
+    "method": "native-maxrects",
+    "regions": [
+      [
+        98,
+        21,
+        46,
+        47
+      ],
+      [
+        131,
+        103,
+        27,
+        28
+      ],
+      [
+        2,
+        21,
+        92,
+        76
+      ],
+      [
+        163,
+        81,
+        37,
+        39
+      ],
+      [
+        131,
+        81,
+        28,
+        17
+      ],
+      [
+        204,
+        75,
+        18,
+        13
+      ],
+      [
+        2,
+        139,
+        130,
+        75
+      ],
+      [
+        117,
+        2,
+        24,
+        15
+      ],
+      [
+        148,
+        2,
+        49,
+        44
+      ],
+      [
+        205,
+        96,
+        20,
+        24
+      ],
+      [
+        180,
+        144,
+        9,
+        26
+      ],
+      [
+        117,
+        111,
+        10,
+        21
+      ],
+      [
+        182,
+        54,
+        39,
+        17
+      ],
+      [
+        136,
+        185,
+        19,
+        28
+      ],
+      [
+        136,
+        135,
+        19,
+        46
+      ],
+      [
+        98,
+        72,
+        29,
+        20
+      ],
+      [
+        193,
+        155,
+        27,
+        28
+      ],
+      [
+        159,
+        183,
+        14,
+        30
+      ],
+      [
+        148,
+        50,
+        30,
+        27
+      ],
+      [
+        193,
+        124,
+        30,
+        27
+      ],
+      [
+        201,
+        2,
+        24,
+        17
+      ],
+      [
+        162,
+        124,
+        27,
+        16
+      ],
+      [
+        204,
+        23,
+        21,
+        27
+      ],
+      [
+        159,
+        144,
+        17,
+        35
+      ],
+      [
+        177,
+        187,
+        47,
+        27
+      ],
+      [
+        2,
+        2,
+        111,
+        15
+      ],
+      [
+        2,
+        101,
+        111,
+        15
+      ],
+      [
+        2,
+        120,
+        111,
+        15
+      ]
+    ],
+    "search_attempts": 1299,
+    "search_microseconds": 29324,
+    "shelf_area": 56025,
+    "width": 227
+  },
+  "layout_sha256": "ac96d98375592c003e115e1d0dbed436c778cd297977af691c887a2a569e43cd"
+}

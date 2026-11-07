@@ -370,12 +370,21 @@ a replacement aggregate DSL.
 resource_build(1)
 sources(reanim "reanim/units/*.dsl")
 sources(particle "particles/particles/*.particle.dsl")
-atlas_defaults(solver exact time_limit_seconds 60 workers 1 require_optimal false)
+atlas_defaults(solver exact max_side 4096 time_limit_seconds 60 workers 1 require_optimal false)
 atlas(pea_family reanim:PeaShooter reanim:SnowPea)
 # A group can also mix reanim:Name and particle:Name.
 # Optional strict override: this group must prove its global minimum.
 atlas_settings(pea_family time_limit_seconds unlimited require_optimal true)
 ```
+
+Atlas width and height are independently bounded by **4096 pixels**, including
+padding. Both the native incumbent search and exact solver enforce this bound;
+a larger configured maximum is rejected. Existing layouts are revalidated under
+the smaller bound. Completed bounded searches keep their actual FEASIBLE/UNKNOWN
+status and gap; a retained wider-domain proof is usable only if its layout fits.
+Oversized bitmap-font strips are folded at glyph boundaries during resource
+compilation. Glyph pixels, advances, kerning and layer metrics are unchanged;
+the loader neither scales nor tiles them.
 
 Ungrouped definitions receive individual atlases. A definition may belong to
 only one explicit group. Group members share the union of their source images,

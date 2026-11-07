@@ -1,0 +1,100 @@
+{
+  "format": "pvz-exact-atlas-v2",
+  "key": "e4a7a0577ba9c666c4b2db2342c385051ca503f8478e42d246d2d3c98b60ecd8",
+  "layout": {
+    "exact": {
+      "best_bound": 16235,
+      "cache_hit": false,
+      "cache_key": "e4a7a0577ba9c666c4b2db2342c385051ca503f8478e42d246d2d3c98b60ecd8",
+      "completion_evidence": "matching-published-manifest",
+      "elapsed_seconds": 60.03287210000417,
+      "gap": 0.04252182118424157,
+      "model_version": "integer-nonrotating-padded-global-area-v2",
+      "objective_area": 16956,
+      "optimal": false,
+      "proof_scope": "minimum integer atlas area; fixed orientation; configured padding and max_side",
+      "search_complete": true,
+      "solve_budget_seconds": 60.0,
+      "solver": "ortools-cp-sat",
+      "solver_version": "9.15.6755",
+      "status": "FEASIBLE",
+      "restricted_from_cache_key": "146e0cafa3b15157826748b8d01e8b9dc04f8c8f335b3d3aeb45dbdf439e4eae",
+      "search_domain_max_side": 16384
+    },
+    "height": 157,
+    "method": "native-maxrects",
+    "regions": [
+      [
+        44,
+        2,
+        62,
+        67
+      ],
+      [
+        2,
+        91,
+        42,
+        26
+      ],
+      [
+        83,
+        111,
+        23,
+        29
+      ],
+      [
+        2,
+        44,
+        36,
+        43
+      ],
+      [
+        48,
+        73,
+        31,
+        42
+      ],
+      [
+        83,
+        73,
+        15,
+        34
+      ],
+      [
+        60,
+        119,
+        19,
+        20
+      ],
+      [
+        2,
+        2,
+        38,
+        38
+      ],
+      [
+        56,
+        144,
+        47,
+        11
+      ],
+      [
+        2,
+        121,
+        52,
+        14
+      ],
+      [
+        2,
+        139,
+        50,
+        14
+      ]
+    ],
+    "search_attempts": 1160,
+    "search_microseconds": 2536,
+    "shelf_area": 20625,
+    "width": 108
+  },
+  "layout_sha256": "7b3686a4a0b340fb2348d6a202426a1a9fc5ef7c8dc934c170c5f0c081e1aa94"
+}

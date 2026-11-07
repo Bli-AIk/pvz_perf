@@ -5,10 +5,10 @@
 IDI_MAIN_ICON ICON "../../assets/branding/pvz_perf.ico"
 
 1 VERSIONINFO
- FILEVERSION 3,2,5,0
- PRODUCTVERSION 3,2,5,0
+ FILEVERSION 3,3,4,0
+ PRODUCTVERSION 3,3,4,0
  FILEFLAGSMASK 0x3fL
- FILEFLAGS 0
+ FILEFLAGS 0x0L
  FILEOS 0x40004L
  FILETYPE 0x1L
  FILESUBTYPE 0
@@ -18,11 +18,11 @@ BEGIN
         BLOCK "040904b0"
         BEGIN
             VALUE "FileDescription", "pvz_perf\0"
-            VALUE "FileVersion", "3.2.5\0"
+            VALUE "FileVersion", "3.3.4\0"
             VALUE "InternalName", "pvz_perf\0"
             VALUE "OriginalFilename", "pvz_perf.exe\0"
             VALUE "ProductName", "pvz_perf\0"
-            VALUE "ProductVersion", "3.2.5\0"
+            VALUE "ProductVersion", "3.3.4\0"
         END
     END
     BLOCK "VarFileInfo"
