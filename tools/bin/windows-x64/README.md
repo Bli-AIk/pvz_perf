@@ -42,6 +42,12 @@ OR-Tools 的官方预编译包见 [官方 C++ 安装说明](https://developers.g
 
 装箱的宽、高硬上限均为 **4096**，配置不能提高此上限。原版超过上限的字体长条不经过装箱求解，构建器会在字形边界折行并更新字体矩形；字形像素、字宽、字距和偏移保持一致，不在加载期缩图。旧缓存必须重新校验四千零九十六上限；来自更宽搜索域的合法最优解仍然最优，已耗尽预算的可行解仍只标为 FEASIBLE／UNKNOWN，并记录原搜索域与来源键。超限布局不能复用。
 
+仅编译图集：`pvz-resource-build.exe pack-atlas --input sprites.json --compiler reanimc.exe --output atlas --cache cache`。
+清单格式为 `pvz-sprite-atlas-v1`，包含 `name` 和 `sprites`。每项指定 `name`、`image`，
+可选 `rect: [x,y,width,height]` 及独立的 `logical_size: [width,height]`，图片路径相对清单。
+输出 PNG、JSON、UV 和 C++ 声明／实现，不编译行为定义或 PAK；像素和 Alpha 保持原样，
+两像素扩边，图集宽高上限均为 4096。新 PNG 必须配套新 UV。AI 候选须确认后显式加入清单。
+
 可选重压缩输出独立的 `main-compact.pak64`，保留原包和源素材：
 
 ```powershell
