@@ -46,7 +46,8 @@ def main():
     # The HTML tool is built and maintained in PvzDevTools; ship its artifact.
     shutil.copyfile(ROOT / 'tools/bin/web/save-editor.html', args.output / 'save-editor.html')
     shutil.copyfile(ROOT / 'tools/bin/web/manifest.json', args.output / 'save-editor-manifest.json')
-    support_files += ['save-editor.html', 'save-editor-manifest.json']
+    shutil.copyfile(ROOT / 'tools/bin/web/save-codec.js', args.output / 'save-codec.js')
+    support_files += ['save-editor.html', 'save-editor-manifest.json', 'save-codec.js']
     readme = args.output / 'README.txt'
     text = readme.read_text(encoding='utf-8')
     readme.write_text('pvz_perf Web v' + version + '\n' + text.split('\n', 1)[1], encoding='utf-8')

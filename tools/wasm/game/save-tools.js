@@ -35,13 +35,13 @@ async function readMusicStart(data,order){
   return state;
  }finally{mixer.close()}
 }
-export async function runSaveTool(request,input){
+export async function runSaveTool(request,input,profile){
  if(window.PVZSaveToolJob)throw Error('离线存档工具正在处理上一项任务');
  const bundle=await loadSaveBundle(),iframe=document.createElement('iframe');
  iframe.setAttribute('aria-hidden','true');iframe.style.cssText='position:fixed;left:-10000px;top:0;width:800px;height:600px;pointer-events:none';
  let timer;
  try{return await new Promise((resolve,reject)=>{
-  window.PVZSaveToolJob={request,fetchResource,readMusicStart,runtimeStem:window.Module?.pvzRuntimeStem||'pvz-perf',baseURL:new URL('./',document.baseURI).href,files:{'users.dat':bundle['users.dat'],'user1.dat64':bundle['user1.dat64'],...(input?{'input.dat64':input}:{})},resolve,reject};
+  window.PVZSaveToolJob={request,fetchResource,readMusicStart,runtimeStem:window.Module?.pvzRuntimeStem||'pvz-perf',baseURL:new URL('./',document.baseURI).href,files:{'users.dat':bundle['users.dat'],'user1.dat64':profile||bundle['user1.dat64'],...(input?{'input.dat64':input}:{})},resolve,reject};
   timer=setTimeout(()=>reject(Error('离线存档工具处理超时')),180000);
   // Toy serves ordinary HTML routes through its own page shell. Do not
   // navigate to a second HTML URL for an implementation detail: keep an

@@ -15,7 +15,7 @@ try{
  await page.locator('#upload-progress').click();await page.locator('#cloud-upload-warning').waitFor({state:'visible'});
  assert.equal(await page.locator('#cloud-upload-warning').evaluate(el=>getComputedStyle(el).color),'rgb(255, 101, 101)');
  await page.waitForFunction(()=>typeof window.finishUpload==='function');await page.evaluate(()=>{const f=finishUpload;finishUpload=null;f()});await page.waitForFunction(()=>typeof window.finishUpload==='function');await page.evaluate(()=>finishUpload());await page.locator('#cloud-upload-warning').waitFor({state:'hidden'});
- console.log('cloud upload state passed');await page.locator('#custom-save').click();const editor=page.frameLocator('#save-editor-frame');await editor.locator('#board button').first().waitFor();
+ console.log('cloud upload state passed');await page.locator('#custom-save').click();const editor=page.frameLocator('#save-editor-frame');await editor.locator('#status').filter({hasText:'已打开'}).waitFor();await editor.locator('[data-tab=lineup]').click();
  console.log('editor opened');assert.equal(await page.evaluate(()=>coinQueries),1);assert.equal(await editor.locator('#board button').count(),54);
  await editor.locator('[data-tab=files]').click();await editor.locator('#extract').click();await editor.locator('#status').filter({hasText:'已提取阵型'}).waitFor({timeout:180000});
  assert.equal(await page.evaluate(()=>coinQueries),1);
@@ -27,7 +27,7 @@ try{
  const download=page.waitForEvent('download');await editor.locator('#export').click();assert.equal((await download).suggestedFilename(),'game1_58.dat64');
  assert.equal(await page.evaluate(()=>coinQueries),1);
  await editor.locator('[data-tab=lineup]').click();await editor.locator('#generate').click();await editor.locator('#status').filter({hasText:'已生成并部署'}).waitFor({timeout:180000});
- await editor.locator('#close').click();await page.locator('#save-editor-dialog').waitFor({state:'hidden'});await page.locator('#custom-save').click();await editor.locator('#board button').first().waitFor();assert.equal(await page.evaluate(()=>coinQueries),2);
+ await editor.locator('#close').click();await page.locator('#save-editor-dialog').waitFor({state:'hidden'});await page.locator('#custom-save').click();await editor.locator('#status').filter({hasText:'已打开'}).waitFor();await editor.locator('[data-tab=lineup]').click();assert.equal(await page.evaluate(()=>coinQueries),2);
  assert.deepEqual(errors,[]);await page.screenshot({path:process.env.TEMP+'/pvz-save-editor-preview.png'});
  console.log('Top actions; red upload state; one authorization per open; visual layers/undo; validated DAT64 import/export; generation; unchanged local namespace passed');
 }finally{await browser.close()}

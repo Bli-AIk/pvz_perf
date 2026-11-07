@@ -66,7 +66,7 @@ Json Extract(Board& board) {
         if(item->mGridItemType==GridItemType::GRIDITEM_LADDER)cells[y*9+x]|=1;
         if(item->mGridItemType==GridItemType::GRIDITEM_RAKE)rake=y+1;
     }
-    return Json{{"sun",board.mSunMoney},{"mowers",mowers},{"music",{{"tune",board.mApp->mMusic->mCurMusicTune},{"order",board.mApp->mMusic->mPauseOffset},{"drumsOrder",board.mApp->mMusic->mPauseOffsetDrums},{"tempo",board.mApp->mMusic->mBaseBPM},{"speed",board.mApp->mMusic->mBaseModSpeed}}},{"healthyPlants",healthy},{"cards",board.mSeedBank->mNumPackets},{"cells",cells},{"scene",static_cast<int>(board.mBackground)},{"rake",rake},{"plants",count},{"flags",board.GetSurvivalFlagsCompleted()},{"repickPending",board.mNextSurvivalStageCounter>0},{"seed",board.mBoardRandSeed}};
+    return Json{{"mode",static_cast<int>(board.mApp->mGameMode)},{"level",board.mLevel},{"sun",board.mSunMoney},{"mowers",mowers},{"music",{{"tune",board.mApp->mMusic->mCurMusicTune},{"order",board.mApp->mMusic->mPauseOffset},{"drumsOrder",board.mApp->mMusic->mPauseOffsetDrums},{"tempo",board.mApp->mMusic->mBaseBPM},{"speed",board.mApp->mMusic->mBaseModSpeed}}},{"healthyPlants",healthy},{"cards",board.mSeedBank->mNumPackets},{"cells",cells},{"scene",static_cast<int>(board.mBackground)},{"rake",rake},{"plants",count},{"flags",board.GetSurvivalFlagsCompleted()},{"repickPending",board.mNextSurvivalStageCounter>0},{"seed",board.mBoardRandSeed}};
 }
 void Generate(LawnApp& app,Board& board,const Json& r) {
     const int flags=r.at("flags"),scene=r.at("scene"),seed=r.at("seed"),rake=r.at("rake");
@@ -78,10 +78,12 @@ void Generate(LawnApp& app,Board& board,const Json& r) {
     const int rows=scene==2||scene==3?6:5;
     Require(rake>=0&&rake<=rows&&!((scene==2||scene==3)&&(rake==3||rake==4)),"Invalid rake row");
     for(int at=0;at<54;++at)Require((cells[at]>>10)<=48&&(at<rows*9||!cells[at]),"Invalid plant or sixth row");
+    const bool endless=LawnApp::IsSurvivalEndless(app.mGameMode);
     board.InitLevel();
+    Plant* oldPlant=nullptr;while(board.IteratePlants(oldPlant))oldPlant->Die(0,0,0);
     board.mBackground=static_cast<BackgroundType>(scene);
     board.mBoardRandSeed=seed;
-    board.mChallenge->mSurvivalStage=flags/2;
+    board.mChallenge->mSurvivalStage=endless?flags/2:0;
     board.mPoolIntroVisual=false;
     board.mSodPosition=0;
     board.mSunMoney=sun;
@@ -106,26 +108,51 @@ void Generate(LawnApp& app,Board& board,const Json& r) {
     // increments stage and opens its chooser. Completed flags stay unchanged.
     // For 0 flags, -1 is only this pre-first-round boundary; normal continuation
     // immediately advances it to stage 0. No negative stage runs a battle.
-    board.mChallenge->mSurvivalStage=flags/2-1;
-    board.mCurrentWave=board.mNumWaves;
-    board.mTotalSpawnedWaves=board.mNumWaves;
-    board.mNextSurvivalStageCounter=1;
-    // There is no previous hand in a newly generated lineup. Repick imports
-    // cooldowns by indexing previous packet types, so an empty hand must have
-    // count zero, not ten SEED_NONE entries. Capacity comes from the profile.
-    board.mSeedBank->mNumPackets=0;
-    constexpr int chooserOrder=0x7A; // Music.cpp: MUSIC_TUNE_CHOOSE_YOUR_SEEDS.
+    if(endless) {
+        board.mChallenge->mSurvivalStage=flags/2-1;
+        board.mCurrentWave=board.mNumWaves;
+        board.mTotalSpawnedWaves=board.mNumWaves;
+        board.mNextSurvivalStageCounter=1;
+        board.mSeedBank->mNumPackets=0;
+    } else {
+        // Ordinary modes keep their own initializer and fixed/conveyor hand.
+        // A normal chooser level needs a usable starting hand in a battle save.
+        constexpr SeedType hand[]{SEED_PEASHOOTER,SEED_SUNFLOWER,SEED_CHERRYBOMB,SEED_WALLNUT,SEED_POTATOMINE,SEED_SNOWPEA,SEED_GRAVEBUSTER,SEED_LILYPAD,SEED_PUMPKINSHELL,SEED_FLOWERPOT};
+        for(int i=0;i<board.mSeedBank->mNumPackets;++i) {
+            auto& packet=board.mSeedBank->mSeedPackets[i];
+            if(packet.mPacketType==SEED_NONE)packet.SetPacketType(hand[i%10]);
+            packet.Activate();
+        }
+        board.mCurrentWave=0;board.mTotalSpawnedWaves=0;board.mNextSurvivalStageCounter=0;
+    }
+    // Offline equivalent of Music::StartGameMusic: select metadata without
+    // touching the audio driver (this isolated instance has no audio device).
+    MusicTune selected=MUSIC_TUNE_DAY_GRASSWALK;
+    if(endless)selected=MUSIC_TUNE_CHOOSE_YOUR_SEEDS;
+    else if(app.IsFinalBossLevel())selected=MUSIC_TUNE_FINAL_BOSS_BRAINIAC_MANIAC;
+    else if(app.IsWallnutBowlingLevel()||app.IsWhackAZombieLevel()||app.IsLittleTroubleLevel()||app.IsBungeeBlitzLevel()||app.mGameMode==GAMEMODE_MINIGAME_SPEED)selected=MUSIC_TUNE_MINIGAME_LOONBOON;
+    else if((app.IsAdventureMode()&&(board.mLevel==10||board.mLevel==20||board.mLevel==30))||app.mGameMode==GAMEMODE_MINIGAME_COLUMN)selected=MUSIC_TUNE_CONVEYER;
+    else if(app.IsStormyNightLevel())selected=MUSIC_TUNE_NONE;
+    else if(app.IsScaryPotterLevel()||app.IsIZombieLevel())selected=MUSIC_TUNE_PUZZLE_CEREBRAWL;
+    else if(board.mBackground==BACKGROUND_4_FOG)selected=MUSIC_TUNE_FOG_RIGORMORMIST;
+    else if(board.StageIsNight())selected=MUSIC_TUNE_NIGHT_MOONGRAINS;
+    else if(board.StageHasPool())selected=MUSIC_TUNE_POOL_WATERYGRAVES;
+    else if(board.StageHasRoof())selected=MUSIC_TUNE_ROOF_GRAZETHEROOF;
+    app.mMusic->mCurMusicTune=selected;
+    app.mMusic->mCurMusicFileMain=selected==MUSIC_TUNE_NONE?MUSIC_FILE_NONE:MUSIC_FILE_MAIN_MUSIC;
+    app.mMusic->mCurMusicFileDrums=selected>=MUSIC_TUNE_DAY_GRASSWALK&&selected<=MUSIC_TUNE_ROOF_GRAZETHEROOF?MUSIC_FILE_DRUMS:MUSIC_FILE_NONE;
+    app.mMusic->mCurMusicFileHihats=selected==MUSIC_TUNE_DAY_GRASSWALK||(selected>=MUSIC_TUNE_POOL_WATERYGRAVES&&selected<=MUSIC_TUNE_ROOF_GRAZETHEROOF)?MUSIC_FILE_HIHATS:MUSIC_FILE_NONE;
+    constexpr int orders[]{0,0,0x30,0x5E,0x7D,0xB8,0x7A,0x98,0xDD,0xB1,0xA6,0xD4,0x9E,0};
+    const int tune=static_cast<int>(app.mMusic->mCurMusicTune);
+    const int order=tune>=1&&tune<static_cast<int>(std::size(orders))?orders[tune]:0;
     PFILE* file=p_fopen("sounds/mainmusic.mo3","rb");
     Require(file!=nullptr,"Cannot read the packaged MO3 music");
     p_fseek(file,0,SEEK_END);const auto size=p_ftell(file);p_fseek(file,0,SEEK_SET);
     std::vector<unsigned char> bytes(size);const auto read=p_fread(bytes.data(),1,bytes.size(),file);p_fclose(file);
     Require(read==bytes.size(),"Cannot read complete MO3 music");
-    Require(ReadMusicStart(bytes.data(),static_cast<int>(bytes.size()),chooserOrder,&app.mMusic->mBaseBPM,&app.mMusic->mBaseModSpeed),"Cannot determine the selected song's natural tempo/speed");
-    app.mMusic->mCurMusicTune=MUSIC_TUNE_CHOOSE_YOUR_SEEDS;
-    app.mMusic->mCurMusicFileMain=MUSIC_FILE_MAIN_MUSIC;
-    app.mMusic->mCurMusicFileDrums=MUSIC_FILE_NONE;
-    app.mMusic->mCurMusicFileHihats=MUSIC_FILE_NONE;
-    app.mMusic->mPaused=true;app.mMusic->mPauseOffset=chooserOrder;app.mMusic->mPauseOffsetDrums=0;
+    Require(tune<1||ReadMusicStart(bytes.data(),static_cast<int>(bytes.size()),order,&app.mMusic->mBaseBPM,&app.mMusic->mBaseModSpeed),"Cannot determine the selected song's natural tempo/speed");
+    app.mMusic->mPaused=tune>=1;app.mMusic->mPauseOffset=order;
+    app.mMusic->mPauseOffsetDrums=tune==MUSIC_TUNE_NIGHT_MOONGRAINS?0x5C:order;
     board.mPaused=false;
     Require(LawnSaveGame(&board,"/tool/generated.dat64"),"Cannot serialize generated DAT64");
 }
@@ -144,6 +171,8 @@ int RunWebSaveTool() {
         Json request;std::ifstream("/tool/request.json")>>request;
         const int mode=request.value("mode",static_cast<int>(GameMode::GAMEMODE_SURVIVAL_ENDLESS_STAGE_3));
         Require(mode>=0&&mode<static_cast<int>(GameMode::NUM_GAME_MODES),"Invalid DAT64 slot mode");
+        Require(mode!=34&&mode!=35&&mode!=71,"This mode has no standalone battle checkpoint");
+        if(mode==0){const int level=request.value("level",app.mPlayerInfo->mLevel);Require(level>=1&&level<=50,"Invalid adventure level");app.mPlayerInfo->mLevel=level;}
         app.mGameMode=static_cast<GameMode>(mode);
         app.mGameScene=GameScenes::SCENE_PLAYING;
         app.mBoard=new Board(&app);
@@ -159,4 +188,3 @@ int RunWebSaveTool() {
         EM_ASM({Module.pvzToolFail(UTF8ToString($0));},message.c_str());return 1;
     }
 }
-

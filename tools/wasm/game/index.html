@@ -11,18 +11,19 @@
 <p class="eyebrow">PLANTS VS. ZOMBIES · WEB</p><h1>植物大战僵尸 · 网页</h1><p class="intro">设置好画面与帧率，进入游戏。</p>
 <div class="launch-row top-actions"><div class="primary-actions"><button id="start" type="submit" disabled>开始游戏</button><button id="upload-progress" class="secondary" type="button" disabled>上传云端</button><button id="restore-progress" class="secondary" type="button" disabled>从云端恢复</button></div><div class="load-state"><span id="status" role="status" aria-live="polite">正在加载程序和资源…</span><progress id="progress"></progress></div><strong id="cloud-upload-warning" role="status" aria-live="assertive" hidden>正在上传云端，请勿关闭或刷新页面。</strong><small id="cloud-status" role="status">关卡 DAT64 不上传云端，请自行导出备份。</small></div>
 <div class="settings">
-<label class="field" id="graphics-field" hidden><span>图形接口</span><select id="graphics-backend" disabled><option value="">正在检测图形接口…</option></select><small id="graphics-info">正在检测浏览器能力…</small><details><summary>设备图形能力</summary><pre id="graphics-capabilities">正在检测…</pre></details></label>
+
 <label class="field"><span>目标帧率</span><input id="target-fps" type="number" min="30" max="1000000000" step="1" value="100" required><small id="target-fps-info">最低 30 FPS；实际绘制受浏览器与屏幕限制。</small></label>
-<label class="field"><span>画面比例</span><select id="aspect"><option value="auto">随可用窗口自动调整</option><option value="4:3">4:3</option><option value="16:9">16:9</option><option value="21:9">21:9</option></select><small>保持比例，不拉伸；超出 4:3～21:9 的部分留黑边。</small></label>
+
 <label class="check"><input id="auto-fps" type="checkbox" checked><span>自动跟随浏览器刷新节奏<small id="refresh-info">正在估算…</small></span></label>
-<label class="check"><input id="show-fps" type="checkbox"><span>显示帧率<small>显示游戏绘制帧率，默认关闭。</small></span></label>
+
 <label class="check"><input id="landscape-ui" type="checkbox"><span>使用横板 UI<small>窗口较窄时回退桌面 UI，布局在启动时确定。</small></span></label>
 <label class="field volume audio-sfx"><span>音效音量 <output id="volume-value">100</output></span><input id="sfx-volume" type="range" min="0" max="100" value="100"></label>
 <label class="field volume audio-music"><span>音乐音量 <output id="music-value">100</output></span><input id="music-volume" type="range" min="0" max="100" value="100"></label>
 <label class="check launch-fullscreen"><input id="launch-fullscreen" type="checkbox"><span>启动时独占全屏<small>需要浏览器允许；未启用时只铺满网页。</small></span></label>
-<div class="field save-management"><span>存档管理</span><button id="custom-save" class="secondary" type="button">自定义存档</button><small>可视化布阵、完美进度和 DAT64 导入／导出。</small><button id="save-local" class="secondary" type="button">重试本地保存</button><small id="local-save-status" role="status"></small><a id="coin-video" class="secondary video-link" target="_blank" rel="noopener noreferrer">前往投币视频</a><small id="reward-status" role="status" aria-live="polite"></small></div>
+<div class="field save-management"><span>存档管理</span><button id="custom-save" class="secondary" type="button">自定义存档</button><small>用户进度、可视化布阵和 DAT64 导入／导出。</small><button id="save-local" hidden class="secondary" type="button">重试本地保存</button><small id="local-save-status" role="status"></small><a id="coin-video" class="secondary video-link" target="_blank" rel="noopener noreferrer">前往投币视频</a><small id="reward-status" role="status" aria-live="polite"></small></div>
 </div>
 
+<details id="advanced-settings"><summary>高级</summary><div class="settings"><label class="field" id="graphics-field" hidden><span>图形接口</span><select id="graphics-backend" disabled><option value="">正在检测图形接口…</option></select><small id="graphics-info">正在检测浏览器能力…</small><details><summary>设备图形能力</summary><pre id="graphics-capabilities">正在检测…</pre></details></label><label class="field"><span>画面比例</span><select id="aspect"><option value="auto">随可用窗口自动调整</option><option value="4:3">4:3</option><option value="16:9">16:9</option><option value="21:9">21:9</option></select><small>保持比例，不拉伸；超出 4:3～21:9 的部分留黑边。</small></label><label class="check"><input id="show-fps" type="checkbox"><span>显示帧率<small>显示游戏绘制帧率，默认关闭。</small></span></label></div></details>
 <p class="note">设置和用户资料保存在当前浏览器。请通过游戏菜单正常退出。</p>
 </form></section><div id="error" role="alert" hidden></div>
 </div></main>

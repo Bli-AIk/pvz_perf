@@ -164,7 +164,7 @@ async function installBaseline(){
  for(const [name,bytes] of Object.entries(files))Module.FS.writeFile(saveRoot+'/'+name,bytes);
  await syncSaves();
 }
-function syncSaves(){return new Promise((resolve,reject)=>Module.FS.syncfs(false,error=>error?reject(error):resolve()))}
+function syncSaves(){return new Promise((resolve,reject)=>Module.FS.syncfs(false,error=>error?reject(error):resolve())).then(()=>{document.getElementById('save-local').hidden=true;document.getElementById('local-save-status').textContent='本地存档已写入浏览器'},error=>{document.getElementById('save-local').hidden=false;document.getElementById('local-save-status').textContent='本地保存失败：'+error.message+'。请重试，不要刷新页面。';throw error})}
 async function preparePersistentFiles(){
  await new Promise((resolve,reject)=>Module.FS.syncfs(true,error=>error?reject(error):resolve()));
  Module.FS.mkdirTree(saveRoot);
@@ -189,13 +189,13 @@ document.getElementById('coin-video').onclick=event=>{
  });
 };
 if(!webConfig.bypassBilibiliChecks)import('./rewards.js').then(m=>m.provideBilibiliToy()).catch(()=>{});
-rewardStatus.textContent=webConfig.bypassBilibiliChecks?'本地版：已绕过 B 站接口。':'给 '+webConfig.rewardVideoBvid+' 投满两个币，解锁自定义存档（含完美进度、无尽布阵与 DAT64 导入／导出）；作者本人可直接使用。';
+rewardStatus.textContent=webConfig.bypassBilibiliChecks?'本地版：已绕过 B 站接口。':'给 '+webConfig.rewardVideoBvid+' 投满两个币，解锁自定义存档（含用户进度、布阵与 DAT64 导入／导出）；作者本人可直接使用。';
 let rewardBusy=false;
 async function authorize(){const {authorizeReward,provideBilibiliToy}=await import('./rewards.js');await authorizeReward(webConfig,provideBilibiliToy)}
 import('./save-editor-host.js').then(({connectSaveEditor})=>connectSaveEditor({
  module:Module,root:saveRoot,ready:()=>runtimeReady,idle:()=>!rewardBusy,running:()=>running,
  setActive:active=>{rewardBusy=active;start.disabled=active||!runtimeReady},
- authorize,sync:syncSaves,installBaseline,tools:saveToolsReady,lineups:lineupToolsReady,
+ authorize,sync:syncSaves,tools:saveToolsReady,lineups:lineupToolsReady,
  status:message=>{rewardStatus.textContent=message}
 })).catch(showError);
 async function progressAction(operation){

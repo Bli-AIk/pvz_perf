@@ -20,8 +20,7 @@ If actual game initialization
 fails after the probe, the page shows the error, browser details and a WebGL retry
 button when available. Copy that error report when asking for help with a black screen.
 
-Claiming the completed profile warns before deleting all existing users and
-level saves, then installs only user ID 1 plus the complete endless benchmark.
+Custom Save opens on user progress. Add/delete users or edit IDs, names and progress without running gameplay. Garden and Zombatar payloads are retained. No perfect-profile claim action is exposed.
 Settings are retained. Custom endless uses Toolkit lineup codes and supports
 6 scenes, completed flags (default 128), RNG seed (default 114514), and sun (0..9990, default 9990).
 Generated checkpoints use full-health plants, have no lawn mowers, and resume into seed selection.
@@ -44,4 +43,6 @@ Build source and file hashes: web-build-manifest.json.
 
 同一页面会话中 Quit 后直接回设置，Wasm 与存档文件系统复用，不重复准备。WebGL／WebGPU 共用同一份设置与存档；主动切换接口会加载相应 Wasm。
 
-Custom Save is the single gated entry for visual lineups, endless settings, profile installation, and DAT64 import/export. Authorization is checked once when opening it. The HTML editor is built from PvzDevTools; see save-editor-manifest.json. Upload-in-progress is shown in red.
+Custom Save is the single gated entry for visual lineups, endless settings, user progress editing, and DAT64 import/export. Authorization is checked once when opening it. The HTML editor is built from PvzDevTools; see save-editor-manifest.json. Upload-in-progress is shown in red.
+
+Custom Save opens on Users: add/delete users, change IDs/names and progress without running gameplay. ID changes also rename the user's checkpoints. Perfect-profile replacement was removed. Generated filenames default to game1_58.dat64; the filename guide lists current project mode IDs, with Limbo and four hidden endless entries collapsed. Advanced graphics/aspect/FPS options are collapsed. Local save retry appears only after persistence failure.

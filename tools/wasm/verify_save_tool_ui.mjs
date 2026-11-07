@@ -16,9 +16,11 @@ try{
  assert.ok(Math.abs(a.x-b.x)<1&&b.y>a.y&&c.x>a.x);
  assert.equal(await page.locator('#coin-video').getAttribute('href'),'https://www.bilibili.com/video/BV1hV4P6PEDc/');
  assert.equal(await page.locator('#cover #export-endless').count(),0);
- page.once('dialog',d=>d.accept());
- await page.locator('#custom-save').click();const editor=page.frameLocator('#save-editor-frame');await editor.locator('#board button').first().waitFor();
- await editor.locator('[data-tab=profile]').click();await editor.locator('#perfect').click();await editor.locator('#status').filter({hasText:'完美存档与无尽基准已部署'}).waitFor({timeout:180000});
+ await page.locator('#custom-save').click();const editor=page.frameLocator('#save-editor-frame');await editor.locator('#status').filter({hasText:'已打开'}).waitFor();
+ await editor.locator('#add-user').click();await editor.locator('#status').filter({hasText:'已新增用户'}).waitFor();await editor.locator('#user-finished').fill('2');await editor.locator('[data-unlock="2"]').check();await editor.locator('#save-user').click();await editor.locator('#status').filter({hasText:'用户进度已保存'}).waitFor();
+ // A baseline DAT64 is a test fixture, not a user-facing claim operation.
+ await page.evaluate(async()=>{const files=await(await import('./save-tools.js')).loadSaveBundle();Module.FS.writeFile('/persist/development-v331/game1_58.dat64',files['game1_58.dat64'])});
+ await editor.locator('#close').click();await page.locator('#custom-save').click();await editor.locator('#status').filter({hasText:'已打开'}).waitFor();
  await editor.locator('[data-tab=files]').click();await editor.locator('#extract').click();await editor.locator('#status').filter({hasText:'已提取阵型'}).waitFor({timeout:180000});
  assert.equal(page.url(),url);assert.equal(await page.locator('#save-editor-dialog').isVisible(),true);
  assert.ok((await editor.locator('#code').inputValue()).length>20);
@@ -36,7 +38,7 @@ try{
  // Page routing does not intercept AudioWorklet loads. Reopen the persisted
  // generated save on the real server root for the actual gameplay check.
  await page.goto('http://127.0.0.1:18088/');await page.waitForFunction(()=>!document.getElementById('start').disabled,null,{timeout:90000});
- await page.locator('#aspect').selectOption('21:9');await page.locator('#auto-fps').uncheck();await page.locator('#target-fps').fill('100');
+ await page.locator('#advanced-settings>summary').click();await page.locator('#aspect').selectOption('21:9');await page.locator('#auto-fps').uncheck();await page.locator('#target-fps').fill('100');
  await page.locator('#start').click();await page.waitForTimeout(16000);
  const click=async(x,y)=>{const b=await page.locator('#canvas').boundingBox();await page.mouse.click(b.x+x*b.width/1400,b.y+y*b.height/600)};
  await click(700,550);await page.waitForFunction(()=>Module._pvz_web_scene()===1,null,{timeout:20000});await page.waitForTimeout(2500);

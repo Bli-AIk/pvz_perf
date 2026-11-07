@@ -1,22 +1,501 @@
 <!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PvzDevTools · 可视化存档修改器</title>
 <style>:root{color-scheme:dark;font:15px/1.6 system-ui,sans-serif;background:#172014;color:#edf3e6;--green:#badb8c}*{box-sizing:border-box}body{margin:0;padding:20px;max-width:1120px;margin-inline:auto}header{display:flex;justify-content:space-between;gap:20px;align-items:center}h1{margin:0;font-size:26px}h2{font-size:20px}p{color:#b9c6ab}nav,.brush,.actions{display:flex;align-items:end;gap:10px;flex-wrap:wrap;margin:16px 0}button{font:inherit;font-weight:600;color:#15210c;background:var(--green);border:1px solid #9abf71;border-radius:7px;padding:8px 15px;cursor:pointer}button.secondary{background:transparent;color:#e0ecd4;border-color:#60784c}button:disabled{opacity:.4;cursor:wait}nav button{background:#25331e;color:#cbd8c0;border-color:#60784c}nav [aria-selected=true],#erase[aria-pressed=true]{background:#badb8c;color:#15210c}label{display:flex;flex-direction:column;gap:5px;min-width:0}input,select,textarea{font:inherit;background:#0e170c;color:#edf3e6;border:1px solid #60784c;border-radius:6px;padding:8px;max-width:100%}textarea{width:100%;resize:vertical;overflow-wrap:anywhere}.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin:15px 0}.fields button{align-self:end}.check{flex-direction:row;align-self:center}.hint{font-size:13px}.warning{color:#ffb0a0}#status{white-space:pre-wrap;border-top:1px solid #435239;padding-top:12px;color:#c6dfa8}#status.error{color:#ffb0a0}#board{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));border:2px solid #90aa75;border-radius:8px;overflow:hidden}#board button{position:relative;display:flex;flex-direction:column;justify-content:center;min-height:83px;padding:4px 2px;background:#436b2d;border:1px solid #648645;border-radius:0;color:#fff;font-size:12px;line-height:1.4}#board button:nth-child(2n){background:#3c6029}#board button.water{background:#236c88}#board button.roof{background:#7c4c36}#board button.night{filter:brightness(.8)}#board .main{font-size:14px;font-weight:700;text-shadow:0 1px 2px #000}#board .base{color:#d1eab6}#board .extras{color:#ffe5a1;font-size:11px}#board button:hover,#board button:focus-visible{outline:3px solid #ffe98e;outline-offset:-3px}hr{border:0;border-top:1px solid #435239;margin:24px 0}[hidden]{display:none!important}:focus-visible{outline:2px solid #e4f0c3;outline-offset:2px}@media(max-width:700px){body{padding:12px}.brush{gap:8px}.brush label{max-width:48%}#board button{min-height:70px;font-size:10px}#board .main{font-size:11px}header p{font-size:12px}.fields{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+.records{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;padding:14px 0}details{border:1px solid #435239;border-radius:8px;padding:12px;margin:12px 0}summary{cursor:pointer;font-weight:600}table{border-collapse:collapse;width:100%;font-size:13px}td,th{padding:8px;border-bottom:1px solid #435239;text-align:left}#mode-guide{overflow:auto}#user-purchases>label:has(input[type=checkbox]),#user-achievements>label{flex-direction:row;align-items:center}
+
+#user-unlocks label{flex-direction:row;align-items:center;gap:6px}#user-unlocks input,#user-achievements input{order:-1}
 </style>
-<header><div><h1>自定义存档</h1><p>阵型、无尽参数与 DAT64 文件都在这里管理。修改只在游戏关闭时写入。</p></div><button id="close" class="secondary">关闭</button></header>
-<nav aria-label="修改器页面"><button data-tab="lineup" aria-selected="true">布阵与无尽</button><button data-tab="files">DAT64 导入／导出</button><button data-tab="profile">用户进度</button></nav>
+<header><div><h1>自定义存档</h1><p>用户进度、布阵与 DAT64 文件统一管理。修改只在游戏关闭时写入。</p></div><button id="close" class="secondary">关闭</button></header>
+<nav aria-label="修改器页面"><button data-tab="profile" aria-selected="true">用户进度</button><button data-tab="lineup">布阵与关卡</button><button data-tab="files">DAT64 导入／导出</button><button data-tab="guide">存档文件名对照</button></nav>
 <main>
-<section id="lineup" class="tab">
+<section id="lineup" class="tab" hidden>
 <div class="fields"><label>已完成旗数<input id="flags" type="number" min="0" max="10000000" step="2" value="128"></label><label>随机数种子<input id="seed" type="number" min="-2147483648" max="2147483647" value="114514"></label><label>初始阳光<input id="sun" type="number" min="0" max="9990" value="9990"></label><label>场景<select id="scene"><option>白天</option><option>黑夜</option><option selected>泳池</option><option>浓雾</option><option>屋顶</option><option>月夜</option></select></label></div>
-<div class="fields"><label>阵型<select id="preset"></select></label><button id="load-code" class="secondary">读取阵型码</button></div><label>Toolkit 阵型码<textarea id="code" rows="2" spellcheck="false"></textarea></label>
+<div class="fields"><label>阵型<select id="preset"></select></label><div class="actions"><button id="load-code" class="secondary">读取阵型码</button><button id="delete-lineup" class="secondary">删除所选阵型</button></div></div><label>Toolkit 阵型码<textarea id="code" rows="2" spellcheck="false"></textarea></label>
 <div class="brush"><label>编辑层<select id="layer"><option value="main">主植物</option><option value="base">花盆／睡莲／墓碑</option><option value="pumpkin">南瓜</option><option value="coffee">咖啡豆</option><option value="ladder">梯子</option></select></label><label>放置内容<select id="plant"></select></label><label class="check"><input id="imitater" type="checkbox">模仿者</label><label class="check"><input id="awake" type="checkbox" checked>清醒</label><button id="erase" class="secondary" aria-pressed="false">擦除</button><button id="undo" class="secondary">撤销</button><button id="redo" class="secondary">重做</button></div>
 <p class="hint">点击格子放置；右键或按住 Shift 点击擦除当前层。每格可以同时保留底座、植物、南瓜、咖啡豆和梯子。</p>
 <div id="board" role="grid" aria-label="九列布阵区"></div><p id="tile-info" class="hint">阵型码只记录布阵，不保留血量。</p>
 <div class="fields"><label>阵型名称<input id="lineup-name" maxlength="60" placeholder="我的阵型"></label><button id="add-lineup" class="secondary">保存到阵型列表</button></div>
-<div class="actions"><button id="recipe" class="secondary">导出布阵 JSON</button><button id="generate">生成并部署无尽 DAT64</button></div><p class="hint">替换 1 号用户的泳池无尽槽位。读取后进入选卡，使用所选场景和完整血量植物，不生成小推车。</p>
+<div class="fields"><label>生成的关卡文件名<input id="generate-filename" value="game1_58.dat64" spellcheck="false"></label><label>冒险关卡（模式 0）<input id="adventure-level" type="number" min="1" max="50" value="1"></label></div><p id="slot-description" class="hint"></p><div class="actions"><button id="recipe" class="secondary">导出布阵 JSON</button><button id="generate">生成并部署关卡 DAT64</button></div><p class="hint">默认写入 game1_58.dat64，可改为其他用户／模式槽位。模式编号见对照页；冒险关卡另设 1～50，并同步该用户的当前冒险进度。无尽档进入选卡，其他模式保留各自机制，不生成小推车。</p>
 </section>
 <section id="files" class="tab" hidden><h2>浏览器内的关卡存档</h2><label>DAT64 槽位<select id="save-list"></select></label><div class="actions"><button id="extract">提取到布阵区</button><button id="export" class="secondary">导出所选 DAT64</button></div><hr><h2>导入关卡</h2><label>DAT64 文件<input id="file" type="file" accept=".dat64"></label><label>目标槽位文件名<input id="filename" value="game1_58.dat64" spellcheck="false"></label><p class="hint">目标用户必须已经存在。先校验格式和模式，再覆盖这个槽位；其他存档保留。关卡 DAT64 不上传云端，请自行备份。</p><button id="import">校验并导入</button></section>
-<section id="profile" class="tab" hidden><h2>完美进度与无尽基准</h2><p>将全部用户及关卡存档替换为唯一的 1 号完美用户，并部署 97 无炮无尽基准。游戏设置和自定义阵型列表保留。</p><p class="warning">此操作会删除当前存档，请先在 DAT64 页面导出需要保留的关卡。</p><button id="perfect">替换为完美存档及无尽基准</button></section>
+<section id="profile" class="tab"><h2>用户与进度</h2><div class="fields"><label>当前用户<select id="user-list"></select></label><button id="add-user" class="secondary">新增用户</button><button id="delete-user" class="secondary">删除用户及关卡</button></div><p class="hint">不启动游戏即可编辑。修改 ID 会同步重命名该用户的关卡文件；未编辑的花园和大头贴数据原样保留。</p><div id="user-fields"><div class="fields"><label>用户 ID<input id="user-id" type="number" min="1" max="2147483646"></label><label>用户名（ASCII）<input id="user-name" maxlength="20"></label><label>冒险当前关卡<input id="user-level" type="number" min="1" max="50"></label><label>金币<input id="user-coins" type="number" min="0" max="999990" step="10"></label><label>冒险通关次数<input id="user-finished" type="number" min="0" max="2147483647"></label></div><div id="user-unlocks" class="actions"></div><p id="user-preserved" class="hint"></p><details><summary>小游戏、解谜、生存记录</summary><div id="user-records" class="records"></div></details><details><summary>商店购买与道具数量</summary><div id="user-purchases" class="fields"></div></details><details><summary>成就</summary><div id="user-achievements" class="fields"></div></details><div class="actions"><button id="save-user">保存当前用户修改</button></div></div></section>
+<section id="guide" class="tab" hidden><h2>存档文件名与关卡</h2><p><code>users.dat</code> 是用户列表，<code>user&lt;用户ID&gt;.dat64</code> 是用户进度。关卡使用 <code>game&lt;用户ID&gt;_&lt;模式编号&gt;.dat64</code>；例如 <code>game1_58.dat64</code> 为 1 号用户的泳池无尽。冒险的 1-1～5-10 共用模式 0，关卡号保存在文件内部，不写在文件名里。</p><p>下表是本项目的模式编号，不是原版编号。花园、开场和智慧树不使用独立战斗 DAT64；不能靠改文件名把不同玩法的内部状态互换。自定义关卡模式需项目内存在相应定义。</p><div id="mode-guide"></div></section>
 </main><p id="status" role="status" aria-live="polite">正在打开修改器…</p>
-<script>'use strict';
+<script>const Profiles=(()=>{
+// Frozen USER64 v13 / users.dat v14 contract. Existing garden/Zombatar bytes
+// are retained verbatim; editing these fields never constructs a game object.
+const magic='PVZUSR64',encoder=new TextEncoder(),decoder=new TextDecoder();
+function require(value,message){if(!value)throw Error(message)}
+function integer(value,min,max,label){require(Number.isInteger(value)&&value>=min&&value<=max,label+'超出允许范围');return value}
+function validName(value){require(typeof value==='string'&&/^[\x20-\x7e]{1,20}$/.test(value)&&value.trim()===value,'用户名需为 1～20 个 ASCII 字符，首尾不能有空格');return value}
+function validId(value){return integer(value,1,2147483646,'用户 ID')}
+function decodeSummary(bytes){
+ const view=new DataView(bytes.buffer,bytes.byteOffset,bytes.byteLength);let at=0;
+ const read=(size,method)=>{require(at+size<=bytes.length,'用户列表不完整');const value=view[method](at,true);at+=size;return value};
+ require(read(4,'getUint32')===14,'仅支持 users.dat v14');const count=read(2,'getUint16'),profiles=[];require(count<=1000,'用户数量异常');
+ for(let i=0;i<count;i++){const size=read(2,'getUint16');require(at+size<=bytes.length,'用户名不完整');const name=decoder.decode(bytes.subarray(at,at+size));at+=size;const useSeq=read(4,'getUint32'),id=validId(read(4,'getUint32'));profiles.push({name,useSeq,id})}
+ require(at===bytes.length,'用户列表有多余数据');validateProfiles(profiles);return profiles;
+}
+function validateProfiles(profiles){require(Array.isArray(profiles)&&profiles.length<=1000,'用户列表无效');const ids=new Set(),names=new Set();for(const p of profiles){validId(p.id);validName(p.name);integer(p.useSeq,0,4294967294,'使用序号');require(!ids.has(p.id)&&!names.has(p.name.toLowerCase()),'用户 ID 或名称重复');ids.add(p.id);names.add(p.name.toLowerCase())}}
+function encodeSummary(profiles){validateProfiles(profiles);const bytes=new Uint8Array(6+profiles.reduce((n,p)=>n+10+encoder.encode(p.name).length,0)),v=new DataView(bytes.buffer);v.setUint32(0,14,true);v.setUint16(4,profiles.length,true);let at=6;for(const p of profiles){const name=encoder.encode(p.name);v.setUint16(at,name.length,true);bytes.set(name,at+2);at+=2+name.length;v.setUint32(at,p.useSeq,true);v.setUint32(at+4,p.id,true);at+=8}return bytes}
+function layout(bytes){require(bytes instanceof Uint8Array&&bytes.length>=894&&decoder.decode(bytes.subarray(0,8))===magic,'用户明细不是有效的 USER64');const v=new DataView(bytes.buffer,bytes.byteOffset,bytes.byteLength);require(v.getInt32(8,true)===13,'仅支持 USER64 v13');const plants=v.getInt32(824,true);integer(plants,0,200,'花园植物数');const achievements=828+plants*88;require(achievements+45<=bytes.length,'花园数据不完整');const zombatars=v.getInt32(achievements+41,true);integer(zombatars,0,100,'大头贴数');require(bytes.length===894+plants*88+zombatars*72,'用户明细长度不正确');return {v,achievements,mini:achievements+45+zombatars*72,plants,zombatars}}
+function decodeProfile(bytes){const {v,achievements,plants,zombatars}=layout(bytes);return {level:v.getInt32(12,true),coins:v.getInt32(16,true)*10,finished:v.getInt32(20,true),records:Array.from({length:100},(_,i)=>v.getInt32(24+i*4,true)),purchases:Array.from({length:80},(_,i)=>v.getInt32(424+i*4,true)),unlocks:[8,9,14].map(i=>v.getInt32(744+i*4,true)!==0),achievements:Array.from({length:20},(_,i)=>v.getUint8(achievements+i*2)!==0),plants,zombatars}}
+function newProfile(){const bytes=new Uint8Array(894);bytes.set(encoder.encode(magic));const v=new DataView(bytes.buffer);v.setInt32(8,13,true);v.setInt32(12,1,true);return bytes}
+function patchProfile(original,patch){
+ const bytes=original.slice(),{v,achievements,mini}=layout(bytes),previous=new DataView(original.buffer,original.byteOffset,original.byteLength);
+ if('level'in patch)v.setInt32(12,integer(patch.level,1,50,'冒险关卡'),true);
+ if('coins'in patch){integer(patch.coins,0,999990,'金币');require(patch.coins%10===0,'金币需为 10 的倍数');v.setInt32(16,patch.coins/10,true)}
+ if('finished'in patch)v.setInt32(20,integer(patch.finished,0,2147483647,'冒险通关次数'),true);
+ if(patch.records){require(Array.isArray(patch.records)&&patch.records.length===100,'挑战记录数组无效');patch.records.forEach((value,i)=>v.setInt32(24+i*4,integer(value,0,2147483647,'挑战记录'),true));for(let i=0;i<20;i++)if(patch.records[i+1]!==previous.getInt32(24+(i+1)*4,true))v.setUint8(mini+i,patch.records[i+1]>0?1:0)}
+ if(patch.purchases){require(Array.isArray(patch.purchases)&&patch.purchases.length===80,'商店记录数组无效');patch.purchases.forEach((value,i)=>v.setInt32(424+i*4,integer(value,0,2147483647,'购买记录'),true))}
+ if(patch.unlocks){require(Array.isArray(patch.unlocks)&&patch.unlocks.length===3,'解锁状态无效');[8,9,14].forEach((field,i)=>v.setInt32(744+field*4,patch.unlocks[i]?1:0,true))}
+ if(patch.achievements){require(Array.isArray(patch.achievements)&&patch.achievements.length===20,'成就状态无效');patch.achievements.forEach((earned,i)=>{if(!!earned===(v.getUint8(achievements+i*2)!==0))return;v.setUint8(achievements+i*2,earned?1:0);v.setUint8(achievements+i*2+1,earned?1:0)})}
+ return bytes;
+}
+
+return {validName,validId,decodeSummary,encodeSummary,validateProfiles,decodeProfile,newProfile,patchProfile};})();
+const Modes=[
+  {
+    "id": 0,
+    "name": "冒险模式",
+    "symbol": "GAMEMODE_ADVENTURE",
+    "checkpoint": true
+  },
+  {
+    "id": 1,
+    "name": "宝石迷阵",
+    "symbol": "GAMEMODE_MINIGAME_BEGHOULED",
+    "checkpoint": true
+  },
+  {
+    "id": 2,
+    "name": "宝石迷阵转转看",
+    "symbol": "GAMEMODE_MINIGAME_BEGHOULED_TWIST",
+    "checkpoint": true
+  },
+  {
+    "id": 3,
+    "name": "雪橇区",
+    "symbol": "GAMEMODE_MINIGAME_BOBSLED_BONANZA",
+    "checkpoint": true
+  },
+  {
+    "id": 4,
+    "name": "植物列阵（柱子模式）",
+    "symbol": "GAMEMODE_MINIGAME_COLUMN",
+    "checkpoint": true
+  },
+  {
+    "id": 5,
+    "name": "僵王博士的复仇",
+    "symbol": "GAMEMODE_MINIGAME_FINAL_BOSS",
+    "checkpoint": true
+  },
+  {
+    "id": 6,
+    "name": "隐形食脑者",
+    "symbol": "GAMEMODE_MINIGAME_INVISIGHOUL",
+    "checkpoint": true
+  },
+  {
+    "id": 7,
+    "name": "坚不可摧",
+    "symbol": "GAMEMODE_MINIGAME_LAST_STAND",
+    "checkpoint": true
+  },
+  {
+    "id": 8,
+    "name": "小僵尸大麻烦",
+    "symbol": "GAMEMODE_MINIGAME_LITTLE_TROUBLE",
+    "checkpoint": true
+  },
+  {
+    "id": 9,
+    "name": "蹦蹦舞会",
+    "symbol": "GAMEMODE_MINIGAME_POGO_PARTY",
+    "checkpoint": true
+  },
+  {
+    "id": 10,
+    "name": "传送门之战",
+    "symbol": "GAMEMODE_MINIGAME_PORTAL_COMBAT",
+    "checkpoint": true
+  },
+  {
+    "id": 11,
+    "name": "种子雨",
+    "symbol": "GAMEMODE_MINIGAME_RAINING_SEEDS",
+    "checkpoint": true
+  },
+  {
+    "id": 12,
+    "name": "观星",
+    "symbol": "GAMEMODE_MINIGAME_SEEING_STARS",
+    "checkpoint": true
+  },
+  {
+    "id": 13,
+    "name": "老虎机",
+    "symbol": "GAMEMODE_MINIGAME_SLOT_MACHINE",
+    "checkpoint": true
+  },
+  {
+    "id": 14,
+    "name": "僵尸快跑",
+    "symbol": "GAMEMODE_MINIGAME_SPEED",
+    "checkpoint": true
+  },
+  {
+    "id": 15,
+    "name": "坚果保龄球",
+    "symbol": "GAMEMODE_MINIGAME_WALLNUT_BOWLING",
+    "checkpoint": true
+  },
+  {
+    "id": 16,
+    "name": "坚果保龄球 2",
+    "symbol": "GAMEMODE_MINIGAME_WALLNUT_BOWLING_2",
+    "checkpoint": true
+  },
+  {
+    "id": 17,
+    "name": "植物僵尸",
+    "symbol": "GAMEMODE_MINIGAME_WAR_AND_PEAS",
+    "checkpoint": true
+  },
+  {
+    "id": 18,
+    "name": "植物僵尸 2",
+    "symbol": "GAMEMODE_MINIGAME_WAR_AND_PEAS_2",
+    "checkpoint": true
+  },
+  {
+    "id": 19,
+    "name": "锤僵尸",
+    "symbol": "GAMEMODE_MINIGAME_WHACK_A_ZOMBIE",
+    "checkpoint": true
+  },
+  {
+    "id": 20,
+    "name": "僵尸水族馆",
+    "symbol": "GAMEMODE_MINIGAME_ZOMBIQUARIUM",
+    "checkpoint": true
+  },
+  {
+    "id": 21,
+    "name": "隐藏关 · Air Raid",
+    "symbol": "GAMEMODE_LIMBO_AIR_RAID",
+    "checkpoint": true
+  },
+  {
+    "id": 22,
+    "name": "隐藏关 · Art Challenge Sunflower",
+    "symbol": "GAMEMODE_LIMBO_ART_CHALLENGE_SUNFLOWER",
+    "checkpoint": true
+  },
+  {
+    "id": 23,
+    "name": "隐藏关 · Art Challenge Wallnut",
+    "symbol": "GAMEMODE_LIMBO_ART_CHALLENGE_WALLNUT",
+    "checkpoint": true
+  },
+  {
+    "id": 24,
+    "name": "隐藏关 · Big Time",
+    "symbol": "GAMEMODE_LIMBO_BIG_TIME",
+    "checkpoint": true
+  },
+  {
+    "id": 25,
+    "name": "隐藏关 · Bungee Blitz",
+    "symbol": "GAMEMODE_LIMBO_BUNGEE_BLITZ",
+    "checkpoint": true
+  },
+  {
+    "id": 26,
+    "name": "隐藏关 · Grave Danger",
+    "symbol": "GAMEMODE_LIMBO_GRAVE_DANGER",
+    "checkpoint": true
+  },
+  {
+    "id": 27,
+    "name": "隐藏关 · High Gravity",
+    "symbol": "GAMEMODE_LIMBO_HIGH_GRAVITY",
+    "checkpoint": true
+  },
+  {
+    "id": 28,
+    "name": "隐藏关 · Ice",
+    "symbol": "GAMEMODE_LIMBO_ICE",
+    "checkpoint": true
+  },
+  {
+    "id": 29,
+    "name": "隐藏关 · Resodded",
+    "symbol": "GAMEMODE_LIMBO_RESODDED",
+    "checkpoint": true
+  },
+  {
+    "id": 30,
+    "name": "隐藏关 · Shovel",
+    "symbol": "GAMEMODE_LIMBO_SHOVEL",
+    "checkpoint": true
+  },
+  {
+    "id": 31,
+    "name": "隐藏关 · Squirrel",
+    "symbol": "GAMEMODE_LIMBO_SQUIRREL",
+    "checkpoint": true
+  },
+  {
+    "id": 32,
+    "name": "隐藏关 · Stormy Night",
+    "symbol": "GAMEMODE_LIMBO_STORMY_NIGHT",
+    "checkpoint": true
+  },
+  {
+    "id": 33,
+    "name": "隐藏关 · Sunny Day",
+    "symbol": "GAMEMODE_LIMBO_SUNNY_DAY",
+    "checkpoint": true
+  },
+  {
+    "id": 34,
+    "name": "禅境花园",
+    "symbol": "GAMEMODE_LIMBO_ZEN_GARDEN",
+    "checkpoint": false
+  },
+  {
+    "id": 35,
+    "name": "开场演示",
+    "symbol": "GAMEMODE_INTRO",
+    "checkpoint": false
+  },
+  {
+    "id": 36,
+    "name": "我是僵尸 1",
+    "symbol": "GAMEMODE_PUZZLE_I_ZOMBIE_1",
+    "checkpoint": true
+  },
+  {
+    "id": 37,
+    "name": "我是僵尸 2",
+    "symbol": "GAMEMODE_PUZZLE_I_ZOMBIE_2",
+    "checkpoint": true
+  },
+  {
+    "id": 38,
+    "name": "我是僵尸 3",
+    "symbol": "GAMEMODE_PUZZLE_I_ZOMBIE_3",
+    "checkpoint": true
+  },
+  {
+    "id": 39,
+    "name": "我是僵尸 4",
+    "symbol": "GAMEMODE_PUZZLE_I_ZOMBIE_4",
+    "checkpoint": true
+  },
+  {
+    "id": 40,
+    "name": "我是僵尸 5",
+    "symbol": "GAMEMODE_PUZZLE_I_ZOMBIE_5",
+    "checkpoint": true
+  },
+  {
+    "id": 41,
+    "name": "我是僵尸 6",
+    "symbol": "GAMEMODE_PUZZLE_I_ZOMBIE_6",
+    "checkpoint": true
+  },
+  {
+    "id": 42,
+    "name": "我是僵尸 7",
+    "symbol": "GAMEMODE_PUZZLE_I_ZOMBIE_7",
+    "checkpoint": true
+  },
+  {
+    "id": 43,
+    "name": "我是僵尸 8",
+    "symbol": "GAMEMODE_PUZZLE_I_ZOMBIE_8",
+    "checkpoint": true
+  },
+  {
+    "id": 44,
+    "name": "我是僵尸 9",
+    "symbol": "GAMEMODE_PUZZLE_I_ZOMBIE_9",
+    "checkpoint": true
+  },
+  {
+    "id": 45,
+    "name": "我是僵尸无尽",
+    "symbol": "GAMEMODE_PUZZLE_I_ZOMBIE_ENDLESS",
+    "checkpoint": true
+  },
+  {
+    "id": 46,
+    "name": "砸罐子 1",
+    "symbol": "GAMEMODE_SCARY_POTTER_1",
+    "checkpoint": true
+  },
+  {
+    "id": 47,
+    "name": "砸罐子 2",
+    "symbol": "GAMEMODE_SCARY_POTTER_2",
+    "checkpoint": true
+  },
+  {
+    "id": 48,
+    "name": "砸罐子 3",
+    "symbol": "GAMEMODE_SCARY_POTTER_3",
+    "checkpoint": true
+  },
+  {
+    "id": 49,
+    "name": "砸罐子 4",
+    "symbol": "GAMEMODE_SCARY_POTTER_4",
+    "checkpoint": true
+  },
+  {
+    "id": 50,
+    "name": "砸罐子 5",
+    "symbol": "GAMEMODE_SCARY_POTTER_5",
+    "checkpoint": true
+  },
+  {
+    "id": 51,
+    "name": "砸罐子 6",
+    "symbol": "GAMEMODE_SCARY_POTTER_6",
+    "checkpoint": true
+  },
+  {
+    "id": 52,
+    "name": "砸罐子 7",
+    "symbol": "GAMEMODE_SCARY_POTTER_7",
+    "checkpoint": true
+  },
+  {
+    "id": 53,
+    "name": "砸罐子 8",
+    "symbol": "GAMEMODE_SCARY_POTTER_8",
+    "checkpoint": true
+  },
+  {
+    "id": 54,
+    "name": "砸罐子 9",
+    "symbol": "GAMEMODE_SCARY_POTTER_9",
+    "checkpoint": true
+  },
+  {
+    "id": 55,
+    "name": "砸罐子无尽",
+    "symbol": "GAMEMODE_SCARY_POTTER_ENDLESS",
+    "checkpoint": true
+  },
+  {
+    "id": 56,
+    "name": "生存无尽 · 白天",
+    "symbol": "GAMEMODE_SURVIVAL_ENDLESS_STAGE_1",
+    "checkpoint": true
+  },
+  {
+    "id": 57,
+    "name": "生存无尽 · 黑夜",
+    "symbol": "GAMEMODE_SURVIVAL_ENDLESS_STAGE_2",
+    "checkpoint": true
+  },
+  {
+    "id": 58,
+    "name": "生存无尽 · 泳池",
+    "symbol": "GAMEMODE_SURVIVAL_ENDLESS_STAGE_3",
+    "checkpoint": true
+  },
+  {
+    "id": 59,
+    "name": "生存无尽 · 浓雾",
+    "symbol": "GAMEMODE_SURVIVAL_ENDLESS_STAGE_4",
+    "checkpoint": true
+  },
+  {
+    "id": 60,
+    "name": "生存无尽 · 屋顶",
+    "symbol": "GAMEMODE_SURVIVAL_ENDLESS_STAGE_5",
+    "checkpoint": true
+  },
+  {
+    "id": 61,
+    "name": "生存困难 · 白天",
+    "symbol": "GAMEMODE_SURVIVAL_HARD_STAGE_1",
+    "checkpoint": true
+  },
+  {
+    "id": 62,
+    "name": "生存困难 · 黑夜",
+    "symbol": "GAMEMODE_SURVIVAL_HARD_STAGE_2",
+    "checkpoint": true
+  },
+  {
+    "id": 63,
+    "name": "生存困难 · 泳池",
+    "symbol": "GAMEMODE_SURVIVAL_HARD_STAGE_3",
+    "checkpoint": true
+  },
+  {
+    "id": 64,
+    "name": "生存困难 · 浓雾",
+    "symbol": "GAMEMODE_SURVIVAL_HARD_STAGE_4",
+    "checkpoint": true
+  },
+  {
+    "id": 65,
+    "name": "生存困难 · 屋顶",
+    "symbol": "GAMEMODE_SURVIVAL_HARD_STAGE_5",
+    "checkpoint": true
+  },
+  {
+    "id": 66,
+    "name": "生存普通 · 白天",
+    "symbol": "GAMEMODE_SURVIVAL_NORMAL_STAGE_1",
+    "checkpoint": true
+  },
+  {
+    "id": 67,
+    "name": "生存普通 · 黑夜",
+    "symbol": "GAMEMODE_SURVIVAL_NORMAL_STAGE_2",
+    "checkpoint": true
+  },
+  {
+    "id": 68,
+    "name": "生存普通 · 泳池",
+    "symbol": "GAMEMODE_SURVIVAL_NORMAL_STAGE_3",
+    "checkpoint": true
+  },
+  {
+    "id": 69,
+    "name": "生存普通 · 浓雾",
+    "symbol": "GAMEMODE_SURVIVAL_NORMAL_STAGE_4",
+    "checkpoint": true
+  },
+  {
+    "id": 70,
+    "name": "生存普通 · 屋顶",
+    "symbol": "GAMEMODE_SURVIVAL_NORMAL_STAGE_5",
+    "checkpoint": true
+  },
+  {
+    "id": 71,
+    "name": "智慧树",
+    "symbol": "GAMEMODE_TREE_OF_WISDOM",
+    "checkpoint": false
+  },
+  {
+    "id": 72,
+    "name": "自定义关卡",
+    "symbol": "GAMEMODE_CUSTOM_LEVEL",
+    "checkpoint": true
+  }
+]
+;
+'use strict';
 (() => {
 const $=id=>document.getElementById(id);
 const plants=['豌豆射手','向日葵','樱桃炸弹','坚果','土豆雷','寒冰射手','大嘴花','双发射手','小喷菇','阳光菇','大喷菇','墓碑吞噬者','魅惑菇','胆小菇','寒冰菇','毁灭菇','睡莲','窝瓜','三线射手','缠绕海草','火爆辣椒','地刺','火炬树桩','高坚果','海蘑菇','路灯花','仙人掌','三叶草','裂荚射手','杨桃','南瓜头','磁力菇','卷心菜投手','花盆','玉米投手','咖啡豆','大蒜','叶子保护伞','金盏花','西瓜投手','机枪射手','双子向日葵','忧郁菇','香蒲','冰西瓜','吸金磁','地刺王','玉米加农炮'];
@@ -31,12 +510,12 @@ window.addEventListener('message',event=>{
  if(event.source!==parent||event.origin!==origin||event.data?.channel!==channel)return;
  const data=event.data;
  if(data.op==='init'){
-  host=true;presets=data.payload.presets;custom=data.payload.custom||[];fillPresets();fillSaves(data.payload.saves);if(!initialized){setModel(data.payload.lineup);$('code').value=data.payload.code;initialized=true}status('已打开。修改游戏存档前可先导出 DAT64 备份。');return;
+  host=true;document.querySelector('main').inert=false;document.querySelector('nav').inert=false;loadProfiles(data.payload.profiles);presets=data.payload.presets;custom=data.payload.custom||[];fillPresets();fillSaves(data.payload.saves);if(!initialized){setModel(data.payload.lineup);$('code').value=data.payload.code;initialized=true}tab('profile');status('已打开。修改游戏存档前可先导出 DAT64 备份。');return;
  }
  const item=pending.get(data.id);if(!item)return;pending.delete(data.id);clearTimeout(item.timer);data.error?item.reject(Error(data.error)):item.resolve(data.result);
 });
 function status(text,error=false){$('status').textContent=text;$('status').classList.toggle('error',error)}
-async function action(fn){if(busy)return;busy=true;const disabled=[...document.querySelectorAll('button,input,select,textarea')].map(el=>[el,el.disabled]);disabled.forEach(([el])=>el.disabled=true);try{status('处理中…');await fn()}catch(error){status(error.message||String(error),true)}finally{busy=false;disabled.forEach(([el,value])=>el.disabled=value)}}
+async function action(fn){if(busy)return;busy=true;const disabled=[...document.querySelectorAll('button,input,select,textarea')].map(el=>[el,el.disabled]);disabled.forEach(([el])=>el.disabled=true);try{status('处理中…');await fn()}catch(error){status(error.message||String(error),true)}finally{busy=false;disabled.forEach(([el,value])=>el.disabled=value);refreshProfileControls()}}
 function tab(name){document.querySelectorAll('.tab').forEach(el=>el.hidden=el.id!==name);document.querySelectorAll('[data-tab]').forEach(el=>el.setAttribute('aria-selected',String(el.dataset.tab===name)))}
 document.querySelectorAll('[data-tab]').forEach(el=>el.onclick=()=>tab(el.dataset.tab));
 function fillPresets(){const selected=$('preset').value;$('preset').replaceChildren(...[...presets,...custom].map((p,i)=>new Option(p.name,String(i))));if(selected)$('preset').value=selected}
@@ -61,17 +540,34 @@ $('undo').onclick=()=>{if(past.length){future.push(structuredClone(model));setMo
 $('scene').onchange=()=>action(async()=>{const next=$('scene').selectedIndex;if(![2,3].includes(next)&&model.cells.slice(45).some(Boolean)){$('scene').selectedIndex=model.scene;throw Error('第六排有物体，请清空后再换成五排场景')}checkpoint();model.scene=next;render();await updateCode();status('场景已切换。')});
 $('load-code').onclick=()=>action(async()=>{const next=await decode($('code').value);checkpoint();setModel(next);status('已读取阵型码。')});
 $('preset').onchange=()=>action(async()=>{const p=[...presets,...custom][Number($('preset').value)];const next=await decode(p.code);checkpoint();setModel(next);$('code').value=p.code;status('已载入 '+p.name)});
-$('add-lineup').onclick=()=>action(async()=>{await updateCode();const entry={name:$('lineup-name').value.trim()||'我的阵型',code:$('code').value};if(host){const result=await request('save-lineup',entry);custom=result.custom}else{custom.push(entry);localStorage.setItem('pvz_devtools_lineups',JSON.stringify(custom))}fillPresets();$('preset').value=presets.length+custom.length-1;status('阵型已保存。')});
+$('add-lineup').onclick=()=>action(async()=>{await updateCode();const entry={name:$('lineup-name').value.trim()||'我的阵型',code:$('code').value};if(host){const result=await request('save-lineup',entry);custom=result.custom;if(result.presets)presets=result.presets}else{custom.push(entry);localStorage.setItem('pvz_devtools_lineups',JSON.stringify(custom))}fillPresets();$('preset').value=presets.length+custom.length-1;status('阵型已保存。')});
 function recipe(){const flags=Number($('flags').value),seed=Number($('seed').value),sun=Number($('sun').value);if(!Number.isInteger(flags)||flags<0||flags>10000000||flags%2)throw Error('旗数需为 0～10000000 的偶数');if(!Number.isInteger(seed)||seed<-2147483648||seed>2147483647)throw Error('种子需为 32 位整数');if(!Number.isInteger(sun)||sun<0||sun>9990)throw Error('阳光需为 0～9990 的整数');return {...structuredClone(model),flags,seed,sun}}
 function download(data,name,type){const url=URL.createObjectURL(new Blob([data],{type})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),60000)}
 $('recipe').onclick=()=>action(async()=>{download(JSON.stringify(recipe(),null,2),'pvz-lineup.json','application/json');status('已导出布阵 JSON。')});
-$('generate').onclick=()=>action(async()=>{const result=await request('generate',{recipe:recipe()});fillSaves(result.saves);status('已生成并部署无尽档，进入泳池无尽继续选卡。')});
-$('extract').onclick=()=>action(async()=>{const result=await request('extract',{name:$('save-list').value});checkpoint();setModel(result.metadata);$('sun').value=result.metadata.sun;$('flags').value=result.metadata.flags;$('seed').value=result.metadata.seed;await updateCode();tab('lineup');status('已提取阵型；修改后生成新档会恢复植物血量。')});
+$('generate').onclick=()=>action(async()=>{const name=$('generate-filename').value.trim(),result=await request('generate',{name,level:Number($('adventure-level').value),recipe:recipe()});fillSaves(result.saves);if(result.profiles)loadProfiles(result.profiles);status('已生成并部署 '+name+'。')});
+$('extract').onclick=()=>action(async()=>{const result=await request('extract',{name:$('save-list').value});checkpoint();setModel(result.metadata);$('sun').value=result.metadata.sun;$('flags').value=result.metadata.flags;$('seed').value=result.metadata.seed;$('generate-filename').value=$('save-list').value;$('adventure-level').value=result.metadata.level||1;describeSlot();await updateCode();tab('lineup');status('已提取阵型；修改后生成新档会恢复植物血量。')});
 $('export').onclick=()=>action(async()=>{const name=$('save-list').value,result=await request('export',{name});download(result.bytes,name,'application/octet-stream');status('已导出 '+name)});
 $('file').onchange=()=>{const file=$('file').files[0];if(/^game[1-9]\d*_\d+\.dat64$/.test(file?.name))$('filename').value=file.name};
 $('import').onclick=()=>action(async()=>{const file=$('file').files[0];if(!file)throw Error('请选择 DAT64');if(file.size>32*1024*1024)throw Error('DAT64 超过 32 MiB');const result=await request('import',{name:$('filename').value.trim(),bytes:new Uint8Array(await file.arrayBuffer())});fillSaves(result.saves);status('已校验并导入，关卡仅保存在本地。')});
-$('perfect').onclick=()=>action(async()=>{if(!confirm('删除全部现有用户和关卡存档，替换为唯一的 1 号完美用户及无尽基准？请先导出需要保留的 DAT64。'))return;const result=await request('perfect');fillSaves(result.saves);status('完美存档与无尽基准已部署。')});
 $('close').onclick=()=>{if(host)request('close').catch(error=>status(error.message,true));else status('可直接关闭此页面。')};
-paintOptions();render();if(parent!==window)parent.postMessage({channel,op:'ready'},origin);else{try{custom=JSON.parse(localStorage.getItem('pvz_devtools_lineups')||'[]')}catch{}fillPresets();status('独立布阵模式：支持阵型码与 JSON；DAT64 请从游戏网页的“自定义存档”入口处理。')}
-})();
-</script></html>
+paintOptions();render();if(parent!==window){document.querySelector('main').inert=true;document.querySelector('nav').inert=true;parent.postMessage({channel,op:'ready'},origin)}else{try{custom=JSON.parse(localStorage.getItem('pvz_devtools_lineups')||'[]')}catch{}fillPresets();status('独立布阵模式：支持阵型码与 JSON；DAT64 请从游戏网页的“自定义存档”入口处理。')}
+// Inserted inside editor.js's closure by build-save-editor.mjs.
+let users=[];
+const shopNames=['机枪射手','双子向日葵','忧郁菇','香蒲','冰西瓜','吸金磁','地刺王','玉米加农炮','模仿者','额外小推车（存档值）','金盏花 1','金盏花 2','金盏花 3','金浇水壶','肥料','杀虫剂','留声机','园艺手套','蘑菇园','手推车','蜗牛','额外卡槽次数','泳池清理车','屋顶清理车','钉耙次数','水族馆','巧克力','智慧树','树肥','坚果包扎术'];
+function selectedUser(){const user=users.find(p=>p.id===Number($('user-list').value));if(!user)throw Error('请先新增或选择一个用户');return user}
+function inputField(parent,label,value,type='number',attributes={}){const wrap=document.createElement('label');wrap.append(document.createTextNode(label));const input=document.createElement('input');input.type=type;if(type==='checkbox')input.checked=!!value;else input.value=value;Object.assign(input,attributes);wrap.append(input);parent.append(wrap);return input}
+function loadProfiles(rows){users=rows||[];const selected=Number($('user-list').value);$('user-list').replaceChildren(...users.map(p=>new Option(p.name+' · ID '+p.id,p.id)));if(users.some(p=>p.id===selected))$('user-list').value=selected;showUser()}
+function showUser(){const user=users.find(p=>p.id===Number($('user-list').value));$('user-fields').hidden=!user;$('delete-user').disabled=!user;if(!user)return;const p=user.progress;$('user-id').value=user.id;$('user-name').value=user.name;$('user-level').value=p.level;$('user-coins').value=p.coins;$('user-finished').value=p.finished;$('user-preserved').textContent=`保留 ${p.plants} 株花园植物、${p.zombatars} 份大头贴；金币按游戏中的 10 为单位保存。`;const unlock=$('user-unlocks');unlock.replaceChildren();['解锁小游戏','解锁解谜','解锁生存'].forEach((name,i)=>{inputField(unlock,name,p.unlocks[i],'checkbox').dataset.unlock=i});const records=$('user-records');records.replaceChildren();for(const mode of Modes.filter(m=>m.id>0&&m.id<=71&&![34,35].includes(m.id))){const name=mode.id>=56&&mode.id<=70?mode.name+'（旗数）':mode.id===71?'智慧树高度':mode.name+'（完成次数）';inputField(records,name,p.records[mode.id],'number',{min:'0',max:'2147483647',step:'1'}).dataset.record=mode.id}const shop=$('user-purchases');shop.replaceChildren();shopNames.forEach((name,i)=>{const count=[9,14,15,21,24,26,28].includes(i),inventory=[14,15,26,28].includes(i),value=inventory?Math.max(0,p.purchases[i]-1000):count?p.purchases[i]:p.purchases[i]>0;const input=inputField(shop,name,value,count?'number':'checkbox',count?{min:'0',max:i===21?'4':'1000000',step:'1'}:{});input.dataset.purchase=i});const achievements=$('user-achievements');achievements.replaceChildren();p.achievements.forEach((earned,i)=>{inputField(achievements,['庭院守卫','诺贝尔豌豆奖','死而无憾','瓷器店','土豆雷爆破','爆破专家','植物收集家','不许用豌豆','滚动的脑袋','禁止空运','僵尸学家','小气鬼','阳光灿烂','爆米花派对','早安','无菇之夜','超越坟墓','不朽','智慧高耸','胡子模式'][i],earned,'checkbox').dataset.achievement=i})}
+function refreshProfileControls(){$('delete-user').disabled=!users.length}
+$('user-list').onchange=showUser;
+$('add-user').onclick=()=>action(async()=>{const result=await request('add-user');loadProfiles(result.profiles);$('user-list').value=result.id;showUser();status('已新增用户，可修改 ID、名称与进度后保存。')});
+$('delete-user').onclick=()=>action(async()=>{const user=selectedUser();if(!confirm('删除 '+user.name+'（ID '+user.id+'）及其全部关卡存档？此操作不可撤销。'))return;const result=await request('delete-user',{id:user.id});loadProfiles(result.profiles);fillSaves(result.saves);status('已删除所选用户及其关卡存档。')});
+$('save-user').onclick=()=>action(async()=>{const user=selectedUser(),id=Profiles.validId(Number($('user-id').value)),name=Profiles.validName($('user-name').value),patch={level:Number($('user-level').value),coins:Number($('user-coins').value),finished:Number($('user-finished').value),records:user.progress.records.slice(),purchases:user.progress.purchases.slice(),unlocks:[],achievements:[]};document.querySelectorAll('[data-record]').forEach(input=>patch.records[Number(input.dataset.record)]=Number(input.value));document.querySelectorAll('[data-purchase]').forEach(input=>{const i=Number(input.dataset.purchase),value=Number(input.value);patch.purchases[i]=input.type==='checkbox'?(input.checked?user.progress.purchases[i]||1:0):[14,15,26,28].includes(i)?(value===Math.max(0,user.progress.purchases[i]-1000)?user.progress.purchases[i]:value?1000+value:0):value});document.querySelectorAll('[data-unlock]').forEach(input=>patch.unlocks[Number(input.dataset.unlock)]=input.checked);document.querySelectorAll('[data-achievement]').forEach(input=>patch.achievements[Number(input.dataset.achievement)]=input.checked);if(id!==user.id&&!confirm('把 ID '+user.id+' 改为 '+id+'？所属关卡文件会一并改名。'))return;const result=await request('edit-user',{oldId:user.id,id,name,patch});loadProfiles(result.profiles);$('user-list').value=id;showUser();fillSaves(result.saves);status('用户进度已保存。未编辑的花园及大头贴数据保持原样。')});
+function makeGuide(entries){const table=document.createElement('table'),head=document.createElement('tr');for(const text of ['模式编号','关卡／模式','1 号用户文件名']){const th=document.createElement('th');th.textContent=text;head.append(th)}table.append(head);for(const mode of entries){const row=document.createElement('tr');for(const text of [String(mode.id),mode.name,mode.checkpoint?`game1_${mode.id}.dat64`:'不使用独立战斗存档']){const cell=document.createElement('td');cell.textContent=text;row.append(cell)}table.append(row)}return table}
+const limbo=mode=>(mode.id>=21&&mode.id<=33)||[56,57,59,60].includes(mode.id);
+$('mode-guide').append(makeGuide(Modes.filter(mode=>!limbo(mode))));const hiddenGuide=document.createElement('details');hiddenGuide.id='limbo-guide';const limboLabel=document.createElement('summary');limboLabel.textContent='展开limbo页关卡';hiddenGuide.append(limboLabel,makeGuide(Modes.filter(limbo)));$('mode-guide').append(hiddenGuide);
+function describeSlot(){const match=/^game([1-9]\d*)_(\d+)\.dat64$/.exec($('generate-filename').value.trim()),mode=match&&Modes[Number(match[2])];$('slot-description').textContent=mode?`用户 ${match[1]} · ${mode.name}${mode.checkpoint?'':'：不使用独立战斗存档'}`:'文件名格式：game用户ID_模式编号.dat64';$('adventure-level').disabled=mode?.id!==0}
+$('generate-filename').oninput=describeSlot;describeSlot();
+$('delete-lineup').onclick=()=>action(async()=>{const all=[...presets,...custom],index=Number($('preset').value),entry=all[index];if(!entry)throw Error('没有可删除的阵型');if(!confirm('从阵型列表删除“'+entry.name+'”？已有 DAT64 不会删除。'))return;if(host){const result=await request('delete-lineup',{code:entry.code});presets=result.presets;custom=result.custom}else{custom=custom.filter(p=>p.code!==entry.code);localStorage.setItem('pvz_devtools_lineups',JSON.stringify(custom))}fillPresets();status('已从列表删除阵型，当前布阵与已有存档保留。')});
+
+})();</script></html>
