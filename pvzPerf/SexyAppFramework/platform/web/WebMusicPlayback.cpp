@@ -3,7 +3,9 @@
 #include <emscripten.h>
 #include <stdexcept>
 EM_JS(void, web_music_master, (double value), { Module.pvzMusic.command(0,'master',value); });
-EM_JS(int, web_music_failed, (), { return !!Module.pvzMusic.error; });
+// The Web adapter stops a failed music node and reports a nonfatal warning.
+// Sound effects, game state and rendering remain usable without BGM.
+EM_JS(int, web_music_failed, (), { return !!Module.pvzMusic.error && !Module.pvzMusic.disabled; });
 namespace Sexy {
 NativeMusicPlayback::~NativeMusicPlayback() = default;
 void NativeMusicPlayback::Initialize(unsigned int handle, bool) { mHandle=handle; }

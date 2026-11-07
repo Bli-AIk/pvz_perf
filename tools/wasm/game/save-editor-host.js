@@ -2,16 +2,14 @@
 // All writes are validated by the existing isolated save tool while the game
 // is stopped. Source of the bundled editor: YuHao2006/PvzDevTools/saveEditor.
 import {ProfileStore,modes} from './save-codec.js';
-export function connectSaveEditor({module,root,ready,idle,running,setActive,authorize,sync,tools,lineups,status}){
+export function connectSaveEditor({module,root,ready,idle,running,setActive,authorize,sync,tools,lineups,library,onLineupsChanged,status}){
  const button=document.getElementById('custom-save'),dialog=document.getElementById('save-editor-dialog'),frame=document.getElementById('save-editor-frame');
  let documentText=null,granted=false,busy=false,opening=false;
  const channel='pvz-save-editor-v1',origin=location.origin;
  const names=()=>module.FS.readdir(root).filter(name=>/^game[1-9]\d*_\d+\.dat64$/.test(name)).sort();
  const read=name=>{if(!/^game[1-9]\d*_\d+\.dat64$/.test(name)||!module.FS.analyzePath(root+'/'+name).exists)throw Error('没有可用的关卡 DAT64');const bytes=module.FS.readFile(root+'/'+name);if(bytes.length>32*1024*1024)throw Error('DAT64 超过 32 MiB');return bytes};
  let store;
- const custom=()=>{try{const values=JSON.parse(localStorage.getItem('pvz_custom_lineups')||'[]');return Array.isArray(values)?values:[]}catch{return []}};
- const deleted=()=>{try{return JSON.parse(localStorage.getItem('pvz_deleted_lineups')||'[]')}catch{return []}};
- const presets=async()=>{const m=await lineups,removed=deleted();return m.defaultLineups.filter(p=>!removed.includes(p.code))};
+ const listed=()=>({presets:library().snapshot().lineups,custom:[]});
  const slot=name=>{const match=/^game([1-9]\d*)_(\d+)\.dat64$/.exec(name);if(!match||!modes[Number(match[2])]?.checkpoint)throw Error('文件名需为存在战斗存档的 game用户ID_模式编号.dat64，编号见对照页');const id=Number(match[1]);if(!store.rows().some(p=>p.id===id))throw Error('目标用户不存在，请先在“用户进度”页新增用户');return {id,mode:Number(match[2])}};
  async function commit(plan){
   const fs=module.FS,changed=new Set([...plan.writes.keys(),...plan.removes]),before=new Map();
@@ -21,14 +19,17 @@ export function connectSaveEditor({module,root,ready,idle,running,setActive,auth
   return {id:plan.id,profiles:store.list(),saves:names()};
  }
  function send(value){frame.contentWindow?.postMessage({channel,...value},origin)}
- async function initial(){const m=await lineups,visible=await presets(),added=custom(),first=[...visible,...added][0]||m.defaultLineups[0];send({op:'init',payload:{presets:visible,custom:added,profiles:store.list(),saves:names(),code:first.code,lineup:await m.decodeLineup(first.code)}})}
+ async function initial(){const m=await lineups,entries=listed(),first=entries.presets[0];const lineup=first?await m.decodeLineup(first.code):{scene:2,rake:0,cells:Array(54).fill(0)};send({op:'init',payload:{...entries,profiles:store.list(),saves:names(),code:first?first.code:await m.encodeLineup(lineup),lineup}})}
  button.onclick=async()=>{
   if(!ready()||!idle()||running()||opening||busy)return;
   opening=true;button.disabled=true;setActive(true);
   try{
    await authorize();
    store ||= new ProfileStore(module.FS,root);
-   if(!documentText){const response=await fetch('./save-editor.html');if(!response.ok)throw Error('存档修改器读取失败（HTTP '+response.status+'）');documentText=await response.text()}
+   // Toy wraps .html requests in its own viewer/password page, even for fetch.
+   // Load the editor as an ordinary JS resource and create an inherited-origin
+   // document. Never embed a second Toy page or collect its access password.
+   if(!documentText){documentText=(await import('./save-editor-document.js')).default;if(typeof documentText!=='string'||!documentText.includes(channel))throw Error('存档修改器资源无效，请重新加载页面')}
    granted=true;dialog.showModal();
    if(!frame.hasAttribute('srcdoc'))frame.srcdoc=documentText;else await initial();
   }catch(error){granted=false;if(dialog.open)dialog.close();status(error.message||String(error))}
@@ -50,14 +51,16 @@ export function connectSaveEditor({module,root,ready,idle,running,setActive,auth
    else if(op==='edit-user')result=await commit(store.edit(payload));
    else if(op==='delete-user')result=await commit(store.remove(payload.id));
    else if(op==='delete-lineup'){
-    const m=await lineups,items=custom().filter(p=>p.code!==payload.code),removed=deleted();
-    if(m.defaultLineups.some(p=>p.code===payload.code)&&!removed.includes(payload.code))removed.push(payload.code);
-    localStorage.setItem('pvz_custom_lineups',JSON.stringify(items));localStorage.setItem('pvz_deleted_lineups',JSON.stringify(removed));result={presets:await presets(),custom:items};
+    library().remove(payload.code);result=listed();onLineupsChanged();
    }
    else if(op==='save-lineup'){
-    const m=await lineups,decoded=await m.decodeLineup(payload.code),name=String(payload.name||'我的阵型').trim().slice(0,60),items=m.mergeLineups(custom()).slice(m.defaultLineups.length);
-    if(!m.mergeLineups(items).some(p=>p.code===decoded.code))items.push({name,code:decoded.code});
-    localStorage.setItem('pvz_custom_lineups',JSON.stringify(items));localStorage.setItem('pvz_deleted_lineups',JSON.stringify(deleted().filter(code=>code!==decoded.code)));result={custom:items,presets:await presets()};
+    const m=await lineups,decoded=await m.decodeLineup(payload.code),name=String(payload.name||'我的阵型').trim().slice(0,60);
+    library().add({name,code:decoded.code});result=listed();onLineupsChanged();
+   }
+   else if(op==='replace-lineups'){
+    const m=await lineups;if(payload?.format!==1||!Array.isArray(payload.lineups)||payload.lineups.length>2000)throw Error('阵型库 JSON 格式无效');
+    for(const entry of payload.lineups)await m.decodeLineup(entry.code);
+    library().replace(payload);result=listed();onLineupsChanged();
    }
    else if(op==='extract'){const target=slot(payload.name);await sync();result=await saveTools.runSaveTool({op:'extract',mode:target.mode},read(payload.name),store.details(target.id))}
    else if(op==='export'){await sync();result={bytes:read(payload.name)}}

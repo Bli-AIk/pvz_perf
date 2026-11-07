@@ -1,0 +1,13 @@
+{
+  "exe_sha256": "5f650f52d12751e08b63e590edb0d9b9f09d087cea900baa0eb39e4af8eda251",
+  "pak_sha256": "7a50e3b247e1b678fa034e0fabe305f419c38a59cdfc5dd379c2f434b5d4a421",
+  "evidence": "Static executable instructions and original animation resource; not an in-process reproduction",
+  "track": "anim_superlongdeath",
+  "total_frames": 504,
+  "active_frame_range_inclusive": [
+    292,
+    428
+  ],
+  "playback_rate": 14,
+  "selection": "Rand(100)==99, eligible progression, track exists, not chilled, on-screen zombie count <=5; water death takes priority"
+}

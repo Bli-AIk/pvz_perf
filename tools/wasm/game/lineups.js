@@ -4,13 +4,6 @@ export const defaultLineups=Object.freeze([
  Object.freeze({name:'24炮',code:'LI43bJyUlNTYBS00RdPXWnxsNHHS3FlXRbJUVHQGQ8pW'}),
  Object.freeze({name:'[终极战术]五角星无炮流',code:'LI43jH/kRlzjZrhRF3RUpjJeOFHFZEXTHtMe0tlawVVE7GI0efJc8npSWMdVLhV261Y='})
 ]);
-export function mergeLineups(saved){
- const result=[...defaultLineups];
- if(Array.isArray(saved))for(const value of saved){
-  if(value&&typeof value.name==='string'&&typeof value.code==='string'&&!result.some(p=>p.code===value.code))result.push({name:value.name,code:value.code});
- }
- return result;
-}
 // Toolkit 1.22 format: packed 16-bit cells, zlib stream, trailing scene/rake,
 // XOR 0x54, then Base64. Format reference: lmintlcx/pvztoolkit/src/lineup.cpp.
 export async function decodeLineup(value){

@@ -157,6 +157,8 @@ public:
     Sexy::TimeCounter                             mBossBungeeCounter;                         //+0x134
     Sexy::TimeCounter                             mBossStompCounter;                          //+0x138
     Sexy::TimeCounter                             mBossHeadCounter;                           //+0x13C
+    // 每个僵王同时至多持有一个冰球或火球，两者共用此 ID，并非各有一个。
+    // BossHeadSpit 先销毁旧球，BossHeadSpitContact 再断言槽位为空后创建新球。
     ReanimationID                   mBossFireBallReanimID;                      //+0x140
     ReanimationID                   mSpecialHeadReanimID;                       //+0x144
     ReanimationID                   mZombatarHeadReanimID;                      //+GOTY @Patoke: 0x148
@@ -166,6 +168,8 @@ public:
     int                             mLastPortalX;                               //+0x154
     bool                            mHasZombatar;                               //+GOTY @Patoke: 0x15C
     int                             mZombatarIndex;                             //+GOTY @Patoke: 0x160
+    // 普通僵尸用于自身根运动；僵王不行走，复用于上述唯一冰球/火球的根运动。
+    // 僵王本体被冻结时球仍独立滚动，因此冻结清理不能重置僵王的这组绑定。
     double                          mRootOriginX = 0;
     std::uint32_t                   mRootBindingGeneration = 0;
     float                           mRootScale = 0;

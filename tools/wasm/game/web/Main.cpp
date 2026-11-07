@@ -17,6 +17,10 @@ EMSCRIPTEN_KEEPALIVE int pvz_web_paused() { return gLawnApp && gLawnApp->mBoard 
 EMSCRIPTEN_KEEPALIVE int pvz_web_active() { return gLawnApp && gLawnApp->mActive; }
 EMSCRIPTEN_KEEPALIVE unsigned int pvz_web_updates() { return gLawnApp ? gLawnApp->mUpdateCount : 0; }
 EMSCRIPTEN_KEEPALIVE unsigned int pvz_web_draws() { return gLawnApp ? gLawnApp->mDrawCount : 0; }
+EMSCRIPTEN_KEEPALIVE int pvz_web_loading_complete() {
+    return gLawnApp && gLawnApp->mLoadingThreadCompleted.load(std::memory_order_acquire)
+        && gLawnApp->mCacheFramesPrebuilt;
+}
 }
 int main(int argc, char** argv) {
     if (argc > 1 && std::string(argv[1]) == "--save-tool") return RunWebSaveTool();

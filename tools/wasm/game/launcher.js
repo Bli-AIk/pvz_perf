@@ -7,7 +7,50 @@ const canvas=document.getElementById('canvas');
 const musicVolume=document.getElementById('music-volume'),launchFullscreen=document.getElementById('launch-fullscreen');
 const saveToolsReady=import('./save-tools.js'),lineupToolsReady=import('./lineups.js');
 const progressToolsReady=import('./progress-storage.js');
-let progressStorage;
+const lineupStorageReady=import('./lineup-storage.js');
+const startupToolsReady=import('./startup.js');
+let progressStorage,lineupStorage,cloudUploads=0;
+let diagnostics;
+const diagnosticsReady=import('./diagnostics.js').then(({createDiagnostics})=>{
+ diagnostics=createDiagnostics({storage:localStorage,defaultEnabled:window.PVZWebConfig?.diagnosticsDefault===true,
+  environment:()=>({version:window.PVZGraphicsConfig?.version,userAgent:navigator.userAgent.replace(/\b(Buvid|sessionID)\/\S+/gi,'$1/[redacted]'),platform:navigator.platform}),
+  readState:()=>{
+   const audio=Module?.pvzMusic,context=audio?.context;
+   return {phase:startupPhase,backend:Module?.pvzSelectedBackend,running,hidden:document.hidden,
+    wasmBytes:Module?.pvzMemory?.buffer.byteLength??null,
+    // Optional Chromium heap metric, not portable and not process RSS.
+    jsHeapBytes:performance.memory?.usedJSHeapSize??null,
+    loaded:!!Module?._pvz_web_loading_complete?.(),draws:Module?._pvz_web_draws?.(),updates:Module?._pvz_web_updates?.(),scene:Module?._pvz_web_scene?.(),
+    canvas:[canvas.width,canvas.height],audio:{backend:audio?.backend,state:context?.state,time:context?.currentTime,
+     sampleRate:context?.sampleRate,baseLatency:context?.baseLatency,outputLatency:context?.outputLatency,
+     buffers:audio?.sound?.sources.size,channels:audio?.sound?.channels.size,voices:audio?.voices.size}};
+  },schedule:fn=>setInterval(()=>{if(!document.hidden)fn()},10000)});
+ const checkbox=document.getElementById('diagnostics-enabled');checkbox.checked=diagnostics.enabled;
+ if(window.PVZWebConfig?.diagnosticsDefault){document.getElementById('diagnostics-settings').open=true;document.getElementById('diagnostics-label').textContent='记录运行诊断（此诊断包默认开启）'}
+ checkbox.onchange=()=>{diagnostics.setEnabled(checkbox.checked);if(checkbox.checked&&running)diagnostics.start()};
+ diagnostics.record('page-ready');
+});
+async function showDiagnostics(){
+ await diagnosticsReady;diagnostics.record('export');
+ document.getElementById('diagnostics-text').value=JSON.stringify(diagnostics.report(),null,2);
+ const dialog=document.getElementById('diagnostics-dialog');if(!dialog.open)dialog.showModal();
+}
+document.getElementById('export-diagnostics').onclick=()=>showDiagnostics();
+document.getElementById('diagnostics-close').onclick=()=>document.getElementById('diagnostics-dialog').close();
+document.getElementById('diagnostics-copy').onclick=async()=>{
+ const text=document.getElementById('diagnostics-text');try{await navigator.clipboard.writeText(text.value)}catch{text.focus();text.select()}
+};
+document.getElementById('diagnostics-download').onclick=async()=>{
+ const text=document.getElementById('diagnostics-text').value,file=new File([text],'pvz-diagnostics.json',{type:'application/json'});
+ if(navigator.canShare?.({files:[file]})){try{await navigator.share({files:[file]});return}catch(error){if(error.name==='AbortError')return}}
+ const url=URL.createObjectURL(file),link=document.createElement('a');link.href=url;link.download=file.name;document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),30000);
+};
+window.addEventListener('pagehide',()=>diagnostics?.pagehide());
+window.addEventListener('pageshow',event=>{if(event.persisted&&running)diagnostics?.start()});
+function cloudUploadState(active){cloudUploads+=active?1:-1;document.getElementById('cloud-upload-warning').hidden=cloudUploads===0}
+function lineupStatus(message){document.getElementById('lineup-cloud-status').textContent=message}
+function saveLineups(){lineupStorage.save().catch(error=>lineupStatus('阵型库云同步未完成：'+error.message+'；本地阵型已保留'))}
+for(const button of document.querySelectorAll('#cloud-restore-dialog button'))button.onclick=()=>document.getElementById('cloud-restore-dialog').close(button.value);
 const mobileUA=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 const mobileInput=mobileUA||
  (navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1)||matchMedia('(pointer:coarse)').matches;
@@ -41,13 +84,23 @@ function normalizePreferences(value){
 function fillPreferences(value){const p=normalizePreferences(value);fps.value=p.targetFps;autoFps.checked=p.autoDetectFrameRate;showFps.checked=p.showFps;landscape.checked=p.landscapeUI;volume.value=p.sfxVolume;musicVolume.value=p.musicVolume;launchFullscreen.checked=p.fullscreen;aspect.value=p.aspect;updateControls()}
 function preferences(){return normalizePreferences({targetFps:fps.value,autoDetectFrameRate:autoFps.checked,showFps:showFps.checked,landscapeUI:landscape.checked,sfxVolume:volume.value,musicVolume:musicVolume.value,fullscreen:launchFullscreen.checked,aspect:aspect.value})}
 function showError(message){
- clearInterval(startupTimer);
+ // Safari stacks can contain only frames, omitting the exception name/message.
+ // Keep both before persisting or rendering, otherwise a useful trap becomes
+ // an anonymous list of wasm-function numbers.
+ const summary=String(message),stack=message?.stack;
+ const description=stack?(stack.includes(summary)?stack:summary+'\n'+stack):summary;
+ diagnostics?.record('error',description);
+ startupMonitor?.stop();document.getElementById('startup-status').hidden=true;
  clearInterval(fpsTimer);fpsTimer=0;
  const box=document.getElementById('error');box.hidden=false;box.replaceChildren();
  const heading=document.createElement('h2');heading.textContent='游戏未能正常启动或运行';
  const details=document.createElement('pre');
- details.textContent=String(message)+'\n\n图形接口：'+(Module?.pvzSelectedBackend||'检测中')+
-  '\n'+(document.getElementById('graphics-capabilities').textContent||'')+'\n\n启动阶段：'+startupPhase+'\n浏览器：'+navigator.userAgent;
+ details.textContent=description+'\n\n图形接口：'+(Module?.pvzSelectedBackend||'检测中')+
+  '\n'+(document.getElementById('graphics-capabilities').textContent||'')+'\n\n启动阶段：'+startupPhase+
+  '\n音频：'+(Module?.pvzMusic?.backend||'尚未初始化')+' / '+(Module?.pvzMusic?.context?.state||'未创建')+
+  '\nWasm 内存：'+(Module?.pvzMemory?.buffer.byteLength??'未知')+' 字节；画布：'+canvas.width+' × '+canvas.height+
+  '\n可见尺寸：'+Math.round(canvas.getBoundingClientRect().width)+' × '+Math.round(canvas.getBoundingClientRect().height)+
+  '\n版本：'+(window.PVZGraphicsConfig?.version||'未知')+'\n浏览器：'+navigator.userAgent;
  const actions=document.createElement('div');actions.className='error-actions';
  const retry=document.createElement('button');retry.type='button';retry.textContent='重新加载';retry.onclick=()=>location.reload();actions.append(retry);
  if(Module?.pvzSelectedBackend==='webgpu'&&window.PVZGraphicsConfig?.fallback&&Module.pvzGraphicsCapabilities?.webgl){
@@ -57,6 +110,7 @@ function showError(message){
  }
  const copy=document.createElement('button');copy.type='button';copy.className='secondary';copy.textContent='复制错误信息';
  copy.onclick=async()=>{try{await navigator.clipboard.writeText(details.textContent);copy.textContent='已复制'}catch{copy.textContent='请选中上方文字复制'}};actions.append(copy);
+ const diagnosticButton=document.createElement('button');diagnosticButton.type='button';diagnosticButton.textContent='导出诊断记录';diagnosticButton.onclick=()=>showDiagnostics();actions.append(diagnosticButton);
  box.append(heading,details,actions);console.error(message);
 }
 function updateControls(){
@@ -75,13 +129,13 @@ function viewportFor(width,height,mode,minimumWidth=800){
 function fitCanvas(){
  resizeScheduled=false;
  if(running&&Module.pvzTextInput?.active)return; // The soft keyboard must not rotate/resize the game underneath an editor.
- const mobile=mobileInput;
- const rotate=mobile&&document.body.classList.contains('playing')&&innerHeight>innerWidth;
+ const mobile=mobileInput,playing=document.body.classList.contains('playing');
+ const rotate=mobile&&playing&&innerHeight>innerWidth;
  document.body.classList.toggle('portrait-game',rotate);
  if(rotate){stage.style.width=`${innerHeight}px`;stage.style.height=`${innerWidth}px`}
  else{stage.style.width='';stage.style.height=''}
  const bounds=stage.getBoundingClientRect();if(bounds.width<1||bounds.height<1)return;
- const p=preferences(),w=stage.clientWidth,h=stage.clientHeight;
+ const p=preferences(),w=stage.clientWidth,h=playing?stage.clientHeight:Math.max(1,innerHeight-document.querySelector('header').offsetHeight-document.querySelector('footer').offsetHeight);
  const view=viewportFor(mobile?Math.max(w,h):w,mobile?Math.min(w,h):h,p.aspect,running&&Module.pvzLandscapeActive?890:800);
  canvas.style.width=`${view.cssWidth}px`;canvas.style.height=`${view.cssHeight}px`;
  Module.pvzViewport={width:view.width,height:view.height};
@@ -116,6 +170,7 @@ for(const type of ['pointerdown','pointermove','pointerup','pointercancel'])canv
   // A genuine canvas press can restore application focus even when a mobile
   // Toy host ignores window.focus(). This queues focus before the touch itself.
   Module._pvz_web_focus?.(1);
+  Module.pvzMusic?.resumeIfInterrupted();
   activePointers.set(e.pointerId,{touch:e.pointerType!=='mouse',button:e.button+1});
  }
  const p=pointerPosition(e.clientX,e.clientY),touch=e.pointerType!=='mouse';
@@ -131,8 +186,9 @@ for(const type of ['pointerdown','pointermove','pointerup','pointercancel'])canv
 });
 canvas.addEventListener('lostpointercapture',e=>cancelPointer(e.pointerId));
 window.addEventListener('blur',()=>{cancelPointers();Module._pvz_web_focus?.(0)});
-window.addEventListener('focus',()=>{if(!document.hidden)Module._pvz_web_focus?.(1)});
-document.addEventListener('visibilitychange',()=>{if(document.hidden)cancelPointers();Module._pvz_web_focus?.(document.hidden?0:1)});
+window.addEventListener('focus',()=>{if(!document.hidden){Module._pvz_web_focus?.(1);if(running)Module.pvzMusic?.resumeIfInterrupted()}});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)cancelPointers();else if(running)Module.pvzMusic?.resumeIfInterrupted();Module._pvz_web_focus?.(document.hidden?0:1)});
+window.addEventListener('keydown',()=>{if(running)Module.pvzMusic?.resumeIfInterrupted()});
 for(const type of ['mousedown','mousemove','mouseup','touchstart','touchmove','touchend','touchcancel'])
  canvas.addEventListener(type,e=>{if(running){e.preventDefault();e.stopImmediatePropagation()}},{capture:true,passive:false});
 window.addEventListener('resize',scheduleResize);
@@ -172,8 +228,11 @@ async function preparePersistentFiles(){
  progressStorage=new ProgressStorage(Module.FS,saveRoot,{cloudEnabled:!webConfig.bypassBilibiliChecks,
   provideToy:async()=>(await import('./rewards.js')).provideBilibiliToy(),
   report:message=>{document.getElementById('cloud-status').textContent=message},
-  uploadState:uploading=>{document.getElementById('cloud-upload-warning').hidden=!uploading}});
+  uploadState:cloudUploadState});
  if(await progressStorage.prepare())await syncSaves();
+ const {LineupStorage}=await lineupStorageReady;
+ lineupStorage=new LineupStorage(localStorage,{cloudEnabled:!webConfig.bypassBilibiliChecks,remote:()=>progressStorage.remote(),report:lineupStatus,uploadState:cloudUploadState});
+ await lineupStorage.prepare();
  if(webConfig.bypassBilibiliChecks&&!Module.FS.analyzePath(saveRoot+'/users.dat').exists)await installBaseline();
  progressStorage.watchProfileWrites();
 }
@@ -196,6 +255,7 @@ import('./save-editor-host.js').then(({connectSaveEditor})=>connectSaveEditor({
  module:Module,root:saveRoot,ready:()=>runtimeReady,idle:()=>!rewardBusy,running:()=>running,
  setActive:active=>{rewardBusy=active;start.disabled=active||!runtimeReady},
  authorize,sync:syncSaves,tools:saveToolsReady,lineups:lineupToolsReady,
+ library:()=>lineupStorage.library,onLineupsChanged:saveLineups,
  status:message=>{rewardStatus.textContent=message}
 })).catch(showError);
 async function progressAction(operation){
@@ -205,32 +265,39 @@ async function progressAction(operation){
  finally{rewardBusy=false;start.disabled=false}
 }
 document.getElementById('upload-progress').onclick=()=>progressAction(async()=>{
- await progressStorage.save(true);
+ const results=await Promise.allSettled([progressStorage.save(true),lineupStorage.save(true)]);
+ const errors=results.filter(r=>r.status==='rejected').map(r=>r.reason.message);if(errors.length)throw Error(errors.join('；'));
 });
 document.getElementById('restore-progress').onclick=()=>progressAction(async()=>{
- const saved=await progressStorage.readCloud();if(!saved)throw Error('当前 B 站账号尚无云端进度');
+ await Promise.allSettled([progressStorage.saving,lineupStorage.saving]);
+ const [saved,lineups]=await Promise.all([progressStorage.readCloud(),lineupStorage.readCloud()]);if(!saved&&!lineups)throw Error('当前 B 站账号尚无云端进度或阵型库');
  const dialog=document.getElementById('cloud-restore-dialog');
  const confirmed=new Promise(resolve=>{dialog.addEventListener('close',()=>resolve(dialog.returnValue==='restore'),{once:true});dialog.returnValue='cancel';dialog.showModal()});
  if(!await confirmed)return;
- progressStorage.apply(saved.files);progressStorage.needsChoice=false;await syncSaves();await progressStorage.save();
+ if(saved){progressStorage.apply(saved.files);progressStorage.needsChoice=false;await syncSaves();await progressStorage.save()}
+ if(lineups){lineupStorage.library.replace(lineups.value);lineupStorage.needsChoice=false;lineupStatus('阵型库已从云端恢复')}
 });
 document.getElementById('save-local').onclick=()=>progressAction(async()=>{
  await syncSaves();document.getElementById('local-save-status').textContent='本地存档已写入浏览器';
 });
-let startupPhase='页面初始化',startupTimer=0;
+let startupPhase='页面初始化',startupMonitor=null;
+function setStartupPhase(phase){startupPhase=phase;startupMonitor?.setPhase(phase);diagnostics?.record('phase',phase)}
 function startupDeadline(promise,phase,milliseconds=30000){
- startupPhase=phase;let timer;
+ setStartupPhase(phase);let timer;
  return Promise.race([promise,new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error(phase+'超时，请重新加载；若持续失败，请复制错误信息反馈。')),milliseconds)})]).finally(()=>clearTimeout(timer));
 }
 async function returnToSettings(){
+ diagnostics?.quit();
  Module.pvzMusic.close();Module.pvzMusic.context?.suspend().catch(console.warn);
- clearInterval(fpsTimer);clearInterval(startupTimer);fpsTimer=startupTimer=0;
+ clearInterval(fpsTimer);fpsTimer=0;startupMonitor?.stop();document.getElementById('startup-status').hidden=true;
  document.getElementById('game-fps').hidden=true;
  Module.pvzTextInput.hide();cancelPointers();
  try{await syncSaves();document.getElementById('local-save-status').textContent='本地存档已写入浏览器'}catch(error){document.getElementById('local-save-status').textContent='本地保存失败：'+error.message+'。请重试保存或导出 DAT64，不要刷新页面。'}
  progressStorage?.save().catch(error=>{document.getElementById('cloud-status').textContent='进度备份未完成：'+error.message});
+ if(lineupStorage)saveLineups();
  if(document.fullscreenElement)await document.exitFullscreen().catch(console.warn);
  running=false;document.body.classList.remove('playing','portrait-game');stage.classList.remove('running');
+ document.documentElement.classList.remove('playing');window.scrollTo(0,0);
  for(const input of form.elements)input.disabled=false;
  formEdited=false;fillPreferences({...readPreferences(),...loadNativeSettings()});
  document.getElementById('graphics-backend').disabled=document.getElementById('graphics-backend').options.length<2;
@@ -239,7 +306,7 @@ async function returnToSettings(){
 }
 canvas.addEventListener('webglcontextlost',event=>{event.preventDefault();showError('WebGL 图形上下文丢失，浏览器已停止绘制。请重新加载。')});
 var Module={canvas,locateFile:name=>'./'+name,pvzRefreshRate:60,pvzMobileInput:mobileInput,
- pvzStartupPhase:phase=>{startupPhase=phase},
+ pvzStartupPhase:setStartupPhase,
  pvzSetFullscreen:enabled=>{if(enabled&&!document.documentElement.requestFullscreen){console.warn('当前浏览器不支持 Fullscreen API');return}const change=enabled?document.documentElement.requestFullscreen():document.fullscreenElement?document.exitFullscreen():Promise.resolve();change.catch(error=>console.warn('浏览器未允许全屏',error))},
  pvzOnQuit:()=>returnToSettings().catch(showError),
  print:message=>console.log(message),printErr:message=>console.error(message),onAbort:showError,pvzOnError:showError,
@@ -253,9 +320,31 @@ new ResizeObserver(scheduleResize).observe(stage);
 form.addEventListener('submit',async event=>{
  event.preventDefault();if(!runtimeReady||running||rewardBusy)return;
  const p=preferences();fps.value=p.targetFps;start.disabled=true;
- try{const full=p.fullscreen&&document.documentElement.requestFullscreen?document.documentElement.requestFullscreen().catch(error=>console.warn('浏览器未允许全屏',error)):Promise.resolve();const audio=Module.pvzMusic.unlock();await startupDeadline(Promise.all([audio,textInputReady,full]),"初始化音频与输入");document.body.classList.add('playing');fitCanvas();await saveSettings(p);running=true;lastWidth=Module.pvzViewport.width;stage.classList.add('running');for(const input of form.elements)input.disabled=true;fitCanvas();canvas.focus();startFps();startupPhase="启动游戏";const begin=performance.now();startupTimer=setInterval(()=>{if(document.hidden)return;if(Module._pvz_web_draws?.()>0){clearInterval(startupTimer);startupPhase="游戏运行"}else if(performance.now()-begin>60000)showError("游戏启动超时，尚未完成首帧绘制。")},1000);Module.callMain([])}catch(error){document.body.classList.remove('playing');showError(error.stack||error);start.disabled=false}
+ diagnostics?.start();
+ try{
+  const full=p.fullscreen&&document.documentElement.requestFullscreen?document.documentElement.requestFullscreen().catch(error=>console.warn('浏览器未允许全屏',error)):Promise.resolve();
+  const audio=Module.pvzMusic.unlock();
+  await startupDeadline(Promise.all([audio,textInputReady,full]),'初始化音频与输入');
+  document.documentElement.classList.add('playing');document.body.classList.add('playing');window.scrollTo(0,0);fitCanvas();
+  await startupDeadline(saveSettings(p),'保存启动设置');
+  running=true;lastWidth=Module.pvzViewport.width;stage.classList.add('running');
+  for(const input of form.elements)input.disabled=true;
+  fitCanvas();canvas.focus();startFps();setStartupPhase('初始化窗口与图形');
+  startupMonitor?.stop();
+  const {createStartupMonitor}=await startupToolsReady;
+  const label=document.getElementById('startup-status');label.hidden=false;
+  startupMonitor=createStartupMonitor({
+   readState:()=>({loaded:!!Module._pvz_web_loading_complete?.(),updates:Module._pvz_web_updates?.()||0,draws:Module._pvz_web_draws?.()||0}),
+   onProgress:(phase,elapsed)=>{label.textContent=phase+'… '+Math.floor(elapsed/1000)+' 秒'},
+   onReady:()=>{label.hidden=true;setStartupPhase('游戏运行')},onError:showError
+  });
+  startupMonitor.setPhase(startupPhase);startupMonitor.start();
+  // Give the host a paint before synchronous Wasm initialization begins.
+  await new Promise(resolve=>requestAnimationFrame(()=>setTimeout(resolve,0)));
+  Module.callMain([]);
+ }catch(error){document.documentElement.classList.remove('playing');document.body.classList.remove('playing');showError(error);start.disabled=false}
 });
-window.addEventListener('error',event=>showError(event.message));window.addEventListener('unhandledrejection',event=>showError(event.reason?.stack||event.reason));
+window.addEventListener('error',event=>showError(event.error||event.message));window.addEventListener('unhandledrejection',event=>showError(event.reason));
 async function boot(){
  const config=window.PVZGraphicsConfig||{webgpu:false};
  if(config.version){document.title='pvz_perf · 网页 v'+config.version;document.getElementById('web-version').textContent='网页 v'+config.version}
@@ -287,10 +376,10 @@ async function boot(){
  const response=await fetch('./'+stem+'.wasm.gz');if(!response.ok)throw Error('Wasm 下载失败：'+response.status);
  const packed=new Uint8Array(await response.arrayBuffer());
  const binary=packed[0]===31&&packed[1]===139?await new Response(new Blob([packed]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer():packed.buffer;
- Module.instantiateWasm=(imports,receive)=>{WebAssembly.instantiate(binary,imports).then(result=>receive(result.instance)).catch(showError);return {}};
+ Module.instantiateWasm=(imports,receive)=>{WebAssembly.instantiate(binary,imports).then(result=>{Module.pvzMemory=Object.values(result.instance.exports).find(value=>value instanceof WebAssembly.Memory)||Object.values(imports).flatMap(Object.values).find(value=>value instanceof WebAssembly.Memory);delete Module.instantiateWasm;receive(result.instance)}).catch(showError);return {}};
  const script=document.createElement('script');script.src='./'+stem+'.js';script.onerror=()=>showError('无法加载游戏 JavaScript');document.body.appendChild(script);
 }
 window.PVZLauncher={viewportFor,normalizePreferences,preferences,fitCanvas,pointerPosition};
 if(!fixedMobileRate)measureRefreshRate().catch(()=>updateControls());
 const textInputReady=import('./text-input.js').then(m=>{Module.pvzTextInput=m.createTextInput()});
-startupDeadline(Promise.all([textInputReady,saveToolsReady,lineupToolsReady,import('./audio/music-engine.js').then(m=>m.prepareMusic()).then(audio=>{Module.pvzMusic=audio;if(runtimeReady)start.disabled=false}),boot()]),"加载游戏资源",120000).catch(showError);
+startupDeadline(Promise.all([diagnosticsReady,startupToolsReady,textInputReady,saveToolsReady,lineupToolsReady,import('./audio/music-engine.js').then(m=>m.prepareMusic()).then(audio=>{Module.pvzMusic=audio;audio.onWarning=message=>{const label=document.getElementById('audio-warning');label.hidden=!message;label.title=message;label.textContent=message?'音乐已暂时停用，音效和游戏可继续。'+(audio.compiled?'正常退出后重新开始可重试。 ':'刷新页面后可重试。 ')+message.split('\n',1)[0]:''};if(runtimeReady)start.disabled=false}),boot()]),"加载游戏资源",120000).catch(showError);

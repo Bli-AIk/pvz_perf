@@ -6222,6 +6222,25 @@ void Board::UpdateGameObjects(std::uint64_t theLevelDeltaNs)
 				animation->mIsAttachment ? nowNs : visualNowNs);
 	};
 	Plant* aPlant = nullptr;
+	if (mApp->mGameScene == GameScenes::SCENE_ZOMBIES_WON)
+	{
+		// Battle time and every other world actor remain frozen. The sole
+		// intruder is now a cutscene actor; both its movement and animation
+		// need the advancing visual timestamp, supplied by this owner.
+		Zombie* winner = nullptr;
+		while (IterateZombies(winner))
+		{
+			if (winner->mFromWave != Zombie::ZOMBIE_WAVE_WINNER) continue;
+			for (const auto id : {winner->mBodyReanimID,winner->mSpecialHeadReanimID,winner->mZombatarHeadReanimID,
+				winner->mMoweredReanimID,winner->mBossFireBallReanimID})
+			{
+				bindAnimation(id,ReanimTimeDomain::Visual,visualNowNs);
+				if (auto* animation=mApp->ReanimationTryToGet(id)) animation->PrepareTimeAt(visualNowNs);
+			}
+			winner->Update(visualNowNs,visualNowNs,visualNowNs,Sexy::gUpdateIntervalNs);
+		}
+		return;
+	}
 	while (IteratePlants(aPlant))
 	{
 		for (const auto id : {aPlant->mBodyReanimID,aPlant->mHeadReanimID,aPlant->mHeadReanimID2,
@@ -6477,6 +6496,9 @@ void Board::ZombiesWon(Zombie* theZombie)
 		if (theZombie)  // 原版此处没有对 theZombie 进行空指针判断，但加上判断后便允许绕过僵尸而直接调用游戏失败
 		{
 			theZombie->WalkIntoHouse(static_cast<std::int64_t>(mLevelTimeNs));
+			theZombie->mRootBindingGeneration = 0;
+			theZombie->mVelocityX = {};
+			theZombie->mVelocityY = {};
 		}
 
 		ClearAdvice(AdviceType::ADVICE_NONE);
@@ -7832,11 +7854,8 @@ void Board::DrawGameObjects(Graphics* g)
 		AddUIRenderItem(aRenderList, aRenderItemCount, RenderObjectType::RENDER_ITEM_BACKDROP, MakeRenderOrder(RenderLayer::RENDER_LAYER_UI_BOTTOM, 0, 0));
 		AddUIRenderItem(aRenderList, aRenderItemCount, RenderObjectType::RENDER_ITEM_BOTTOM_UI, aZPos);
 		AddUIRenderItem(aRenderList, aRenderItemCount, RenderObjectType::RENDER_ITEM_COIN_BANK, MakeRenderOrder(RenderLayer::RENDER_LAYER_COIN_BANK, 0, 0));
-        // Ordinary sun/coins start at COIN_BANK+1 (not ABOVE_UI). Keep the
-        // native HUD above world/fog but below that actual collectible layer.
         AddUIRenderItem(aRenderList, aRenderItemCount, RenderObjectType::RENDER_ITEM_TOP_UI,
-            mLandscapeHud ? MakeRenderOrder(RENDER_LAYER_COIN_BANK,0,-1) :
-                MakeRenderOrder(RENDER_LAYER_UI_TOP,0,0));
+            MakeRenderOrder(RENDER_LAYER_UI_TOP,0,0));
 		AddUIRenderItem(aRenderList, aRenderItemCount, RenderObjectType::RENDER_ITEM_SCREEN_FADE, MakeRenderOrder(RenderLayer::RENDER_LAYER_SCREEN_FADE, 0, 0));
 	}
 	if (mApp->mGameScene == GameScenes::SCENE_ZOMBIES_WON)
@@ -9009,8 +9028,11 @@ void Board::DrawUIBottom(Graphics* g)
 		g->mDrawMode = Graphics::DRAWMODE_NORMAL;
 	}
 
-    if(!mLandscapeHud)DrawCardHud(g);
-	if (!StageHasFog()&&!mLandscapeHud)
+    // Both layouts follow the PC queue: during opening dialogue BOTTOM_UI is
+    // raised to ABOVE_UI, so the shovel draws over Dave and his speech bubble.
+    // During normal play it returns to the ordinary PC HUD layer.
+    DrawCardHud(g);
+	if (!StageHasFog())
 	{
 		DrawTopRightUI(g);
 	}
@@ -9221,7 +9243,7 @@ void Board::DrawUITop(Graphics* g)
 	Rect aScreenRect = mApp->mScreenBounds;
 	aScreenRect.Offset(-mX, -mY);
 
-	if (StageHasFog()||mLandscapeHud)
+	if (StageHasFog())
 	{
 		DrawTopRightUI(g);
 	}
@@ -9231,8 +9253,6 @@ void Board::DrawUITop(Graphics* g)
 		g->mColor = Color(200, 200, 200, 210);
 		g->FillRect(aScreenRect);
 	}
-
-    if(mLandscapeHud)DrawCardHud(g);
 
 	if (mApp->mGameScene == GameScenes::SCENE_PLAYING || mApp->mGameMode == GameMode::GAMEMODE_TREE_OF_WISDOM)
 	{

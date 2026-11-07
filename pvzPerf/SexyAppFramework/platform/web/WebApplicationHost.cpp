@@ -35,11 +35,15 @@ void HostYield() {
 }
 void HostStartLoading(SexyAppBase& app, void (*entry)(void*)) {
     EM_ASM({ Module.pvzStartupPhase?.('加载游戏资源'); });
+    emscripten_sleep(0);
     entry(&app);
 }
 void HostFinishResourcePrewarm(SexyAppBase&, const std::atomic<bool>&) {
     EM_ASM({ Module.pvzStartupPhase?.('解码音效与上传纹理'); });
+    emscripten_sleep(0);
     FinishWebSoundLoading();
+    EM_ASM({ Module.pvzStartupPhase?.('上传图集与预热纹理'); });
+    emscripten_sleep(0);
     TodWarmDrainAll();
     ReanimatorUploadAllTexturesToGPU();
     TodWarmMarkSweepClean();

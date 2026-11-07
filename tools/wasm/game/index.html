@@ -7,9 +7,11 @@
 <main><div class="stage" id="stage">
 <canvas id="canvas" width="800" height="600" tabindex="0" aria-label="植物大战僵尸游戏画面" oncontextmenu="event.preventDefault()"></canvas>
 <output id="game-fps" hidden title="游戏绘制计数；实际呈现还受屏幕和浏览器限制">FPS —</output>
+<div id="startup-status" role="status" aria-live="polite" hidden></div>
+<div id="audio-warning" role="status" aria-live="polite" hidden></div>
 <section id="cover"><form id="launch-form" class="panel">
 <p class="eyebrow">PLANTS VS. ZOMBIES · WEB</p><h1>植物大战僵尸 · 网页</h1><p class="intro">设置好画面与帧率，进入游戏。</p>
-<div class="launch-row top-actions"><div class="primary-actions"><button id="start" type="submit" disabled>开始游戏</button><button id="upload-progress" class="secondary" type="button" disabled>上传云端</button><button id="restore-progress" class="secondary" type="button" disabled>从云端恢复</button></div><div class="load-state"><span id="status" role="status" aria-live="polite">正在加载程序和资源…</span><progress id="progress"></progress></div><strong id="cloud-upload-warning" role="status" aria-live="assertive" hidden>正在上传云端，请勿关闭或刷新页面。</strong><small id="cloud-status" role="status">关卡 DAT64 不上传云端，请自行导出备份。</small></div>
+<div class="launch-row top-actions"><div class="primary-actions"><button id="start" type="submit" disabled>开始游戏</button><button id="upload-progress" class="secondary" type="button" disabled>上传云端</button><button id="restore-progress" class="secondary" type="button" disabled>从云端恢复</button></div><div class="load-state"><span id="status" role="status" aria-live="polite">正在加载程序和资源…</span><progress id="progress"></progress></div><strong id="cloud-upload-warning" role="status" aria-live="assertive" hidden>正在上传云端，请勿关闭或刷新页面。</strong><small id="cloud-status" role="status">关卡 DAT64 不上传云端，请自行导出备份。</small><small id="lineup-cloud-status" role="status"></small></div>
 <div class="settings">
 
 <label class="field"><span>目标帧率</span><input id="target-fps" type="number" min="30" max="1000000000" step="1" value="100" required><small id="target-fps-info">最低 30 FPS；实际绘制受浏览器与屏幕限制。</small></label>
@@ -24,15 +26,17 @@
 </div>
 
 <details id="advanced-settings"><summary>高级</summary><div class="settings"><label class="field" id="graphics-field" hidden><span>图形接口</span><select id="graphics-backend" disabled><option value="">正在检测图形接口…</option></select><small id="graphics-info">正在检测浏览器能力…</small><details><summary>设备图形能力</summary><pre id="graphics-capabilities">正在检测…</pre></details></label><label class="field"><span>画面比例</span><select id="aspect"><option value="auto">随可用窗口自动调整</option><option value="4:3">4:3</option><option value="16:9">16:9</option><option value="21:9">21:9</option></select><small>保持比例，不拉伸；超出 4:3～21:9 的部分留黑边。</small></label><label class="check"><input id="show-fps" type="checkbox"><span>显示帧率<small>显示游戏绘制帧率，默认关闭。</small></span></label></div></details>
+<details id="diagnostics-settings"><summary>故障诊断</summary><label class="check"><input id="diagnostics-enabled" type="checkbox"><span><span id="diagnostics-label">记录运行诊断（默认关闭）</span><small>每 10 秒保留一次状态，最多 90 条。闪退后重新打开此页面导出；记录只保存在本机，不包含账号或存档。</small></span></label><button id="export-diagnostics" class="secondary" type="button">导出诊断记录</button></details>
 <p class="note">设置和用户资料保存在当前浏览器。请通过游戏菜单正常退出。</p>
 </form></section><div id="error" role="alert" hidden></div>
 </div></main>
 <dialog id="save-editor-dialog" aria-label="自定义存档"><iframe id="save-editor-frame" title="PvzDevTools 可视化存档修改器" sandbox="allow-scripts allow-same-origin allow-downloads allow-modals"></iframe></dialog>
+<dialog id="diagnostics-dialog" aria-label="诊断记录"><h2>诊断记录</h2><p>闪退前的记录在 previous 中。没有正常退出标记也可能是关闭标签页，不能单独认定为崩溃。页面无法读取 iOS 系统崩溃日志。</p><textarea id="diagnostics-text" readonly aria-label="诊断 JSON"></textarea><div><button id="diagnostics-copy" type="button">复制</button><button id="diagnostics-download" type="button">保存／分享文件</button><button id="diagnostics-close" type="button" class="secondary">关闭</button></div></dialog>
 <form id="web-text-input" hidden><label for="web-text-value">游戏文本输入（ASCII）</label><input id="web-text-value" type="text" inputmode="text" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="done"><button type="submit">完成</button></form>
 <footer><span>点击／拖动 · 空格暂停 · Esc 菜单</span><span>基于 <a href="https://github.com/wszqkzqk/PvZ-Portable" target="_blank" rel="noopener">PvZ-Portable</a> 修改 · <a href="https://github.com/YuHao2006/pvz_perf" target="_blank" rel="noopener">源码与原生版</a></span></footer>
 <script src="./web-config.js"></script><script src="./graphics-config.js"></script><script defer src="./launcher.js"></script>
 
-<dialog id="cloud-restore-dialog"><h2>恢复云端用户进度？</h2><p>将覆盖本地用户资料、通关进度和花园状态。关卡 DAT64 不在云端，不会被本操作删除。请先备份需要保留的关卡文件。</p><form method="dialog"><button value="cancel" class="secondary" autofocus>取消</button><button value="restore">覆盖用户进度并恢复</button></form></dialog>
+<dialog id="cloud-restore-dialog"><h2>恢复云端进度与阵型库？</h2><p>将用云端已有内容覆盖本地用户资料、通关进度、花园状态及阵型列表。云端没有的项目保留本地内容。关卡 DAT64 不在云端，不会被本操作删除。请先备份需要保留的关卡文件。</p><div><button type="button" value="cancel" class="secondary" autofocus>取消</button><button type="button" value="restore">覆盖本地并恢复</button></div></dialog>
 
 
 </body></html>

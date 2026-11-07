@@ -12,10 +12,10 @@ class PvzMusicProcessor extends AudioWorkletProcessor {
   this.port.onmessage=event=>{try{
    if(event.data.op==='flush')this.port.postMessage({flush:event.data.token,voices:this.mixer.positions()});
    else this.mixer.command(event.data);
-  }catch(error){this.fail(error)}};
+  }catch(error){this.fail(error,event.data)}};
   MusicMixer.create(options.processorOptions.compiled,sampleRate,options.processorOptions.entropy).then(mixer=>{this.mixer=mixer;this.port.postMessage({ready:true})}).catch(error=>this.fail(error));
  }
- fail(error){this.failed=true;this.port.postMessage({error:String(error.stack||error)})}
+ fail(error,command={}){if(this.failed)return;this.failed=true;this.port.postMessage({error:String(error.stack||error),op:command.op,id:command.id})}
  process(inputs,outputs){
   const channels=outputs[0];if(!channels?.length||this.failed)return true;
   try{

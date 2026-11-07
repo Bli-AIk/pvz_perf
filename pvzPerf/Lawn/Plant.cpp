@@ -4213,7 +4213,9 @@ void Plant::UpdateShooting(std::int64_t ownerNowNs, std::int64_t visualNowNs, st
             Fire(ownerNowNs, visualNowNs, animationNowNs, nullptr, mRow, PlantWeapon::WEAPON_PRIMARY);
         }
 
-        return;
+        // A variable step can cross both the shot threshold and expiry. Keep
+        // processing zero below; returning here would leave the held attack
+        // animation/cob state permanently unprocessed on the next call's guard.
     }
 
     if (mShootingCounter != 0)

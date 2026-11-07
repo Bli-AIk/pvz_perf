@@ -2529,8 +2529,9 @@ void PlantSpecialCatalogRuntime(TestApp& app)
 {
     auto& clocks=*app.mEffectSystem->mReanimationHolder;
     for(const auto seed:kSpecialPlantAuditSeeds)
-    for(const int hz:{100,30,240,0})
+    for(const int hz:{100,60,30,240,0,-30})
     {
+        if(seed!=SEED_COBCANNON && (hz==60 || hz<0)) continue;
         app.mGameScene=SCENE_PLAYING;
         std::cout<<"Plant special begin seed="<<int(seed)<<" Hz="<<hz<<'\n';
         Sexy::SRand(0xF170A);Sexy::gLegacyTickPhaseNs=0;
@@ -2597,21 +2598,22 @@ void PlantSpecialCatalogRuntime(TestApp& app)
             plant->mState=STATE_MAGNETSHROOM_SUCKING;
             plant->PlayBodyReanim(0,ReanimTrackId::anim_attract,REANIM_PLAY_ONCE_AND_HOLD,20,12);
         }
-        const auto duration=(seed==SEED_POTATOMINE||seed==SEED_COBCANNON)?20'000'000'000ULL:
+        const auto duration=seed==SEED_COBCANNON?90'000'000'000ULL:seed==SEED_POTATOMINE?20'000'000'000ULL:
             (seed==SEED_GRAVEBUSTER||seed==SEED_GOLD_MAGNET)?8'000'000'000ULL:4'000'000'000ULL;
-        bool firedCob=false,seenCob=false,seenCrater=false,seenFrozen=false,seenReflecting=false;
+        bool seenCob=false,seenCrater=false,seenFrozen=false,seenReflecting=false;
+        int cobShots=0;
         constexpr std::array<long long,7> jitter{1'234'567,18'765'433,4'000'003,32'333'333,7'891'011,5'432'109,11'111'111};
         for(int stepIndex=0;board.mLevelTimeNs<duration;++stepIndex)
         {
-            const auto step=std::min<unsigned long long>(hz?1'000'000'000ULL/hz:jitter[stepIndex%jitter.size()],duration-board.mLevelTimeNs);
+            const auto step=std::min<unsigned long long>(hz>0?1'000'000'000ULL/hz:hz<0?4'000'000'000ULL/(-hz):jitter[stepIndex%jitter.size()],duration-board.mLevelTimeNs);
             Sexy::ApplySimulationStep(step);
             board.mLevelTimeNs+=step;clocks.mVisualTimeNs+=step;clocks.mBattleTimeNs=board.mLevelTimeNs;
             app.mEffectSystem->UpdateAt(clocks.mVisualTimeNs,clocks.mBattleTimeNs);
             board.UpdateGameObjects(step);
-            if(seed==SEED_COBCANNON && !firedCob && plant->mState==STATE_COBCANNON_READY)
+            if(seed==SEED_COBCANNON && plant->mState==STATE_COBCANNON_READY)
             {
                 plant->CobCannonFire(board.mLevelTimeNs,650,board.GridToPixelY(0,row)+40);
-                firedCob=true;
+                ++cobShots;
             }
             Projectile* projectile=nullptr;
             while(board.IterateProjectiles(projectile)) seenCob|=projectile->mProjectileType==PROJECTILE_COBBIG;
@@ -2648,7 +2650,12 @@ void PlantSpecialCatalogRuntime(TestApp& app)
         case SEED_UMBRELLA:
             Require(seenReflecting && plant->mState==STATE_NOTREADY,"Umbrella did not enter reflecting and return to idle");break;
         case SEED_COBCANNON:
-            Require(firedCob && seenCob,"Cob Cannon did not complete charging and launch a real cob");break;
+            Require(cobShots==3 && seenCob && plant->mState==STATE_COBCANNON_ARMING &&
+                1000000-target->mBodyHealth==1800*cobShots,
+                "Cob Cannon failed repeated launch/rearm or skipped attack-animation cleanup after crossing shot and zero together");
+            Require(app.ReanimationGet(plant->mBodyReanimID)->mLoopType==REANIM_LOOP,
+                "Cob Cannon remained on its held shooting animation after firing");
+            std::cout<<"PASS repeated cob launch/rearm Hz="<<hz<<" shots="<<cobShots<<'\n';break;
         case SEED_IMITATER:
         {
             auto* replacement=board.GetTopPlantAt(3,row,TOPPLANT_ONLY_NORMAL_POSITION);
@@ -2762,8 +2769,9 @@ void PlantAttackCatalogRuntime(TestApp& app)
     Require(std::all_of(coverage.begin(),coverage.end(),[](auto count){return count==1;}),
         "Plant behavior catalog must audit every actual SeedType exactly once");
     for(const auto& test:cases)
-    for(const int hz:{100,30,240,0})
+    for(const int hz:{100,60,30,240,0})
     {
+        if(hz==60 && test.seed!=SEED_WINTERMELON)continue;
         Sexy::SRand(0x4A715);
         clocks.mVisualTimeNs=0;clocks.mBattleTimeNs=0;
         Sexy::gLegacyTickPhaseNs=0;
@@ -2830,6 +2838,36 @@ void PlantAttackCatalogRuntime(TestApp& app)
         if(test.damage) Require(1000000-target->mBodyHealth==test.damage,"Plant catalog area-damage pulse count changed");
         Require(coins.size()==test.coins && (coinTypes&~test.coinTypes)==0,
             "Plant catalog production count/type changed");
+        if(test.seed==SEED_WINTERMELON)
+        {
+            // The first volley cannot detect a later held-animation lock.
+            // Keep a durable real target and allow repeated normal deadlines.
+            plant->mLaunchRate=150;
+            plant->mLaunchWindowStartNs=board.mLevelTimeNs;
+            plant->mNextLaunchTimeNs=board.mLevelTimeNs+1'000'000'000LL;
+            const auto end=board.mLevelTimeNs+30'000'000'000ULL;
+            for(int stepIndex=0;board.mLevelTimeNs<end;++stepIndex)
+            {
+                const auto step=std::min<unsigned long long>(hz?1'000'000'000ULL/hz:jitter[stepIndex%jitter.size()],end-board.mLevelTimeNs);
+                if(board.mLevelTimeNs>=end-2'000'000'000ULL)plant->mNextLaunchTimeNs=end+10'000'000'000ULL;
+                Sexy::ApplySimulationStep(step);
+                board.mLevelTimeNs+=step;clocks.mVisualTimeNs+=step;clocks.mBattleTimeNs=board.mLevelTimeNs;
+                app.mEffectSystem->UpdateAt(clocks.mVisualTimeNs,clocks.mBattleTimeNs);
+                board.UpdateGameObjects(step);
+                Projectile* bullet=nullptr;
+                while(board.IterateProjectiles(bullet)){
+                    const auto id=board.mProjectiles.DataArrayGetID(bullet);
+                    if(std::find(shots.begin(),shots.end(),id)==shots.end())shots.push_back(id);
+                }
+                app.mEffectSystem->ProcessDeleteQueue();
+            }
+            auto* body=app.ReanimationGet(plant->mBodyReanimID);
+            Require(shots.size()>=10,"Winter Melon stopped firing after its first volleys");
+            Require(plant->mShootingCounter.mNanoseconds==0 && body->mLoopType==REANIM_LOOP && body->mAnimRate>0,
+                "Winter Melon remained in a held attack after its timer expired");
+            Require(body->mLastUpdateTimeNs==static_cast<long long>(board.mLevelTimeNs),"Winter Melon animation clock stopped following its owner");
+            std::cout<<"PASS repeated Winter Melon Hz="<<hz<<" shots="<<shots.size()<<" idle restored\n";
+        }
     }
     std::cout<<"PASS actual Plant attack catalog: 23 types, first-volley counts/types, area pulses and production at 100/30/240Hz and jitter\n";
     PlantSpecialCatalogRuntime(app);
@@ -3260,10 +3298,28 @@ void ZombieBehaviorCatalogRuntime(TestApp& app)
         }
         auto* boss=board.AddZombieInRow(ZOMBIE_BOSS,0,0);
         bool spawned=false,ball=false,rv=false,bungee=false,stomp=false;
+        unsigned long long iceballFreezeStart=0;
+        float iceballFreezeX=0;
+        bool iceballFreezeChecked=false;
         int stage=0;
         constexpr std::array<long long,7> jitter{1'234'567,18'765'433,4'000'003,32'333'333,7'891'011,5'432'109,11'111'111};
         for(int n=0;board.mLevelTimeNs<100'000'000'000ULL&&stage<5;++n)
         {
+            if(stage==1 && boss->mZombiePhase==PHASE_BOSS_HEAD_SPIT && boss->mBossFireBallReanimID==REANIMATIONID_NULL)
+                boss->mIsFireBall=false;
+            if(auto* rolling=app.ReanimationTryToGet(boss->mBossFireBallReanimID);
+                rolling && rolling->mLoopType==REANIM_LOOP && !iceballFreezeChecked)
+            {
+                if(!iceballFreezeStart){
+                    Require(!boss->mIsFireBall,"Boss freeze fixture must use the actual iceball variant");
+                    iceballFreezeStart=board.mLevelTimeNs;iceballFreezeX=rolling->mOverlayMatrix.m02;
+                    boss->HitIceTrap(board.mLevelTimeNs,clocks.mVisualTimeNs,board.mLevelTimeNs);
+                    Require(boss->IsImmobilizied(board.mLevelTimeNs),"Ice-shroom did not immobilize the boss");
+                }else if(board.mLevelTimeNs>=iceballFreezeStart+500'000'000ULL){
+                    Require(rolling->mOverlayMatrix.m02<iceballFreezeX-1,"Iceball stopped rolling when Ice-shroom froze its boss");
+                    iceballFreezeChecked=true;
+                }
+            }
             if(boss->mZombiePhase==PHASE_BOSS_IDLE)
             {
                 if(stage==0&&spawned) {boss->BossHeadAttack(board.mLevelTimeNs);stage=1;}
@@ -3295,6 +3351,7 @@ void ZombieBehaviorCatalogRuntime(TestApp& app)
         std::cout<<"Zombie Boss Hz="<<hz<<" stage="<<stage<<" spawn="<<spawned<<" ball="<<ball
             <<" rv="<<rv<<" bungee="<<bungee<<" stomp="<<stomp<<" phase="<<int(boss->mZombiePhase)<<'\n';
         Require(stage==5&&app.mGameScene==SCENE_PLAYING,"Boss entry/spawn/head/RV/bungee/stomp actions did not complete");
+        Require(iceballFreezeChecked,"Boss iceball freeze regression was not exercised");
     }
     std::cout<<"PASS actual Boss primary actions: entry, spawn, head ball, RV, bungee and stomp at four schedules\n";
     Require(allPassed,"Zombie primary behavior catalog has failed cases; inspect per-type results");
@@ -5832,10 +5889,21 @@ void LossRulesRuntime(TestApp& app)
             app.PreNewGame(entry.mode,false);app.mBoard->RemoveCutsceneZombies();app.StartPlaying();
             auto* board=app.mBoard;board->mDrawCount=1;board->mLevelTimeNs=31'234'567'890ULL;clocks.mBattleTimeNs=board->mLevelTimeNs;
             Zombie* intruder=nullptr;
+            Zombie* frozenZombie=nullptr;
+            Plant* frozenPlant=nullptr;
+            std::int64_t frozenPlantPhase=0,frozenZombiePhase=0;
             if(entry.cutscene) {
                 intruder=board->AddZombieInRow(ZOMBIE_NORMAL,1,0);intruder->mX=-120;intruder->mRootBindingGeneration=0;
+                frozenZombie=board->AddZombieInRow(ZOMBIE_NORMAL,1,0);frozenZombie->mX=600;
+                frozenPlant=board->NewPlant(5,1,SEED_PEASHOOTER,SEED_NONE);
+                frozenZombiePhase=app.ReanimationGet(frozenZombie->mBodyReanimID)->SamplePlayback().phaseNs;
+                frozenPlantPhase=app.ReanimationGet(frozenPlant->mBodyReanimID)->SamplePlayback().phaseNs;
             }
             board->ZombiesWon(intruder);
+            const float intruderStartX=intruder?intruder->mX:0;
+            const float intruderStartY=intruder?intruder->mY:0;
+            const float intruderStartAltitude=intruder?intruder->mAltitude:0;
+            bool intruderMoved=false;
             const auto heldBattle=board->mLevelTimeNs;
             Require(app.mBoardResult==BOARDRESULT_LOST,"ZombiesWon did not record a loss");
             if(entry.cutscene) Require(app.mGameScene==SCENE_ZOMBIES_WON&&!app.GetDialog(DIALOG_GAME_OVER),"Loss cutscene was skipped or showed its dialog immediately");
@@ -5847,6 +5915,13 @@ void LossRulesRuntime(TestApp& app)
                 const auto step=hz?1'000'000'000ULL/hz:jitter[sequence++%jitter.size()];
                 Sexy::ApplySimulationStep(step);app.UpdateFrames();elapsed+=step;
                 Require(board->mLevelTimeNs==heldBattle&&clocks.mBattleTimeNs==static_cast<std::int64_t>(heldBattle),"Loss movie advanced Board/Battle time");
+                if(intruder){
+                    intruderMoved|=intruder->mX!=intruderStartX || intruder->mY!=intruderStartY || intruder->mAltitude!=intruderStartAltitude;
+                    Require(frozenZombie->mX==600 && app.ReanimationGet(frozenZombie->mBodyReanimID)->SamplePlayback().phaseNs==frozenZombiePhase,
+                        "Loss cutscene moved or animated a non-winning zombie");
+                    Require(app.ReanimationGet(frozenPlant->mBodyReanimID)->SamplePlayback().phaseNs==frozenPlantPhase,
+                        "Loss cutscene advanced a frozen plant animation");
+                }
                 if(auto* movie=app.ReanimationTryToGet(board->mCutScene->mZombiesWonReanimID)) {
                     if(lossAnimation==ReanimationID::REANIMATIONID_NULL) {
                         lossAnimation=board->mCutScene->mZombiesWonReanimID;firstPhase=movie->SamplePlayback().phaseNs;
@@ -5859,6 +5934,7 @@ void LossRulesRuntime(TestApp& app)
             Require(dialog&&board->mPaused,"Loss movie never reached the Game Over dialog");
             if(entry.cutscene) Require(elapsed>=11'000'000'000ULL&&elapsed<11'040'000'000ULL&&animated&&board->mCutScene->IsCutSceneOver(),
                 "Loss movie timing or its visible animation did not complete");
+            if(entry.cutscene)Require(intruderMoved,"Winning zombie did not perform its walk while Board time was frozen");
             const auto heldVisual=clocks.mVisualTimeNs;
             for(int i=0;i<3;++i) {Sexy::ApplySimulationStep(33'345'678);app.UpdateFrames();}
             Require(app.GetDialog(DIALOG_GAME_OVER)==dialog&&board->mLevelTimeNs==heldBattle&&clocks.mVisualTimeNs==heldVisual,
@@ -7466,12 +7542,15 @@ void LandscapeHudRuntime(TestApp& app)
         if(width==1333) {
             target=render.CreateRenderImage(width,600);
             {GpuImageDrawScope destination(render,target);Graphics g(target);g.mColor=Color(255,0,255);g.FillRect(0,0,width,600);
-                g.Translate(-app.mScreenBounds.mX,0);board.DrawUIBottom(&g);}
+                g.Translate(-app.mScreenBounds.mX,0);board.DrawUITop(&g);}
             render.Flush();pixels=render.ReadImagePixels(*target);
-            Require((pixels.pixels[53*width+40]&0x00ffffff)==0x00ff00ff,"Native cards were still emitted below world objects");
-            {GpuImageDrawScope destination(render,target);Graphics g(target);g.Translate(-app.mScreenBounds.mX,0);board.DrawUITop(&g);}
+            // Match the PC stage, whose queue is raised above Dave during
+            // opening dialogue. Landscape geometry must not move cards/tools
+            // into TOP_UI, where Dave would paint over the shovel afterwards.
+            Require((pixels.pixels[53*width+40]&0x00ffffff)==0x00ff00ff,"Landscape cards still bypassed the PC bottom UI stage");
+            {GpuImageDrawScope destination(render,target);Graphics g(target);g.Translate(-app.mScreenBounds.mX,0);board.DrawUIBottom(&g);}
             render.Flush();pixels=render.ReadImagePixels(*target);
-            Require((pixels.pixels[53*width+40]&0x00ffffff)!=0x00ff00ff,"Native cards were missing from the top HUD layer");delete target;
+            Require((pixels.pixels[53*width+40]&0x00ffffff)!=0x00ff00ff,"Landscape cards were missing from the PC bottom UI stage");delete target;
         }
         {
             SeedChooserScreen chooser;

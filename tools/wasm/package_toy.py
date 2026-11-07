@@ -21,6 +21,7 @@ def main():
     parser.add_argument('--config', type=Path, default=ROOT / 'tools/wasm/game/web-config.json')
     parser.add_argument('--version', help='Explicit preview version; defaults to the native product version')
     parser.add_argument('--bilibili', action='store_true', help='Disable API bypass; game files remain identical')
+    parser.add_argument('--diagnostics', action='store_true', help='Separate diagnostic distribution with recording enabled by default')
     parser.add_argument('--webgpu', action='store_true', help='Package WebGPU; optionally add selectable WebGL through --webgl-build')
     parser.add_argument('--webgl-build', type=Path, help='Include selectable WebGL runtime, sharing the same data package')
     args = parser.parse_args()
@@ -33,21 +34,26 @@ def main():
         raise ValueError('rewardVideoBvid must be one BV string')
     if args.bilibili:
         config['bypassBilibiliChecks'] = False
+    config['diagnosticsDefault'] = args.diagnostics
     required = ['pvz-perf.js', 'pvz-perf.wasm', 'pvz-perf.data']
     for name in required:
         if not (args.build / name).is_file():
             raise FileNotFoundError(args.build / name)
     args.output.mkdir(parents=True, exist_ok=True)
     (args.output / "save-tool.html").unlink(missing_ok=True)
-    support_files = ['index.html', 'launcher.js', 'launcher.css', 'rewards.js', 'lineups.js', 'frame-rate.js', 'graphics.js', 'save-tools.js', 'save-tool-runtime.js', 'save-editor-host.js', 'progress-storage.js', 'text-input.js', 'serve.py',
+    support_files = ['index.html', 'launcher.js', 'launcher.css', 'startup.js', 'diagnostics.js', 'rewards.js', 'lineups.js', 'lineup-storage.js', 'frame-rate.js', 'graphics.js', 'save-tools.js', 'save-tool-runtime.js', 'save-editor-host.js', 'progress-storage.js', 'text-input.js', 'serve.py',
                      'start-local.cmd', 'start-local.sh', 'README.txt']
     for name in support_files:
         shutil.copyfile(ROOT / 'tools/wasm/game' / name, args.output / name)
     # The HTML tool is built and maintained in PvzDevTools; ship its artifact.
-    shutil.copyfile(ROOT / 'tools/bin/web/save-editor.html', args.output / 'save-editor.html')
+    editor_text = (ROOT / 'tools/bin/web/save-editor.html').read_bytes().decode('utf-8')
+    (args.output / 'save-editor-document.js').write_text(
+        'export default ' + json.dumps(editor_text, ensure_ascii=False) + ';\n', encoding='utf-8')
+    (args.output / 'save-editor.html').unlink(missing_ok=True)
     shutil.copyfile(ROOT / 'tools/bin/web/manifest.json', args.output / 'save-editor-manifest.json')
     shutil.copyfile(ROOT / 'tools/bin/web/save-codec.js', args.output / 'save-codec.js')
-    support_files += ['save-editor.html', 'save-editor-manifest.json', 'save-codec.js']
+    shutil.copyfile(ROOT / 'tools/bin/web/lineup-library.js', args.output / 'lineup-library.js')
+    support_files += ['save-editor-document.js', 'save-editor-manifest.json', 'save-codec.js', 'lineup-library.js']
     readme = args.output / 'README.txt'
     text = readme.read_text(encoding='utf-8')
     readme.write_text('pvz_perf Web v' + version + '\n' + text.split('\n', 1)[1], encoding='utf-8')
@@ -117,6 +123,8 @@ def main():
         'backend': 'WebGPU' if args.webgpu else 'WebGL2',
         'webgl_fallback': bool(args.webgl_build),
         'source_commit': source_commit,
+        'source_dirty': bool(subprocess.check_output(
+            ['git', 'status', '--porcelain', '--', 'tools/wasm', 'pvzPerf', 'CMake'], cwd=ROOT, text=True).strip()),
         'source_url': 'https://github.com/YuHao2006/pvz_perf/tree/' + source_commit,
         'bypass_bilibili_checks': config['bypassBilibiliChecks'],
         'files': {name: {'bytes': (args.output / name).stat().st_size,

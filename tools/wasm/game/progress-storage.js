@@ -4,10 +4,10 @@
 const profileName=name=>/^(users\.dat|user[1-9]\d*\.dat64)$/.test(name);
 const headKey='pvz_progress_v1',chunkSize=1000,chunkCount=60;
 const key=(slot,index)=>'pvz_progress_'+slot+'_'+index;
-const encode=bytes=>{let text='';for(let i=0;i<bytes.length;i+=16384)text+=String.fromCharCode(...bytes.subarray(i,i+16384));return btoa(text)};
-const decode=text=>Uint8Array.from(atob(text),c=>c.charCodeAt(0));
-async function digest(bytes){return [...new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))].map(v=>v.toString(16).padStart(2,'0')).join('')}
-async function unpack(bytes){
+export const encode=bytes=>{let text='';for(let i=0;i<bytes.length;i+=16384)text+=String.fromCharCode(...bytes.subarray(i,i+16384));return btoa(text)};
+export const decode=text=>Uint8Array.from(atob(text),c=>c.charCodeAt(0));
+export async function digest(bytes){return [...new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))].map(v=>v.toString(16).padStart(2,'0')).join('')}
+export async function unpack(bytes){
  const reader=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip')).getReader(),parts=[];let size=0;
  try{for(;;){const {done,value}=await reader.read();if(done)break;size+=value.length;if(size>2*1024*1024)throw Error('云端进度解压后过大');parts.push(value)}}finally{reader.releaseLock()}
  const out=new Uint8Array(size);let offset=0;for(const part of parts){out.set(part,offset);offset+=part.length}return JSON.parse(new TextDecoder().decode(out));
@@ -34,13 +34,13 @@ async function backup(operation,value){
   request.onsuccess=()=>{result=request.result};tx.oncomplete=()=>resolve(result);tx.onerror=tx.onabort=()=>reject(tx.error||Error('进度备份失败'));
  })}finally{db.close()}
 }
-async function cloudCall(operation){
+export async function cloudCall(operation){
  for(let attempt=0;;++attempt)try{return await operation()}catch(error){
   if(Number(error?.code)!==307044||attempt>=2)throw error;
   await new Promise(resolve=>setTimeout(resolve,1000*2**attempt+Math.random()*250));
  }
 }
-function deadline(operation){let timer;return Promise.race([operation,new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('云端进度请求超时')),15000)})]).finally(()=>clearTimeout(timer))}
+export function deadline(operation){let timer;return Promise.race([operation,new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('云端进度请求超时')),15000)})]).finally(()=>clearTimeout(timer))}
 export class ProgressStorage {
  constructor(fs,root,{cloudEnabled,provideToy,report,uploadState=()=>{}}){Object.assign(this,{fs,root,cloudEnabled,provideToy,report,uploadState});this.head=null;this.saving=null;this.pending=null;this.lastLocal='';this.lastCloud='';this.needsChoice=false}
  snapshot(){

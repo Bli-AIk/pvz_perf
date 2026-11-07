@@ -1,19 +1,24 @@
 {
   "tool": "PvzDevTools visual save editor",
-  "version": "0.1.2+8170704",
-  "source_commit": "8170704c130ceef77dce4b317e47541cabd84531",
-  "source_url": "https://github.com/YuHao2006/PvzDevTools/tree/8170704c130ceef77dce4b317e47541cabd84531/saveEditor",
-  "bytes": 44428,
-  "sha256": "7be7f8736981997e79834f4330e3e8e34960b013c3ef4ccc8c117f3d5a3d7091",
-  "development": true,
+  "version": "0.1.2+6b74a7c",
+  "source_commit": "6b74a7cc670d04d89b80f78408bf972409542beb",
+  "source_url": "https://github.com/YuHao2006/PvzDevTools/tree/6b74a7cc670d04d89b80f78408bf972409542beb/saveEditor",
+  "bytes": 49631,
+  "sha256": "26fd28c1beb0514b14c7644df99d3159ca6e2c4f006c9a52f620911e0991a89d",
+  "development": false,
   "files": {
     "save-editor.html": {
-      "bytes": 44428,
-      "sha256": "7be7f8736981997e79834f4330e3e8e34960b013c3ef4ccc8c117f3d5a3d7091"
+      "bytes": 49631,
+      "sha256": "26fd28c1beb0514b14c7644df99d3159ca6e2c4f006c9a52f620911e0991a89d"
     },
     "save-codec.js": {
       "bytes": 16962,
       "sha256": "36de79fb91e4db8bf912edf37a99a7c60bace9d064a37f5df0c81cc32fd975dd"
+    },
+    "lineup-library.js": {
+      "bytes": 2011,
+      "sha256": "406a977fc3d6f26ff97c6cd68a18951de9ebfada9192fe2707a8822a6e642190"
     }
-  }
+  },
+  "source_dirty": false
 }

@@ -5228,7 +5228,11 @@ void Zombie::UpdatePlaying(std::int64_t ownerNowNs, std::int64_t visualNowNs, st
         mAltitudeMotion.bound = false;
         // A root walker may have accumulated an additional linear offset
         // (for example on a ladder). Absorb it when binding the resumed root.
-        mRootBindingGeneration = 0;
+        // Bosses use this binding for the independent rolling ice/fire ball.
+        // Resetting it every frozen step reanchors the ball at its current
+        // phase and cancels all displacement, although UpdateBoss still runs.
+        if ((ZombieFlagsOf(mZombieType) & ZombieFlags::Boss) == 0)
+            mRootBindingGeneration = 0;
     }
 
     if (((ZombieFlagsOf(mZombieType) & ZombieFlags::Boss) != 0))
@@ -9988,6 +9992,10 @@ void Zombie::PlayDeathAnim(std::int64_t ownerNowNs, std::int64_t visualNowNs, st
 
     ReanimTrackId aDeathTrackName = ReanimTrackId::anim_death;
     int aDeathAnimHit = Rand(100);
+    // GOTY 1073 retains the rare choking death: 0x543F09 tests Rand(100)==99,
+    // 0x543F12 checks anim_superlongdeath, and 0x543F43 selects that track.
+    // The shipped main.pak also retains its active frame range 292..428.
+    // Keep the original eligibility checks; this is not a restored unused egg.
     bool aCanDoSuperLongDeath = mApp->HasFinishedAdventure() || mBoard->mLevel > 5;
     if (mInPool && aBodyReanim->TrackExists(ReanimTrackId::anim_waterdeath))
     {
@@ -11165,8 +11173,11 @@ void Zombie::UpdateBossFireball(std::int64_t ownerNowNs, std::int64_t visualNowN
     if (aFireballReanim == nullptr)
         return;
 
-    // Bosses do not use walking motion, so their compact root binding belongs
-    // to the active fireball while it is alive.
+    // 每个僵王同时至多存在一个冰球或火球：BossHeadSpit 先销毁旧球，
+    // BossHeadSpitContact 断言没有旧球后创建新球，两者共用 mBossFireBallReanimID。
+    // 僵王自身不行走，故复用其根运动绑定来记录这唯一一颗球的位移。
+    // 球不随僵王本体冻结；UpdatePlaying 的冻结清理必须保留此绑定，
+    // 否则每拍都会重新锚定当前位置，抵消球本应产生的位移。
     if (!mRootBindingGeneration || mRootBindingGeneration != aFireballReanim->mPlaybackGeneration || mRootScale != -1.0f)
     {
         mRootOriginX = aFireballReanim->mOverlayMatrix.m02 -

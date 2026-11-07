@@ -1,0 +1,71 @@
+SHA256: 5f650f52d12751e08b63e590edb0d9b9f09d087cea900baa0eb39e4af8eda251
+00543EA9: push 0x64
+00543EAB: mov esi, 0x6f3a30
+00543EB0: call 0x5ff2a0
+00543EB5: mov ebp, eax
+00543EB7: mov eax, dword ptr [edi]
+00543EB9: add esp, 4
+00543EBC: call 0x457610
+00543EC1: test al, al
+00543EC3: jne 0x543ed5
+00543EC5: mov eax, dword ptr [edi + 4]
+00543EC8: cmp dword ptr [eax + 0x5568], 5
+00543ECF: mov byte ptr [esp + 0x1c], bl
+00543ED3: jle 0x543eda
+00543ED5: mov byte ptr [esp + 0x1c], 1
+00543EDA: cmp byte ptr [edi + 0xbd], bl
+00543EE0: je 0x543f09
+00543EE2: mov ebx, dword ptr [esp + 0x14]
+00543EE6: push 0x6f3a50
+00543EEB: call 0x4779e0
+00543EF0: test al, al
+00543EF2: je 0x543f09
+00543EF4: push 0
+00543EF6: push 0x6e62d8
+00543EFB: mov ecx, edi
+00543EFD: mov esi, 0x6f3a50
+00543F02: call 0x534960
+00543F07: jmp 0x543f6a
+00543F09: cmp ebp, 0x63
+00543F0C: jne 0x543f4e
+00543F0E: mov ebx, dword ptr [esp + 0x14]
+00543F12: push 0x6f3a60
+00543F17: call 0x4779e0
+00543F1C: test al, al
+00543F1E: je 0x543f53
+00543F20: cmp byte ptr [esp + 0x1c], 0
+00543F25: je 0x543f53
+00543F27: cmp dword ptr [edi + 0xac], 0
+00543F2E: jne 0x543f53
+00543F30: mov ebx, dword ptr [edi + 4]
+00543F33: call 0x40b4a0
+00543F38: cmp eax, 5
+00543F3B: jg 0x543f53
+00543F3D: fld dword ptr [0x6fdf1c]
+00543F43: mov esi, 0x6f3a60
+00543F48: fstp dword ptr [esp + 0x10]
+00543F4C: jmp 0x543f6a
+00543F4E: cmp ebp, 0x32
+00543F51: jle 0x543f6a
+00543F53: mov ebx, dword ptr [esp + 0x14]
+00543F57: push 0x6f3a74
+00543F5C: call 0x4779e0
+00543F61: test al, al
+00543F63: je 0x543f6a
+00543F65: mov esi, 0x6f3a74
+00543F6A: fld dword ptr [esp + 0x10]
+00543F6E: push ecx
+00543F6F: fstp dword ptr [esp]
+00543F72: push 0x14
+00543F74: push 3
+00543F76: push esi
+00543F77: call 0x539190
+00543F7C: push -1
+00543F7E: push 0x6e613c
+00543F83: mov eax, edi
+00543F85: call 0x543bb0
+00543F8A: pop edi
+00543F8B: pop esi
+00543F8C: pop ebp
+00543F8D: pop ebx
+00543F8E: add esp, 8

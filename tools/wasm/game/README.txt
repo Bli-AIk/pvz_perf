@@ -14,13 +14,19 @@ check is not encryption; the template saves are included in save-bundle.json.
 Graphics defaults to WebGPU when available, otherwise WebGL 2. Select either
 backend on the setup screen; changing it reloads setup and keeps browser saves.
 All bundled APIs are checked before populating the selector, including WebGL 2
-RGBA16F render targets. Unavailable backends are omitted; an unavailable saved
+RGBA16F render targets, blending, linear sampling and pixel readback. Unavailable backends are omitted; an unavailable saved
 choice is reset to auto. An error is shown if no bundled backend is usable.
 If actual game initialization
 fails after the probe, the page shows the error, browser details and a WebGL retry
 button when available. Copy that error report when asking for help with a black screen.
+The startup status remains visible until resource initialization and a later game
+frame complete. Its foreground-only watchdog and graphics readbacks stop before
+normal play. AudioWorklet initialization connects the graph before waiting for
+readiness, and failed initialization can be retried after reporting an error.
 
 Custom Save opens on user progress. Add/delete users or edit IDs, names and progress without running gameplay. Garden and Zombatar payloads are retained. No perfect-profile claim action is exposed.
+The editor document is packaged as save-editor-document.js and loaded into
+srcdoc; no second HTML navigation or Toy password page is required.
 Settings are retained. Custom endless uses Toolkit lineup codes and supports
 6 scenes, completed flags (default 128), RNG seed (default 114514), and sun (0..9990, default 9990).
 Generated checkpoints use full-health plants, have no lawn mowers, and resume into seed selection.
