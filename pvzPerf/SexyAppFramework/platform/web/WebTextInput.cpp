@@ -9,12 +9,13 @@
 #include <string>
 
 EM_JS(void, WebShowEditor, (const char* value, int session, int limit, int cursor, int selection), {
-    Module.pvzTextInput.show(UTF8ToString(value),session,limit,cursor,selection);
+    Module.pvzTextInput.show(UTF8ToString(Number(value)),session,limit,cursor,selection);
 });
-EM_JS(void, WebSyncEditor, (const char* value), { Module.pvzTextInput.sync(UTF8ToString(value)); });
+EM_JS(void, WebSyncEditor, (const char* value), { Module.pvzTextInput.sync(UTF8ToString(Number(value))); });
 EM_JS(void, WebHideEditor, (), { Module.pvzTextInput.hide(); });
 EM_JS(int, WebTakeEdit, (char* buffer, int capacity, int* metadata), {
     const edit=Module.pvzTextInput.take();if(!edit)return 0;
+    buffer=Number(buffer);metadata=Number(metadata);
     const count=Math.min(edit.text.length,capacity-1);
     for(let i=0;i<count;++i)HEAPU8[buffer+i]=edit.text.charCodeAt(i);
     HEAPU8[buffer+count]=0;

@@ -8,6 +8,7 @@ set(GAME "${ROOT}/pvzPerf")
 set(FRAMEWORK "${GAME}/SexyAppFramework")
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+option(PVZ_WEB_MEMORY64 "Build a native Memory64 browser diagnostic runtime" OFF)
 set(PVZ_CONFIG_TARGET_SYSTEM Web)
 set(PVZ_CONFIG_WINDOW_SYSTEM Browser)
 set(PVZ_WEB_BACKEND "WEBGL" CACHE STRING "Browser graphics backend: WEBGL or WEBGPU")
@@ -72,4 +73,8 @@ target_link_options(pvz-perf PRIVATE -Oz -flto -fexceptions -sUSE_SDL=2 -sUSE_ZL
     -sSTACK_SIZE=4194304 -sASYNCIFY=1 -sASYNCIFY_STACK_SIZE=131072 -sEXIT_RUNTIME=0
     "-sEXPORTED_RUNTIME_METHODS=['FS','IDBFS','callMain','addRunDependency','removeRunDependency']" -sINVOKE_RUN=0 -lidbfs.js
     "--preload-file=${PVZ_WEB_PAK}@/main.pak64")
+if(PVZ_WEB_MEMORY64)
+    target_compile_options(pvz-perf PRIVATE -sMEMORY64=1)
+    target_link_options(pvz-perf PRIVATE -sMEMORY64=1)
+endif()
 set_target_properties(pvz-perf PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/site")

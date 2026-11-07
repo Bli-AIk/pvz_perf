@@ -13,7 +13,7 @@ let progressStorage,lineupStorage,cloudUploads=0;
 let diagnostics;
 const diagnosticsReady=import('./diagnostics.js').then(({createDiagnostics})=>{
  diagnostics=createDiagnostics({storage:localStorage,defaultEnabled:window.PVZWebConfig?.diagnosticsDefault===true,
-  environment:()=>({version:window.PVZGraphicsConfig?.version,userAgent:navigator.userAgent.replace(/\b(Buvid|sessionID)\/\S+/gi,'$1/[redacted]'),platform:navigator.platform}),
+  environment:()=>({version:window.PVZGraphicsConfig?.version,memoryModel:window.PVZGraphicsConfig?.memory64?'wasm64':'wasm32',userAgent:navigator.userAgent.replace(/\b(Buvid|sessionID)\/\S+/gi,'$1/[redacted]'),platform:navigator.platform}),
   readState:()=>{
    const audio=Module?.pvzMusic,context=audio?.context;
    return {phase:startupPhase,backend:Module?.pvzSelectedBackend,running,hidden:document.hidden,
@@ -347,6 +347,8 @@ form.addEventListener('submit',async event=>{
 window.addEventListener('error',event=>showError(event.error||event.message));window.addEventListener('unhandledrejection',event=>showError(event.reason));
 async function boot(){
  const config=window.PVZGraphicsConfig||{webgpu:false};
+ if(config.memory64&&!WebAssembly.validate(new Uint8Array([0,97,115,109,1,0,0,0,5,3,1,4,1])))
+  throw Error('此诊断包需要 Wasm Memory64；当前浏览器不支持。64 位手机或操作系统不等于浏览器支持 Memory64。请导出诊断记录反馈。');
  if(config.version){document.title='pvz_perf · 网页 v'+config.version;document.getElementById('web-version').textContent='网页 v'+config.version}
  const dropdown=document.getElementById('graphics-backend');
  document.getElementById('graphics-field').hidden=false;

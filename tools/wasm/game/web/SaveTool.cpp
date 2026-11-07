@@ -28,8 +28,8 @@ namespace {
 using Json = nlohmann::json;
 EM_ASYNC_JS(int, ReadMusicStart, (const unsigned char* data, int size, int order, float* tempo, float* speed), {
     try {
-        const state=await parent.PVZSaveToolJob.readMusicStart(HEAPU8.slice(data,data+size),order);
-        HEAPF32[tempo>>2]=state.tempo;HEAPF32[speed>>2]=state.speed;return 1;
+        const state=await parent.PVZSaveToolJob.readMusicStart(HEAPU8.slice(Number(data),Number(data)+size),order);
+        HEAPF32[Number(tempo)/4]=state.tempo;HEAPF32[Number(speed)/4]=state.speed;return 1;
     } catch(error) { console.error('Offline music initialization:',error);return 0; }
 });
 void ReleaseToolApp() {
@@ -180,11 +180,11 @@ int RunWebSaveTool() {
         else Require(LawnLoadGame(app.mBoard,"/tool/input.dat64"),"Cannot load DAT64 in offline extractor");
         const auto result=(request.at("op")=="validate" ? Json{{"mode",mode},{"scene",static_cast<int>(app.mBoard->mBackground)}} : Extract(*app.mBoard)).dump();
         ReleaseToolApp();
-        EM_ASM({Module.pvzToolComplete(UTF8ToString($0));},result.c_str());
+        EM_ASM({Module.pvzToolComplete(UTF8ToString(Number($0)));},result.c_str());
         // The caller also destroys the iframe and remaining Wasm memory.
         return 0;
     } catch(const std::exception& error) {
         const std::string message=error.what();ReleaseToolApp();
-        EM_ASM({Module.pvzToolFail(UTF8ToString($0));},message.c_str());return 1;
+        EM_ASM({Module.pvzToolFail(UTF8ToString(Number($0)));},message.c_str());return 1;
     }
 }

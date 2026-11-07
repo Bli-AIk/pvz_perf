@@ -9,10 +9,10 @@
 #include <stdexcept>
 
 EM_JS(void, web_sound_load, (int id, const unsigned char* data, int size), {
-    Module.pvzMusic.sound.load(id,HEAPU8.slice(data,data+size));
+    Module.pvzMusic.sound.load(id,HEAPU8.slice(Number(data),Number(data)+size));
 });
 EM_JS(void, web_sound_pcm, (int id, const float* data, int samples, int channels, int rate), {
-    Module.pvzMusic.sound.loadPCM(id,HEAPF32.subarray(data>>2,(data>>2)+samples),channels,rate);
+    Module.pvzMusic.sound.loadPCM(id,HEAPF32.subarray(Number(data)/4,Number(data)/4+samples),channels,rate);
 });
 EM_JS(void, web_sound_release, (int id), { Module.pvzMusic.sound.release(id); });
 EM_JS(int, web_sound_play, (int id,int channel,int loop,double volume,double pitch,int pan), {

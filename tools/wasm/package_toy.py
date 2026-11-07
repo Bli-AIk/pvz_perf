@@ -14,6 +14,36 @@ import zipfile
 ROOT = Path(__file__).resolve().parents[2]
 
 
+def memory64_runtime(path):
+    data = path.read_bytes()
+    if data[:8] != b'\0asm\1\0\0\0':
+        raise ValueError(f'Invalid Wasm module: {path}')
+    cursor = 8
+
+    def uleb():
+        nonlocal cursor
+        value = shift = 0
+        while True:
+            byte = data[cursor]
+            cursor += 1
+            value |= (byte & 127) << shift
+            if byte < 128:
+                return value
+            shift += 7
+
+    while cursor < len(data):
+        section = data[cursor]
+        cursor += 1
+        size = uleb()
+        end = cursor + size
+        if section == 5:
+            if uleb() != 1:
+                raise ValueError(f'Expected one game linear memory: {path}')
+            return bool(uleb() & 4)
+        cursor = end
+    raise ValueError(f'No defined game linear memory: {path}')
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--build', type=Path, default=ROOT / 'out/wasm/game/site')
@@ -22,6 +52,7 @@ def main():
     parser.add_argument('--version', help='Explicit preview version; defaults to the native product version')
     parser.add_argument('--bilibili', action='store_true', help='Disable API bypass; game files remain identical')
     parser.add_argument('--diagnostics', action='store_true', help='Separate diagnostic distribution with recording enabled by default')
+    parser.add_argument('--memory64', action='store_true', help='Require native Wasm Memory64 (diagnostic package, no wasm32 fallback)')
     parser.add_argument('--webgpu', action='store_true', help='Package WebGPU; optionally add selectable WebGL through --webgl-build')
     parser.add_argument('--webgl-build', type=Path, help='Include selectable WebGL runtime, sharing the same data package')
     args = parser.parse_args()
@@ -39,6 +70,9 @@ def main():
     for name in required:
         if not (args.build / name).is_file():
             raise FileNotFoundError(args.build / name)
+    for build in [args.build, *([args.webgl_build] if args.webgl_build else [])]:
+        if memory64_runtime(build / 'pvz-perf.wasm') != args.memory64:
+            raise ValueError(f'Wasm memory model does not match --memory64: {build}')
     args.output.mkdir(parents=True, exist_ok=True)
     (args.output / "save-tool.html").unlink(missing_ok=True)
     support_files = ['index.html', 'launcher.js', 'launcher.css', 'startup.js', 'diagnostics.js', 'rewards.js', 'lineups.js', 'lineup-storage.js', 'frame-rate.js', 'graphics.js', 'save-tools.js', 'save-tool-runtime.js', 'save-editor-host.js', 'progress-storage.js', 'text-input.js', 'serve.py',
@@ -70,7 +104,7 @@ def main():
         shutil.copyfile(args.webgl_build / 'pvz-perf.js', args.output / 'pvz-perf-webgl.js')
         (args.output / 'pvz-perf-webgl.wasm.gz').write_bytes(gzip.compress((args.webgl_build / 'pvz-perf.wasm').read_bytes(), compresslevel=9, mtime=0))
         files += ['pvz-perf-webgl.js', 'pvz-perf-webgl.wasm.gz']
-    graphics = {'version': version, 'webgpu': args.webgpu, 'fallback': bool(args.webgl_build)}
+    graphics = {'version': version, 'webgpu': args.webgpu, 'fallback': bool(args.webgl_build), 'memory64': args.memory64}
     (args.output / 'graphics-config.js').write_text('window.PVZGraphicsConfig = ' + json.dumps(graphics) + ';\n', encoding='utf-8')
     files.append('graphics-config.js')
     license_path = args.output / 'licenses/stb-vorbis.txt'
@@ -122,6 +156,7 @@ def main():
         'version': version,
         'backend': 'WebGPU' if args.webgpu else 'WebGL2',
         'webgl_fallback': bool(args.webgl_build),
+        'memory_model': 'wasm64' if args.memory64 else 'wasm32',
         'source_commit': source_commit,
         'source_dirty': bool(subprocess.check_output(
             ['git', 'status', '--porcelain', '--', 'tools/wasm', 'pvzPerf', 'CMake'], cwd=ROOT, text=True).strip()),

@@ -47,7 +47,7 @@ int main(int argc, char** argv) {
         EM_ASM({ Module.pvzOnQuit?.(); });
     } catch (const std::exception& error) {
         emscripten_log(EM_LOG_ERROR, "pvz_perf Web: %s", error.what());
-        EM_ASM({ Module.pvzOnError?.(UTF8ToString($0)); }, error.what());
+        EM_ASM({ Module.pvzOnError?.(UTF8ToString(Number($0))); }, error.what());
         return 1;
     } catch (...) {
         EM_ASM({ Module.pvzOnError?.('游戏初始化或运行时出现未知异常'); });
