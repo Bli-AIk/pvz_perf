@@ -12,6 +12,15 @@ export class MusicMixer {
   return new MusicMixer(api,rate);
  }
  constructor(api,rate){this.api=api;this.rate=rate;this.voices=new Map();this.output=api._malloc(8192*8);this.frames=0}
+ prime(v){
+  if(v.primed)return;
+  // OpenMPT executes destination-row commands on the first read, whereas
+  // BASS resolves them during play/seek. Keep that frame for normal rendering
+  // so later tempo/speed restoration is not overwritten or one sample lost.
+  const count=this.api._openmpt_module_read_interleaved_float_stereo(v.mod,this.rate,1,this.output);
+  const pcm=new Float32Array(this.api.heap().buffer,this.output,2);
+  v.pendingFrame=count===1;v.firstLeft=pcm[0];v.firstRight=pcm[1];v.primed=true;
+ }
  command(c){
   const m=this.api;
   if(c.op==='load'){
@@ -30,19 +39,19 @@ export class MusicMixer {
    case 'free':m._openmpt_module_ext_destroy(v.ext);this.voices.delete(c.id);break;
    case 'play':
     if(c.restart){m._openmpt_module_set_position_order_row(v.mod,0,0);v.primed=false;v.pendingFrame=false}
-    // BASS_ChannelPlay processes the destination row before the controller
-    // restores saved tempo/speed. OpenMPT defers it until read: prime one frame
-    // here so row commands cannot overwrite the subsequent restored values.
-    if(!v.primed){
-     const count=m._openmpt_module_read_interleaved_float_stereo(v.mod,this.rate,1,this.output);
-     const pcm=new Float32Array(m.heap().buffer,this.output,2);
-     v.pendingFrame=count===1;v.firstLeft=pcm[0];v.firstRight=pcm[1];v.primed=true;
-    }
+    this.prime(v);
     v.playing=true;v.paused=false;break;
    case 'stop':v.playing=false;v.paused=false;break;
    case 'pause':v.paused=true;break;
    case 'resume':v.paused=false;v.playing=true;break;
-   case 'seek':m._openmpt_module_set_position_order_row(v.mod,c.order,c.row);for(const [channel,volume] of v.channels)call(8,channel,volume);v.revision=c.revision;v.primed=false;v.pendingFrame=false;break;
+   case 'seek':
+    m._openmpt_module_set_position_order_row(v.mod,c.order,c.row);
+    for(const [channel,volume] of v.channels)call(8,channel,volume);
+    v.revision=c.revision;v.primed=false;v.pendingFrame=false;
+    // Night music switches the already-playing silent voice to order 76/77
+    // without another Play call. Resolve its row before MusicResync sets BPM.
+    if(v.playing)this.prime(v);
+    break;
    case 'loop':m._openmpt_module_set_repeat_count(v.mod,c.value?-1:0);break;
    case 'gain':v.gain=c.value;break;
    case 'channel':v.channels.set(c.channel,c.value);call(8,c.channel,c.value);break;
