@@ -22,6 +22,26 @@ class Worklet{
 globalThis.AudioContext=Context;globalThis.AudioWorkletNode=Worklet;
 try{
  let engine=await prepareMusic();await engine.unlock();assert.notEqual(await engine.flush(),false);assert.equal(!!engine.disabled,false);
+ const module=engine.load(new Uint8Array([1]),false);
+ const voice=engine.voices.get(module);
+ assert.equal(engine.command(module,'position'),0);
+ assert.equal(engine.command(module,'pscaler',4),1);
+ for(const [order,row] of [[0,0],[0,31],[0,32],[1,63]]){
+  engine.command(module,'seek',(order|(row<<16))>>>0);
+  assert.equal(engine.command(module,'position'),(order|((row*4)<<16))>>>0,
+   'BASS position scaler must multiply decoded rows without scaling Seek');
+  assert.equal(voice.position>>>16,row,'Cached decoder position must stay raw');
+ }
+ engine.receive({voices:[{id:module,revision:voice.revision,position:(1|(32<<16))>>>0}]});
+ assert.equal(engine.command(module,'position'),(1|(128<<16))>>>0,'Worklet reports must retain the configured scaler');
+ voice.position=0xffffffff;assert.equal(engine.command(module,'position'),0xffffffff);
+ assert.equal(engine.command(module,'pscaler',0),0);
+ assert.equal(engine.command(module,'pscaler',1),1);
+ engine.command(module,'seek',(2|(40<<16))>>>0);
+ assert.equal(engine.command(module,'position'),(2|(40<<16))>>>0);
+ engine.command(module,'free');
+ console.log('Web BASS position scaler: raw decoder rows, 4x progress, half-pattern entry, row wrap, pause seek and invalid sentinel passed');
+
  for(const mode of ['silent','error','processor-error']){
   behavior=mode;engine=await prepareMusic();await engine.unlock();const warnings=[];engine.onWarning=message=>warnings.push(message);
   await assert.doesNotReject(async()=>assert.equal(await engine.flush(),false),'Audio failure must not reject the game call');

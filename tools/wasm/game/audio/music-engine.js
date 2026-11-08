@@ -87,7 +87,7 @@ class MusicEngine {
  }
  load(data,stream){
   if(stream)throw Error('OGG streams must be decoded by Wasm');
-  const id=this.next++,v={id,stream,playing:false,paused:false,position:0,revision:0,tempo:155,speed:3,gain:0,flags:0,offset:0};this.voices.set(id,v);
+  const id=this.next++,v={id,stream,playing:false,paused:false,position:0,positionScale:1,revision:0,tempo:155,speed:3,gain:0,flags:0,offset:0};this.voices.set(id,v);
   this.send({op:'load',id,data});
   return id;
  }
@@ -107,7 +107,18 @@ class MusicEngine {
   const v=this.voices.get(id);if(!v)return 0;
   if(op==='free'){v.source?.stop();v.gainNode?.disconnect();if(!v.stream)this.send({id,op});this.voices.delete(id);return 1}
   if(op==='state')return v.paused?3:v.playing?1:0;
-  if(op==='position')return v.stream?Math.floor(this.streamPosition(v)*v.byteRate):v.position;
+  if(op==='position'){
+   if(v.stream)return Math.floor(this.streamPosition(v)*v.byteRate);
+   // BASS MUSIC_PSCALER multiplies returned row progress, not Seek's raw row.
+   // The 1073 controller requests scale 4 (half-pattern=128, last row=252).
+   // Decoder/cache positions stay raw, so pause -> row/4 -> Seek round-trips.
+   if(v.position===0xffffffff||v.position===-1)return 0xffffffff;
+   return ((v.position&65535)|((((v.position>>>16)*v.positionScale)&65535)<<16))>>>0;
+  }
+  if(op==='pscaler'){
+   if(v.stream||!Number.isInteger(value)||value<1)return 0;
+   v.positionScale=value;return 1;
+  }
   if(op==='tempoGet')return v.tempo;if(op==='speedGet')return v.speed;
   if(op==='tempo')v.tempo=value;if(op==='speed')v.speed=value;
   if(op==='flags'){const old=v.flags;v.flags=(old&~extra)|(value&extra);if(v.source)v.source.loop=!!(v.flags&4);if(!v.stream)this.send({id,op:'loop',value:!!(v.flags&4)});return v.flags}

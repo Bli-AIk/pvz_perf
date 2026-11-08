@@ -186,7 +186,52 @@ int main(int argc, char** argv)
         } detach{app};
         Board board(&app);
         music.PlayMusic(MUSIC_TUNE_DAY_GRASSWALK);
-        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+        auto& dayMain = playback.mMusicSlots[MUSIC_FILE_MAIN_MUSIC]->mPlayback;
+        const auto dayRow = [&](unsigned order, unsigned row) {
+            dayMain.Pause();
+            Require(dayMain.Seek(MAKELONG(order, row), BASS_POS_MUSIC_ORDER), "Cannot seek day fixture row");
+            const auto normalized = music.GetMusicOrder(MUSIC_FILE_MAIN_MUSIC);
+            if (normalized != unsigned(MAKELONG(order, row * 4)))
+                std::cerr << "Day seek diagnostics: wanted=" << order << ':' << row
+                    << " BASS-scaled=" << dayMain.Position(BASS_POS_MUSIC_ORDER) << " normalized=" << normalized << '\n';
+            Require(normalized == unsigned(MAKELONG(order, row * 4)),
+                "Real BASS rows were not normalized to the controller's quarter-row contract");
+        };
+        dayRow(0, 31);
+        music.mBurstOverride = 1;
+        music.StartBurst();
+        app.mApplicationTimeNs = music.mBurstEndTimeNs - 500'000'000;
+        music.UpdateMusicBurst(app.mApplicationTimeNs);
+        Require(music.mMusicDrumsState == MUSIC_DRUMS_ON_QUEUED && Gain(playback, MUSIC_FILE_DRUMS) == 0,
+            "Real daytime drums did not wait for the next half-pattern");
+        dayRow(0, 32);
+        music.UpdateMusicBurst(app.mApplicationTimeNs);
+        Require(music.mMusicDrumsState == MUSIC_DRUMS_ON && Gain(playback, MUSIC_FILE_DRUMS) == 1,
+            "Real daytime drums did not enter at decoder row 32");
+        app.mApplicationTimeNs += 1'000'000'000;
+        music.UpdateMusicBurst(app.mApplicationTimeNs);
+        app.mApplicationTimeNs += 9'000'000'000;
+        music.mBurstOverride = 2;
+        music.UpdateMusicBurst(app.mApplicationTimeNs);
+        Require(music.mMusicDrumsState == MUSIC_DRUMS_OFF_QUEUED,
+            "Real daytime drums did not queue their release");
+        dayRow(1, 0);
+        music.UpdateMusicBurst(app.mApplicationTimeNs);
+        Require(music.mMusicDrumsState == MUSIC_DRUMS_FADING,
+            "Real daytime drums did not release across pattern wrap");
+        app.mApplicationTimeNs += 500'000'000;
+        music.UpdateMusicBurst(app.mApplicationTimeNs);
+        Require(music.mMusicDrumsState == MUSIC_DRUMS_OFF && Gain(playback, MUSIC_FILE_DRUMS) == 0,
+            "Real daytime drums remained audible after release");
+        dayRow(1, 40);
+        music.GameMusicPause(true);
+        Require(HIWORD(music.mPauseOffset) == 40,
+            "Day pause stored a row scaled down twice");
+        music.GameMusicPause(false);
+        dayMain.Pause();
+        Require(HIWORD(dayMain.Position(BASS_POS_MUSIC_ORDER)) / 4 == 40,
+            "Day resume returned to a different raw decoder row");
+        std::cout << "PASS production day BASS: raw row 31/32 entry, pattern-wrap release, zero gain and exact pause row\n";
         music.StopAllMusic();
         music.PlayMusic(MUSIC_TUNE_NIGHT_MOONGRAINS);
         Require(music.mCurMusicFileMain == MUSIC_FILE_MAIN_MUSIC &&

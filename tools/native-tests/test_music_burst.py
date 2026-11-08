@@ -135,8 +135,8 @@ int main() {
             self.skipTest("A C++20 compiler is required")
         production = (ROOT / "pvzPerf/Lawn/System/Music.cpp").read_text(encoding="utf-8")
 
-        def definition(name):
-            start = production.index(f"void Music::{name}(")
+        def definition(name, result="void"):
+            start = production.index(f"{result} Music::{name}(")
             opening = production.index("{", start)
             depth = 1
             end = opening + 1
@@ -147,6 +147,7 @@ int main() {
 
         source = (ROOT / "Tests/native/MusicBurstTests.cpp").read_text(encoding="utf-8")
         source += "\nusing namespace Sexy;\n"
+        source += definition("GetMusicOrder", "unsigned int") + "\n"
         source += definition("StartBurst") + "\n" + definition("UpdateMusicBurst") + "\n" + definition("MusicUpdate") + "\n"
         source += r'''
 void Require(bool value, const char* message)
@@ -162,6 +163,7 @@ int main()
         LawnApp app;
         app.mBoard = &board;
         Sexy::BassMusicInterface playback;
+        app.mMusicInterface = &playback;
         Music music;
         music.mApp = &app;
         music.mMusicInterface = &playback;
@@ -169,7 +171,7 @@ int main()
             app.mApplicationTimeNs += static_cast<std::int64_t>(Sexy::gUpdateIntervalNs);
             music.UpdateMusicBurst(app.mApplicationTimeNs);
         };
-        currentOrder = MAKELONG(48, 80);
+        currentOrder = MAKELONG(48, 20);
         step();
         Require(music.mMusicBurstState == MUSIC_BURST_STARTING, "Crowd did not trigger night burst");
         step();
@@ -214,9 +216,12 @@ int main()
         Require(music.mBurstEndTimeNs - app.mApplicationTimeNs == burstRemaining,
             "Board pause consumed burst controller time");
         board.mPaused = false;
+        for (const auto tune : {MUSIC_TUNE_DAY_GRASSWALK, MUSIC_TUNE_POOL_WATERYGRAVES,
+                MUSIC_TUNE_FOG_RIGORMORMIST, MUSIC_TUNE_ROOF_GRAZETHEROOF}) {
+        currentOrder = MAKELONG(2, 16);
         music.mMusicBurstState = MUSIC_BURST_OFF;
         music.mMusicDrumsState = MUSIC_DRUMS_OFF;
-        music.mCurMusicTune = MUSIC_TUNE_DAY_GRASSWALK;
+        music.mCurMusicTune = tune;
         board.zombies = 10;
         step();
         // Skip directly over the one-second-remaining boundary. Queue once.
@@ -228,9 +233,53 @@ int main()
         music.UpdateMusicBurst(app.mApplicationTimeNs);
         Require(music.mQueuedDrumTrackPackedOrder == queuedOrder,
             "Day burst repeatedly reset queued drum order");
+        // Real decoders expose rows 0..63. The controller uses the original
+        // quarter-row position contract (128 units = 32 decoder rows).
+        currentOrder = MAKELONG(2, 31);
+        music.mQueuedDrumTrackPackedOrder = music.GetMusicOrder(MUSIC_FILE_MAIN_MUSIC);
+        music.UpdateMusicBurst(app.mApplicationTimeNs);
+        Require(music.mMusicDrumsState == MUSIC_DRUMS_ON_QUEUED,
+            "Day drums started before the half-pattern boundary");
+        currentOrder = MAKELONG(2, 32);
+        step();
+        Require(music.mMusicDrumsState == MUSIC_DRUMS_ON && playback.volume[2] == 1,
+            "Day drums never started when raw decoder rows crossed 31 to 32");
+        for (unsigned i = 0; i < fps * 12; ++i) step();
+        Require(music.mMusicBurstState == MUSIC_BURST_ON && playback.volume[2] == 1,
+            "Day crowd lost its drum layer");
+        board.zombies = 0;
+        step();
+        Require(music.mMusicDrumsState == MUSIC_DRUMS_OFF_QUEUED,
+            "Day calm did not queue drum release");
+        currentOrder = MAKELONG(3, 0);
+        step();
+        Require(music.mMusicDrumsState == MUSIC_DRUMS_FADING,
+            "Day drums remained on across raw decoder row wrap");
+        for (unsigned i = 0; i < fps + 1; ++i) step();
+        Require(music.mMusicDrumsState == MUSIC_DRUMS_OFF && playback.volume[2] == 0,
+            "Day drums failed to complete their release");
+        for (unsigned i = 0; i < fps * 9; ++i) step();
+        Require(music.mMusicBurstState == MUSIC_BURST_OFF && playback.volume[3] == 0,
+            "Day hihats did not return to calm");
+        board.zombies = 10;
+        step();
+        app.mApplicationTimeNs = music.mBurstEndTimeNs - 500'000'000;
+        music.UpdateMusicBurst(app.mApplicationTimeNs);
+        currentOrder = MAKELONG(3, 32);
+        step();
+        Require(music.mMusicDrumsState == MUSIC_DRUMS_ON,
+            "Day drums could not retrigger after a completed crowd cycle");
+        currentOrder = 0xffffffffu;
+        Require(music.GetMusicOrder(MUSIC_FILE_MAIN_MUSIC) == 0xffffffffu,
+            "Invalid decoder position must remain the invalid sentinel");
+        std::cout << "PASS scheme-1 decoder-row burst entry/release/retrigger tune=" << tune << " at " << fps << " FPS\n";
+        }
+
     }
 }
 '''
+        source = source.replace("int main()\n{", "int main() try\n{")
+        source += '\ncatch (const std::exception& error) { std::cerr << error.what() << "\\n"; return 1; }\n'
         with tempfile.TemporaryDirectory(prefix="pvz-music-burst-") as temp:
             source_path = Path(temp) / "music_burst.cpp"
             executable = Path(temp) / ("music_burst.exe" if os.name == "nt" else "music_burst")

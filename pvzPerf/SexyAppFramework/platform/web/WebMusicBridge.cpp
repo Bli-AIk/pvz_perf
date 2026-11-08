@@ -39,7 +39,7 @@ BASSBOOL SetAttribute(DWORD id,DWORD attribute,float value) {
     case BASS_ATTRIB_MUSIC_BPM:return web_music_command(id,"tempo",value,0);
     case BASS_ATTRIB_MUSIC_SPEED:return web_music_command(id,"speed",value,0);
     case BASS_ATTRIB_MUSIC_AMPLIFY:return web_music_command(id,"amplify",value/50.0f,0);
-    case BASS_ATTRIB_MUSIC_PSCALER:return true;
+    case BASS_ATTRIB_MUSIC_PSCALER:return web_music_command(id,"pscaler",value,0);
     default:return false;
     }
 }

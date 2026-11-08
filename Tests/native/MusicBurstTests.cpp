@@ -4,6 +4,8 @@
 #include "Lawn/System/Music.h"
 #include "Sexy.TodLib/ReanimClock.h"
 #include <algorithm>
+#include <cassert>
+#define TOD_ASSERT(value) assert(value)
 #include <array>
 #include <iostream>
 #include <memory>
@@ -21,13 +23,16 @@ public:
     bool mPaused = false;
     int CountZombiesOnScreen() const { return zombies; }
 };
+namespace Sexy { class MusicInterface; }
 class LawnApp
 {
 public:
     Board* mBoard = nullptr;
+    Sexy::MusicInterface* mMusicInterface = nullptr;
     std::int64_t mApplicationTimeNs = 0;
     GameMode mGameMode = GameMode::GAMEMODE_ADVENTURE;
 };
+static unsigned currentOrder = 48; // Decoder contract: low word order, high word raw row.
 namespace Sexy
 {
 class MusicInterface
@@ -51,6 +56,11 @@ class BassMusicInterface : public MusicInterface
 {
 public:
     std::array<std::unique_ptr<TestSlot>, 6> mMusicSlots;
+    int GetMusicOrder(int) {
+        // Native BASS has MUSIC_PSCALER=4 set by SetupMusicFileForTune.
+        return currentOrder == 0xffffffffu ? -1 :
+            int(MAKELONG(LOWORD(currentOrder), HIWORD(currentOrder) * 4));
+    }
     BassMusicInterface()
     {
         for (auto& slot : mMusicSlots) slot = std::make_unique<TestSlot>();
@@ -64,8 +74,6 @@ float TodAnimateCurveNs(std::int64_t start, std::int64_t end, std::int64_t age,
     const auto progress = std::clamp(double(age - start) / double(end - start), 0.0, 1.0);
     return static_cast<float>(first + (double(last) - first) * progress);
 }
-static unsigned currentOrder = 48;
-unsigned Music::GetMusicOrder(MusicFile) { return currentOrder; }
 Music::Music()
 {
     mCurMusicTune = MUSIC_TUNE_NIGHT_MOONGRAINS;
