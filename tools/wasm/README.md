@@ -1,8 +1,8 @@
-# v3.3.5 网页版：WebGPU / WebGL 2 / Wasm
+# v3.3.6 网页版：WebGPU / WebGL 2 / Wasm
 
 独立 CMake 工程 `game/` 编译当前 pvz_perf 游戏逻辑，不替换为上游游戏。
 发行包包含 WebGPU 和 WebGL 2；启动时默认优先 WebGPU，不可用时使用 WebGL 2，也可手动选择。
-两个运行时共用资源和存档，浏览器只下载所选后端的 Wasm；切换接口重新加载启动页。
+发行包包含 wasm32／wasm64 × WebGPU／WebGL 2 四个运行时，默认使用 wasm32；可在高级选项选择通过能力检测的 wasm64。四者共用资源、设置和存档，浏览器只下载所选运行时；切换接口或位数重新加载启动页。
 两者是平级构建后端，浏览器窗口使用 SDL2 的 Emscripten 端口。
 OpenGL / WebGL 共享 `graphics/gl` 的绘制实现，各自的上下文、API 差异由编译期别名选择。
 浏览器调度、加载、文件路径和音频实现放在 `platform/web`，由 CMake 选入；
@@ -21,7 +21,7 @@ python -m http.server 18089 --bind 127.0.0.1 --directory out/wasm-webgpu/toy
 
 浏览器打开 `http://127.0.0.1:18089/`，等待加载后点击“开始游戏”。不能用 file://
 直接打开，需要 HTTP。包位于 `out/wasm-webgpu/pvz-perf-toy.zip`，
-GitHub 附件名为 `wasm32-web-v3.3.3.zip`；入口及资源 URL 均使用相对路径。
+GitHub 附件名为 `wasm-web-v3.3.6.zip`；入口及资源 URL 均使用相对路径。
 源码对照构建可显式使用 `-GraphicsBackend WEBGL`，输出至原 `out/wasm/` 树。
 ZIP 内 `web-build-manifest.json` 记录版本、Web 补充源码提交和每个资源的 SHA256。
 v3.3.3 标签包含首发原生和 Web 源码；后续替换的网页附件以包内 `source_commit` 记录的补充提交为准。
@@ -296,3 +296,15 @@ Toy 云端单独使用 `pvz_lineups_v1` 索引和字符串分片保存压缩 JSO
 修改器内确认操作使用 HTML dialog，不能依赖 Toy 祖先 iframe 可能禁止的原生 `confirm()`。`verify_editor_sandbox.mjs` 覆盖没有 `allow-modals` 的两层 iframe，验证取消、删除和刷新后的列表持久化；`verify_audio_failure.mjs` 注入丢失回包、命令失败与模块失败并验证游戏继续绘制，同时验证 ScriptProcessor 正常同步路径。
 
 开始前设置页使用文档原生滚动，面板处于正常文档流，不再将长表单放进“根页面禁止滚动＋绝对定位容器滚动”的结构。进入游戏后才锁定根页面并禁用画布手势，Quit 时恢复文档滚动。启动尺寸由可见窗口扣除页眉页脚计算，不使用长表单撑高后的容器高度；这些操作只发生在 Web 布局和模式切换。`verify_launcher_scroll.mjs` 使用原生触控滚动手势覆盖直接打开和 Toy 式 iframe 的设置页上下滚动。
+
+
+## v3.3.6 音乐与上下文兼容修正
+
+Web BASS 适配层执行 `MUSIC_PSCALER=4`，仅将查询返回的行进度乘以四，
+解码器缓存及 Seek 保持原始行号。这样白天等曲目的鼓声进入与退出能按
+原版控制器的半段边界执行，暂停保存时除以四也能还原正确行号。
+
+WebGL 能力探测与 SDL/EGL 的实际窗口统一请求 RGBA、无深度、无模板、
+无多重采样的二维表面。上下文创建失败时，错误报告附浏览器的
+`webglcontextcreationerror.statusMessage`。仅接收 RGBA 配置的模拟驱动
+回归通过；OPPO A3x 5G／ColorOS 15／天玑 6300 的真机反馈仍待复测。

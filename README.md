@@ -2,7 +2,7 @@
 
 基于 [PvZ-Portable](https://github.com/wszqkzqk/PvZ-Portable) 修改，继续优化《植物大战僵尸》的 CPU 热路径、资源装载、图形提交和跨平台输入。游戏行为以零售 1073 为主要核对依据。
 
-**当前发行版：[v3.3.5](https://github.com/YuHao2006/pvz_perf/releases/tag/v3.3.5)，包含四个原生包和网页版。**
+**当前发行版：[v3.3.6](https://github.com/YuHao2006/pvz_perf/releases/tag/v3.3.6)，包含四个原生包和网页版。**
 
 版本号采用三段规则：**第一个数表示破坏性更新，第二个数表示功能更新，第三个数表示 bug 修复**。兼容性以各版发行说明为准。
 
@@ -14,13 +14,13 @@
 | `x64-win7-openGL3.3` | Windows 7 x64、OpenGL 3.3 |
 | `arm64-android14-vulkan1.3` | Android 14、Armv9-A、Vulkan 1.3 及所需 descriptor indexing 能力；不要求 SVE/SVE2 |
 | `arm64-android7-vulkan1.0` | Android 7、Armv8-A、Vulkan 1.0；传统纹理绑定 |
-| `wasm32-web` | 支持 WebAssembly 和 WebGL 2／WebGPU 的现代浏览器；默认优先 WebGPU，可选择 WebGL 2 |
+| `wasm-web` | 包含 wasm32／wasm64 与 WebGPU／WebGL 2 四个运行时；默认 wasm32、优先 WebGPU，可在高级设置切换 |
 
 下载入口：[GitHub Releases](https://github.com/YuHao2006/pvz_perf/releases)。Windows ZIP 完整解压到可写目录后运行 `pvz_perf.exe`；需要兼容的 VC++ x64 运行库。Android APK 已包含资源，不需要另拷数据包或在手机安装 Java。设备满足系统版本还不够，CPU、驱动和所需图形格式也必须满足对应要求。
 
 发行附件同时提供完美用户档、统一无尽基准、图集布局缓存和校验清单。完美档包含坚果包扎术。不要用个人进度覆盖仓库的性能基准。
 
-**v3.x 对旧版本有资源和存档兼容边界：**游戏只直接读取 DAT64 v4／schema `0x10745`。原版 DAT、DAT64 v1/v2 使用附带转换器升级；未发布的 v3 中间格式不支持。程序、shader、PAK64 必须成套更新。见[存档转换](docs/DAT-DAT64-CONVERSION.md)与[发行说明](docs/releases/v3.3.5.md)。
+**v3.x 对旧版本有资源和存档兼容边界：**游戏只直接读取 DAT64 v4／schema `0x10745`。原版 DAT、DAT64 v1/v2 使用附带转换器升级；未发布的 v3 中间格式不支持。程序、shader、PAK64 必须成套更新。见[存档转换](docs/DAT-DAT64-CONVERSION.md)与[发行说明](docs/releases/v3.3.6.md)。
 
 ## 设置与存档
 
