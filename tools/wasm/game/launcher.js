@@ -13,7 +13,7 @@ let progressStorage,lineupStorage,cloudUploads=0;
 let diagnostics;
 const diagnosticsReady=import('./diagnostics.js').then(({createDiagnostics})=>{
  diagnostics=createDiagnostics({storage:localStorage,defaultEnabled:window.PVZWebConfig?.diagnosticsDefault===true,
-  environment:()=>({version:window.PVZGraphicsConfig?.version,memoryModel:window.PVZGraphicsConfig?.memory64?'wasm64':'wasm32',userAgent:navigator.userAgent.replace(/\b(Buvid|sessionID)\/\S+/gi,'$1/[redacted]'),platform:navigator.platform}),
+  environment:()=>({version:window.PVZGraphicsConfig?.version,memoryModel:Module?.pvzMemoryModel||(window.PVZGraphicsConfig?.memory64?'wasm64':'wasm32'),userAgent:navigator.userAgent.replace(/\b(Buvid|sessionID)\/\S+/gi,'$1/[redacted]'),platform:navigator.platform}),
   readState:()=>{
    const audio=Module?.pvzMusic,context=audio?.context;
    return {phase:startupPhase,backend:Module?.pvzSelectedBackend,running,hidden:document.hidden,
@@ -95,7 +95,7 @@ function showError(message){
  const box=document.getElementById('error');box.hidden=false;box.replaceChildren();
  const heading=document.createElement('h2');heading.textContent='游戏未能正常启动或运行';
  const details=document.createElement('pre');
- details.textContent=description+'\n\n图形接口：'+(Module?.pvzSelectedBackend||'检测中')+
+ details.textContent=description+'\n\nWasm 位数：'+(Module?.pvzMemoryModel||'检测中')+'\n图形接口：'+(Module?.pvzSelectedBackend||'检测中')+
   '\n'+(document.getElementById('graphics-capabilities').textContent||'')+'\n\n启动阶段：'+startupPhase+
   '\n音频：'+(Module?.pvzMusic?.backend||'尚未初始化')+' / '+(Module?.pvzMusic?.context?.state||'未创建')+
   '\nWasm 内存：'+(Module?.pvzMemory?.buffer.byteLength??'未知')+' 字节；画布：'+canvas.width+' × '+canvas.height+
@@ -301,6 +301,7 @@ async function returnToSettings(){
  for(const input of form.elements)input.disabled=false;
  formEdited=false;fillPreferences({...readPreferences(),...loadNativeSettings()});
  document.getElementById('graphics-backend').disabled=document.getElementById('graphics-backend').options.length<2;
+ document.getElementById('memory-model').disabled=document.getElementById('memory-model').options.length<2;
  document.getElementById('upload-progress').disabled=document.getElementById('restore-progress').disabled=webConfig.bypassBilibiliChecks;
  statusText.textContent='准备就绪';startupPhase='设置页面';start.disabled=false;scheduleResize();
 }
@@ -347,8 +348,27 @@ form.addEventListener('submit',async event=>{
 window.addEventListener('error',event=>showError(event.error||event.message));window.addEventListener('unhandledrejection',event=>showError(event.reason));
 async function boot(){
  const config=window.PVZGraphicsConfig||{webgpu:false};
- if(config.memory64&&!WebAssembly.validate(new Uint8Array([0,97,115,109,1,0,0,0,5,3,1,4,1])))
-  throw Error('此诊断包需要 Wasm Memory64；当前浏览器不支持。64 位手机或操作系统不等于浏览器支持 Memory64。请导出诊断记录反馈。');
+ const {supportsMemory64,memoryModels,selectMemoryModel,runtimeStem}=await import('./runtime-selection.js');
+ const memorySupported=supportsMemory64(),models=memoryModels(config,memorySupported);
+ let savedMemory='wasm32';try{savedMemory=localStorage.getItem('pvz_wasm_memory_model')||'wasm32'}catch{}
+ const memoryModel=selectMemoryModel(models,savedMemory);
+ Module.pvzMemoryModel=memoryModel;
+ const memoryDropdown=document.getElementById('memory-model');
+ document.getElementById('memory-field').hidden=false;
+ memoryDropdown.replaceChildren(...models.map(model=>new Option(model==='wasm32'?'32 位（默认）':'64 位（Memory64，对照测试）',model)));
+ memoryDropdown.value=memoryModel;memoryDropdown.disabled=models.length<2;
+ if(memoryModel!==savedMemory)try{localStorage.setItem('pvz_wasm_memory_model',memoryModel)}catch{}
+ const switchRuntime=async(key,value)=>{
+  try{
+   if(runtimeReady)await saveSettings(preferences());
+   localStorage.setItem(key,value);localStorage.setItem(storageKey,JSON.stringify(preferences()));
+   location.reload();
+  }catch(error){showError('切换运行时前保存设置失败，未重新加载：'+error.message)}
+ };
+ memoryDropdown.onchange=()=>switchRuntime('pvz_wasm_memory_model',memoryDropdown.value);
+ document.getElementById('memory-info').textContent=models.length>1
+  ?'默认使用 32 位；遇到异常可切换 64 位对照。切换会重新加载，设置和存档共用。'
+  :!memorySupported?'当前浏览器不支持 Memory64，使用 32 位。':config.memory64?'此包仅包含 Memory64 诊断版本。':'此包仅包含 32 位版本。';
  if(config.version){document.title='pvz_perf · 网页 v'+config.version;document.getElementById('web-version').textContent='网页 v'+config.version}
  const dropdown=document.getElementById('graphics-backend');
  document.getElementById('graphics-field').hidden=false;
@@ -370,10 +390,10 @@ async function boot(){
  const backend=mode==='auto'?available[0][0]:mode;
  dropdown.replaceChildren(...(available.length>1?[new Option('自动（优先 WebGPU）','auto')]:[]),...available.map(([name,label])=>new Option(label,name)));
  dropdown.value=available.length>1?mode:backend;dropdown.disabled=available.length<2;
- dropdown.onchange=()=>{try{localStorage.setItem('pvz_graphics_backend',dropdown.value)}catch{}location.reload()};
+ dropdown.onchange=()=>switchRuntime('pvz_graphics_backend',dropdown.value);
  document.getElementById('graphics-info').textContent='当前使用 '+(backend==='webgpu'?'WebGPU':'WebGL 2')+'；切换接口会重新加载设置页，存档保留。';
  Module.pvzSelectedBackend=backend;
- const stem=config.webgpu&&backend==='webgl'?'pvz-perf-webgl':'pvz-perf';
+ const stem=runtimeStem(config,backend,memoryModel);
  Module.pvzRuntimeStem=stem;
  const response=await fetch('./'+stem+'.wasm.gz');if(!response.ok)throw Error('Wasm 下载失败：'+response.status);
  const packed=new Uint8Array(await response.arrayBuffer());

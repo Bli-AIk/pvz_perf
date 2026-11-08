@@ -13,6 +13,10 @@ check is not encryption; the template saves are included in save-bundle.json.
 
 Graphics defaults to WebGPU when available, otherwise WebGL 2. Select either
 backend on the setup screen; changing it reloads setup and keeps browser saves.
+When both memory models are bundled, Advanced -> Wasm memory defaults to 32-bit.
+64-bit (Memory64) is a manual diagnostic option, shown only on browsers that
+support it. Both models use the same resources, settings, profile and saves.
+Switching memory model reloads setup; error/diagnostic reports include the choice.
 All bundled APIs are checked before populating the selector, including WebGL 2
 RGBA16F render targets, blending, linear sampling and pixel readback. Unavailable backends are omitted; an unavailable saved
 choice is reset to auto. An error is shown if no bundled backend is usable.

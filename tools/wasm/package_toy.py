@@ -55,6 +55,8 @@ def main():
     parser.add_argument('--memory64', action='store_true', help='Require native Wasm Memory64 (diagnostic package, no wasm32 fallback)')
     parser.add_argument('--webgpu', action='store_true', help='Package WebGPU; optionally add selectable WebGL through --webgl-build')
     parser.add_argument('--webgl-build', type=Path, help='Include selectable WebGL runtime, sharing the same data package')
+    parser.add_argument('--wasm64-build', type=Path, help='Add optional Memory64 primary runtime; default remains wasm32')
+    parser.add_argument('--wasm64-webgl-build', type=Path, help='Memory64 WebGL runtime paired with --webgl-build')
     args = parser.parse_args()
     version_source = (ROOT / 'pvzPerf/LawnApp.cpp').read_text(encoding='utf-8')
     version = args.version or re.search(r'mProductVersion\s*=\s*"([^"]+)"', version_source).group(1)
@@ -70,12 +72,27 @@ def main():
     for name in required:
         if not (args.build / name).is_file():
             raise FileNotFoundError(args.build / name)
-    for build in [args.build, *([args.webgl_build] if args.webgl_build else [])]:
-        if memory64_runtime(build / 'pvz-perf.wasm') != args.memory64:
-            raise ValueError(f'Wasm memory model does not match --memory64: {build}')
+    if args.memory64 and (args.wasm64_build or args.wasm64_webgl_build):
+        parser.error('--memory64 is a standalone diagnostic mode; do not combine with optional runtimes')
+    if args.webgl_build and not args.webgpu:
+        parser.error('--webgl-build requires --webgpu')
+    if bool(args.wasm64_webgl_build) != bool(args.wasm64_build and args.webgl_build):
+        parser.error('Dual-backend Memory64 needs both --wasm64-build and --wasm64-webgl-build')
+    builds = [(args.build, args.memory64)]
+    if args.webgl_build: builds.append((args.webgl_build, args.memory64))
+    if args.wasm64_build: builds.append((args.wasm64_build, True))
+    if args.wasm64_webgl_build: builds.append((args.wasm64_webgl_build, True))
+    resource_hash = hashlib.sha256((args.build / 'pvz-perf.data').read_bytes()).digest()
+    for build, is64 in builds:
+        for name in required:
+            if not (build / name).is_file(): raise FileNotFoundError(build / name)
+        if memory64_runtime(build / 'pvz-perf.wasm') != is64:
+            raise ValueError(f'Unexpected Wasm memory model: {build}')
+        if hashlib.sha256((build / 'pvz-perf.data').read_bytes()).digest() != resource_hash:
+            raise ValueError(f'All runtimes must share the identical resource package: {build}')
     args.output.mkdir(parents=True, exist_ok=True)
     (args.output / "save-tool.html").unlink(missing_ok=True)
-    support_files = ['index.html', 'launcher.js', 'launcher.css', 'startup.js', 'diagnostics.js', 'rewards.js', 'lineups.js', 'lineup-storage.js', 'frame-rate.js', 'graphics.js', 'save-tools.js', 'save-tool-runtime.js', 'save-editor-host.js', 'progress-storage.js', 'text-input.js', 'serve.py',
+    support_files = ['index.html', 'launcher.js', 'launcher.css', 'startup.js', 'diagnostics.js', 'rewards.js', 'lineups.js', 'lineup-storage.js', 'frame-rate.js', 'graphics.js', 'runtime-selection.js', 'save-tools.js', 'save-tool-runtime.js', 'save-editor-host.js', 'progress-storage.js', 'text-input.js', 'serve.py',
                      'start-local.cmd', 'start-local.sh', 'README.txt']
     for name in support_files:
         shutil.copyfile(ROOT / 'tools/wasm/game' / name, args.output / name)
@@ -104,7 +121,13 @@ def main():
         shutil.copyfile(args.webgl_build / 'pvz-perf.js', args.output / 'pvz-perf-webgl.js')
         (args.output / 'pvz-perf-webgl.wasm.gz').write_bytes(gzip.compress((args.webgl_build / 'pvz-perf.wasm').read_bytes(), compresslevel=9, mtime=0))
         files += ['pvz-perf-webgl.js', 'pvz-perf-webgl.wasm.gz']
-    graphics = {'version': version, 'webgpu': args.webgpu, 'fallback': bool(args.webgl_build), 'memory64': args.memory64}
+    for build, stem in [(args.wasm64_build, 'pvz-perf-wasm64'), (args.wasm64_webgl_build, 'pvz-perf-webgl-wasm64')]:
+        if not build: continue
+        shutil.copyfile(build / 'pvz-perf.js', args.output / (stem + '.js'))
+        (args.output / (stem + '.wasm.gz')).write_bytes(gzip.compress((build / 'pvz-perf.wasm').read_bytes(), compresslevel=9, mtime=0))
+        files += [stem + '.js', stem + '.wasm.gz']
+    graphics = {'version': version, 'webgpu': args.webgpu, 'fallback': bool(args.webgl_build),
+                'memory64': args.memory64, 'memory64Available': bool(args.wasm64_build)}
     (args.output / 'graphics-config.js').write_text('window.PVZGraphicsConfig = ' + json.dumps(graphics) + ';\n', encoding='utf-8')
     files.append('graphics-config.js')
     license_path = args.output / 'licenses/stb-vorbis.txt'
@@ -157,6 +180,7 @@ def main():
         'backend': 'WebGPU' if args.webgpu else 'WebGL2',
         'webgl_fallback': bool(args.webgl_build),
         'memory_model': 'wasm64' if args.memory64 else 'wasm32',
+        'memory_models': ['wasm32', 'wasm64'] if args.wasm64_build else ['wasm64' if args.memory64 else 'wasm32'],
         'source_commit': source_commit,
         'source_dirty': bool(subprocess.check_output(
             ['git', 'status', '--porcelain', '--', 'tools/wasm', 'pvzPerf', 'CMake'], cwd=ROOT, text=True).strip()),
