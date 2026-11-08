@@ -26,5 +26,14 @@ try{
  await e.locator('#generate-filename').fill('game9_58.dat64');await e.locator('#flags').fill('128');await e.locator('#generate').click();await e.locator('#status').filter({hasText:'已生成并部署 game9_58.dat64'}).waitFor({timeout:180000});metadata=await extract('game9_58.dat64',58);assert.equal(metadata.mode,58);assert.equal(metadata.flags,128);assert.equal(metadata.repickPending,true);assert.equal(metadata.music.tune,6);assert.equal(metadata.mowers,0);
  await e.locator('#close').click();await page.reload();await page.waitForFunction(()=>!document.getElementById('start').disabled,null,{timeout:120000});await page.locator('#custom-save').click();await e.locator('#status').filter({hasText:'已打开'}).waitFor();assert.equal(await e.locator('#profile').isVisible(),true);await e.locator('[data-tab=lineup]').click();assert.equal(await e.locator('#preset option').count(),count-1);assert.deepEqual(errors,[]);
  console.log('profile persistence, deletion, preset removal, filename guide and endless chooser state passed');
+ await e.locator('[data-tab=profile]').click();
+ const preservedLevels=await page.evaluate(root=>Object.fromEntries(Module.FS.readdir(root).filter(n=>/^game.*\.dat64$/.test(n)).map(n=>[n,Array.from(Module.FS.readFile(root+'/'+n))])),root);
+ await e.locator('#add-perfect-user').click();await e.locator('#status').filter({hasText:'已新增完美存档用户'}).waitFor();
+ const perfectId=await e.locator('#user-id').inputValue();assert.notEqual(perfectId,'1');assert.notEqual(perfectId,'9');
+ assert.equal(await e.locator('#user-coins').inputValue(),'999990');assert.equal(await e.locator('#user-finished').inputValue(),'2');
+ const perfectBytes=await page.evaluate(({root,id})=>Array.from(Module.FS.readFile(root+'/user'+id+'.dat64')),{root,id:perfectId});assert.deepEqual(perfectBytes,original);
+ assert.deepEqual(await page.evaluate(root=>Object.fromEntries(Module.FS.readdir(root).filter(n=>/^game.*\.dat64$/.test(n)).map(n=>[n,Array.from(Module.FS.readFile(root+'/'+n))])),root),preservedLevels);
+ await e.locator('#close').click();await page.reload();await page.waitForFunction(()=>!document.getElementById('start').disabled,null,{timeout:120000});await page.locator('#custom-save').click();await e.locator('#status').filter({hasText:'已打开'}).waitFor();await e.locator('#user-list').selectOption(perfectId);assert.equal(await e.locator('#user-coins').inputValue(),'999990');
+ console.log('perfect-user button: matches bundled profile, keeps all level saves and persists after reload');
  await e.locator('[data-tab=profile]').click();await e.locator('#user-list').selectOption('9');await page.screenshot({path:process.env.TEMP+'/pvz-user-editor-preview.png'});
 }finally{await browser.close()}

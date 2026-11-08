@@ -47,7 +47,7 @@ export function connectSaveEditor({module,root,ready,idle,running,setActive,auth
    if(running()||!ready())throw Error('请先从游戏菜单退出，再修改存档');
    let result={};const saveTools=await tools;
    if(op==='close'){dialog.close()}
-   else if(op==='add-user')result=await commit(store.add());
+   else if(op==='add-user')result=await commit(store.add({perfect:payload.perfect===true}));
    else if(op==='edit-user')result=await commit(store.edit(payload));
    else if(op==='delete-user')result=await commit(store.remove(payload.id));
    else if(op==='delete-lineup'){

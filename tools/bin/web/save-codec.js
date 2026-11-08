@@ -17,6 +17,23 @@ export function encodeSummary(profiles){validateProfiles(profiles);const bytes=n
 function layout(bytes){require(bytes instanceof Uint8Array&&bytes.length>=894&&decoder.decode(bytes.subarray(0,8))===magic,'用户明细不是有效的 USER64');const v=new DataView(bytes.buffer,bytes.byteOffset,bytes.byteLength);require(v.getInt32(8,true)===13,'仅支持 USER64 v13');const plants=v.getInt32(824,true);integer(plants,0,200,'花园植物数');const achievements=828+plants*88;require(achievements+45<=bytes.length,'花园数据不完整');const zombatars=v.getInt32(achievements+41,true);integer(zombatars,0,100,'大头贴数');require(bytes.length===894+plants*88+zombatars*72,'用户明细长度不正确');return {v,achievements,mini:achievements+45+zombatars*72,plants,zombatars}}
 export function decodeProfile(bytes){const {v,achievements,plants,zombatars}=layout(bytes);return {level:v.getInt32(12,true),coins:v.getInt32(16,true)*10,finished:v.getInt32(20,true),records:Array.from({length:100},(_,i)=>v.getInt32(24+i*4,true)),purchases:Array.from({length:80},(_,i)=>v.getInt32(424+i*4,true)),unlocks:[8,9,14].map(i=>v.getInt32(744+i*4,true)!==0),achievements:Array.from({length:20},(_,i)=>v.getUint8(achievements+i*2)!==0),plants,zombatars}}
 export function newProfile(){const bytes=new Uint8Array(894);bytes.set(encoder.encode(magic));const v=new DataView(bytes.buffer);v.setInt32(8,13,true);v.setInt32(12,1,true);return bytes}
+// Same completed USER64 preset as pvz_perf's distributed perfect profile.
+// Always create fresh bytes: adding a user must never alter another user's data.
+export function perfectProfile(){
+ const records=Array(100).fill(0),purchases=Array(80).fill(0);
+ for(let mode=1;mode<=70;mode++)if(mode!==35)records[mode]=1;
+ for(let mode=61;mode<=65;mode++)records[mode]=10;
+ for(let mode=66;mode<=70;mode++)records[mode]=5;
+ records[71]=1000;
+ for(const item of [0,1,2,3,4,5,6,7,8,13,16,17,18,19,20,22,23,25,27,29])purchases[item]=1;
+ purchases[9]=2;purchases[21]=4;purchases[24]=3;
+ for(const item of [14,15])purchases[item]=1020;
+ for(const item of [26,28])purchases[item]=1010;
+ const bytes=patchProfile(newProfile(),{level:1,coins:999990,finished:2,records,purchases,unlocks:[true,true,true],achievements:Array(20).fill(true)}),{v,mini}=layout(bytes);
+ // Already seen Stinky and upsell; suppress the first-use Zombatar notice.
+ v.setInt32(812,1,true);v.setInt32(816,1,true);v.setUint8(mini+20,1);
+ return bytes;
+}
 export function patchProfile(original,patch){
  const bytes=original.slice(),{v,achievements,mini}=layout(bytes),previous=new DataView(original.buffer,original.byteOffset,original.byteLength);
  if('level'in patch)v.setInt32(12,integer(patch.level,1,50,'冒险关卡'),true);
@@ -37,7 +54,7 @@ export class ProfileStore {
  details(id){const path=this.root+'/user'+id+'.dat64';return this.fs.analyzePath(path).exists?this.fs.readFile(path):newProfile()}
  list(){return this.rows().map(row=>({...row,progress:decodeProfile(this.details(row.id))}))}
  owned(id){return this.names().filter(name=>name==='user'+id+'.dat64'||new RegExp('^game'+id+'_\\d+\\.dat64$').test(name))}
- add(){const rows=this.rows();let id=1;while(rows.some(p=>p.id===id)||this.owned(id).length)++id;validId(id);let name='Player'+id;while(rows.some(p=>p.name.toLowerCase()===name.toLowerCase()))name+='x';validName(name);rows.push({id,name,useSeq:Math.max(0,...rows.map(p=>p.useSeq))+1});validateProfiles(rows);return {id,writes:new Map([['user'+id+'.dat64',newProfile()],['users.dat',encodeSummary(rows)]]),removes:[]}}
+ add({perfect=false}={}){const rows=this.rows();let id=1;while(rows.some(p=>p.id===id)||this.owned(id).length)++id;validId(id);let name=(perfect?'Perfect':'Player')+id;while(rows.some(p=>p.name.toLowerCase()===name.toLowerCase()))name+='x';validName(name);rows.push({id,name,useSeq:Math.max(0,...rows.map(p=>p.useSeq))+1});validateProfiles(rows);return {id,writes:new Map([['user'+id+'.dat64',perfect?perfectProfile():newProfile()],['users.dat',encodeSummary(rows)]]),removes:[]}}
  edit({oldId,id,name,patch}){validId(oldId);validId(id);validName(name);const rows=this.rows(),user=rows.find(p=>p.id===oldId);if(!user)throw Error('目标用户不存在');if(id!==oldId&&(rows.some(p=>p.id===id)||this.owned(id).length))throw Error('目标 ID 已被用户或关卡存档占用');const details=patchProfile(this.details(oldId),patch);user.id=id;user.name=name;validateProfiles(rows);const writes=new Map(),removes=[];if(id!==oldId)for(const file of this.owned(oldId)){removes.push(file);if(file.startsWith('game'))writes.set(file.replace('game'+oldId+'_','game'+id+'_'),this.fs.readFile(this.root+'/'+file))}writes.set('user'+id+'.dat64',details);writes.set('users.dat',encodeSummary(rows));return {id,writes,removes}}
  remove(id){validId(id);const rows=this.rows();if(!rows.some(p=>p.id===id))throw Error('目标用户不存在');return {writes:new Map([['users.dat',encodeSummary(rows.filter(p=>p.id!==id))]]),removes:this.owned(id)}}
 }
