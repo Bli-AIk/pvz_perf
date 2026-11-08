@@ -11,7 +11,7 @@ const gl={RGBA16F:0x881a,FRAMEBUFFER_COMPLETE:0x8cd5,NO_ERROR:0,
 for(const name of ['bindTexture','texParameteri','texImage2D','bindFramebuffer','framebufferTexture2D','deleteFramebuffer','deleteTexture',
  'shaderSource','compileShader','attachShader','linkProgram','bindVertexArray','useProgram','uniform1i','activeTexture',
  'viewport','clearColor','clear','enable','disable','blendFuncSeparate','drawArrays','deleteProgram','deleteShader','deleteVertexArray'])gl[name]=()=>{};
-globalThis.document={createElement:()=>({addEventListener(){},getContext:()=>glAvailable?gl:null})};
+globalThis.document={createElement:()=>({addEventListener(){},getContext:(kind,attributes)=>{assert.equal(kind,'webgl2');assert.deepEqual(attributes,{alpha:true,depth:false,stencil:false,antialias:false});return glAvailable?gl:null}})};
 const limits={maxTextureDimension2D:8192,maxSampledTexturesPerShaderStage:16,maxBindGroups:4};
 let requests=0,destroyed=0,requested,gpuDrawValid=true,gpuValidationError=null;
 globalThis.GPUShaderStage={FRAGMENT:2};globalThis.GPUTextureUsage={TEXTURE_BINDING:4,COPY_DST:2,COPY_SRC:1,RENDER_ATTACHMENT:16};

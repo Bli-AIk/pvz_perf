@@ -100,6 +100,7 @@ function showError(message){
   '\n音频：'+(Module?.pvzMusic?.backend||'尚未初始化')+' / '+(Module?.pvzMusic?.context?.state||'未创建')+
   '\nWasm 内存：'+(Module?.pvzMemory?.buffer.byteLength??'未知')+' 字节；画布：'+canvas.width+' × '+canvas.height+
   '\n可见尺寸：'+Math.round(canvas.getBoundingClientRect().width)+' × '+Math.round(canvas.getBoundingClientRect().height)+
+  (Module?.pvzWebGLCreationError?'\nWebGL 上下文创建详情：'+Module.pvzWebGLCreationError:'')+
   '\n版本：'+(window.PVZGraphicsConfig?.version||'未知')+'\n浏览器：'+navigator.userAgent;
  const actions=document.createElement('div');actions.className='error-actions';
  const retry=document.createElement('button');retry.type='button';retry.textContent='重新加载';retry.onclick=()=>location.reload();actions.append(retry);
@@ -305,6 +306,7 @@ async function returnToSettings(){
  document.getElementById('upload-progress').disabled=document.getElementById('restore-progress').disabled=webConfig.bypassBilibiliChecks;
  statusText.textContent='准备就绪';startupPhase='设置页面';start.disabled=false;scheduleResize();
 }
+canvas.addEventListener('webglcontextcreationerror',event=>{Module.pvzWebGLCreationError=event.statusMessage||'浏览器未提供创建失败的详情'});
 canvas.addEventListener('webglcontextlost',event=>{event.preventDefault();showError('WebGL 图形上下文丢失，浏览器已停止绘制。请重新加载。')});
 var Module={canvas,locateFile:name=>'./'+name,pvzRefreshRate:60,pvzMobileInput:mobileInput,
  pvzStartupPhase:setStartupPhase,

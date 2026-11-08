@@ -5,7 +5,9 @@ function probeWebGL(){
  let gl=null,reason='';const textures=[],framebuffers=[],shaders=[];let program=null,vao=null;
  canvas.addEventListener('webglcontextcreationerror',event=>{reason=event.statusMessage||reason});
  try{
-  gl=canvas.getContext('webgl2');
+  // Keep these in sync with WebWindow.cpp's explicit SDL/EGL framebuffer
+  // attributes. Probe the same 2D surface configuration the game will request.
+  gl=canvas.getContext('webgl2',{alpha:true,depth:false,stencil:false,antialias:false});
   if(!gl)throw Error(reason||'浏览器无法创建 WebGL 2 上下文');
   const webglLimits={maxTextureDimension2D:gl.getParameter(gl.MAX_TEXTURE_SIZE),maxRenderbufferSize:gl.getParameter(gl.MAX_RENDERBUFFER_SIZE)};
   if(webglLimits.maxTextureDimension2D<4096)throw Error('最大二维纹理仅 '+webglLimits.maxTextureDimension2D+'，此资源包需要 4096');

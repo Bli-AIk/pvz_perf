@@ -73,6 +73,17 @@ NativeWindow::NativeWindow(const NativeWindowConfig& config) : impl_(new Impl) {
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+    // Match graphics.js's capability probe. Request an RGBA browser surface,
+    // not SDL's implicit opaque/depth configuration; all game rendering is 2D
+    // and intermediate color targets are allocated by the renderer itself.
+    SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 0);
+    SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 0);
+    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 0);
+    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 0);
 #endif
     Width = std::clamp(WebViewportWidth(), 800, 1400); Height = 600; Focused = true;
     impl_->window = SDL_CreateWindow(config.title.c_str(), 0, 0, Width, Height,
