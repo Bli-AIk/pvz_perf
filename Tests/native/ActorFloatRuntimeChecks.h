@@ -433,6 +433,31 @@ inline void LaunchDeadlines(LawnApp& app, Board& board)
     } restoreContext{app, previousMode, previousScene, previousProfile};
     app.mGameMode = GameMode::GAMEMODE_ADVENTURE;
     app.mGameScene = GameScenes::SCENE_PLAYING;
+    // The disk field remains a remaining-ns timer: inactive remains inactive,
+    // future deadlines are exact, and expired-but-active waits stay active
+    // below every shot event boundary. Reload must not re-fire the projectile.
+    {
+        Plant timer;
+        timer.PlantInitialize(0, 0, 0, 3, 2, SeedType::SEED_PEASHOOTER, SeedType::SEED_NONE);
+        constexpr std::int64_t now = 10'000'000'000;
+        for (const auto end : {std::int64_t(0), now + 123'456'789, now, now - 500'000'000}) {
+            board.mLevelTimeNs = now;
+            timer.mShootingEndTimeNs = end;
+            const auto bytes = SaveRecordMapping::WriteSaveRecord(timer);
+            SaveRecordMapping::ReadSaveRecord(timer, bytes.data());
+            timer.mApp = &app; timer.mBoard = &board;
+            SaveClockProjection::Bind(timer);
+            Require(timer.mShootingEndTimeNs == (end == 0 ? 0 : end > now ? end : now + 1),
+                "Attack deadline save projection lost activity or remaining time");
+            const auto count = board.mProjectiles.mSize;
+            Sexy::ApplySimulationStep(16'666'667);
+            board.mLevelTimeNs += Sexy::gUpdateIntervalNs;
+            timer.UpdateShooting(board.mLevelTimeNs, board.mLevelTimeNs, board.mLevelTimeNs);
+            Require(board.mProjectiles.mSize == count,
+                "Reloading inactive or expired attack replayed its projectile");
+        }
+        std::cout << "PASS attack deadline persistence: inactive, future, exact-expiry, expired waiting, no replay\n";
+    }
     board.mZombies.DataArrayFreeAll();
     board.RebuildZombieRowBucket();
     const auto run = [&](int frequency) {
@@ -441,7 +466,7 @@ inline void LaunchDeadlines(LawnApp& app, Board& board)
         Plant plant;
         plant.mSeedType = SeedType::SEED_PEASHOOTER;
         plant.mRow = 2;
-        plant.mShootingCounter = 0;
+        plant.mShootingEndTimeNs = 0;
         plant.mLaunchRate = 150;
         plant.mNextLaunchTimeNs = 123'456'789;
         plant.mLaunchWindowStartNs = 0;
@@ -558,7 +583,7 @@ inline void LaunchDeadlines(LawnApp& app, Board& board)
                     Require(hits == 4, "Gloom/Gatling volley lost one of its four pulses");
                     ++completedVolleys;
                 }
-                Require(gloom.mShootingCounter.mNanoseconds ==
+                Require(gloom.mShootingEndTimeNs - static_cast<std::int64_t>(board.mLevelTimeNs) ==
                     (isGloom ? 200 : 100) * PlantLaunchClock::Tick,
                     "Gloom/Gatling skipped a launch deadline while its previous shooting timer was positive");
                 const auto period = gloom.mNextLaunchTimeNs - due;
@@ -583,10 +608,10 @@ inline void LaunchDeadlines(LawnApp& app, Board& board)
         plant.PlantInitialize(static_cast<std::int64_t>(board.mLevelTimeNs), app.mEffectSystem->mReanimationHolder->mVisualTimeNs, (board.AnimationTimeDomain()==ReanimTimeDomain::Battle ? static_cast<std::int64_t>(board.mLevelTimeNs) : app.mEffectSystem->mReanimationHolder->mVisualTimeNs), 3, 2, seed, SeedType::SEED_NONE);
         plant.mNextLaunchTimeNs = 1'000'000'000;
         plant.mLaunchWindowStartNs = 0;
-        plant.mShootingCounter = 10;
+        plant.mShootingEndTimeNs = 100'000'000;
         board.mLevelTimeNs = seed == SeedType::SEED_CATTAIL ? 500'000'000 : 750'000'000;
         plant.UpdateShooter(static_cast<std::int64_t>(board.mLevelTimeNs), app.mEffectSystem->mReanimationHolder->mVisualTimeNs, (board.AnimationTimeDomain()==ReanimTimeDomain::Battle ? static_cast<std::int64_t>(board.mLevelTimeNs) : app.mEffectSystem->mReanimationHolder->mVisualTimeNs));
-        Require(plant.mShootingCounter.mNanoseconds ==
+        Require(plant.mShootingEndTimeNs - static_cast<std::int64_t>(board.mLevelTimeNs) ==
             (seed == SeedType::SEED_CATTAIL ? 50 : 26) * PlantLaunchClock::Tick,
             "Secondary launch was suppressed by an unfinished shooting timer");
     }

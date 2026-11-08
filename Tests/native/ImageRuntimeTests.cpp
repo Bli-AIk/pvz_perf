@@ -2650,12 +2650,29 @@ void PlantSpecialCatalogRuntime(TestApp& app)
         case SEED_UMBRELLA:
             Require(seenReflecting && plant->mState==STATE_NOTREADY,"Umbrella did not enter reflecting and return to idle");break;
         case SEED_COBCANNON:
+        {
             Require(cobShots==3 && seenCob && plant->mState==STATE_COBCANNON_ARMING &&
                 1000000-target->mBodyHealth==1800*cobShots,
                 "Cob Cannon failed repeated launch/rearm or skipped attack-animation cleanup after crossing shot and zero together");
             Require(app.ReanimationGet(plant->mBodyReanimID)->mLoopType==REANIM_LOOP,
                 "Cob Cannon remained on its held shooting animation after firing");
-            std::cout<<"PASS repeated cob launch/rearm Hz="<<hz<<" shots="<<cobShots<<'\n';break;
+            // Recreate the persisted zero-countdown/held-terminal combination
+            // from the reported checkpoint, independently of zombie updates.
+            plant->mState=STATE_COBCANNON_FIRING;plant->mShootingEndTimeNs=0;plant->mStateCountdown=0;
+            plant->PlayBodyReanim(board.mLevelTimeNs,ReanimTrackId::anim_shooting,REANIM_PLAY_ONCE_AND_HOLD,0,12);
+            auto* held=app.ReanimationGet(plant->mBodyReanimID);
+            held->Seek(1,1);held->mLoopCount=1;
+            const auto projectilesBefore=board.mProjectiles.mSize;
+            const auto recoveryStep=hz>0?1'000'000'000ULL/hz:hz<0?4'000'000'000ULL/(-hz):32'333'333ULL;
+            Sexy::ApplySimulationStep(recoveryStep);board.mLevelTimeNs+=recoveryStep;
+            clocks.mVisualTimeNs+=recoveryStep;clocks.mBattleTimeNs=board.mLevelTimeNs;
+            plant->Update(board.mLevelTimeNs,clocks.mVisualTimeNs,board.mLevelTimeNs,recoveryStep);
+            Require(plant->mState==STATE_COBCANNON_FIRING&&plant->mShootingEndTimeNs==0&&
+                held->mLoopType==REANIM_PLAY_ONCE_AND_HOLD,
+                "Runtime must not repair persisted invalid attack state");
+            Require(board.mProjectiles.mSize==projectilesBefore,"Invalid saved attack fired again");
+            std::cout<<"PASS repeated cob launch/rearm; no runtime old-save repair Hz="<<hz<<" shots="<<cobShots<<'\n';break;
+        }
         case SEED_IMITATER:
         {
             auto* replacement=board.GetTopPlantAt(3,row,TOPPLANT_ONLY_NORMAL_POSITION);
@@ -2728,6 +2745,49 @@ void PlantAttackCatalogRuntime(TestApp& app)
     profile.mLevel=31;profile.mFinishedAdventure=1;
     app.mPlayerInfo=&profile;app.mZenGarden=&garden;
     app.mGameMode=GAMEMODE_ADVENTURE;app.mGameScene=SCENE_PLAYING;
+    if(const char* saved=std::getenv("PVZ_STALLED_PLANT_SAVE"))
+    {
+        Board board(&app);app.mBoard=&board;
+        Require(LawnLoadGame(&board,saved),"Cannot load reported plant-stall checkpoint");
+        board.mPaused=false;
+        clocks.mBattleTimeNs=board.mLevelTimeNs;
+        const bool damaged=std::getenv("PVZ_EXPECT_DAMAGED_SAVE")!=nullptr;
+        std::vector<Plant*> cannons;
+        Plant* found=nullptr;
+        while(board.IteratePlants(found))if(found->mSeedType==SEED_COBCANNON){
+            const auto* r=app.ReanimationGet(found->mBodyReanimID);
+            Require(found->mState==STATE_COBCANNON_FIRING&&(damaged ? found->mShootingEndTimeNs==0 : found->mShootingEndTimeNs!=0)&&r->mLoopCount>0,
+                "Reported fixture no longer contains the original held-zero attack");
+            cannons.push_back(found);
+        }
+        Require(!cannons.empty(),"Reported fixture has no stalled cannons");
+        std::vector<int> shots(cannons.size());
+        for(int i=1;i<=5400;++i){
+            constexpr unsigned long long step=16'666'667;
+            Sexy::ApplySimulationStep(step);board.mLevelTimeNs+=step;
+            clocks.mVisualTimeNs+=step;clocks.mBattleTimeNs=board.mLevelTimeNs;
+            app.mEffectSystem->UpdateAt(clocks.mVisualTimeNs,clocks.mBattleTimeNs);
+            // Isolate saved plant state: no zombie actions, ICE3 or combat damage.
+            for(std::size_t j=0;j<cannons.size();++j){
+                auto* plant=cannons[j];
+                plant->Update(board.mLevelTimeNs,clocks.mVisualTimeNs,board.mLevelTimeNs,step);
+                if(damaged)Require(plant->mState==STATE_COBCANNON_FIRING&&plant->mShootingEndTimeNs==0,
+                    "Game silently repaired an old damaged checkpoint");
+                else if(i==1)Require(plant->mState==STATE_COBCANNON_ARMING&&plant->mShootingEndTimeNs==0,
+                    "DevTools-repaired cannon did not complete on its first update");
+                if(plant->mState==STATE_COBCANNON_READY){
+                    plant->CobCannonFire(board.mLevelTimeNs,650,200);++shots[j];
+                }
+            }
+            app.mEffectSystem->ProcessDeleteQueue();
+        }
+        for(std::size_t j=0;j<cannons.size();++j){
+            Require(damaged ? shots[j]==0 : shots[j]>=2,"Repaired cannon failed a subsequent fire/reload cycle");
+            std::cout<<"PASS reported cannon col="<<cannons[j]->mPlantCol<<" row="<<cannons[j]->mRow
+                <<(damaged ? " kept invalid; subsequent shots=" : " repaired offline; subsequent shots=")<<shots[j]<<'\n';
+        }
+        return;
+    }
     struct Attack {
         SeedType seed;
         int projectiles;
@@ -2863,7 +2923,7 @@ void PlantAttackCatalogRuntime(TestApp& app)
             }
             auto* body=app.ReanimationGet(plant->mBodyReanimID);
             Require(shots.size()>=10,"Winter Melon stopped firing after its first volleys");
-            Require(plant->mShootingCounter.mNanoseconds==0 && body->mLoopType==REANIM_LOOP && body->mAnimRate>0,
+            Require(plant->mShootingEndTimeNs==0 && body->mLoopType==REANIM_LOOP && body->mAnimRate>0,
                 "Winter Melon remained in a held attack after its timer expired");
             Require(body->mLastUpdateTimeNs==static_cast<long long>(board.mLevelTimeNs),"Winter Melon animation clock stopped following its owner");
             std::cout<<"PASS repeated Winter Melon Hz="<<hz<<" shots="<<shots.size()<<" idle restored\n";

@@ -172,7 +172,7 @@ public:
     int                     mTargetY;                       //+0x84
     int                     mStartRow;                      //+0x88
     ParticleSystemID        mParticleID;                    //+0x8C
-    Sexy::TimeCounter                     mShootingCounter;               //+0x90
+    std::int64_t                          mShootingEndTimeNs;             // 0 = inactive; expired stays active until animation cleanup
     ReanimationID           mBodyReanimID;                  //+0x94
     ReanimationID           mHeadReanimID;                  //+0x98
     ReanimationID           mHeadReanimID2;                 //+0x9C

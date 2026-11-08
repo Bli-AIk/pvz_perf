@@ -18,14 +18,14 @@ namespace SaveClockProjection
 {
 namespace
 {
-enum class Kind { None, Raw, Start, End, SignedEnd, Fade, InfiniteEnd, DormantStart, Refresh, SlotEnd, Transparency, Health, Disappear };
+enum class Kind { None, Raw, ShootingEnd, Start, End, SignedEnd, Fade, InfiniteEnd, DormantStart, Refresh, SlotEnd, Transparency, Health, Disappear };
 template<class T, class F> void Fields(const T& v, F&& f)
 {
 #define CLOCK(field,kind) f(offsetof(T, field),Kind::kind)
     if constexpr(std::is_same_v<T,Plant>) {
         CLOCK(mDisappearEndTimeNs,Disappear); CLOCK(mRecentlyEatenEndTimeNs,End);
         CLOCK(mEatenFlashEndTimeNs,End); CLOCK(mBeghouledFlashEndTimeNs,End); CLOCK(mWakeUpEndTimeNs,End);
-        CLOCK(mMagnetStartTimeNs,Start);
+        CLOCK(mMagnetStartTimeNs,Start); CLOCK(mShootingEndTimeNs,ShootingEnd);
     } else if constexpr(std::is_same_v<T,Zombie>) {
         CLOCK(mShotFlashEndTimeNs,SignedEnd); CLOCK(mShieldFlashEndTimeNs,End); CLOCK(mShieldRecoilEndTimeNs,End);
         CLOCK(mBirthTimeNs,Start); CLOCK(mFadeEndTimeNs,Fade); CLOCK(mChilledEndTimeNs,End);
@@ -85,6 +85,10 @@ template<class T> std::int64_t EncodeAt(const T& v,std::size_t p,std::int64_t ra
     if(k==Kind::Start||k==Kind::Refresh||k==Kind::DormantStart) return k==Kind::DormantStart&&raw==INT64_MAX?0:ReanimClock::Subtract(now,raw);
     if(k==Kind::Fade&&raw==-1)return -10'000'000;
     if(k==Kind::InfiniteEnd&&raw==INT64_MAX)return 100'000'000'000LL;
+    // Preserve the established remaining-time wire field. A one-ns sentinel
+    // keeps expired attacks active while awaiting animation completion. It is
+    // below every shot event offset; elapsed waiting age is never consumed.
+    if(k==Kind::ShootingEnd)return raw==0?0:std::max<std::int64_t>(1,ReanimClock::Subtract(raw,now));
     if(k==Kind::SignedEnd)return ReanimClock::Subtract(raw,now);
     // Zero is inactive. Preserve signed remaining time for an expired slot
     // that is still finishing its last turn. INT64_MIN encodes active exactly
@@ -110,7 +114,7 @@ template<class T> void BindAt(T& v) {
     Fields(v,[&](std::size_t p,Kind k){
         if(k==Kind::None||k==Kind::Raw||k==Kind::Health)return;
         std::int64_t raw;std::memcpy(&raw,reinterpret_cast<unsigned char*>(&v)+p,8);
-        if((k==Kind::End||k==Kind::SlotEnd||k==Kind::Disappear||k==Kind::Transparency)&&raw==0)return;
+        if((k==Kind::End||k==Kind::ShootingEnd||k==Kind::SlotEnd||k==Kind::Disappear||k==Kind::Transparency)&&raw==0)return;
         if(k==Kind::Fade&&raw==-1)return;
         if(k==Kind::SlotEnd&&raw==INT64_MIN)
         {

@@ -231,7 +231,7 @@ visit(offsetof(Type, mTargetX), 140, 4, sizeof(Type::mTargetX));
 visit(offsetof(Type, mTargetY), 144, 4, sizeof(Type::mTargetY));
 visit(offsetof(Type, mStartRow), 148, 4, sizeof(Type::mStartRow));
 visit(offsetof(Type, mParticleID), 152, 4, sizeof(Type::mParticleID));
-visit(offsetof(Type, mShootingCounter), 156, 4, sizeof(Type::mShootingCounter));
+visit(offsetof(Type, mShootingEndTimeNs), 156, 4, sizeof(Type::mShootingEndTimeNs));
 visit(offsetof(Type, mBodyReanimID), 160, 4, sizeof(Type::mBodyReanimID));
 visit(offsetof(Type, mHeadReanimID), 164, 4, sizeof(Type::mHeadReanimID));
 visit(offsetof(Type, mHeadReanimID2), 168, 4, sizeof(Type::mHeadReanimID2));

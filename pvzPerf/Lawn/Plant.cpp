@@ -507,7 +507,7 @@ void Plant::PlantInitialize(std::int64_t ownerNowNs, std::int64_t visualNowNs, s
     mAnimCounter = 0;
     mAnimPing = true;
     mFrame = 0;
-    mShootingCounter = 0;
+    mShootingEndTimeNs = 0;
     mShakeOffsetX = 0.0f;
     mShakeOffsetY = 0.0f;
     mFrameLength = RandRangeInt(12, 18);
@@ -912,7 +912,7 @@ bool Plant::FindTargetAndFire(std::int64_t ownerNowNs, std::int64_t visualNowNs,
         aHeadReanim2->ChangeLoopType(ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD);
         aHeadReanim2->ApplyRate(35.0f);
         aHeadReanim2->SetFramesForLayer(ReanimTrackId::anim_splitpea_shooting);
-        mShootingCounter = 26;
+        mShootingEndTimeNs = ReanimClock::Add(ownerNowNs, 26 * PlantLaunchClock::Tick);
     }
     else if (aHeadReanim && aHeadReanim->TrackExists(ReanimTrackId::anim_shooting))
     {
@@ -921,32 +921,32 @@ bool Plant::FindTargetAndFire(std::int64_t ownerNowNs, std::int64_t visualNowNs,
         aHeadReanim->ApplyRate(35.0f);
         aHeadReanim->SetFramesForLayer(ReanimTrackId::anim_shooting);
 
-        mShootingCounter = 35;
+        mShootingEndTimeNs = ReanimClock::Add(ownerNowNs, 35 * PlantLaunchClock::Tick);
         if (mSeedType == SeedType::SEED_REPEATER || mSeedType == SeedType::SEED_SPLITPEA || mSeedType == SeedType::SEED_LEFTPEATER)
         {
             aHeadReanim->ApplyRate(45.0f);
-            mShootingCounter = 26;
+            mShootingEndTimeNs = ReanimClock::Add(ownerNowNs, 26 * PlantLaunchClock::Tick);
         }
         else if (mSeedType == SeedType::SEED_GATLINGPEA)
         {
             aHeadReanim->ApplyRate(38.0f);
-            mShootingCounter = 100;
+            mShootingEndTimeNs = ReanimClock::Add(ownerNowNs, 100 * PlantLaunchClock::Tick);
         }
     }
     else if (mState == PlantState::STATE_CACTUS_HIGH)
     {
         PlayBodyReanim(ownerNowNs, ReanimTrackId::anim_shootinghigh, ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD, 20, 35.0f);
-        mShootingCounter = 23;
+        mShootingEndTimeNs = ReanimClock::Add(ownerNowNs, 23 * PlantLaunchClock::Tick);
     }
     else if (mSeedType == SeedType::SEED_GLOOMSHROOM)
     {
         PlayBodyReanim(ownerNowNs, ReanimTrackId::anim_shooting, ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD, 20, 14.0f);
-        mShootingCounter = 200;
+        mShootingEndTimeNs = ReanimClock::Add(ownerNowNs, 200 * PlantLaunchClock::Tick);
     }
     else if (mSeedType == SeedType::SEED_CATTAIL)
     {
         PlayBodyReanim(ownerNowNs, ReanimTrackId::anim_shooting, ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD, 20, 30.0f);
-        mShootingCounter = 50;
+        mShootingEndTimeNs = ReanimClock::Add(ownerNowNs, 50 * PlantLaunchClock::Tick);
     }
     else if (aBodyReanim && aBodyReanim->TrackExists(ReanimTrackId::anim_shooting))
     {
@@ -1018,7 +1018,7 @@ bool Plant::FindTargetAndFire(std::int64_t ownerNowNs, std::int64_t visualNowNs,
         };
         static_assert(sizeof(kShootingCounter) / sizeof(kShootingCounter[0]) == (int)SeedType::NUM_SEED_TYPES,
             "射击节奏槽位须与 SeedType 枚举同步");
-        mShootingCounter = kShootingCounter[mSeedType];
+        mShootingEndTimeNs = ReanimClock::Add(ownerNowNs, kShootingCounter[mSeedType] * PlantLaunchClock::Tick);
     }
     else
         Fire(ownerNowNs, visualNowNs, animationNowNs, aZombie, theRow, thePlantWeapon);
@@ -1064,7 +1064,7 @@ void Plant::LaunchThreepeater(std::int64_t ownerNowNs)
             aHeadReanim3->SetFramesForLayer(ReanimTrackId::anim_shooting3);
         }
 
-        mShootingCounter = 35;
+        mShootingEndTimeNs = ReanimClock::Add(ownerNowNs, 35 * PlantLaunchClock::Tick);
     }
 }
 
@@ -1128,7 +1128,7 @@ void Plant::LaunchStarFruit(std::int64_t ownerNowNs)
     if (FindStarFruitTarget(ownerNowNs))
     {
         PlayBodyReanim(ownerNowNs, ReanimTrackId::anim_shoot, ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD, 20, 28.0f);
-        mShootingCounter = 40;
+        mShootingEndTimeNs = ReanimClock::Add(ownerNowNs, 40 * PlantLaunchClock::Tick);
     }
 }
 
@@ -1184,7 +1184,7 @@ void Plant::UpdateShooter(std::int64_t ownerNowNs, std::int64_t visualNowNs, std
             // at the update endpoint. Otherwise the next trigger can reset
             // its 26-unit timer before it crosses the one-unit fire event.
             if (aStartedShooting)
-                mShootingCounter.AddNanoseconds(aFirstShotStart - aNow);
+                mShootingEndTimeNs = ReanimClock::Add(mShootingEndTimeNs, aFirstShotStart - aNow);
         }
     };
     int aEvents = 0;
@@ -1752,7 +1752,7 @@ void Plant::UpdateSpikeweed(std::int64_t ownerNowNs, std::int64_t visualNowNs, s
 //0x460420
 void Plant::UpdateScaredyShroom(std::int64_t ownerNowNs)
 {
-    if (mShootingCounter > 0)
+    if (mShootingEndTimeNs != 0)
         return;
 
     bool aHasZombieNearby = false;
@@ -2263,7 +2263,7 @@ void Plant::UpdateCobCannon(std::int64_t ownerNowNs)
 //0x4611F0
 void Plant::UpdateCactus(std::int64_t ownerNowNs)
 {
-    if (mShootingCounter > 0)
+    if (mShootingEndTimeNs != 0)
         return;
 
     Reanimation* aBodyReanim = mApp->ReanimationGet(mBodyReanimID);
@@ -3667,6 +3667,9 @@ void Plant::Update(std::int64_t ownerNowNs, std::int64_t visualNowNs, std::int64
         {
             animation->PrepareTimeAt(animationNowNs);
         }
+    if (mShootingEndTimeNs != 0 && (!doUpdate || mIsAsleep || mSquished ||
+        mOnBungeeState != PlantOnBungeeState::NOT_ON_BUNGEE || NotOnGround()))
+        mShootingEndTimeNs = ReanimClock::Add(mShootingEndTimeNs, static_cast<std::int64_t>(theLevelDeltaNs));
     if (doUpdate)
     {
         UpdateAbilities(ownerNowNs, visualNowNs, animationNowNs);
@@ -3909,7 +3912,7 @@ void Plant::DoBlink(std::int64_t ownerNowNs, std::int64_t animationNowNs)
 {
     mBlinkCountdown = 400 + Rand(400);
 
-    if (NotOnGround() || mShootingCounter != 0)
+    if (NotOnGround() || mShootingEndTimeNs != 0)
         return;
 
     if (mSeedType == SeedType::SEED_POTATOMINE && mState != PlantState::STATE_POTATO_ARMED)
@@ -4106,12 +4109,19 @@ void Plant::AnimatePumpkin()
 //0x464820
 void Plant::UpdateShooting(std::int64_t ownerNowNs, std::int64_t visualNowNs, std::int64_t animationNowNs)
 {
-    if (NotOnGround() || mShootingCounter == 0)
+    if (NotOnGround() || mShootingEndTimeNs == 0)
         return;
 
-    mShootingCounter--;
+    // Use the owner's interval, never decrement a stored countdown. Keep an
+    // expired deadline active until animation cleanup completes. Zero alone
+    // is inactive; old invalid checkpoints are repaired in DevTools only.
+    const auto beforeNs = ownerNowNs - static_cast<std::int64_t>(Sexy::gUpdateIntervalNs);
+    const auto crossed = [&](std::int64_t remainingUnits) {
+        const auto eventNs = mShootingEndTimeNs - remainingUnits * PlantLaunchClock::Tick;
+        return beforeNs < eventNs && eventNs <= ownerNowNs;
+    };
 
-    if (mSeedType == SeedType::SEED_FUMESHROOM && mShootingCounter == 15)
+    if (mSeedType == SeedType::SEED_FUMESHROOM && crossed(15))
     {
         int aRenderPosition = Board::MakeRenderOrder(RenderLayer::RENDER_LAYER_PARTICLE, mRow, 0);
         AddAttachedParticle(ownerNowNs, (mX) + 85, (mY) + 31, aRenderPosition, ParticleEffect::PARTICLE_FUMECLOUD);
@@ -4119,26 +4129,26 @@ void Plant::UpdateShooting(std::int64_t ownerNowNs, std::int64_t visualNowNs, st
 
     if (mSeedType == SeedType::SEED_GLOOMSHROOM)
     {
-        if (mShootingCounter == 136 || mShootingCounter == 108 || mShootingCounter == 80 || mShootingCounter == 52)
+        for (const auto offset : {136, 108, 80, 52}) if (crossed(offset))
         {
             int aRenderPosition = Board::MakeRenderOrder(RenderLayer::RENDER_LAYER_PARTICLE, mRow, 0);
             AddAttachedParticle(ownerNowNs, (mX) + 40, (mY) + 40, aRenderPosition, ParticleEffect::PARTICLE_GLOOMCLOUD);
         }
-        if (mShootingCounter == 126 || mShootingCounter == 98 || mShootingCounter == 70 || mShootingCounter == 42)
+        for (const auto offset : {126, 98, 70, 42}) if (crossed(offset))
         {
             Fire(ownerNowNs, visualNowNs, animationNowNs, nullptr, mRow, PlantWeapon::WEAPON_PRIMARY);
         }
     }
     else if (mSeedType == SeedType::SEED_GATLINGPEA)
     {
-        if (mShootingCounter == 18 || mShootingCounter == 35 || mShootingCounter == 51 || mShootingCounter == 68)
+        for (const auto offset : {68, 51, 35, 18}) if (crossed(offset))
         {
             Fire(ownerNowNs, visualNowNs, animationNowNs, nullptr, mRow, PlantWeapon::WEAPON_PRIMARY);
         }
     }
     else if (mSeedType == SeedType::SEED_CATTAIL)
     {
-        if (mShootingCounter == 19)
+        if (crossed(19))
         {
             Zombie* aZombie = FindTargetZombie(mRow, PlantWeapon::WEAPON_PRIMARY);
             if (aZombie)
@@ -4147,7 +4157,7 @@ void Plant::UpdateShooting(std::int64_t ownerNowNs, std::int64_t visualNowNs, st
             }
         }
     }
-    else if (mShootingCounter == 1)
+    else if (crossed(1))
     {
         if (mSeedType == SeedType::SEED_THREEPEATER)
         {
@@ -4218,7 +4228,7 @@ void Plant::UpdateShooting(std::int64_t ownerNowNs, std::int64_t visualNowNs, st
         // animation/cob state permanently unprocessed on the next call's guard.
     }
 
-    if (mShootingCounter != 0)
+    if (ownerNowNs < mShootingEndTimeNs)
         return;
 
     Reanimation* aBodyReanim = mApp->ReanimationTryToGet(mBodyReanimID);
@@ -4258,6 +4268,7 @@ void Plant::UpdateShooting(std::int64_t ownerNowNs, std::int64_t visualNowNs, st
                 aHeadReanim3->SynchronizePhase(*aBodyReanim);
             }
 
+            mShootingEndTimeNs = 0;
             return;
         }
     }
@@ -4284,6 +4295,9 @@ void Plant::UpdateShooting(std::int64_t ownerNowNs, std::int64_t visualNowNs, st
             aHeadReanim2->SynchronizePhase(*aBodyReanim);
         }
 
+        if (aHeadReanim->mLoopType != ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD &&
+            aHeadReanim2->mLoopType != ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD)
+            mShootingEndTimeNs = 0;
         return;
     }
     else if (mState == PlantState::STATE_CACTUS_HIGH)
@@ -4298,6 +4312,7 @@ void Plant::UpdateShooting(std::int64_t ownerNowNs, std::int64_t visualNowNs, st
                 aBodyReanim->ApplyRate(0.0f);
             }
 
+            mShootingEndTimeNs = 0;
             return;
         }
     }
@@ -4310,6 +4325,7 @@ void Plant::UpdateShooting(std::int64_t ownerNowNs, std::int64_t visualNowNs, st
             aHeadReanim->SetFramesForLayer(ReanimTrackId::anim_head_idle);
             aHeadReanim->ApplyRate(aBodyReanim->mAnimRate);
             aHeadReanim->SynchronizePhase(*aBodyReanim);
+            mShootingEndTimeNs = 0;
             return;
         }
     }
@@ -4320,16 +4336,18 @@ void Plant::UpdateShooting(std::int64_t ownerNowNs, std::int64_t visualNowNs, st
             mState = PlantState::STATE_COBCANNON_ARMING;
             mStateCountdown = 3000;
             PlayBodyReanim(ownerNowNs, ReanimTrackId::anim_unarmed_idle, ReanimLoopType::REANIM_LOOP, 20, aBodyReanim->mDefinition->mFPS);
+            mShootingEndTimeNs = 0;
             return;
         }
     }
     else if (aBodyReanim && aBodyReanim->mLoopCount > 0)
     {
         PlayIdleAnim(ownerNowNs, aBodyReanim->mDefinition->mFPS);
+        mShootingEndTimeNs = 0;
         return;
     }
 
-    mShootingCounter = 1;
+    // Still waiting: retain the expired deadline without extending it.
 }
 
 //0x464DB0
@@ -5379,7 +5397,7 @@ void Plant::CobCannonFire(std::int64_t ownerNowNs, int theTargetX, int theTarget
     TOD_ASSERT(mState == PlantState::STATE_COBCANNON_READY);
 
     mState = PlantState::STATE_COBCANNON_FIRING;
-    mShootingCounter = 206;
+    mShootingEndTimeNs = ReanimClock::Add(ownerNowNs, 206 * PlantLaunchClock::Tick);
     PlayBodyReanim(ownerNowNs, ReanimTrackId::anim_shooting, ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD, 20, 12.0f);
 
     mTargetX = theTargetX - 47.0f;
