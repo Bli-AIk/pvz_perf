@@ -8,7 +8,7 @@ try{
  await page.goto(process.env.PVZ_DIAGNOSTICS_URL||'http://127.0.0.1:18090/');
  await page.waitForFunction(()=>!document.getElementById('start').disabled,null,{timeout:120000});
  assert.equal(await page.locator('#diagnostics-enabled').isChecked(),true);
- assert.equal(await page.locator('#diagnostics-settings').getAttribute('open'),'');
+ assert.equal(await page.locator('#advanced-settings').getAttribute('open'),'');
  await page.locator('#start').click();
  await page.waitForFunction(()=>Module._pvz_web_loading_complete?.()&&Module._pvz_web_draws()>0,null,{timeout:120000});
  await page.waitForFunction(()=>JSON.parse(localStorage.getItem('pvz_diagnostics_v1')).events.some(event=>event.state.phase==='游戏运行'));

@@ -6,6 +6,11 @@ const make=()=>createDiagnostics({storage,environment:()=>({version:'test'}),rea
  schedule:fn=>{scheduled++;tick=fn;return scheduled},cancel:()=>cancelled++});
 const first=make();first.start();first.record('phase');first.quit();
 assert.equal(reads,0);assert.equal(scheduled,0);assert.equal(data.size,0,'Disabled diagnostics must not sample or write storage');
+const snapshot=first.report();
+assert.equal(snapshot.enabled,false);assert.equal(snapshot.environment.version,'test');
+assert.equal(snapshot.state.wasmBytes,128*1024*1024);
+assert.equal(snapshot.current,null);assert.equal(snapshot.previous,null);
+assert.equal(scheduled,0);assert.equal(data.size,0,'Explicit snapshot must not enable recording or persist history');
 first.setEnabled(true);first.start();for(let i=0;i<200;i++)tick();
 assert.equal(first.report().current.events.length,90);assert.equal(first.report().current.normalQuit,false);
 const second=make();second.record('page-ready');assert.equal(second.report().previous.events.length,90,'Unexpected process exit must leave the previous snapshot');

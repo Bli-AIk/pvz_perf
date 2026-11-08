@@ -24,6 +24,13 @@ export function createDiagnostics({storage,readState,environment,defaultEnabled=
   start(){if(!enabled)return;stop();record('game-start');current.normalQuit=false;persist();timer=schedule(()=>record('sample'))},
   quit(){if(!enabled)return;stop();record('game-quit');current.normalQuit=true;persist()},
   pagehide(){record('pagehide');stop()},
-  report(){return {notice:'诊断记录不包含存档或账号。Wasm 字节数不是进程总内存；异常中止标记不能单独证明崩溃原因。',storageError,previous,current}}
+  report(){
+   // Explicit exports remain useful with recording disabled. Capture a live
+   // snapshot only on request; do not start a sampler or persist new history.
+   let state,env;
+   try{state=readState()}catch(error){state={readError:String(error.message||error)}}
+   try{env=environment()}catch(error){env={readError:String(error.message||error)}}
+   return {notice:'诊断记录不包含存档或账号。Wasm 字节数不是进程总内存；异常中止标记不能单独证明崩溃原因。',enabled,environment:env,state,storageError,previous,current};
+  }
  };
 }

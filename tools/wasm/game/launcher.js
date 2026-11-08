@@ -26,7 +26,7 @@ const diagnosticsReady=import('./diagnostics.js').then(({createDiagnostics})=>{
      buffers:audio?.sound?.sources.size,channels:audio?.sound?.channels.size,voices:audio?.voices.size}};
   },schedule:fn=>setInterval(()=>{if(!document.hidden)fn()},10000)});
  const checkbox=document.getElementById('diagnostics-enabled');checkbox.checked=diagnostics.enabled;
- if(window.PVZWebConfig?.diagnosticsDefault){document.getElementById('diagnostics-settings').open=true;document.getElementById('diagnostics-label').textContent='记录运行诊断（此诊断包默认开启）'}
+ if(window.PVZWebConfig?.diagnosticsDefault){document.getElementById('advanced-settings').open=true;document.getElementById('diagnostics-label').textContent='记录运行诊断（此诊断包默认开启）'}
  checkbox.onchange=()=>{diagnostics.setEnabled(checkbox.checked);if(checkbox.checked&&running)diagnostics.start()};
  diagnostics.record('page-ready');
 });
